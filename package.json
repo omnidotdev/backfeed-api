@@ -7,9 +7,9 @@
     "seed": "tsnd src/lib/prisma/seed.ts"
   },
   "scripts": {
-    "dev": "NODE_PATH=src/ dotenv -e .env -c -- tsnd --respawn --quiet --transpile-only ./src/server.ts",
+    "dev": "NODE_ENV=development NODE_PATH=src/ dotenv -e .env -c -- tsnd --respawn --quiet --transpile-only ./src/server.ts",
     "build": "yarn db:generate && tsc",
-    "start": "dotenv -e .env -c -- yarn db:migrate:prod && NODE_PATH=build/ node build/server.js",
+    "start": "NODE_ENV=production dotenv -e .env -c -- yarn db:migrate:prod && NODE_PATH=build/ node build/server.js",
     "lint": "eslint . --ext .ts --fix",
     "format": "prettier --write src/**/*.ts",
     "db:seed": "dotenv -e .env -c -- prisma db seed",
