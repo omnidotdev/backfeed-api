@@ -1,0 +1,67 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsonc/recommended-with-jsonc",
+    "prettier"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "unused-imports"
+  ],
+  "rules": {
+    // allow non-null assertion operators
+    "@typescript-eslint/no-non-null-assertion": "off",
+    // warn for TS comments (e.g. `@ts-ignore`)
+    "@typescript-eslint/ban-ts-comment": "warn",
+    // disallow unused variables
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    // warn on use of type `any`
+    "@typescript-eslint/no-explicit-any": "warn",
+    // explicitly handle promises (e.g. `await`, `void`)
+    "@typescript-eslint/no-floating-promises": "error",
+    // enforce type imports
+    "@typescript-eslint/consistent-type-imports": "error",
+    // prevent duplicate imports
+    "@typescript-eslint/no-duplicate-imports": "error",
+    // remove unused imports
+    "unused-imports/no-unused-imports": "warn",
+    // enforce import group order
+    "import/order": [
+      "error",
+      {
+        "alphabetize": {
+          "caseInsensitive": true,
+          "order": "asc"
+        },
+        // separate external dependencies from internal dependencies
+        "groups": [
+          "builtin",
+          "external",
+          [
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+            "object"
+          ],
+          "type"
+        ],
+        "newlines-between": "always"
+      }
+    ]
+  }
+}

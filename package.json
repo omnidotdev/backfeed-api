@@ -1,0 +1,48 @@
+{
+  "name": "backfeed-graphql-api",
+  "private": true,
+  "main": "build/server.js",
+  "packageManager": "yarn@3.5.0",
+  "prisma": {
+    "seed": "tsnd src/lib/prisma/seed.ts"
+  },
+  "scripts": {
+    "dev": "NODE_PATH=src/ dotenv -e .env -c -- tsnd --respawn --quiet --transpile-only ./src/server.ts",
+    "build": "tsc && yarn db:generate",
+    "start": "dotenv -e .env -c -- yarn db:migrate:prod && NODE_PATH=build/ node build/server.js",
+    "lint": "eslint . --ext .ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "db:seed": "dotenv -e .env -c -- prisma db seed",
+    "db:generate": "prisma generate --schema src/lib/prisma/schema.prisma",
+    "db:migrate:dev": "dotenv -e .env -c -- prisma migrate dev --schema src/lib/prisma/schema.prisma",
+    "db:migrate:prod": "prisma migrate deploy --schema src/lib/prisma/schema.prisma",
+    "db:studio": "dotenv -e .env -c -- prisma studio --schema src/lib/prisma/schema.prisma",
+    "db:reset": "dotenv -e .env -c -- prisma migrate reset --schema src/lib/prisma/schema.prisma",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "dotenv-cli": "^7.2.1",
+    "eslint": "^8.41.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsonc": "^2.8.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8",
+    "prisma": "^4.15.0",
+    "prisma-generator-pothos-codegen": "^0.5.7",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@pothos/core": "^3.30.0",
+    "@pothos/plugin-prisma": "^3.51.1",
+    "@prisma/client": "^4.15.0",
+    "graphql": "^16.6.0",
+    "graphql-yoga": "^3.9.1"
+  }
+}
