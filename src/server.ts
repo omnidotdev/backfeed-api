@@ -12,7 +12,7 @@ const yoga = createYoga({
     origin:
       NODE_ENV === "production"
         ? "https://backfeed.omni.dev"
-        : "http://localhost:4000",
+        : "http://localhost:3000",
     credentials: true,
     methods: ["POST"],
   },
