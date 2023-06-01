@@ -16,8 +16,10 @@ const yoga = createYoga({
     credentials: true,
     methods: ["POST"],
   },
-  // NB: can also provide an object of options instead of a boolean
+  // only enable web UIs in development
+  // NB: can also provide an object of GraphiQL options instead of a boolean
   graphiql: NODE_ENV === "development",
+  landingPage: NODE_ENV === "development",
 });
 
 const server = createServer(yoga);
