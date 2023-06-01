@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "NODE_PATH=src/ dotenv -e .env -c -- tsnd --respawn --quiet --transpile-only ./src/server.ts",
-    "build": "tsc && yarn db:generate",
+    "build": "yarn db:generate && tsc",
     "start": "dotenv -e .env -c -- yarn db:migrate:prod && NODE_PATH=build/ node build/server.js",
     "lint": "eslint . --ext .ts --fix",
     "format": "prettier --write src/**/*.ts",
