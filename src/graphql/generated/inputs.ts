@@ -36,46 +36,51 @@ type PrismaUpdateOperationsInputFilter<T extends object> = {
 
 export const DateTime = builder.scalarType('DateTime', {
   parseValue: (value) => {
-    const isDateParsable = typeof value === 'string' || typeof value === 'number';
-    if (!isDateParsable) throw new Error('Invalid Date type');
-    const date = new Date(value);
-    const isInvalidDate = date.toString() === 'Invalid Date';
-    if (isInvalidDate) throw new Error('Invalid Date');
-    return new Date(value);
+    try {
+      const date = new Date(value)
+      if (date.toString() === 'Invalid Date') throw new Error('Invalid Date')
+      return date
+    } catch (error) {
+      throw new Error('Invalid Date');
+    }
   },
   serialize: (value) => value ? new Date(value) : null,
-});
-
-export const OrganizationScalarFieldEnum = builder.enumType('OrganizationScalarFieldEnum', {
-  values: ["id","createdAt","updatedAt","name","slug"] as const,
-});
-
-export const PostScalarFieldEnum = builder.enumType('PostScalarFieldEnum', {
-  values: ["id","createdAt","updatedAt","title","description","authorId","projectId"] as const,
-});
-
-export const ProjectScalarFieldEnum = builder.enumType('ProjectScalarFieldEnum', {
-  values: ["id","createdAt","updatedAt","name","slug","image","description","organizationId"] as const,
-});
-
-export const QueryMode = builder.enumType('QueryMode', {
-  values: ["default","insensitive"] as const,
-});
-
-export const SortOrder = builder.enumType('SortOrder', {
-  values: ["asc","desc"] as const,
 });
 
 export const TransactionIsolationLevel = builder.enumType('TransactionIsolationLevel', {
   values: ["ReadUncommitted","ReadCommitted","RepeatableRead","Serializable"] as const,
 });
 
+export const UserScalarFieldEnum = builder.enumType('UserScalarFieldEnum', {
+  values: ["id","createdAt","updatedAt","walletAddress"] as const,
+});
+
+export const OrganizationScalarFieldEnum = builder.enumType('OrganizationScalarFieldEnum', {
+  values: ["id","createdAt","updatedAt","name","slug"] as const,
+});
+
+export const ProjectScalarFieldEnum = builder.enumType('ProjectScalarFieldEnum', {
+  values: ["id","createdAt","updatedAt","name","slug","image","description","organizationId"] as const,
+});
+
+export const PostScalarFieldEnum = builder.enumType('PostScalarFieldEnum', {
+  values: ["id","createdAt","updatedAt","title","description","authorId","projectId"] as const,
+});
+
 export const UpvoteScalarFieldEnum = builder.enumType('UpvoteScalarFieldEnum', {
   values: ["id","createdAt","updatedAt","postId","userId"] as const,
 });
 
-export const UserScalarFieldEnum = builder.enumType('UserScalarFieldEnum', {
-  values: ["id","createdAt","updatedAt","walletAddress"] as const,
+export const SortOrder = builder.enumType('SortOrder', {
+  values: ["asc","desc"] as const,
+});
+
+export const QueryMode = builder.enumType('QueryMode', {
+  values: ["default","insensitive"] as const,
+});
+
+export const NullsOrder = builder.enumType('NullsOrder', {
+  values: ["first","last"] as const,
 });
 
 export const UserWhereInputFields = (t: any) => ({
