@@ -1,1 +1,1 @@
-{ "*.ts": ["yarn lint", "yarn format"] }
+{ "*.ts": ["bun lint", "bun format"] }
