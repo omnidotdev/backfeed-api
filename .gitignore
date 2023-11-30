@@ -1,7 +1,5 @@
 build/
 node_modules/
-.yarn/*
-!.yarn/releases
 .env
 .env.*
 !.env.*template

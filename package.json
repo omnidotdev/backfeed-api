@@ -2,14 +2,13 @@
   "name": "backfeed-graphql-api",
   "private": true,
   "main": "build/server.js",
-  "packageManager": "yarn@3.5.0",
   "prisma": {
     "seed": "tsnd src/lib/prisma/seed.ts"
   },
   "scripts": {
     "dev": "NODE_ENV=development NODE_PATH=src/ dotenv -e .env -c -- tsnd --respawn --quiet --transpile-only ./src/server.ts",
-    "build": "yarn db:generate && tsc",
-    "start": "NODE_ENV=production dotenv -e .env -c -- yarn db:migrate:prod && NODE_PATH=build/ node build/server.js",
+    "build": "bun db:generate && tsc",
+    "start": "NODE_ENV=production dotenv -e .env -c -- bun db:migrate:prod && NODE_PATH=build/ node build/server.js",
     "lint": "eslint . --ext .ts --fix",
     "format": "prettier --write src/**/*.ts",
     "db:seed": "dotenv -e .env -c -- prisma db seed",
