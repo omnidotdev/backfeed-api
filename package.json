@@ -6,7 +6,7 @@
     "seed": "tsnd src/lib/prisma/seed.ts"
   },
   "scripts": {
-    "dev": "NODE_ENV=development NODE_PATH=src/ dotenv -e .env -c -- tsnd --respawn --quiet --transpile-only ./src/server.ts",
+    "dev": "NODE_ENV=development bun run --hot src/server.ts",
     "build": "bun db:generate && tsc",
     "start": "NODE_ENV=production dotenv -e .env -c -- bun db:migrate:prod && NODE_PATH=build/ node build/server.js",
     "lint": "biome lint src",
@@ -34,6 +34,7 @@
     "@pothos/plugin-prisma": "^3.51.1",
     "@prisma/client": "^4.15.0",
     "graphql": "^16.6.0",
-    "graphql-yoga": "^3.9.1"
+    "graphql-yoga": "^3.9.1",
+    "hono": "^4.6.5"
   }
 }
