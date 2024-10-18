@@ -3,3 +3,6 @@ node_modules/
 .env
 .env.*
 !.env.*template
+
+## Misc
+.vscode
