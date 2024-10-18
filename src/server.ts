@@ -4,6 +4,7 @@ import { cors } from "hono/cors";
 
 import { createContext } from "graphql/context";
 import { schema } from "graphql/schema";
+import { app as appConfig } from "lib/config/app";
 import { HOST, PORT, isDev, isProd } from "lib/config/env";
 
 const yoga = createYoga({
@@ -19,8 +20,7 @@ const app = new Hono();
 
 app.use(
   cors({
-    // TODO: get correct prod origin (current one is down)
-    origin: isProd ? "https://backfeed.omni.dev" : "http://localhost:3000",
+    origin: isProd ? appConfig.appUrl : "http://localhost:3000",
     credentials: true,
     allowMethods: ["POST"],
   })
