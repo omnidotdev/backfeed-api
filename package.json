@@ -34,6 +34,7 @@
     "@pothos/plugin-prisma": "^3.51.1",
     "@prisma/client": "^4.15.0",
     "graphql": "^16.6.0",
-    "graphql-yoga": "^3.9.1"
+    "graphql-yoga": "^3.9.1",
+    "hono": "^4.6.5"
   }
 }
