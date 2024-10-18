@@ -1,3 +1,0 @@
-# `node_modules/**` included by default: https://github.com/Holixus/eslint/commit/38233e67ac066d9e742a28b7b2a1fb456d9c0a9a
-build/
-generated/
