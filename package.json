@@ -17,13 +17,13 @@
     "db:migrate:prod": "prisma migrate deploy --schema src/lib/prisma/schema.prisma",
     "db:studio": "dotenv -e .env -c -- prisma studio --schema src/lib/prisma/schema.prisma",
     "db:reset": "dotenv -e .env -c -- prisma migrate reset --schema src/lib/prisma/schema.prisma",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/node": "^20.2.5",
     "dotenv-cli": "^7.2.1",
-    "husky": "^8.0.3",
+    "husky": "^9.1.6",
     "lint-staged": "^13.2.2",
     "prisma": "^4.15.0",
     "prisma-generator-pothos-codegen": "^0.5.7",
