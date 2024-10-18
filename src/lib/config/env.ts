@@ -7,3 +7,6 @@ export const {
   // https://stackoverflow.com/a/68578294
   HOST = "0.0.0.0",
 } = process.env;
+
+export const isDev = NODE_ENV === "development";
+export const isProd = NODE_ENV === "production";
