@@ -1,6 +1,6 @@
+import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
-import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
 
 import { DATABASE_URL, isProd } from "./src/lib/config/env";
 
