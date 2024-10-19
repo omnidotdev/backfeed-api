@@ -34,7 +34,7 @@ app.use(
   })
 );
 
-app.use("/graphql", async (c) => yoga.fetch(c.req.raw, {}));
+app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));
 
 export default {
   host: HOST,
