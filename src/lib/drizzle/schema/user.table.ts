@@ -1,15 +1,8 @@
-import { integer, pgTable, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable } from "drizzle-orm/pg-core";
+import { defaultDate } from "./constants";
 
 export const userTable = pgTable("user", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  createdAt: timestamp({
-    precision: 6,
-    mode: "string",
-    withTimezone: true,
-  }).defaultNow(),
-  updatedAt: timestamp({
-    precision: 6,
-    mode: "string",
-    withTimezone: true,
-  }).defaultNow(),
+  createdAt: defaultDate(),
+  updatedAt: defaultDate(),
 });

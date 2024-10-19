@@ -8,6 +8,13 @@
       "when": 1729309032378,
       "tag": "0000_goofy_living_tribunal",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1729310569649,
+      "tag": "0001_true_korvac",
+      "breakpoints": true
     }
   ]
 }
