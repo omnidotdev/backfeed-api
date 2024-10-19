@@ -3,10 +3,12 @@ import { integer, pgTable, text } from "drizzle-orm/pg-core";
 
 import { defaultDate } from "./constants";
 import { projectTable } from "./project.table";
+import { upvoteTable } from "./upvote.table";
 import { userTable } from "./user.table";
 
 export const postTable = pgTable("post", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  // TODO: discuss if this should be unique
   title: text().unique(),
   description: text(),
   projectId: integer()
@@ -23,7 +25,7 @@ export const postTable = pgTable("post", {
   updatedAt: defaultDate(),
 });
 
-export const postRelations = relations(postTable, ({ one }) => ({
+export const postRelations = relations(postTable, ({ one, many }) => ({
   project: one(projectTable, {
     fields: [postTable.projectId],
     references: [projectTable.id],
@@ -32,4 +34,5 @@ export const postRelations = relations(postTable, ({ one }) => ({
     fields: [postTable.userId],
     references: [userTable.id],
   }),
+  upvotes: many(upvoteTable),
 }));

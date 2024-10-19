@@ -3,6 +3,7 @@ import { integer, pgTable } from "drizzle-orm/pg-core";
 
 import { defaultDate } from "./constants";
 import { postTable } from "./post.table";
+import { upvoteTable } from "./upvote.table";
 
 export const userTable = pgTable("user", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -12,4 +13,5 @@ export const userTable = pgTable("user", {
 
 export const userRelations = relations(userTable, ({ many }) => ({
   posts: many(postTable),
+  upvotes: many(upvoteTable),
 }));
