@@ -26,13 +26,13 @@
     "@types/node": "^20.2.5",
     "dotenv-cli": "^7.2.1",
     "husky": "^9.1.6",
-    "prisma": "^4.15.0",
+    "prisma": "^5.0.0",
     "replace-in-file": "^8.2.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@prisma/client": "^4.15.0",
+    "@prisma/client": "^5.0.0",
     "graphile-export": "^0.0.2-beta.20",
     "graphql": "^16.6.0",
     "graphql-yoga": "^3.9.1",
