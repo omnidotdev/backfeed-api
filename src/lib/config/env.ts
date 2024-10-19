@@ -6,6 +6,7 @@ export const {
   PORT = 4000,
   // https://stackoverflow.com/a/68578294
   HOST = "0.0.0.0",
+  DATABASE_URL,
 } = process.env;
 
 export const isDev = NODE_ENV === "development";
