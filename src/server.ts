@@ -1,19 +1,27 @@
-import { createYoga } from "graphql-yoga";
+import { createWithPgClient } from "@dataplan/pg/adaptors/pg";
+import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
+import { createYoga, useSchema } from "graphql-yoga";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { Pool } from "pg";
 
-import { createContext } from "graphql/context";
-import { schema } from "graphql/schema";
+import { schema } from "graphql/generated/schema.executable";
 import { app as appConfig } from "lib/config/app";
-import { HOST, PORT, isDev, isProd } from "lib/config/env";
+import { DATABASE_URL, HOST, PORT, isDev, isProd } from "lib/config/env";
+
+const pool = new Pool({
+  connectionString: DATABASE_URL,
+});
+
+const withPgClient = createWithPgClient({ pool });
 
 const yoga = createYoga({
-  schema,
-  context: createContext,
+  context: { withPgClient },
   // only enable web UIs in development
   // NB: can also provide an object of GraphiQL options instead of a boolean
   graphiql: isDev,
   landingPage: isDev,
+  plugins: [useSchema(schema), useMoreDetailedErrors(), useGrafast()],
 });
 
 const app = new Hono();
@@ -26,7 +34,7 @@ app.use(
   })
 );
 
-app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));
+app.use("/graphql", async (c) => yoga.fetch(c.req.raw, {}));
 
 export default {
   host: HOST,

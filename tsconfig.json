@@ -3,12 +3,9 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "src",
     "esModuleInterop": true,
-    "lib": [
-      "dom",
-      "esnext"
-    ],
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "types": ["@types/bun"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "noUnusedLocals": true,
     "outDir": "build/",
     "resolveJsonModule": true,
@@ -16,10 +13,6 @@
     "strict": true,
     "target": "ESNext"
   },
-  "exclude": [
-    "generated"
-  ],
-  "include": [
-    "src/**/*"
-  ]
+  "exclude": ["generated"],
+  "include": ["src/**/*"]
 }
