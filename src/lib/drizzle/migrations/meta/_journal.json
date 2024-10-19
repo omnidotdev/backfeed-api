@@ -15,6 +15,13 @@
       "when": 1729310569649,
       "tag": "0001_true_korvac",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1729312910274,
+      "tag": "0002_shocking_the_renegades",
+      "breakpoints": true
     }
   ]
 }

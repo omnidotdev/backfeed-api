@@ -1,5 +1,8 @@
+import { relations } from "drizzle-orm";
 import { integer, pgTable, text } from "drizzle-orm/pg-core";
+
 import { defaultDate } from "./constants";
+import projectTable from "./project.table";
 
 const organizationTable = pgTable("organization", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -8,5 +11,12 @@ const organizationTable = pgTable("organization", {
   createdAt: defaultDate(),
   updatedAt: defaultDate(),
 });
+
+export const organizationRelations = relations(
+  organizationTable,
+  ({ many }) => ({
+    projects: many(projectTable),
+  })
+);
 
 export default organizationTable;
