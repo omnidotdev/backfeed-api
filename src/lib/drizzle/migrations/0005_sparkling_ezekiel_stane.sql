@@ -1,0 +1,1 @@
+ALTER TABLE "upvote" ADD CONSTRAINT "upvote_postId_userId_unique" UNIQUE("post_id","user_id");
