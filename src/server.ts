@@ -1,6 +1,6 @@
 import { createWithPgClient } from "@dataplan/pg/adaptors/pg";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
-import { createYoga, useSchema } from "graphql-yoga";
+import { createYoga } from "graphql-yoga";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { Pool } from "pg";
@@ -16,12 +16,13 @@ const pool = new Pool({
 const withPgClient = createWithPgClient({ pool });
 
 const yoga = createYoga({
+  schema,
   context: { withPgClient },
   // only enable web UIs in development
   // NB: can also provide an object of GraphiQL options instead of a boolean
   graphiql: isDev,
   landingPage: isDev,
-  plugins: [useSchema(schema), useMoreDetailedErrors(), useGrafast()],
+  plugins: [useMoreDetailedErrors(), useGrafast()],
 });
 
 const app = new Hono();
