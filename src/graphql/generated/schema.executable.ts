@@ -719,6 +719,13 @@ const projectUniques = [{
   extensions: {
     tags: Object.create(null)
   }
+}, {
+  isPrimary: false,
+  attributes: ["slug", "organization_id"],
+  description: undefined,
+  extensions: {
+    tags: Object.create(null)
+  }
 }];
 const registryConfig_pgResources_project_project = {
   executor: executor,
@@ -2057,6 +2064,9 @@ type Query implements Node {
 
   """Get a single \`Project\`."""
   projectByName(name: String!): Project
+
+  """Get a single \`Project\`."""
+  projectBySlugAndOrganizationId(slug: String!, organizationId: Int!): Project
 
   """Reads a single \`Upvote\` using its globally unique \`ID\`."""
   upvote(
@@ -3573,6 +3583,14 @@ type Mutation {
     input: UpdateProjectByNameInput!
   ): UpdateProjectPayload
 
+  """Updates a single \`Project\` using a unique key and a patch."""
+  updateProjectBySlugAndOrganizationId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectBySlugAndOrganizationIdInput!
+  ): UpdateProjectPayload
+
   """Deletes a single \`Upvote\` using its globally unique id."""
   deleteUpvote(
     """
@@ -3699,6 +3717,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteProjectByNameInput!
+  ): DeleteProjectPayload
+
+  """Deletes a single \`Project\` using a unique key."""
+  deleteProjectBySlugAndOrganizationId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectBySlugAndOrganizationIdInput!
   ): DeleteProjectPayload
 }
 
@@ -4347,6 +4373,22 @@ input UpdateProjectByNameInput {
   projectPatch: ProjectPatch!
 }
 
+"""All input for the \`updateProjectBySlugAndOrganizationId\` mutation."""
+input UpdateProjectBySlugAndOrganizationIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  slug: String!
+  organizationId: Int!
+
+  """
+  An object where the defined keys will be set on the \`Project\` being updated.
+  """
+  projectPatch: ProjectPatch!
+}
+
 """The output of our delete \`Upvote\` mutation."""
 type DeleteUpvotePayload {
   """
@@ -4646,6 +4688,17 @@ input DeleteProjectByNameInput {
   """
   clientMutationId: String
   name: String!
+}
+
+"""All input for the \`deleteProjectBySlugAndOrganizationId\` mutation."""
+input DeleteProjectBySlugAndOrganizationIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  slug: String!
+  organizationId: Int!
 }`;
 export const plans = {
   Query: {
@@ -4777,6 +4830,18 @@ export const plans = {
       },
       args: {
         name: undefined
+      }
+    },
+    projectBySlugAndOrganizationId: {
+      plan(_$root, args) {
+        return pgResource_projectPgResource.get({
+          slug: args.get("slug"),
+          organization_id: args.get("organizationId")
+        });
+      },
+      args: {
+        slug: undefined,
+        organizationId: undefined
       }
     },
     upvote: {
@@ -5619,7 +5684,7 @@ export const plans = {
             nulls: undefined ? "LAST" : "FIRST"
           } : null)
         });
-        if (false) plan.setOrderIsUnique();
+        if (true) plan.setOrderIsUnique();
       }
     },
     SLUG_DESC: {
@@ -5632,7 +5697,7 @@ export const plans = {
             nulls: undefined ? "LAST" : "FIRST"
           } : null)
         });
-        if (false) plan.setOrderIsUnique();
+        if (true) plan.setOrderIsUnique();
       }
     },
     DESCRIPTION_ASC: {
@@ -9961,6 +10026,25 @@ export const plans = {
         }
       }
     },
+    updateProjectBySlugAndOrganizationId: {
+      plan(_$root, args) {
+        const plan = object({
+          result: pgUpdateSingle(pgResource_projectPgResource, {
+            slug: args.get(['input', "slug"]),
+            organization_id: args.get(['input', "organizationId"])
+          })
+        });
+        args.apply(plan);
+        return plan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
     deleteUpvote: {
       plan(_$root, args) {
         const plan = object({
@@ -10227,6 +10311,25 @@ export const plans = {
         const plan = object({
           result: pgDeleteSingle(pgResource_projectPgResource, {
             name: args.get(['input', "name"])
+          })
+        });
+        args.apply(plan);
+        return plan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    deleteProjectBySlugAndOrganizationId: {
+      plan(_$root, args) {
+        const plan = object({
+          result: pgDeleteSingle(pgResource_projectPgResource, {
+            slug: args.get(['input', "slug"]),
+            organization_id: args.get(['input', "organizationId"])
           })
         });
         args.apply(plan);
@@ -11256,6 +11359,20 @@ export const plans = {
       }
     }
   },
+  UpdateProjectBySlugAndOrganizationIdInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    slug: undefined,
+    organizationId: undefined,
+    projectPatch: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      }
+    }
+  },
   DeleteUpvotePayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -11584,6 +11701,15 @@ export const plans = {
       }
     },
     name: undefined
+  },
+  DeleteProjectBySlugAndOrganizationIdInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    slug: undefined,
+    organizationId: undefined
   }
 };
 export const schema = makeGrafastSchema({
