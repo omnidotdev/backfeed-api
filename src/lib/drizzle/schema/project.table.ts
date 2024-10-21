@@ -8,6 +8,7 @@ import { postTable } from "./post.table";
 export const projectTable = pgTable("project", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: text().unique(),
+  image: text(),
   slug: text(),
   description: text(),
   organizationId: integer()
