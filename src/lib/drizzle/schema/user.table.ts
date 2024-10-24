@@ -5,6 +5,9 @@ import { defaultDate } from "./constants";
 import { postTable } from "./post.table";
 import { upvoteTable } from "./upvote.table";
 
+/**
+ * User table.
+ */
 export const userTable = pgTable("user", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   walletAddress: text().unique(),
@@ -12,6 +15,9 @@ export const userTable = pgTable("user", {
   updatedAt: defaultDate(),
 });
 
+/**
+ * Relations for the user table.
+ */
 export const userRelations = relations(userTable, ({ many }) => ({
   posts: many(postTable),
   upvotes: many(upvoteTable),

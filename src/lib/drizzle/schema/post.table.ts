@@ -6,6 +6,9 @@ import { projectTable } from "./project.table";
 import { upvoteTable } from "./upvote.table";
 import { userTable } from "./user.table";
 
+/**
+ * Post table.
+ */
 export const postTable = pgTable("post", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   // TODO: discuss if this should be unique
@@ -25,6 +28,9 @@ export const postTable = pgTable("post", {
   updatedAt: defaultDate(),
 });
 
+/**
+ * Relations for the post table.
+ */
 export const postRelations = relations(postTable, ({ one, many }) => ({
   project: one(projectTable, {
     fields: [postTable.projectId],

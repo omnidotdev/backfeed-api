@@ -5,6 +5,9 @@ import { defaultDate } from "./constants";
 import { organizationTable } from "./organization.table";
 import { postTable } from "./post.table";
 
+/**
+ * Project table.
+ */
 export const projectTable = pgTable(
   "project",
   {
@@ -26,6 +29,9 @@ export const projectTable = pgTable(
   })
 );
 
+/**
+ * Relations for the project table.
+ */
 export const projectRelations = relations(projectTable, ({ one, many }) => ({
   organization: one(organizationTable, {
     fields: [projectTable.organizationId],

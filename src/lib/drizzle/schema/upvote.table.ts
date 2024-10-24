@@ -5,6 +5,9 @@ import { defaultDate } from "./constants";
 import { postTable } from "./post.table";
 import { userTable } from "./user.table";
 
+/**
+ * Upvote table.
+ */
 export const upvoteTable = pgTable(
   "upvote",
   {
@@ -27,6 +30,9 @@ export const upvoteTable = pgTable(
   })
 );
 
+/**
+ * Relations for the upvote table.
+ */
 export const upvoteRelations = relations(upvoteTable, ({ one }) => ({
   post: one(postTable, {
     fields: [upvoteTable.postId],
