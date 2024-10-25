@@ -1,5 +1,4 @@
-import { createId } from "@paralleldrive/cuid2";
-import { text, timestamp } from "drizzle-orm/pg-core";
+import { timestamp, uuid } from "drizzle-orm/pg-core";
 
 /**
  * Utility function to create a default date column.
@@ -12,9 +11,6 @@ export const defaultDate = () =>
   }).defaultNow();
 
 /**
- * Utility function to create a CUID column (Note: this value does not affect the drizzle-kit behavior, it is only used at runtime in drizzle-orm).
+ * Utility function to create a default ID column.
  */
-export const defaultId = () =>
-  text()
-    .primaryKey()
-    .$defaultFn(() => createId());
+export const defaultId = () => uuid().primaryKey().defaultRandom();

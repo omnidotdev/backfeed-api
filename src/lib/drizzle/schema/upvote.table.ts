@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, unique } from "drizzle-orm/pg-core";
+import { pgTable, unique, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { postTable } from "./post.table";
@@ -12,12 +12,12 @@ export const upvoteTable = pgTable(
   "upvote",
   {
     id: defaultId(),
-    postId: text()
+    postId: uuid()
       .notNull()
       .references(() => postTable.id, {
         onDelete: "cascade",
       }),
-    userId: text()
+    userId: uuid()
       .notNull()
       .references(() => userTable.id, {
         onDelete: "cascade",

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS "organization" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text,
 	"slug" text,
 	"created_at" timestamp(6) with time zone DEFAULT now(),
@@ -9,23 +9,23 @@ CREATE TABLE IF NOT EXISTS "organization" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "post" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"title" text,
 	"description" text,
-	"project_id" text NOT NULL,
-	"user_id" text NOT NULL,
+	"project_id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
 	"created_at" timestamp(6) with time zone DEFAULT now(),
 	"updated_at" timestamp(6) with time zone DEFAULT now(),
 	CONSTRAINT "post_title_unique" UNIQUE("title")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "project" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text,
 	"image" text,
 	"slug" text,
 	"description" text,
-	"organization_id" text NOT NULL,
+	"organization_id" uuid NOT NULL,
 	"created_at" timestamp(6) with time zone DEFAULT now(),
 	"updated_at" timestamp(6) with time zone DEFAULT now(),
 	CONSTRAINT "project_name_unique" UNIQUE("name"),
@@ -33,16 +33,16 @@ CREATE TABLE IF NOT EXISTS "project" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "upvote" (
-	"id" text PRIMARY KEY NOT NULL,
-	"post_id" text NOT NULL,
-	"user_id" text NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"post_id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
 	"created_at" timestamp(6) with time zone DEFAULT now(),
 	"updated_at" timestamp(6) with time zone DEFAULT now(),
 	CONSTRAINT "upvote_postId_userId_unique" UNIQUE("post_id","user_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"wallet_address" text,
 	"created_at" timestamp(6) with time zone DEFAULT now(),
 	"updated_at" timestamp(6) with time zone DEFAULT now(),

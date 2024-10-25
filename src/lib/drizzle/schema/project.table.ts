@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, unique, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { organizationTable } from "./organization.table";
@@ -16,7 +16,7 @@ export const projectTable = pgTable(
     image: text(),
     slug: text(),
     description: text(),
-    organizationId: text()
+    organizationId: uuid()
       .notNull()
       .references(() => organizationTable.id, {
         onDelete: "cascade",
