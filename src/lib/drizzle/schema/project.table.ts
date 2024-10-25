@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, text, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, unique } from "drizzle-orm/pg-core";
 
-import { defaultDate } from "./constants";
+import { defaultDate, defaultId } from "./constants";
 import { organizationTable } from "./organization.table";
 import { postTable } from "./post.table";
 
@@ -11,12 +11,12 @@ import { postTable } from "./post.table";
 export const projectTable = pgTable(
   "project",
   {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    id: defaultId(),
     name: text().unique(),
     image: text(),
     slug: text(),
     description: text(),
-    organizationId: integer()
+    organizationId: text()
       .notNull()
       .references(() => organizationTable.id, {
         onDelete: "cascade",

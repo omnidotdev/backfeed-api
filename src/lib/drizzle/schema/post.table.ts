@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, text } from "drizzle-orm/pg-core";
+import { pgTable, text } from "drizzle-orm/pg-core";
 
-import { defaultDate } from "./constants";
+import { defaultDate, defaultId } from "./constants";
 import { projectTable } from "./project.table";
 import { upvoteTable } from "./upvote.table";
 import { userTable } from "./user.table";
@@ -10,16 +10,16 @@ import { userTable } from "./user.table";
  * Post table.
  */
 export const postTable = pgTable("post", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  id: defaultId(),
   // TODO: discuss if this should be unique
   title: text().unique(),
   description: text(),
-  projectId: integer()
+  projectId: text()
     .notNull()
     .references(() => projectTable.id, {
       onDelete: "cascade",
     }),
-  userId: integer()
+  userId: text()
     .notNull()
     .references(() => userTable.id, {
       onDelete: "cascade",

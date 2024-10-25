@@ -5,64 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1729309032378,
-      "tag": "0000_goofy_living_tribunal",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1729310569649,
-      "tag": "0001_true_korvac",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1729312910274,
-      "tag": "0002_shocking_the_renegades",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1729317057387,
-      "tag": "0003_icy_chimera",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1729317440885,
-      "tag": "0004_sparkling_cargill",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1729317985440,
-      "tag": "0005_sparkling_ezekiel_stane",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1729550247251,
-      "tag": "0006_smiling_morbius",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1729550648332,
-      "tag": "0007_robust_nextwave",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1729552128829,
-      "tag": "0008_graceful_doorman",
+      "when": 1729873932538,
+      "tag": "0000_empty_norrin_radd",
       "breakpoints": true
     }
   ]

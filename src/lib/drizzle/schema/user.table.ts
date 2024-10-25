@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, text } from "drizzle-orm/pg-core";
+import { pgTable, text } from "drizzle-orm/pg-core";
 
-import { defaultDate } from "./constants";
+import { defaultDate, defaultId } from "./constants";
 import { postTable } from "./post.table";
 import { upvoteTable } from "./upvote.table";
 
@@ -9,7 +9,7 @@ import { upvoteTable } from "./upvote.table";
  * User table.
  */
 export const userTable = pgTable("user", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  id: defaultId(),
   walletAddress: text().unique(),
   createdAt: defaultDate(),
   updatedAt: defaultDate(),

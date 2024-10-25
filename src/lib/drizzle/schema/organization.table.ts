@@ -1,14 +1,14 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, text } from "drizzle-orm/pg-core";
+import { pgTable, text } from "drizzle-orm/pg-core";
 
-import { defaultDate } from "./constants";
+import { defaultDate, defaultId } from "./constants";
 import { projectTable } from "./project.table";
 
 /**
  * Organization table.
  */
 export const organizationTable = pgTable("organization", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  id: defaultId(),
   name: text().unique(),
   slug: text().unique(),
   createdAt: defaultDate(),

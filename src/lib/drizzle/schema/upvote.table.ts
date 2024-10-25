@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, unique } from "drizzle-orm/pg-core";
 
-import { defaultDate } from "./constants";
+import { defaultDate, defaultId } from "./constants";
 import { postTable } from "./post.table";
 import { userTable } from "./user.table";
 
@@ -11,13 +11,13 @@ import { userTable } from "./user.table";
 export const upvoteTable = pgTable(
   "upvote",
   {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    postId: integer()
+    id: defaultId(),
+    postId: text()
       .notNull()
       .references(() => postTable.id, {
         onDelete: "cascade",
       }),
-    userId: integer()
+    userId: text()
       .notNull()
       .references(() => userTable.id, {
         onDelete: "cascade",
