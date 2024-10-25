@@ -146,7 +146,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "73567",
+    oid: "17241",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -216,7 +216,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "73506",
+    oid: "17180",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -298,7 +298,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "73514",
+    oid: "17188",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -404,7 +404,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "73545",
+    oid: "17219",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -522,7 +522,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "73528",
+    oid: "17202",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2033,19 +2033,19 @@ type Query implements Node {
   ): Node
 
   """Get a single \`Upvote\`."""
-  upvoteByRowId(rowId: Int!): Upvote
+  upvote(rowId: Int!): Upvote
 
   """Get a single \`Upvote\`."""
   upvoteByPostIdAndUserId(postId: Int!, userId: Int!): Upvote
 
   """Get a single \`User\`."""
-  userByRowId(rowId: Int!): User
+  user(rowId: Int!): User
 
   """Get a single \`User\`."""
   userByWalletAddress(walletAddress: String!): User
 
   """Get a single \`Organization\`."""
-  organizationByRowId(rowId: Int!): Organization
+  organization(rowId: Int!): Organization
 
   """Get a single \`Organization\`."""
   organizationByName(name: String!): Organization
@@ -2054,13 +2054,13 @@ type Query implements Node {
   organizationBySlug(slug: String!): Organization
 
   """Get a single \`Post\`."""
-  postByRowId(rowId: Int!): Post
+  post(rowId: Int!): Post
 
   """Get a single \`Post\`."""
   postByTitle(title: String!): Post
 
   """Get a single \`Project\`."""
-  projectByRowId(rowId: Int!): Project
+  project(rowId: Int!): Project
 
   """Get a single \`Project\`."""
   projectByName(name: String!): Project
@@ -2069,19 +2069,19 @@ type Query implements Node {
   projectBySlugAndOrganizationId(slug: String!, organizationId: Int!): Project
 
   """Reads a single \`Upvote\` using its globally unique \`ID\`."""
-  upvote(
+  upvoteById(
     """The globally unique \`ID\` to be used in selecting a single \`Upvote\`."""
     id: ID!
   ): Upvote
 
   """Reads a single \`User\` using its globally unique \`ID\`."""
-  user(
+  userById(
     """The globally unique \`ID\` to be used in selecting a single \`User\`."""
     id: ID!
   ): User
 
   """Reads a single \`Organization\` using its globally unique \`ID\`."""
-  organization(
+  organizationById(
     """
     The globally unique \`ID\` to be used in selecting a single \`Organization\`.
     """
@@ -2089,19 +2089,19 @@ type Query implements Node {
   ): Organization
 
   """Reads a single \`Post\` using its globally unique \`ID\`."""
-  post(
+  postById(
     """The globally unique \`ID\` to be used in selecting a single \`Post\`."""
     id: ID!
   ): Post
 
   """Reads a single \`Project\` using its globally unique \`ID\`."""
-  project(
+  projectById(
     """The globally unique \`ID\` to be used in selecting a single \`Project\`."""
     id: ID!
   ): Project
 
   """Reads and enables pagination through a set of \`Upvote\`."""
-  allUpvotes(
+  upvotes(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -2135,7 +2135,7 @@ type Query implements Node {
   ): UpvoteConnection
 
   """Reads and enables pagination through a set of \`User\`."""
-  allUsers(
+  users(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -2169,7 +2169,7 @@ type Query implements Node {
   ): UserConnection
 
   """Reads and enables pagination through a set of \`Organization\`."""
-  allOrganizations(
+  organizations(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -2203,7 +2203,7 @@ type Query implements Node {
   ): OrganizationConnection
 
   """Reads and enables pagination through a set of \`Post\`."""
-  allPosts(
+  posts(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -2237,7 +2237,7 @@ type Query implements Node {
   ): PostConnection
 
   """Reads and enables pagination through a set of \`Project\`."""
-  allProjects(
+  projects(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -2291,10 +2291,10 @@ type Upvote implements Node {
   updatedAt: Datetime
 
   """Reads a single \`Post\` that is related to this \`Upvote\`."""
-  postByPostId: Post
+  post: Post
 
   """Reads a single \`User\` that is related to this \`Upvote\`."""
-  userByUserId: User
+  user: User
 }
 
 """
@@ -2320,13 +2320,13 @@ type Post implements Node {
   updatedAt: Datetime
 
   """Reads a single \`Project\` that is related to this \`Post\`."""
-  projectByProjectId: Project
+  project: Project
 
   """Reads a single \`User\` that is related to this \`Post\`."""
-  userByUserId: User
+  user: User
 
   """Reads and enables pagination through a set of \`Upvote\`."""
-  upvotesByPostId(
+  upvotes(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -2375,10 +2375,10 @@ type Project implements Node {
   image: String
 
   """Reads a single \`Organization\` that is related to this \`Project\`."""
-  organizationByOrganizationId: Organization
+  organization: Organization
 
   """Reads and enables pagination through a set of \`Post\`."""
-  postsByProjectId(
+  posts(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -2424,7 +2424,7 @@ type Organization implements Node {
   updatedAt: Datetime
 
   """Reads and enables pagination through a set of \`Project\`."""
-  projectsByOrganizationId(
+  projects(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -2582,14 +2582,14 @@ input ProjectFilter {
   """Filter by the object’s \`image\` field."""
   image: StringFilter
 
-  """Filter by the object’s \`postsByProjectId\` relation."""
-  postsByProjectId: ProjectToManyPostFilter
+  """Filter by the object’s \`posts\` relation."""
+  posts: ProjectToManyPostFilter
 
-  """Some related \`postsByProjectId\` exist."""
-  postsByProjectIdExist: Boolean
+  """Some related \`posts\` exist."""
+  postsExist: Boolean
 
-  """Filter by the object’s \`organizationByOrganizationId\` relation."""
-  organizationByOrganizationId: OrganizationFilter
+  """Filter by the object’s \`organization\` relation."""
+  organization: OrganizationFilter
 
   """Checks for all expressions in this list."""
   and: [ProjectFilter!]
@@ -2862,17 +2862,17 @@ input PostFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
-  """Filter by the object’s \`upvotesByPostId\` relation."""
-  upvotesByPostId: PostToManyUpvoteFilter
+  """Filter by the object’s \`upvotes\` relation."""
+  upvotes: PostToManyUpvoteFilter
 
-  """Some related \`upvotesByPostId\` exist."""
-  upvotesByPostIdExist: Boolean
+  """Some related \`upvotes\` exist."""
+  upvotesExist: Boolean
 
-  """Filter by the object’s \`projectByProjectId\` relation."""
-  projectByProjectId: ProjectFilter
+  """Filter by the object’s \`project\` relation."""
+  project: ProjectFilter
 
-  """Filter by the object’s \`userByUserId\` relation."""
-  userByUserId: UserFilter
+  """Filter by the object’s \`user\` relation."""
+  user: UserFilter
 
   """Checks for all expressions in this list."""
   and: [PostFilter!]
@@ -2923,11 +2923,11 @@ input UpvoteFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
-  """Filter by the object’s \`postByPostId\` relation."""
-  postByPostId: PostFilter
+  """Filter by the object’s \`post\` relation."""
+  post: PostFilter
 
-  """Filter by the object’s \`userByUserId\` relation."""
-  userByUserId: UserFilter
+  """Filter by the object’s \`user\` relation."""
+  user: UserFilter
 
   """Checks for all expressions in this list."""
   and: [UpvoteFilter!]
@@ -2955,17 +2955,17 @@ input UserFilter {
   """Filter by the object’s \`walletAddress\` field."""
   walletAddress: StringFilter
 
-  """Filter by the object’s \`postsByUserId\` relation."""
-  postsByUserId: UserToManyPostFilter
+  """Filter by the object’s \`posts\` relation."""
+  posts: UserToManyPostFilter
 
-  """Some related \`postsByUserId\` exist."""
-  postsByUserIdExist: Boolean
+  """Some related \`posts\` exist."""
+  postsExist: Boolean
 
-  """Filter by the object’s \`upvotesByUserId\` relation."""
-  upvotesByUserId: UserToManyUpvoteFilter
+  """Filter by the object’s \`upvotes\` relation."""
+  upvotes: UserToManyUpvoteFilter
 
-  """Some related \`upvotesByUserId\` exist."""
-  upvotesByUserIdExist: Boolean
+  """Some related \`upvotes\` exist."""
+  upvotesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [UserFilter!]
@@ -3036,11 +3036,11 @@ input OrganizationFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
-  """Filter by the object’s \`projectsByOrganizationId\` relation."""
-  projectsByOrganizationId: OrganizationToManyProjectFilter
+  """Filter by the object’s \`projects\` relation."""
+  projects: OrganizationToManyProjectFilter
 
-  """Some related \`projectsByOrganizationId\` exist."""
-  projectsByOrganizationIdExist: Boolean
+  """Some related \`projects\` exist."""
+  projectsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [OrganizationFilter!]
@@ -3156,7 +3156,7 @@ type User implements Node {
   walletAddress: String
 
   """Reads and enables pagination through a set of \`Post\`."""
-  postsByUserId(
+  posts(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -3190,7 +3190,7 @@ type User implements Node {
   ): PostConnection!
 
   """Reads and enables pagination through a set of \`Upvote\`."""
-  upvotesByUserId(
+  upvotes(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -3454,19 +3454,19 @@ type Mutation {
   ): CreateProjectPayload
 
   """Updates a single \`Upvote\` using its globally unique id and a patch."""
+  updateUpvoteById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUpvoteByIdInput!
+  ): UpdateUpvotePayload
+
+  """Updates a single \`Upvote\` using a unique key and a patch."""
   updateUpvote(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateUpvoteInput!
-  ): UpdateUpvotePayload
-
-  """Updates a single \`Upvote\` using a unique key and a patch."""
-  updateUpvoteByRowId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUpvoteByRowIdInput!
   ): UpdateUpvotePayload
 
   """Updates a single \`Upvote\` using a unique key and a patch."""
@@ -3478,19 +3478,19 @@ type Mutation {
   ): UpdateUpvotePayload
 
   """Updates a single \`User\` using its globally unique id and a patch."""
+  updateUserById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserByIdInput!
+  ): UpdateUserPayload
+
+  """Updates a single \`User\` using a unique key and a patch."""
   updateUser(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateUserInput!
-  ): UpdateUserPayload
-
-  """Updates a single \`User\` using a unique key and a patch."""
-  updateUserByRowId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserByRowIdInput!
   ): UpdateUserPayload
 
   """Updates a single \`User\` using a unique key and a patch."""
@@ -3504,19 +3504,19 @@ type Mutation {
   """
   Updates a single \`Organization\` using its globally unique id and a patch.
   """
+  updateOrganizationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateOrganizationByIdInput!
+  ): UpdateOrganizationPayload
+
+  """Updates a single \`Organization\` using a unique key and a patch."""
   updateOrganization(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateOrganizationInput!
-  ): UpdateOrganizationPayload
-
-  """Updates a single \`Organization\` using a unique key and a patch."""
-  updateOrganizationByRowId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateOrganizationByRowIdInput!
   ): UpdateOrganizationPayload
 
   """Updates a single \`Organization\` using a unique key and a patch."""
@@ -3536,19 +3536,19 @@ type Mutation {
   ): UpdateOrganizationPayload
 
   """Updates a single \`Post\` using its globally unique id and a patch."""
+  updatePostById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostByIdInput!
+  ): UpdatePostPayload
+
+  """Updates a single \`Post\` using a unique key and a patch."""
   updatePost(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdatePostInput!
-  ): UpdatePostPayload
-
-  """Updates a single \`Post\` using a unique key and a patch."""
-  updatePostByRowId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePostByRowIdInput!
   ): UpdatePostPayload
 
   """Updates a single \`Post\` using a unique key and a patch."""
@@ -3560,19 +3560,19 @@ type Mutation {
   ): UpdatePostPayload
 
   """Updates a single \`Project\` using its globally unique id and a patch."""
+  updateProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectByIdInput!
+  ): UpdateProjectPayload
+
+  """Updates a single \`Project\` using a unique key and a patch."""
   updateProject(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateProjectInput!
-  ): UpdateProjectPayload
-
-  """Updates a single \`Project\` using a unique key and a patch."""
-  updateProjectByRowId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectByRowIdInput!
   ): UpdateProjectPayload
 
   """Updates a single \`Project\` using a unique key and a patch."""
@@ -3592,19 +3592,19 @@ type Mutation {
   ): UpdateProjectPayload
 
   """Deletes a single \`Upvote\` using its globally unique id."""
+  deleteUpvoteById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUpvoteByIdInput!
+  ): DeleteUpvotePayload
+
+  """Deletes a single \`Upvote\` using a unique key."""
   deleteUpvote(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteUpvoteInput!
-  ): DeleteUpvotePayload
-
-  """Deletes a single \`Upvote\` using a unique key."""
-  deleteUpvoteByRowId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUpvoteByRowIdInput!
   ): DeleteUpvotePayload
 
   """Deletes a single \`Upvote\` using a unique key."""
@@ -3616,19 +3616,19 @@ type Mutation {
   ): DeleteUpvotePayload
 
   """Deletes a single \`User\` using its globally unique id."""
+  deleteUserById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserByIdInput!
+  ): DeleteUserPayload
+
+  """Deletes a single \`User\` using a unique key."""
   deleteUser(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteUserInput!
-  ): DeleteUserPayload
-
-  """Deletes a single \`User\` using a unique key."""
-  deleteUserByRowId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserByRowIdInput!
   ): DeleteUserPayload
 
   """Deletes a single \`User\` using a unique key."""
@@ -3640,19 +3640,19 @@ type Mutation {
   ): DeleteUserPayload
 
   """Deletes a single \`Organization\` using its globally unique id."""
+  deleteOrganizationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteOrganizationByIdInput!
+  ): DeleteOrganizationPayload
+
+  """Deletes a single \`Organization\` using a unique key."""
   deleteOrganization(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteOrganizationInput!
-  ): DeleteOrganizationPayload
-
-  """Deletes a single \`Organization\` using a unique key."""
-  deleteOrganizationByRowId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteOrganizationByRowIdInput!
   ): DeleteOrganizationPayload
 
   """Deletes a single \`Organization\` using a unique key."""
@@ -3672,19 +3672,19 @@ type Mutation {
   ): DeleteOrganizationPayload
 
   """Deletes a single \`Post\` using its globally unique id."""
+  deletePostById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostByIdInput!
+  ): DeletePostPayload
+
+  """Deletes a single \`Post\` using a unique key."""
   deletePost(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeletePostInput!
-  ): DeletePostPayload
-
-  """Deletes a single \`Post\` using a unique key."""
-  deletePostByRowId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePostByRowIdInput!
   ): DeletePostPayload
 
   """Deletes a single \`Post\` using a unique key."""
@@ -3696,19 +3696,19 @@ type Mutation {
   ): DeletePostPayload
 
   """Deletes a single \`Project\` using its globally unique id."""
+  deleteProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectByIdInput!
+  ): DeleteProjectPayload
+
+  """Deletes a single \`Project\` using a unique key."""
   deleteProject(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteProjectInput!
-  ): DeleteProjectPayload
-
-  """Deletes a single \`Project\` using a unique key."""
-  deleteProjectByRowId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectByRowIdInput!
   ): DeleteProjectPayload
 
   """Deletes a single \`Project\` using a unique key."""
@@ -3970,8 +3970,8 @@ type UpdateUpvotePayload {
   ): UpvoteEdge
 }
 
-"""All input for the \`updateUpvote\` mutation."""
-input UpdateUpvoteInput {
+"""All input for the \`updateUpvoteById\` mutation."""
+input UpdateUpvoteByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -3986,7 +3986,7 @@ input UpdateUpvoteInput {
   """
   An object where the defined keys will be set on the \`Upvote\` being updated.
   """
-  upvotePatch: UpvotePatch!
+  patch: UpvotePatch!
 }
 
 """
@@ -3999,8 +3999,8 @@ input UpvotePatch {
   updatedAt: Datetime
 }
 
-"""All input for the \`updateUpvoteByRowId\` mutation."""
-input UpdateUpvoteByRowIdInput {
+"""All input for the \`updateUpvote\` mutation."""
+input UpdateUpvoteInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4011,7 +4011,7 @@ input UpdateUpvoteByRowIdInput {
   """
   An object where the defined keys will be set on the \`Upvote\` being updated.
   """
-  upvotePatch: UpvotePatch!
+  patch: UpvotePatch!
 }
 
 """All input for the \`updateUpvoteByPostIdAndUserId\` mutation."""
@@ -4027,7 +4027,7 @@ input UpdateUpvoteByPostIdAndUserIdInput {
   """
   An object where the defined keys will be set on the \`Upvote\` being updated.
   """
-  upvotePatch: UpvotePatch!
+  patch: UpvotePatch!
 }
 
 """The output of our update \`User\` mutation."""
@@ -4053,8 +4053,8 @@ type UpdateUserPayload {
   ): UserEdge
 }
 
-"""All input for the \`updateUser\` mutation."""
-input UpdateUserInput {
+"""All input for the \`updateUserById\` mutation."""
+input UpdateUserByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4069,7 +4069,7 @@ input UpdateUserInput {
   """
   An object where the defined keys will be set on the \`User\` being updated.
   """
-  userPatch: UserPatch!
+  patch: UserPatch!
 }
 
 """Represents an update to a \`User\`. Fields that are set will be updated."""
@@ -4079,8 +4079,8 @@ input UserPatch {
   walletAddress: String
 }
 
-"""All input for the \`updateUserByRowId\` mutation."""
-input UpdateUserByRowIdInput {
+"""All input for the \`updateUser\` mutation."""
+input UpdateUserInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4091,7 +4091,7 @@ input UpdateUserByRowIdInput {
   """
   An object where the defined keys will be set on the \`User\` being updated.
   """
-  userPatch: UserPatch!
+  patch: UserPatch!
 }
 
 """All input for the \`updateUserByWalletAddress\` mutation."""
@@ -4106,7 +4106,7 @@ input UpdateUserByWalletAddressInput {
   """
   An object where the defined keys will be set on the \`User\` being updated.
   """
-  userPatch: UserPatch!
+  patch: UserPatch!
 }
 
 """The output of our update \`Organization\` mutation."""
@@ -4132,8 +4132,8 @@ type UpdateOrganizationPayload {
   ): OrganizationEdge
 }
 
-"""All input for the \`updateOrganization\` mutation."""
-input UpdateOrganizationInput {
+"""All input for the \`updateOrganizationById\` mutation."""
+input UpdateOrganizationByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4148,7 +4148,7 @@ input UpdateOrganizationInput {
   """
   An object where the defined keys will be set on the \`Organization\` being updated.
   """
-  organizationPatch: OrganizationPatch!
+  patch: OrganizationPatch!
 }
 
 """
@@ -4161,8 +4161,8 @@ input OrganizationPatch {
   updatedAt: Datetime
 }
 
-"""All input for the \`updateOrganizationByRowId\` mutation."""
-input UpdateOrganizationByRowIdInput {
+"""All input for the \`updateOrganization\` mutation."""
+input UpdateOrganizationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4173,7 +4173,7 @@ input UpdateOrganizationByRowIdInput {
   """
   An object where the defined keys will be set on the \`Organization\` being updated.
   """
-  organizationPatch: OrganizationPatch!
+  patch: OrganizationPatch!
 }
 
 """All input for the \`updateOrganizationByName\` mutation."""
@@ -4188,7 +4188,7 @@ input UpdateOrganizationByNameInput {
   """
   An object where the defined keys will be set on the \`Organization\` being updated.
   """
-  organizationPatch: OrganizationPatch!
+  patch: OrganizationPatch!
 }
 
 """All input for the \`updateOrganizationBySlug\` mutation."""
@@ -4203,7 +4203,7 @@ input UpdateOrganizationBySlugInput {
   """
   An object where the defined keys will be set on the \`Organization\` being updated.
   """
-  organizationPatch: OrganizationPatch!
+  patch: OrganizationPatch!
 }
 
 """The output of our update \`Post\` mutation."""
@@ -4229,8 +4229,8 @@ type UpdatePostPayload {
   ): PostEdge
 }
 
-"""All input for the \`updatePost\` mutation."""
-input UpdatePostInput {
+"""All input for the \`updatePostById\` mutation."""
+input UpdatePostByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4245,7 +4245,7 @@ input UpdatePostInput {
   """
   An object where the defined keys will be set on the \`Post\` being updated.
   """
-  postPatch: PostPatch!
+  patch: PostPatch!
 }
 
 """Represents an update to a \`Post\`. Fields that are set will be updated."""
@@ -4258,8 +4258,8 @@ input PostPatch {
   updatedAt: Datetime
 }
 
-"""All input for the \`updatePostByRowId\` mutation."""
-input UpdatePostByRowIdInput {
+"""All input for the \`updatePost\` mutation."""
+input UpdatePostInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4270,7 +4270,7 @@ input UpdatePostByRowIdInput {
   """
   An object where the defined keys will be set on the \`Post\` being updated.
   """
-  postPatch: PostPatch!
+  patch: PostPatch!
 }
 
 """All input for the \`updatePostByTitle\` mutation."""
@@ -4285,7 +4285,7 @@ input UpdatePostByTitleInput {
   """
   An object where the defined keys will be set on the \`Post\` being updated.
   """
-  postPatch: PostPatch!
+  patch: PostPatch!
 }
 
 """The output of our update \`Project\` mutation."""
@@ -4311,8 +4311,8 @@ type UpdateProjectPayload {
   ): ProjectEdge
 }
 
-"""All input for the \`updateProject\` mutation."""
-input UpdateProjectInput {
+"""All input for the \`updateProjectById\` mutation."""
+input UpdateProjectByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4327,7 +4327,7 @@ input UpdateProjectInput {
   """
   An object where the defined keys will be set on the \`Project\` being updated.
   """
-  projectPatch: ProjectPatch!
+  patch: ProjectPatch!
 }
 
 """
@@ -4343,8 +4343,8 @@ input ProjectPatch {
   image: String
 }
 
-"""All input for the \`updateProjectByRowId\` mutation."""
-input UpdateProjectByRowIdInput {
+"""All input for the \`updateProject\` mutation."""
+input UpdateProjectInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4355,7 +4355,7 @@ input UpdateProjectByRowIdInput {
   """
   An object where the defined keys will be set on the \`Project\` being updated.
   """
-  projectPatch: ProjectPatch!
+  patch: ProjectPatch!
 }
 
 """All input for the \`updateProjectByName\` mutation."""
@@ -4370,7 +4370,7 @@ input UpdateProjectByNameInput {
   """
   An object where the defined keys will be set on the \`Project\` being updated.
   """
-  projectPatch: ProjectPatch!
+  patch: ProjectPatch!
 }
 
 """All input for the \`updateProjectBySlugAndOrganizationId\` mutation."""
@@ -4386,7 +4386,7 @@ input UpdateProjectBySlugAndOrganizationIdInput {
   """
   An object where the defined keys will be set on the \`Project\` being updated.
   """
-  projectPatch: ProjectPatch!
+  patch: ProjectPatch!
 }
 
 """The output of our delete \`Upvote\` mutation."""
@@ -4413,8 +4413,8 @@ type DeleteUpvotePayload {
   ): UpvoteEdge
 }
 
-"""All input for the \`deleteUpvote\` mutation."""
-input DeleteUpvoteInput {
+"""All input for the \`deleteUpvoteById\` mutation."""
+input DeleteUpvoteByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4427,8 +4427,8 @@ input DeleteUpvoteInput {
   id: ID!
 }
 
-"""All input for the \`deleteUpvoteByRowId\` mutation."""
-input DeleteUpvoteByRowIdInput {
+"""All input for the \`deleteUpvote\` mutation."""
+input DeleteUpvoteInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4472,8 +4472,8 @@ type DeleteUserPayload {
   ): UserEdge
 }
 
-"""All input for the \`deleteUser\` mutation."""
-input DeleteUserInput {
+"""All input for the \`deleteUserById\` mutation."""
+input DeleteUserByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4486,8 +4486,8 @@ input DeleteUserInput {
   id: ID!
 }
 
-"""All input for the \`deleteUserByRowId\` mutation."""
-input DeleteUserByRowIdInput {
+"""All input for the \`deleteUser\` mutation."""
+input DeleteUserInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4530,8 +4530,8 @@ type DeleteOrganizationPayload {
   ): OrganizationEdge
 }
 
-"""All input for the \`deleteOrganization\` mutation."""
-input DeleteOrganizationInput {
+"""All input for the \`deleteOrganizationById\` mutation."""
+input DeleteOrganizationByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4544,8 +4544,8 @@ input DeleteOrganizationInput {
   id: ID!
 }
 
-"""All input for the \`deleteOrganizationByRowId\` mutation."""
-input DeleteOrganizationByRowIdInput {
+"""All input for the \`deleteOrganization\` mutation."""
+input DeleteOrganizationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4598,8 +4598,8 @@ type DeletePostPayload {
   ): PostEdge
 }
 
-"""All input for the \`deletePost\` mutation."""
-input DeletePostInput {
+"""All input for the \`deletePostById\` mutation."""
+input DeletePostByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4612,8 +4612,8 @@ input DeletePostInput {
   id: ID!
 }
 
-"""All input for the \`deletePostByRowId\` mutation."""
-input DeletePostByRowIdInput {
+"""All input for the \`deletePost\` mutation."""
+input DeletePostInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4656,8 +4656,8 @@ type DeleteProjectPayload {
   ): ProjectEdge
 }
 
-"""All input for the \`deleteProject\` mutation."""
-input DeleteProjectInput {
+"""All input for the \`deleteProjectById\` mutation."""
+input DeleteProjectByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4670,8 +4670,8 @@ input DeleteProjectInput {
   id: ID!
 }
 
-"""All input for the \`deleteProjectByRowId\` mutation."""
-input DeleteProjectByRowIdInput {
+"""All input for the \`deleteProject\` mutation."""
+input DeleteProjectInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4720,7 +4720,7 @@ export const plans = {
         id: undefined
       }
     },
-    upvoteByRowId: {
+    upvote: {
       plan(_$root, args) {
         return pgResource_upvotePgResource.get({
           id: args.get("rowId")
@@ -4742,7 +4742,7 @@ export const plans = {
         userId: undefined
       }
     },
-    userByRowId: {
+    user: {
       plan(_$root, args) {
         return pgResource_userPgResource.get({
           id: args.get("rowId")
@@ -4762,7 +4762,7 @@ export const plans = {
         walletAddress: undefined
       }
     },
-    organizationByRowId: {
+    organization: {
       plan(_$root, args) {
         return pgResource_organizationPgResource.get({
           id: args.get("rowId")
@@ -4792,7 +4792,7 @@ export const plans = {
         slug: undefined
       }
     },
-    postByRowId: {
+    post: {
       plan(_$root, args) {
         return pgResource_postPgResource.get({
           id: args.get("rowId")
@@ -4812,7 +4812,7 @@ export const plans = {
         title: undefined
       }
     },
-    projectByRowId: {
+    project: {
       plan(_$root, args) {
         return pgResource_projectPgResource.get({
           id: args.get("rowId")
@@ -4844,7 +4844,7 @@ export const plans = {
         organizationId: undefined
       }
     },
-    upvote: {
+    upvoteById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher($nodeId);
@@ -4853,7 +4853,7 @@ export const plans = {
         id: undefined
       }
     },
-    user: {
+    userById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher2($nodeId);
@@ -4862,7 +4862,7 @@ export const plans = {
         id: undefined
       }
     },
-    organization: {
+    organizationById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher3($nodeId);
@@ -4871,7 +4871,7 @@ export const plans = {
         id: undefined
       }
     },
-    post: {
+    postById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher4($nodeId);
@@ -4880,7 +4880,7 @@ export const plans = {
         id: undefined
       }
     },
-    project: {
+    projectById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher5($nodeId);
@@ -4889,7 +4889,7 @@ export const plans = {
         id: undefined
       }
     },
-    allUpvotes: {
+    upvotes: {
       plan() {
         return connection(pgResource_upvotePgResource.find());
       },
@@ -4952,7 +4952,7 @@ export const plans = {
         }
       }
     },
-    allUsers: {
+    users: {
       plan() {
         return connection(pgResource_userPgResource.find());
       },
@@ -5015,7 +5015,7 @@ export const plans = {
         }
       }
     },
-    allOrganizations: {
+    organizations: {
       plan() {
         return connection(pgResource_organizationPgResource.find());
       },
@@ -5078,7 +5078,7 @@ export const plans = {
         }
       }
     },
-    allPosts: {
+    posts: {
       plan() {
         return connection(pgResource_postPgResource.find());
       },
@@ -5141,7 +5141,7 @@ export const plans = {
         }
       }
     },
-    allProjects: {
+    projects: {
       plan() {
         return connection(pgResource_projectPgResource.find());
       },
@@ -5226,12 +5226,12 @@ export const plans = {
     updatedAt($record) {
       return $record.get("updated_at");
     },
-    postByPostId($record) {
+    post($record) {
       return pgResource_postPgResource.get({
         id: $record.get("post_id")
       });
     },
-    userByUserId($record) {
+    user($record) {
       return pgResource_userPgResource.get({
         id: $record.get("user_id")
       });
@@ -5272,17 +5272,17 @@ export const plans = {
     updatedAt($record) {
       return $record.get("updated_at");
     },
-    projectByProjectId($record) {
+    project($record) {
       return pgResource_projectPgResource.get({
         id: $record.get("project_id")
       });
     },
-    userByUserId($record) {
+    user($record) {
       return pgResource_userPgResource.get({
         id: $record.get("user_id")
       });
     },
-    upvotesByPostId: {
+    upvotes: {
       plan($record) {
         const $records = pgResource_upvotePgResource.find({
           post_id: $record.get("id")
@@ -5379,12 +5379,12 @@ export const plans = {
     image($record) {
       return $record.get("image");
     },
-    organizationByOrganizationId($record) {
+    organization($record) {
       return pgResource_organizationPgResource.get({
         id: $record.get("organization_id")
       });
     },
-    postsByProjectId: {
+    posts: {
       plan($record) {
         const $records = pgResource_postPgResource.find({
           project_id: $record.get("id")
@@ -5472,7 +5472,7 @@ export const plans = {
     updatedAt($record) {
       return $record.get("updated_at");
     },
-    projectsByOrganizationId: {
+    projects: {
       plan($record) {
         const $records = pgResource_projectPgResource.find({
           organization_id: $record.get("id")
@@ -6074,7 +6074,7 @@ export const plans = {
         fieldArgs.apply($col);
       }
     },
-    postsByProjectId: {
+    posts: {
       applyPlan($where, fieldArgs) {
         assertAllowed9(fieldArgs, "object");
         const $rel = $where.andPlan();
@@ -6087,7 +6087,7 @@ export const plans = {
         fieldArgs.apply($rel);
       }
     },
-    postsByProjectIdExist: {
+    postsExist: {
       applyPlan($where, fieldArgs) {
         assertAllowed9(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
@@ -6101,7 +6101,7 @@ export const plans = {
         });
       }
     },
-    organizationByOrganizationId: {
+    organization: {
       applyPlan($where, fieldArgs) {
         assertAllowed10(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
@@ -7643,7 +7643,7 @@ export const plans = {
         fieldArgs.apply($col);
       }
     },
-    upvotesByPostId: {
+    upvotes: {
       applyPlan($where, fieldArgs) {
         assertAllowed13(fieldArgs, "object");
         const $rel = $where.andPlan();
@@ -7656,7 +7656,7 @@ export const plans = {
         fieldArgs.apply($rel);
       }
     },
-    upvotesByPostIdExist: {
+    upvotesExist: {
       applyPlan($where, fieldArgs) {
         assertAllowed13(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
@@ -7670,7 +7670,7 @@ export const plans = {
         });
       }
     },
-    projectByProjectId: {
+    project: {
       applyPlan($where, fieldArgs) {
         assertAllowed14(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
@@ -7684,7 +7684,7 @@ export const plans = {
         fieldArgs.apply($subQuery);
       }
     },
-    userByUserId: {
+    user: {
       applyPlan($where, fieldArgs) {
         assertAllowed14(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
@@ -7841,7 +7841,7 @@ export const plans = {
         fieldArgs.apply($col);
       }
     },
-    postByPostId: {
+    post: {
       applyPlan($where, fieldArgs) {
         assertAllowed17(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
@@ -7855,7 +7855,7 @@ export const plans = {
         fieldArgs.apply($subQuery);
       }
     },
-    userByUserId: {
+    user: {
       applyPlan($where, fieldArgs) {
         assertAllowed17(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
@@ -7936,7 +7936,7 @@ export const plans = {
         fieldArgs.apply($col);
       }
     },
-    postsByUserId: {
+    posts: {
       applyPlan($where, fieldArgs) {
         assertAllowed19(fieldArgs, "object");
         const $rel = $where.andPlan();
@@ -7949,7 +7949,7 @@ export const plans = {
         fieldArgs.apply($rel);
       }
     },
-    postsByUserIdExist: {
+    postsExist: {
       applyPlan($where, fieldArgs) {
         assertAllowed19(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
@@ -7963,7 +7963,7 @@ export const plans = {
         });
       }
     },
-    upvotesByUserId: {
+    upvotes: {
       applyPlan($where, fieldArgs) {
         assertAllowed19(fieldArgs, "object");
         const $rel = $where.andPlan();
@@ -7976,7 +7976,7 @@ export const plans = {
         fieldArgs.apply($rel);
       }
     },
-    upvotesByUserIdExist: {
+    upvotesExist: {
       applyPlan($where, fieldArgs) {
         assertAllowed19(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
@@ -8198,7 +8198,7 @@ export const plans = {
         fieldArgs.apply($col);
       }
     },
-    projectsByOrganizationId: {
+    projects: {
       applyPlan($where, fieldArgs) {
         assertAllowed23(fieldArgs, "object");
         const $rel = $where.andPlan();
@@ -8211,7 +8211,7 @@ export const plans = {
         fieldArgs.apply($rel);
       }
     },
-    projectsByOrganizationIdExist: {
+    projectsExist: {
       applyPlan($where, fieldArgs) {
         assertAllowed23(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
@@ -8708,7 +8708,7 @@ export const plans = {
     walletAddress($record) {
       return $record.get("wallet_address");
     },
-    postsByUserId: {
+    posts: {
       plan($record) {
         const $records = pgResource_postPgResource.find({
           user_id: $record.get("id")
@@ -8774,7 +8774,7 @@ export const plans = {
         }
       }
     },
-    upvotesByUserId: {
+    upvotes: {
       plan($record) {
         const $records = pgResource_upvotePgResource.find({
           user_id: $record.get("id")
@@ -9747,7 +9747,7 @@ export const plans = {
         }
       }
     },
-    updateUpvote: {
+    updateUpvoteById: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_upvotePgResource, specFromArgs(args))
@@ -9763,7 +9763,7 @@ export const plans = {
         }
       }
     },
-    updateUpvoteByRowId: {
+    updateUpvote: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_upvotePgResource, {
@@ -9800,7 +9800,7 @@ export const plans = {
         }
       }
     },
-    updateUser: {
+    updateUserById: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_userPgResource, specFromArgs2(args))
@@ -9816,7 +9816,7 @@ export const plans = {
         }
       }
     },
-    updateUserByRowId: {
+    updateUser: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_userPgResource, {
@@ -9852,7 +9852,7 @@ export const plans = {
         }
       }
     },
-    updateOrganization: {
+    updateOrganizationById: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_organizationPgResource, specFromArgs3(args))
@@ -9868,7 +9868,7 @@ export const plans = {
         }
       }
     },
-    updateOrganizationByRowId: {
+    updateOrganization: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_organizationPgResource, {
@@ -9922,7 +9922,7 @@ export const plans = {
         }
       }
     },
-    updatePost: {
+    updatePostById: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_postPgResource, specFromArgs4(args))
@@ -9938,7 +9938,7 @@ export const plans = {
         }
       }
     },
-    updatePostByRowId: {
+    updatePost: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_postPgResource, {
@@ -9974,7 +9974,7 @@ export const plans = {
         }
       }
     },
-    updateProject: {
+    updateProjectById: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_projectPgResource, specFromArgs5(args))
@@ -9990,7 +9990,7 @@ export const plans = {
         }
       }
     },
-    updateProjectByRowId: {
+    updateProject: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_projectPgResource, {
@@ -10045,7 +10045,7 @@ export const plans = {
         }
       }
     },
-    deleteUpvote: {
+    deleteUpvoteById: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_upvotePgResource, specFromArgs6(args))
@@ -10061,7 +10061,7 @@ export const plans = {
         }
       }
     },
-    deleteUpvoteByRowId: {
+    deleteUpvote: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_upvotePgResource, {
@@ -10098,7 +10098,7 @@ export const plans = {
         }
       }
     },
-    deleteUser: {
+    deleteUserById: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_userPgResource, specFromArgs7(args))
@@ -10114,7 +10114,7 @@ export const plans = {
         }
       }
     },
-    deleteUserByRowId: {
+    deleteUser: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_userPgResource, {
@@ -10150,7 +10150,7 @@ export const plans = {
         }
       }
     },
-    deleteOrganization: {
+    deleteOrganizationById: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_organizationPgResource, specFromArgs8(args))
@@ -10166,7 +10166,7 @@ export const plans = {
         }
       }
     },
-    deleteOrganizationByRowId: {
+    deleteOrganization: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_organizationPgResource, {
@@ -10220,7 +10220,7 @@ export const plans = {
         }
       }
     },
-    deletePost: {
+    deletePostById: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_postPgResource, specFromArgs9(args))
@@ -10236,7 +10236,7 @@ export const plans = {
         }
       }
     },
-    deletePostByRowId: {
+    deletePost: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_postPgResource, {
@@ -10272,7 +10272,7 @@ export const plans = {
         }
       }
     },
-    deleteProject: {
+    deleteProjectById: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_projectPgResource, specFromArgs10(args))
@@ -10288,7 +10288,7 @@ export const plans = {
         }
       }
     },
-    deleteProjectByRowId: {
+    deleteProject: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_projectPgResource, {
@@ -10817,14 +10817,14 @@ export const plans = {
       }
     }
   },
-  UpdateUpvoteInput: {
+  UpdateUpvoteByIdInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
     id: undefined,
-    upvotePatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -10863,14 +10863,14 @@ export const plans = {
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateUpvoteByRowIdInput: {
+  UpdateUpvoteInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
     rowId: undefined,
-    upvotePatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -10884,7 +10884,7 @@ export const plans = {
     },
     postId: undefined,
     userId: undefined,
-    upvotePatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -10925,14 +10925,14 @@ export const plans = {
       }
     }
   },
-  UpdateUserInput: {
+  UpdateUserByIdInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
     id: undefined,
-    userPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -10964,14 +10964,14 @@ export const plans = {
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateUserByRowIdInput: {
+  UpdateUserInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
     rowId: undefined,
-    userPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -10984,7 +10984,7 @@ export const plans = {
       }
     },
     walletAddress: undefined,
-    userPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11025,14 +11025,14 @@ export const plans = {
       }
     }
   },
-  UpdateOrganizationInput: {
+  UpdateOrganizationByIdInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
     id: undefined,
-    organizationPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11071,14 +11071,14 @@ export const plans = {
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateOrganizationByRowIdInput: {
+  UpdateOrganizationInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
     rowId: undefined,
-    organizationPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11091,7 +11091,7 @@ export const plans = {
       }
     },
     name: undefined,
-    organizationPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11104,7 +11104,7 @@ export const plans = {
       }
     },
     slug: undefined,
-    organizationPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11145,14 +11145,14 @@ export const plans = {
       }
     }
   },
-  UpdatePostInput: {
+  UpdatePostByIdInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
     id: undefined,
-    postPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11205,14 +11205,14 @@ export const plans = {
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdatePostByRowIdInput: {
+  UpdatePostInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
     rowId: undefined,
-    postPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11225,7 +11225,7 @@ export const plans = {
       }
     },
     title: undefined,
-    postPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11266,14 +11266,14 @@ export const plans = {
       }
     }
   },
-  UpdateProjectInput: {
+  UpdateProjectByIdInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
     id: undefined,
-    projectPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11333,14 +11333,14 @@ export const plans = {
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateProjectByRowIdInput: {
+  UpdateProjectInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
     rowId: undefined,
-    projectPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11353,7 +11353,7 @@ export const plans = {
       }
     },
     name: undefined,
-    projectPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11367,7 +11367,7 @@ export const plans = {
     },
     slug: undefined,
     organizationId: undefined,
-    projectPatch: {
+    patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       }
@@ -11413,7 +11413,7 @@ export const plans = {
       }
     }
   },
-  DeleteUpvoteInput: {
+  DeleteUpvoteByIdInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
@@ -11421,7 +11421,7 @@ export const plans = {
     },
     id: undefined
   },
-  DeleteUpvoteByRowIdInput: {
+  DeleteUpvoteInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
@@ -11478,7 +11478,7 @@ export const plans = {
       }
     }
   },
-  DeleteUserInput: {
+  DeleteUserByIdInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
@@ -11486,7 +11486,7 @@ export const plans = {
     },
     id: undefined
   },
-  DeleteUserByRowIdInput: {
+  DeleteUserInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
@@ -11542,7 +11542,7 @@ export const plans = {
       }
     }
   },
-  DeleteOrganizationInput: {
+  DeleteOrganizationByIdInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
@@ -11550,7 +11550,7 @@ export const plans = {
     },
     id: undefined
   },
-  DeleteOrganizationByRowIdInput: {
+  DeleteOrganizationInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
@@ -11614,7 +11614,7 @@ export const plans = {
       }
     }
   },
-  DeletePostInput: {
+  DeletePostByIdInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
@@ -11622,7 +11622,7 @@ export const plans = {
     },
     id: undefined
   },
-  DeletePostByRowIdInput: {
+  DeletePostInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
@@ -11678,7 +11678,7 @@ export const plans = {
       }
     }
   },
-  DeleteProjectInput: {
+  DeleteProjectByIdInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
@@ -11686,7 +11686,7 @@ export const plans = {
     },
     id: undefined
   },
-  DeleteProjectByRowIdInput: {
+  DeleteProjectInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
