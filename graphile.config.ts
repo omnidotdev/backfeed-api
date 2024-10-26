@@ -15,7 +15,6 @@ const preset: GraphileConfig.Preset = {
     PgSimplifyInflectionPreset,
     PgAggregatesPreset,
   ],
-  // @ts-ignore TODO: fix
   schema: {
     retryOnInitFail: isProd,
     sortExport: true,
