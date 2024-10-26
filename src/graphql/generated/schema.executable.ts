@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { PgConditionStep, PgDeleteSingleStep, PgExecutor, PgSelectStep, PgUnionAllStep, TYPES, assertPgClassSingleStep, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, recordCodec } from "@dataplan/pg";
-import { ConnectionStep, EdgeStep, ObjectStep, SafeError, __ValueStep, access, assertEdgeCapableStep, assertExecutableStep, assertPageInfoCapableStep, connection, constant, context, first, getEnumValueConfig, inhibitOnNull, lambda, list, makeGrafastSchema, node, object, rootValue, specFromNodeId } from "grafast";
-import { GraphQLError, Kind } from "graphql";
+import { PgBooleanFilterStep, PgConditionStep, PgDeleteSingleStep, PgExecutor, PgOrFilterStep, PgSelectStep, PgUnionAllStep, TYPES, assertPgClassSingleStep, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec } from "@dataplan/pg";
+import { ConnectionStep, EdgeStep, ModifierStep, ObjectStep, SafeError, __ValueStep, access, assertEdgeCapableStep, assertExecutableStep, assertPageInfoCapableStep, connection, constant, context, first, getEnumValueConfig, inhibitOnNull, lambda, list, makeGrafastSchema, node, object, rootValue, specFromNodeId } from "grafast";
+import { GraphQLEnumType, GraphQLError, Kind } from "graphql";
 import { sql } from "pg-sql2";
 import { inspect } from "util";
 const handler = {
@@ -1201,6 +1201,330 @@ function assertAllowed8(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+function ProjectGroupBy_extensions_grafast_applyPlan($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("image")}`
+  });
+}
+function ProjectGroupBy_extensions_grafast_applyPlan2($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("slug")}`
+  });
+}
+function ProjectGroupBy_extensions_grafast_applyPlan3($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("description")}`
+  });
+}
+function ProjectGroupBy_extensions_grafast_applyPlan4($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`
+  });
+}
+function ProjectGroupBy_extensions_grafast_applyPlan5($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
+  });
+}
+const aggregateGroupBySpec = {
+  id: "truncated-to-hour",
+  isSuitableType(codec) {
+    return codec === TYPES.timestamp || codec === TYPES.timestamptz;
+  },
+  sqlWrap(sqlFrag) {
+    return sql`date_trunc('hour', ${sqlFrag})`;
+  }
+};
+function ProjectGroupBy_extensions_grafast_applyPlan6($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+const aggregateGroupBySpec2 = {
+  id: "truncated-to-day",
+  isSuitableType(codec) {
+    return codec === TYPES.timestamp || codec === TYPES.timestamptz;
+  },
+  sqlWrap(sqlFrag) {
+    return sql`date_trunc('day', ${sqlFrag})`;
+  }
+};
+function ProjectGroupBy_extensions_grafast_applyPlan7($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function ProjectGroupBy_extensions_grafast_applyPlan8($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
+  });
+}
+function ProjectGroupBy_extensions_grafast_applyPlan9($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+function ProjectGroupBy_extensions_grafast_applyPlan10($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+export const ProjectGroupBy = new GraphQLEnumType({
+  name: "ProjectGroupBy",
+  description: "Grouping methods for `Project` for usage during aggregation.",
+  values: Object.assign(Object.create(null), {
+    IMAGE: {
+      value: "IMAGE",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan
+        }
+      })
+    },
+    SLUG: {
+      value: "SLUG",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan2
+        }
+      })
+    },
+    DESCRIPTION: {
+      value: "DESCRIPTION",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan3
+        }
+      })
+    },
+    ORGANIZATION_ID: {
+      value: "ORGANIZATION_ID",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan4
+        }
+      })
+    },
+    CREATED_AT: {
+      value: "CREATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan5
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      value: "CREATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan6
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      value: "CREATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan7
+        }
+      })
+    },
+    UPDATED_AT: {
+      value: "UPDATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan8
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      value: "UPDATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan9
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      value: "UPDATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan10
+        }
+      })
+    }
+  })
+});
+const dataTypeToAggregateTypeMap = {};
+const spec = {
+  id: "distinctCount",
+  humanLabel: "distinct count",
+  HumanLabel: "Distinct count",
+  isSuitableType() {
+    return !0;
+  },
+  sqlAggregateWrap(sqlFrag) {
+    return sql`count(distinct ${sqlFrag})`;
+  },
+  pgTypeCodecModifier(codec) {
+    var _a, _b;
+    const oid = (_a = codec.extensions) === null || _a === void 0 ? void 0 : _a.oid;
+    return (_b = oid ? dataTypeToAggregateTypeMap[oid] : null) !== null && _b !== void 0 ? _b : TYPES.bigint;
+  }
+};
+const isIntervalLike = codec => {
+  var _a;
+  return !!((_a = codec.extensions) === null || _a === void 0 ? void 0 : _a.isIntervalLike);
+};
+const isNumberLike = codec => {
+  var _a;
+  return !!((_a = codec.extensions) === null || _a === void 0 ? void 0 : _a.isNumberLike);
+};
+const aggregateSpec_isSuitableType = codec => isIntervalLike(codec) || isNumberLike(codec);
+const dataTypeToAggregateTypeMap2 = {
+  "20": TYPES.numeric,
+  "21": TYPES.bigint,
+  "23": TYPES.bigint,
+  "700": TYPES.float4,
+  "701": TYPES.float,
+  "790": TYPES.money,
+  "1186": TYPES.interval
+};
+const aggregateSpec = {
+  id: "sum",
+  humanLabel: "sum",
+  HumanLabel: "Sum",
+  isSuitableType: aggregateSpec_isSuitableType,
+  sqlAggregateWrap(sqlFrag) {
+    return sql`coalesce(sum(${sqlFrag}), '0')`;
+  },
+  isNonNull: true,
+  pgTypeCodecModifier(codec) {
+    var _a, _b;
+    const oid = (_a = codec.extensions) === null || _a === void 0 ? void 0 : _a.oid;
+    return (_b = oid ? dataTypeToAggregateTypeMap2[oid] : null) !== null && _b !== void 0 ? _b : TYPES.numeric;
+  }
+};
+const infix = () => sql.fragment`=`;
+const infix2 = () => sql.fragment`<>`;
+const infix3 = () => sql.fragment`>`;
+const infix4 = () => sql.fragment`>=`;
+const infix5 = () => sql.fragment`<`;
+const infix6 = () => sql.fragment`<=`;
+const aggregateSpec2 = {
+  id: "min",
+  humanLabel: "minimum",
+  HumanLabel: "Minimum",
+  isSuitableType: aggregateSpec_isSuitableType,
+  sqlAggregateWrap(sqlFrag) {
+    return sql`min(${sqlFrag})`;
+  }
+};
+const aggregateSpec3 = {
+  id: "max",
+  humanLabel: "maximum",
+  HumanLabel: "Maximum",
+  isSuitableType: aggregateSpec_isSuitableType,
+  sqlAggregateWrap(sqlFrag) {
+    return sql`max(${sqlFrag})`;
+  }
+};
+const dataTypeToAggregateTypeMap3 = {
+  "20": TYPES.numeric,
+  "21": TYPES.numeric,
+  "23": TYPES.numeric,
+  "700": TYPES.float,
+  "701": TYPES.float,
+  "1186": TYPES.interval,
+  "1700": TYPES.numeric
+};
+const aggregateSpec4 = {
+  id: "average",
+  humanLabel: "mean average",
+  HumanLabel: "Mean average",
+  isSuitableType: aggregateSpec_isSuitableType,
+  sqlAggregateWrap(sqlFrag) {
+    return sql`avg(${sqlFrag})`;
+  },
+  pgTypeCodecModifier(codec) {
+    var _a, _b;
+    const oid = (_a = codec.extensions) === null || _a === void 0 ? void 0 : _a.oid;
+    return (_b = oid ? dataTypeToAggregateTypeMap3[oid] : null) !== null && _b !== void 0 ? _b : TYPES.numeric;
+  }
+};
+const dataTypeToAggregateTypeMap4 = {
+  "700": TYPES.float,
+  "701": TYPES.float
+};
+const aggregateSpec5 = {
+  id: "stddevSample",
+  humanLabel: "sample standard deviation",
+  HumanLabel: "Sample standard deviation",
+  isSuitableType: isNumberLike,
+  sqlAggregateWrap(sqlFrag) {
+    return sql`stddev_samp(${sqlFrag})`;
+  },
+  pgTypeCodecModifier(codec) {
+    var _a, _b;
+    const oid = (_a = codec.extensions) === null || _a === void 0 ? void 0 : _a.oid;
+    return (_b = oid ? dataTypeToAggregateTypeMap4[oid] : null) !== null && _b !== void 0 ? _b : TYPES.numeric;
+  }
+};
+const dataTypeToAggregateTypeMap5 = {
+  "700": TYPES.float,
+  "701": TYPES.float
+};
+const aggregateSpec6 = {
+  id: "stddevPopulation",
+  humanLabel: "population standard deviation",
+  HumanLabel: "Population standard deviation",
+  isSuitableType: isNumberLike,
+  sqlAggregateWrap(sqlFrag) {
+    return sql`stddev_pop(${sqlFrag})`;
+  },
+  pgTypeCodecModifier(codec) {
+    var _a, _b;
+    const oid = (_a = codec.extensions) === null || _a === void 0 ? void 0 : _a.oid;
+    return (_b = oid ? dataTypeToAggregateTypeMap5[oid] : null) !== null && _b !== void 0 ? _b : TYPES.numeric;
+  }
+};
+const dataTypeToAggregateTypeMap6 = {
+  "700": TYPES.float,
+  "701": TYPES.float
+};
+const aggregateSpec7 = {
+  id: "varianceSample",
+  humanLabel: "sample variance",
+  HumanLabel: "Sample variance",
+  isSuitableType: isNumberLike,
+  sqlAggregateWrap(sqlFrag) {
+    return sql`var_samp(${sqlFrag})`;
+  },
+  pgTypeCodecModifier(codec) {
+    var _a, _b;
+    const oid = (_a = codec.extensions) === null || _a === void 0 ? void 0 : _a.oid;
+    return (_b = oid ? dataTypeToAggregateTypeMap6[oid] : null) !== null && _b !== void 0 ? _b : TYPES.numeric;
+  }
+};
+const dataTypeToAggregateTypeMap7 = {
+  "700": TYPES.float,
+  "701": TYPES.float
+};
+const aggregateSpec8 = {
+  id: "variancePopulation",
+  humanLabel: "population variance",
+  HumanLabel: "Population variance",
+  isSuitableType: isNumberLike,
+  sqlAggregateWrap(sqlFrag) {
+    return sql`var_pop(${sqlFrag})`;
+  },
+  pgTypeCodecModifier(codec) {
+    var _a, _b;
+    const oid = (_a = codec.extensions) === null || _a === void 0 ? void 0 : _a.oid;
+    return (_b = oid ? dataTypeToAggregateTypeMap7[oid] : null) !== null && _b !== void 0 ? _b : TYPES.numeric;
+  }
+};
+const relation = registry.pgRelations["project"]["postsByTheirProjectId"];
 const colSpec = {
   attributeName: "id",
   attribute: spec_project.attributes.id
@@ -1703,6 +2027,67 @@ function assertAllowed12(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+const PgAggregateConditionExpressionStep = class PgAggregateConditionExpressionStep extends ModifierStep {
+  constructor($parent, spec, pgWhereConditionSpecListToSQL) {
+    super($parent);
+    this.spec = spec;
+    this.pgWhereConditionSpecListToSQL = pgWhereConditionSpecListToSQL;
+    this.conditions = [];
+    this.alias = $parent.alias;
+  }
+  placeholder($step, codec) {
+    return this.$parent.placeholder($step, codec);
+  }
+  where(condition) {
+    this.conditions.push(condition);
+  }
+  apply() {
+    const sqlCondition = this.pgWhereConditionSpecListToSQL(this.alias, this.conditions);
+    if (sqlCondition) this.$parent.expression(sqlCondition);
+  }
+};
+const PgAggregateConditionStep = class PgAggregateConditionStep extends ModifierStep {
+  constructor($parent, options, pgWhereConditionSpecListToSQL) {
+    super($parent);
+    this.pgWhereConditionSpecListToSQL = pgWhereConditionSpecListToSQL;
+    this.conditions = [];
+    this.expressions = [];
+    const {
+      sql,
+      tableExpression,
+      alias
+    } = options;
+    this.sql = sql;
+    this.alias = sql.identifier(Symbol(alias !== null && alias !== void 0 ? alias : "aggregate"));
+    this.tableExpression = tableExpression;
+  }
+  placeholder($step, codec) {
+    return this.$parent.placeholder($step, codec);
+  }
+  where(condition) {
+    this.conditions.push(condition);
+  }
+  expression(expression) {
+    this.expressions.push(expression);
+  }
+  forAggregate(spec) {
+    return new PgAggregateConditionExpressionStep(this, spec, this.pgWhereConditionSpecListToSQL);
+  }
+  apply() {
+    const {
+        sql
+      } = this,
+      sqlCondition = this.pgWhereConditionSpecListToSQL(this.alias, this.conditions),
+      where = sqlCondition ? sql`where ${sqlCondition}` : sql.blank,
+      boolExpr = this.expressions.length === 0 ? sql.true : sql.parens(sql.join(this.expressions.map(expr => sql.parens(expr)), "\nand\n")),
+      subquery = sql`(${sql.indent`\
+select ${boolExpr}
+from ${this.tableExpression} as ${this.alias}
+${where}`}
+group by ())`;
+    return this.$parent.where(subquery);
+  }
+};
 const colSpec9 = {
   attributeName: "id",
   attribute: spec_post.attributes.id
@@ -1875,6 +2260,56 @@ function assertAllowed21(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+const resolve50 = (i, _v, $input) => sql`${i} ${$input.eval() ? sql`IS NULL` : sql`IS NOT NULL`}`;
+const resolveInputCodec21 = () => TYPES.boolean;
+const resolveSqlValue14 = () => sql.null;
+const resolve51 = (i, v) => sql`${i} = ${v}`;
+const forceTextTypesSensitive4 = [TYPES.citext, TYPES.char, TYPES.bpchar];
+function resolveDomains4(c) {
+  let current = c;
+  while (current.domainOfCodec) current = current.domainOfCodec;
+  return current;
+}
+function resolveInputCodec22(c) {
+  if (c.arrayOfCodec) {
+    if (forceTextTypesSensitive4.includes(resolveDomains4(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
+      extensions: {
+        listItemNonNull: c.extensions?.listItemNonNull
+      }
+    });
+    return c;
+  } else {
+    if (forceTextTypesSensitive4.includes(resolveDomains4(c))) return TYPES.text;
+    return c;
+  }
+}
+function resolveSqlIdentifier15(identifier, c) {
+  if (c.arrayOfCodec && forceTextTypesSensitive4.includes(resolveDomains4(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: c.extensions?.listItemNonNull
+    }
+  })];else if (forceTextTypesSensitive4.includes(resolveDomains4(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
+}
+const resolve52 = (i, v) => sql`${i} <> ${v}`;
+const resolve53 = (i, v) => sql`${i} IS DISTINCT FROM ${v}`;
+const resolve54 = (i, v) => sql`${i} IS NOT DISTINCT FROM ${v}`;
+const resolve55 = (i, v) => sql`${i} = ANY(${v})`;
+function resolveInputCodec23(c) {
+  if (forceTextTypesSensitive4.includes(resolveDomains4(c))) return listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });else return listOfCodec(c, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });
+}
+const resolve56 = (i, v) => sql`${i} <> ALL(${v})`;
+const resolve57 = (i, v) => sql`${i} < ${v}`;
+const resolve58 = (i, v) => sql`${i} <= ${v}`;
+const resolve59 = (i, v) => sql`${i} > ${v}`;
+const resolve60 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed22(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -1943,6 +2378,130 @@ function assertAllowed25(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+function PostGroupBy_extensions_grafast_applyPlan($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("description")}`
+  });
+}
+function PostGroupBy_extensions_grafast_applyPlan2($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("project_id")}`
+  });
+}
+function PostGroupBy_extensions_grafast_applyPlan3($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("user_id")}`
+  });
+}
+function PostGroupBy_extensions_grafast_applyPlan4($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
+  });
+}
+function PostGroupBy_extensions_grafast_applyPlan5($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function PostGroupBy_extensions_grafast_applyPlan6($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function PostGroupBy_extensions_grafast_applyPlan7($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
+  });
+}
+function PostGroupBy_extensions_grafast_applyPlan8($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+function PostGroupBy_extensions_grafast_applyPlan9($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+export const PostGroupBy = new GraphQLEnumType({
+  name: "PostGroupBy",
+  description: "Grouping methods for `Post` for usage during aggregation.",
+  values: Object.assign(Object.create(null), {
+    DESCRIPTION: {
+      value: "DESCRIPTION",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostGroupBy_extensions_grafast_applyPlan
+        }
+      })
+    },
+    PROJECT_ID: {
+      value: "PROJECT_ID",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostGroupBy_extensions_grafast_applyPlan2
+        }
+      })
+    },
+    USER_ID: {
+      value: "USER_ID",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostGroupBy_extensions_grafast_applyPlan3
+        }
+      })
+    },
+    CREATED_AT: {
+      value: "CREATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostGroupBy_extensions_grafast_applyPlan4
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      value: "CREATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostGroupBy_extensions_grafast_applyPlan5
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      value: "CREATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostGroupBy_extensions_grafast_applyPlan6
+        }
+      })
+    },
+    UPDATED_AT: {
+      value: "UPDATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostGroupBy_extensions_grafast_applyPlan7
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      value: "UPDATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostGroupBy_extensions_grafast_applyPlan8
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      value: "UPDATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostGroupBy_extensions_grafast_applyPlan9
+        }
+      })
+    }
+  })
+});
+const relation2 = registry.pgRelations["post"]["upvotesByTheirPostId"];
 function assertAllowed26(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -1967,6 +2526,287 @@ function assertAllowed27(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+function UpvoteGroupBy_extensions_grafast_applyPlan($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("post_id")}`
+  });
+}
+function UpvoteGroupBy_extensions_grafast_applyPlan2($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("user_id")}`
+  });
+}
+function UpvoteGroupBy_extensions_grafast_applyPlan3($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
+  });
+}
+function UpvoteGroupBy_extensions_grafast_applyPlan4($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function UpvoteGroupBy_extensions_grafast_applyPlan5($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function UpvoteGroupBy_extensions_grafast_applyPlan6($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
+  });
+}
+function UpvoteGroupBy_extensions_grafast_applyPlan7($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+function UpvoteGroupBy_extensions_grafast_applyPlan8($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+export const UpvoteGroupBy = new GraphQLEnumType({
+  name: "UpvoteGroupBy",
+  description: "Grouping methods for `Upvote` for usage during aggregation.",
+  values: Object.assign(Object.create(null), {
+    POST_ID: {
+      value: "POST_ID",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan
+        }
+      })
+    },
+    USER_ID: {
+      value: "USER_ID",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan2
+        }
+      })
+    },
+    CREATED_AT: {
+      value: "CREATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan3
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      value: "CREATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan4
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      value: "CREATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan5
+        }
+      })
+    },
+    UPDATED_AT: {
+      value: "UPDATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan6
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      value: "UPDATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan7
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      value: "UPDATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan8
+        }
+      })
+    }
+  })
+});
+function UserGroupBy_extensions_grafast_applyPlan($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
+  });
+}
+function UserGroupBy_extensions_grafast_applyPlan2($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function UserGroupBy_extensions_grafast_applyPlan3($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function UserGroupBy_extensions_grafast_applyPlan4($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
+  });
+}
+function UserGroupBy_extensions_grafast_applyPlan5($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+function UserGroupBy_extensions_grafast_applyPlan6($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+export const UserGroupBy = new GraphQLEnumType({
+  name: "UserGroupBy",
+  description: "Grouping methods for `User` for usage during aggregation.",
+  values: Object.assign(Object.create(null), {
+    CREATED_AT: {
+      value: "CREATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UserGroupBy_extensions_grafast_applyPlan
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      value: "CREATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UserGroupBy_extensions_grafast_applyPlan2
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      value: "CREATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UserGroupBy_extensions_grafast_applyPlan3
+        }
+      })
+    },
+    UPDATED_AT: {
+      value: "UPDATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UserGroupBy_extensions_grafast_applyPlan4
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      value: "UPDATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UserGroupBy_extensions_grafast_applyPlan5
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      value: "UPDATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: UserGroupBy_extensions_grafast_applyPlan6
+        }
+      })
+    }
+  })
+});
+const relation3 = registry.pgRelations["user"]["postsByTheirUserId"];
+const relation4 = registry.pgRelations["user"]["upvotesByTheirUserId"];
+function OrganizationGroupBy_extensions_grafast_applyPlan($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
+  });
+}
+function OrganizationGroupBy_extensions_grafast_applyPlan2($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function OrganizationGroupBy_extensions_grafast_applyPlan3($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function OrganizationGroupBy_extensions_grafast_applyPlan4($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
+  });
+}
+function OrganizationGroupBy_extensions_grafast_applyPlan5($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+function OrganizationGroupBy_extensions_grafast_applyPlan6($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+export const OrganizationGroupBy = new GraphQLEnumType({
+  name: "OrganizationGroupBy",
+  description: "Grouping methods for `Organization` for usage during aggregation.",
+  values: Object.assign(Object.create(null), {
+    CREATED_AT: {
+      value: "CREATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      value: "CREATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan2
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      value: "CREATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan3
+        }
+      })
+    },
+    UPDATED_AT: {
+      value: "UPDATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan4
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      value: "UPDATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan5
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      value: "UPDATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan6
+        }
+      })
+    }
+  })
+});
+const relation5 = registry.pgRelations["organization"]["projectsByTheirOrganizationId"];
 const specFromArgs = args => {
   const $nodeId = args.get(["input", "id"]);
   return specFromNodeId(nodeIdHandlerByTypeName.Upvote, $nodeId);
@@ -2472,6 +3312,22 @@ type ProjectConnection {
 
   """The count of *all* \`Project\` you could get from the connection."""
   totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`Project\` for these aggregates."""
+    groupBy: [ProjectGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectHavingInput
+  ): [ProjectAggregates!]
 }
 
 """A \`Project\` edge in the connection."""
@@ -2501,6 +3357,131 @@ type PageInfo {
   endCursor: Cursor
 }
 
+type ProjectAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectDistinctCountAggregates
+}
+
+type ProjectDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of name across the matching connection"""
+  name: BigInt
+
+  """Distinct count of image across the matching connection"""
+  image: BigInt
+
+  """Distinct count of slug across the matching connection"""
+  slug: BigInt
+
+  """Distinct count of description across the matching connection"""
+  description: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""
+A signed eight-byte integer. The upper big integer values are greater than the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
+"""
+scalar BigInt
+
+"""Grouping methods for \`Project\` for usage during aggregation."""
+enum ProjectGroupBy {
+  IMAGE
+  SLUG
+  DESCRIPTION
+  ORGANIZATION_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`Project\` aggregates."""
+input ProjectHavingInput {
+  AND: [ProjectHavingInput!]
+  OR: [ProjectHavingInput!]
+  sum: ProjectHavingSumInput
+  distinctCount: ProjectHavingDistinctCountInput
+  min: ProjectHavingMinInput
+  max: ProjectHavingMaxInput
+  average: ProjectHavingAverageInput
+  stddevSample: ProjectHavingStddevSampleInput
+  stddevPopulation: ProjectHavingStddevPopulationInput
+  varianceSample: ProjectHavingVarianceSampleInput
+  variancePopulation: ProjectHavingVariancePopulationInput
+}
+
+input ProjectHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input HavingDatetimeFilter {
+  equalTo: Datetime
+  notEqualTo: Datetime
+  greaterThan: Datetime
+  greaterThanOrEqualTo: Datetime
+  lessThan: Datetime
+  lessThanOrEqualTo: Datetime
+}
+
+input ProjectHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
 """Methods to use when ordering \`Project\`."""
 enum ProjectOrderBy {
   NATURAL
@@ -2522,6 +3503,22 @@ enum ProjectOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  POSTS_COUNT_ASC
+  POSTS_COUNT_DESC
+  POSTS_DISTINCT_COUNT_ID_ASC
+  POSTS_DISTINCT_COUNT_ID_DESC
+  POSTS_DISTINCT_COUNT_TITLE_ASC
+  POSTS_DISTINCT_COUNT_TITLE_DESC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_ASC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_DESC
+  POSTS_DISTINCT_COUNT_USER_ID_ASC
+  POSTS_DISTINCT_COUNT_USER_ID_DESC
+  POSTS_DISTINCT_COUNT_CREATED_AT_ASC
+  POSTS_DISTINCT_COUNT_CREATED_AT_DESC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """
@@ -2834,6 +3831,9 @@ input ProjectToManyPostFilter {
   No related \`Post\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: PostFilter
+
+  """Aggregates across related \`Post\` match the filter criteria."""
+  aggregates: PostAggregatesFilter
 }
 
 """
@@ -2901,6 +3901,9 @@ input PostToManyUpvoteFilter {
   No related \`Upvote\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: UpvoteFilter
+
+  """Aggregates across related \`Upvote\` match the filter criteria."""
+  aggregates: UpvoteAggregatesFilter
 }
 
 """
@@ -2994,6 +3997,72 @@ input UserToManyPostFilter {
   No related \`Post\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: PostFilter
+
+  """Aggregates across related \`Post\` match the filter criteria."""
+  aggregates: PostAggregatesFilter
+}
+
+"""A filter to be used against aggregates of \`Post\` object types."""
+input PostAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`Post\` object to be included within the aggregate.
+  """
+  filter: PostFilter
+
+  """Distinct count aggregate over matching \`Post\` objects."""
+  distinctCount: PostDistinctCountAggregateFilter
+}
+
+input PostDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  title: BigIntFilter
+  description: BigIntFilter
+  projectId: BigIntFilter
+  userId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+"""
+A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’
+"""
+input BigIntFilter {
+  """
+  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigInt
+
+  """Not equal to the specified value."""
+  notEqualTo: BigInt
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigInt
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigInt
+
+  """Included in the specified list."""
+  in: [BigInt!]
+
+  """Not included in the specified list."""
+  notIn: [BigInt!]
+
+  """Less than the specified value."""
+  lessThan: BigInt
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigInt
+
+  """Greater than the specified value."""
+  greaterThan: BigInt
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigInt
 }
 
 """
@@ -3014,6 +4083,28 @@ input UserToManyUpvoteFilter {
   No related \`Upvote\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: UpvoteFilter
+
+  """Aggregates across related \`Upvote\` match the filter criteria."""
+  aggregates: UpvoteAggregatesFilter
+}
+
+"""A filter to be used against aggregates of \`Upvote\` object types."""
+input UpvoteAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`Upvote\` object to be included within the aggregate.
+  """
+  filter: UpvoteFilter
+
+  """Distinct count aggregate over matching \`Upvote\` objects."""
+  distinctCount: UpvoteDistinctCountAggregateFilter
+}
+
+input UpvoteDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  postId: BigIntFilter
+  userId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
 }
 
 """
@@ -3069,6 +4160,31 @@ input OrganizationToManyProjectFilter {
   No related \`Project\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: ProjectFilter
+
+  """Aggregates across related \`Project\` match the filter criteria."""
+  aggregates: ProjectAggregatesFilter
+}
+
+"""A filter to be used against aggregates of \`Project\` object types."""
+input ProjectAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`Project\` object to be included within the aggregate.
+  """
+  filter: ProjectFilter
+
+  """Distinct count aggregate over matching \`Project\` objects."""
+  distinctCount: ProjectDistinctCountAggregateFilter
+}
+
+input ProjectDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  name: BigIntFilter
+  image: BigIntFilter
+  slug: BigIntFilter
+  description: BigIntFilter
+  organizationId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
 }
 
 """A connection to a list of \`Post\` values."""
@@ -3086,6 +4202,22 @@ type PostConnection {
 
   """The count of *all* \`Post\` you could get from the connection."""
   totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: PostAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`Post\` for these aggregates."""
+    groupBy: [PostGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: PostHavingInput
+  ): [PostAggregates!]
 }
 
 """A \`Post\` edge in the connection."""
@@ -3095,6 +4227,111 @@ type PostEdge {
 
   """The \`Post\` at the end of the edge."""
   node: Post
+}
+
+type PostAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: PostDistinctCountAggregates
+}
+
+type PostDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of title across the matching connection"""
+  title: BigInt
+
+  """Distinct count of description across the matching connection"""
+  description: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for \`Post\` for usage during aggregation."""
+enum PostGroupBy {
+  DESCRIPTION
+  PROJECT_ID
+  USER_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`Post\` aggregates."""
+input PostHavingInput {
+  AND: [PostHavingInput!]
+  OR: [PostHavingInput!]
+  sum: PostHavingSumInput
+  distinctCount: PostHavingDistinctCountInput
+  min: PostHavingMinInput
+  max: PostHavingMaxInput
+  average: PostHavingAverageInput
+  stddevSample: PostHavingStddevSampleInput
+  stddevPopulation: PostHavingStddevPopulationInput
+  varianceSample: PostHavingVarianceSampleInput
+  variancePopulation: PostHavingVariancePopulationInput
+}
+
+input PostHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
 }
 
 """Methods to use when ordering \`Post\`."""
@@ -3116,6 +4353,18 @@ enum PostOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  UPVOTES_COUNT_ASC
+  UPVOTES_COUNT_DESC
+  UPVOTES_DISTINCT_COUNT_ID_ASC
+  UPVOTES_DISTINCT_COUNT_ID_DESC
+  UPVOTES_DISTINCT_COUNT_POST_ID_ASC
+  UPVOTES_DISTINCT_COUNT_POST_ID_DESC
+  UPVOTES_DISTINCT_COUNT_USER_ID_ASC
+  UPVOTES_DISTINCT_COUNT_USER_ID_DESC
+  UPVOTES_DISTINCT_COUNT_CREATED_AT_ASC
+  UPVOTES_DISTINCT_COUNT_CREATED_AT_DESC
+  UPVOTES_DISTINCT_COUNT_UPDATED_AT_ASC
+  UPVOTES_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """
@@ -3238,6 +4487,22 @@ type UpvoteConnection {
 
   """The count of *all* \`Upvote\` you could get from the connection."""
   totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: UpvoteAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`Upvote\` for these aggregates."""
+    groupBy: [UpvoteGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: UpvoteHavingInput
+  ): [UpvoteAggregates!]
 }
 
 """A \`Upvote\` edge in the connection."""
@@ -3247,6 +4512,104 @@ type UpvoteEdge {
 
   """The \`Upvote\` at the end of the edge."""
   node: Upvote
+}
+
+type UpvoteAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: UpvoteDistinctCountAggregates
+}
+
+type UpvoteDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of postId across the matching connection"""
+  postId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for \`Upvote\` for usage during aggregation."""
+enum UpvoteGroupBy {
+  POST_ID
+  USER_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`Upvote\` aggregates."""
+input UpvoteHavingInput {
+  AND: [UpvoteHavingInput!]
+  OR: [UpvoteHavingInput!]
+  sum: UpvoteHavingSumInput
+  distinctCount: UpvoteHavingDistinctCountInput
+  min: UpvoteHavingMinInput
+  max: UpvoteHavingMaxInput
+  average: UpvoteHavingAverageInput
+  stddevSample: UpvoteHavingStddevSampleInput
+  stddevPopulation: UpvoteHavingStddevPopulationInput
+  varianceSample: UpvoteHavingVarianceSampleInput
+  variancePopulation: UpvoteHavingVariancePopulationInput
+}
+
+input UpvoteHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UpvoteHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UpvoteHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UpvoteHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UpvoteHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UpvoteHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UpvoteHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UpvoteHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UpvoteHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
 }
 
 """Methods to use when ordering \`Upvote\`."""
@@ -3301,6 +4664,22 @@ type UserConnection {
 
   """The count of *all* \`User\` you could get from the connection."""
   totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: UserAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`User\` for these aggregates."""
+    groupBy: [UserGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: UserHavingInput
+  ): [UserAggregates!]
 }
 
 """A \`User\` edge in the connection."""
@@ -3310,6 +4689,99 @@ type UserEdge {
 
   """The \`User\` at the end of the edge."""
   node: User
+}
+
+type UserAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: UserDistinctCountAggregates
+}
+
+type UserDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of walletAddress across the matching connection"""
+  walletAddress: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for \`User\` for usage during aggregation."""
+enum UserGroupBy {
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`User\` aggregates."""
+input UserHavingInput {
+  AND: [UserHavingInput!]
+  OR: [UserHavingInput!]
+  sum: UserHavingSumInput
+  distinctCount: UserHavingDistinctCountInput
+  min: UserHavingMinInput
+  max: UserHavingMaxInput
+  average: UserHavingAverageInput
+  stddevSample: UserHavingStddevSampleInput
+  stddevPopulation: UserHavingStddevPopulationInput
+  varianceSample: UserHavingVarianceSampleInput
+  variancePopulation: UserHavingVariancePopulationInput
+}
+
+input UserHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
 }
 
 """Methods to use when ordering \`User\`."""
@@ -3325,6 +4797,34 @@ enum UserOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  POSTS_COUNT_ASC
+  POSTS_COUNT_DESC
+  POSTS_DISTINCT_COUNT_ID_ASC
+  POSTS_DISTINCT_COUNT_ID_DESC
+  POSTS_DISTINCT_COUNT_TITLE_ASC
+  POSTS_DISTINCT_COUNT_TITLE_DESC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_ASC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_DESC
+  POSTS_DISTINCT_COUNT_USER_ID_ASC
+  POSTS_DISTINCT_COUNT_USER_ID_DESC
+  POSTS_DISTINCT_COUNT_CREATED_AT_ASC
+  POSTS_DISTINCT_COUNT_CREATED_AT_DESC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  UPVOTES_COUNT_ASC
+  UPVOTES_COUNT_DESC
+  UPVOTES_DISTINCT_COUNT_ID_ASC
+  UPVOTES_DISTINCT_COUNT_ID_DESC
+  UPVOTES_DISTINCT_COUNT_POST_ID_ASC
+  UPVOTES_DISTINCT_COUNT_POST_ID_DESC
+  UPVOTES_DISTINCT_COUNT_USER_ID_ASC
+  UPVOTES_DISTINCT_COUNT_USER_ID_DESC
+  UPVOTES_DISTINCT_COUNT_CREATED_AT_ASC
+  UPVOTES_DISTINCT_COUNT_CREATED_AT_DESC
+  UPVOTES_DISTINCT_COUNT_UPDATED_AT_ASC
+  UPVOTES_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """
@@ -3359,6 +4859,22 @@ type OrganizationConnection {
 
   """The count of *all* \`Organization\` you could get from the connection."""
   totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: OrganizationAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`Organization\` for these aggregates."""
+    groupBy: [OrganizationGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: OrganizationHavingInput
+  ): [OrganizationAggregates!]
 }
 
 """A \`Organization\` edge in the connection."""
@@ -3368,6 +4884,102 @@ type OrganizationEdge {
 
   """The \`Organization\` at the end of the edge."""
   node: Organization
+}
+
+type OrganizationAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: OrganizationDistinctCountAggregates
+}
+
+type OrganizationDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of name across the matching connection"""
+  name: BigInt
+
+  """Distinct count of slug across the matching connection"""
+  slug: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for \`Organization\` for usage during aggregation."""
+enum OrganizationGroupBy {
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`Organization\` aggregates."""
+input OrganizationHavingInput {
+  AND: [OrganizationHavingInput!]
+  OR: [OrganizationHavingInput!]
+  sum: OrganizationHavingSumInput
+  distinctCount: OrganizationHavingDistinctCountInput
+  min: OrganizationHavingMinInput
+  max: OrganizationHavingMaxInput
+  average: OrganizationHavingAverageInput
+  stddevSample: OrganizationHavingStddevSampleInput
+  stddevPopulation: OrganizationHavingStddevPopulationInput
+  varianceSample: OrganizationHavingVarianceSampleInput
+  variancePopulation: OrganizationHavingVariancePopulationInput
+}
+
+input OrganizationHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input OrganizationHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input OrganizationHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input OrganizationHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input OrganizationHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input OrganizationHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input OrganizationHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input OrganizationHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input OrganizationHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
 }
 
 """Methods to use when ordering \`Organization\`."""
@@ -3385,6 +4997,24 @@ enum OrganizationOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  PROJECTS_COUNT_ASC
+  PROJECTS_COUNT_DESC
+  PROJECTS_DISTINCT_COUNT_ID_ASC
+  PROJECTS_DISTINCT_COUNT_ID_DESC
+  PROJECTS_DISTINCT_COUNT_NAME_ASC
+  PROJECTS_DISTINCT_COUNT_NAME_DESC
+  PROJECTS_DISTINCT_COUNT_IMAGE_ASC
+  PROJECTS_DISTINCT_COUNT_IMAGE_DESC
+  PROJECTS_DISTINCT_COUNT_SLUG_ASC
+  PROJECTS_DISTINCT_COUNT_SLUG_DESC
+  PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """
@@ -5571,6 +7201,36 @@ export const plans = {
     },
     totalCount($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+    },
+    aggregates($connection) {
+      return $connection.cloneSubplanWithoutPagination("aggregate").single();
+    },
+    groupedAggregates: {
+      plan($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate");
+      },
+      args: {
+        groupBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect, input) {
+            var _a, _b;
+            const val = input.getRaw().eval();
+            if (!Array.isArray(val)) throw new Error("Invalid!");
+            for (const group of val) {
+              const config = getEnumValueConfig(ProjectGroupBy, group),
+                plan = (_b = (_a = config === null || config === void 0 ? void 0 : config.extensions) === null || _a === void 0 ? void 0 : _a.grafast) === null || _b === void 0 ? void 0 : _b.applyPlan;
+              if (typeof plan === "function") plan($pgSelect);
+            }
+            return null;
+          }
+        },
+        having: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect) {
+            return $pgSelect.havingPlan();
+          }
+        }
+      }
     }
   },
   ProjectEdge: {
@@ -5603,6 +7263,340 @@ export const plans = {
     },
     endCursor($pageInfo) {
       return $pageInfo.endCursor();
+    }
+  },
+  ProjectAggregates: {
+    __assertStep: assertPgClassSingleStep,
+    keys($pgSelectSingle) {
+      const groups = $pgSelectSingle.getClassStep().getGroups();
+      if (groups.length > 0) return $pgSelectSingle.select(sql`json_build_array(${sql.join(groups.map(g => g.fragment), ", ")})`, TYPES.json);else return constant(null);
+    },
+    distinctCount($pgSelectSingle) {
+      return $pgSelectSingle;
+    }
+  },
+  ProjectDistinctCountAggregates: {
+    rowId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    name($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("name")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    image($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("image")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    slug($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("slug")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    description($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("description")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    organizationId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    createdAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    updatedAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("updated_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    }
+  },
+  BigInt: {
+    serialize: UUIDSerialize,
+    parseValue: UUIDSerialize,
+    parseLiteral(ast) {
+      if (ast.kind !== Kind.STRING) throw new GraphQLError(`${"BigInt" ?? "This scalar"} can only parse string values (kind='${ast.kind}')`);
+      return ast.value;
+    }
+  },
+  ProjectGroupBy: {
+    IMAGE: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan
+    },
+    SLUG: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan2
+    },
+    DESCRIPTION: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan3
+    },
+    ORGANIZATION_ID: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan4
+    },
+    CREATED_AT: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan5
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan6
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan7
+    },
+    UPDATED_AT: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan8
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan9
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan10
+    }
+  },
+  ProjectHavingInput: {
+    AND: {
+      applyPlan($where, input) {
+        input.apply($where);
+        return null;
+      }
+    },
+    OR: {
+      applyPlan($where, input) {
+        const $or = new PgOrFilterStep($where);
+        input.apply($or);
+        return null;
+      }
+    },
+    sum: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    distinctCount: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    min: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    max: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    average: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevPopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    varianceSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    variancePopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    }
+  },
+  ProjectHavingSumInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  HavingDatetimeFilter: {
+    equalTo: {
+      applyPlan($booleanFilter, input) {
+        const val = input.get();
+        $booleanFilter.having(sql`(${sql.parens($booleanFilter.expression)} ${infix()} ${$booleanFilter.placeholder(val, TYPES.timestamptz)})`);
+      }
+    },
+    notEqualTo: {
+      applyPlan($booleanFilter, input) {
+        const val = input.get();
+        $booleanFilter.having(sql`(${sql.parens($booleanFilter.expression)} ${infix2()} ${$booleanFilter.placeholder(val, TYPES.timestamptz)})`);
+      }
+    },
+    greaterThan: {
+      applyPlan($booleanFilter, input) {
+        const val = input.get();
+        $booleanFilter.having(sql`(${sql.parens($booleanFilter.expression)} ${infix3()} ${$booleanFilter.placeholder(val, TYPES.timestamptz)})`);
+      }
+    },
+    greaterThanOrEqualTo: {
+      applyPlan($booleanFilter, input) {
+        const val = input.get();
+        $booleanFilter.having(sql`(${sql.parens($booleanFilter.expression)} ${infix4()} ${$booleanFilter.placeholder(val, TYPES.timestamptz)})`);
+      }
+    },
+    lessThan: {
+      applyPlan($booleanFilter, input) {
+        const val = input.get();
+        $booleanFilter.having(sql`(${sql.parens($booleanFilter.expression)} ${infix5()} ${$booleanFilter.placeholder(val, TYPES.timestamptz)})`);
+      }
+    },
+    lessThanOrEqualTo: {
+      applyPlan($booleanFilter, input) {
+        const val = input.get();
+        $booleanFilter.having(sql`(${sql.parens($booleanFilter.expression)} ${infix6()} ${$booleanFilter.placeholder(val, TYPES.timestamptz)})`);
+      }
+    }
+  },
+  ProjectHavingDistinctCountInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectHavingMinInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectHavingMaxInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectHavingAverageInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectHavingStddevSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectHavingStddevPopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectHavingVarianceSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectHavingVariancePopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
     }
   },
   ProjectOrderBy: {
@@ -5847,6 +7841,354 @@ export const plans = {
           } : null)
         });
         if (false) plan.setOrderIsUnique();
+      }
+    },
+    POSTS_COUNT_ASC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_COUNT_DESC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_TITLE_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.title.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.title.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_TITLE_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.title.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.title.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_DESCRIPTION_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.description.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.description.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_DESCRIPTION_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.description.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.description.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_PROJECT_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.project_id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.project_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_PROJECT_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.project_id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.project_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_USER_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.user_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_USER_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.user_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_CREATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.created_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_CREATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.created_at.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_UPDATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.updated_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_UPDATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.updated_at.codec,
+          direction: "DESC"
+        });
       }
     }
   },
@@ -7582,6 +9924,27 @@ export const plans = {
         });
         fieldArgs.apply($subQuery);
       }
+    },
+    aggregates: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = new PgAggregateConditionStep($where, {
+            sql,
+            tableExpression,
+            alias
+          }, pgWhereConditionSpecListToSQL);
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
     }
   },
   PostFilter: {
@@ -7796,6 +10159,27 @@ export const plans = {
             tableExpression,
             alias
           });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    },
+    aggregates: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = new PgAggregateConditionStep($where, {
+            sql,
+            tableExpression,
+            alias
+          }, pgWhereConditionSpecListToSQL);
         localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
@@ -8094,6 +10478,367 @@ export const plans = {
         });
         fieldArgs.apply($subQuery);
       }
+    },
+    aggregates: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = new PgAggregateConditionStep($where, {
+            sql,
+            tableExpression,
+            alias
+          }, pgWhereConditionSpecListToSQL);
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    }
+  },
+  PostAggregatesFilter: {
+    filter: {
+      applyPlan($subquery, fieldArgs) {
+        const $condition = new PgConditionStep($subquery, !1, "AND");
+        fieldArgs.apply($condition);
+      }
+    },
+    distinctCount: {
+      applyPlan($subquery, fieldArgs) {
+        fieldArgs.apply($subquery.forAggregate(spec));
+      }
+    }
+  },
+  PostDistinctCountAggregateFilter: {
+    rowId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    title: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    description: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    projectId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    userId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    createdAt: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    updatedAt: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    }
+  },
+  BigIntFilter: {
+    isNull: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = undefined ? undefined(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec21 ? resolveInputCodec21(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = resolveSqlValue14 ? resolveSqlValue14($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve50(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
+    },
+    equalTo: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve51(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
+    },
+    notEqualTo: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve52(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
+    },
+    distinctFrom: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve53(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
+    },
+    notDistinctFrom: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve54(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
+    },
+    in: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec23 ? resolveInputCodec23(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve55(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
+    },
+    notIn: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec23 ? resolveInputCodec23(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve56(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
+    },
+    lessThan: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve57(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
+    },
+    lessThanOrEqualTo: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve58(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
+    },
+    greaterThan: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve59(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
+    },
+    greaterThanOrEqualTo: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve60(sqlIdentifier, sqlValue, $input, $where);
+        $where.where(fragment);
+      }
     }
   },
   UserToManyUpvoteFilter: {
@@ -8158,6 +10903,92 @@ export const plans = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
         fieldArgs.apply($subQuery);
+      }
+    },
+    aggregates: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = new PgAggregateConditionStep($where, {
+            sql,
+            tableExpression,
+            alias
+          }, pgWhereConditionSpecListToSQL);
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    }
+  },
+  UpvoteAggregatesFilter: {
+    filter: {
+      applyPlan($subquery, fieldArgs) {
+        const $condition = new PgConditionStep($subquery, !1, "AND");
+        fieldArgs.apply($condition);
+      }
+    },
+    distinctCount: {
+      applyPlan($subquery, fieldArgs) {
+        fieldArgs.apply($subquery.forAggregate(spec));
+      }
+    }
+  },
+  UpvoteDistinctCountAggregateFilter: {
+    rowId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    postId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    userId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    createdAt: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    updatedAt: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)
+        };
+        fieldArgs.apply($col);
       }
     }
   },
@@ -8329,6 +11160,122 @@ export const plans = {
         });
         fieldArgs.apply($subQuery);
       }
+    },
+    aggregates: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = new PgAggregateConditionStep($where, {
+            sql,
+            tableExpression,
+            alias
+          }, pgWhereConditionSpecListToSQL);
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    }
+  },
+  ProjectAggregatesFilter: {
+    filter: {
+      applyPlan($subquery, fieldArgs) {
+        const $condition = new PgConditionStep($subquery, !1, "AND");
+        fieldArgs.apply($condition);
+      }
+    },
+    distinctCount: {
+      applyPlan($subquery, fieldArgs) {
+        fieldArgs.apply($subquery.forAggregate(spec));
+      }
+    }
+  },
+  ProjectDistinctCountAggregateFilter: {
+    rowId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_project.attributes.id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    name: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    image: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("image")}`, spec_project.attributes.image.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    slug: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("slug")}`, spec_project.attributes.slug.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    description: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("description")}`, spec_project.attributes.description.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    organizationId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("organization_id")}`, spec_project.attributes.organization_id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    createdAt: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_project.attributes.created_at.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    updatedAt: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_project.attributes.updated_at.codec)
+        };
+        fieldArgs.apply($col);
+      }
     }
   },
   PostConnection: {
@@ -8344,6 +11291,36 @@ export const plans = {
     },
     totalCount($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+    },
+    aggregates($connection) {
+      return $connection.cloneSubplanWithoutPagination("aggregate").single();
+    },
+    groupedAggregates: {
+      plan($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate");
+      },
+      args: {
+        groupBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect, input) {
+            var _a, _b;
+            const val = input.getRaw().eval();
+            if (!Array.isArray(val)) throw new Error("Invalid!");
+            for (const group of val) {
+              const config = getEnumValueConfig(PostGroupBy, group),
+                plan = (_b = (_a = config === null || config === void 0 ? void 0 : config.extensions) === null || _a === void 0 ? void 0 : _a.grafast) === null || _b === void 0 ? void 0 : _b.applyPlan;
+              if (typeof plan === "function") plan($pgSelect);
+            }
+            return null;
+          }
+        },
+        having: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect) {
+            return $pgSelect.havingPlan();
+          }
+        }
+      }
     }
   },
   PostEdge: {
@@ -8353,6 +11330,286 @@ export const plans = {
     },
     node($edge) {
       return $edge.node();
+    }
+  },
+  PostAggregates: {
+    __assertStep: assertPgClassSingleStep,
+    keys($pgSelectSingle) {
+      const groups = $pgSelectSingle.getClassStep().getGroups();
+      if (groups.length > 0) return $pgSelectSingle.select(sql`json_build_array(${sql.join(groups.map(g => g.fragment), ", ")})`, TYPES.json);else return constant(null);
+    },
+    distinctCount($pgSelectSingle) {
+      return $pgSelectSingle;
+    }
+  },
+  PostDistinctCountAggregates: {
+    rowId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    title($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("title")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    description($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("description")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    projectId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("project_id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    userId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("user_id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    createdAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    updatedAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("updated_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    }
+  },
+  PostGroupBy: {
+    DESCRIPTION: {
+      applyPlan: PostGroupBy_extensions_grafast_applyPlan
+    },
+    PROJECT_ID: {
+      applyPlan: PostGroupBy_extensions_grafast_applyPlan2
+    },
+    USER_ID: {
+      applyPlan: PostGroupBy_extensions_grafast_applyPlan3
+    },
+    CREATED_AT: {
+      applyPlan: PostGroupBy_extensions_grafast_applyPlan4
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: PostGroupBy_extensions_grafast_applyPlan5
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: PostGroupBy_extensions_grafast_applyPlan6
+    },
+    UPDATED_AT: {
+      applyPlan: PostGroupBy_extensions_grafast_applyPlan7
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: PostGroupBy_extensions_grafast_applyPlan8
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: PostGroupBy_extensions_grafast_applyPlan9
+    }
+  },
+  PostHavingInput: {
+    AND: {
+      applyPlan($where, input) {
+        input.apply($where);
+        return null;
+      }
+    },
+    OR: {
+      applyPlan($where, input) {
+        const $or = new PgOrFilterStep($where);
+        input.apply($or);
+        return null;
+      }
+    },
+    sum: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    distinctCount: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    min: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    max: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    average: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevPopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    varianceSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    variancePopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    }
+  },
+  PostHavingSumInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_post.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_post.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  PostHavingDistinctCountInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_post.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_post.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  PostHavingMinInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_post.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_post.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  PostHavingMaxInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_post.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_post.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  PostHavingAverageInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_post.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_post.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  PostHavingStddevSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_post.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_post.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  PostHavingStddevPopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_post.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_post.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  PostHavingVarianceSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_post.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_post.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  PostHavingVariancePopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_post.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_post.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
     }
   },
   PostOrderBy: {
@@ -8571,6 +11828,266 @@ export const plans = {
           } : null)
         });
         if (false) plan.setOrderIsUnique();
+      }
+    },
+    UPVOTES_COUNT_ASC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_COUNT_DESC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_POST_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.post_id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.post_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_POST_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.post_id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.post_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_USER_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.user_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_USER_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.user_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_CREATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.created_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_CREATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.created_at.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_UPDATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.updated_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_UPDATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.updated_at.codec,
+          direction: "DESC"
+        });
       }
     }
   },
@@ -8873,6 +12390,36 @@ export const plans = {
     },
     totalCount($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+    },
+    aggregates($connection) {
+      return $connection.cloneSubplanWithoutPagination("aggregate").single();
+    },
+    groupedAggregates: {
+      plan($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate");
+      },
+      args: {
+        groupBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect, input) {
+            var _a, _b;
+            const val = input.getRaw().eval();
+            if (!Array.isArray(val)) throw new Error("Invalid!");
+            for (const group of val) {
+              const config = getEnumValueConfig(UpvoteGroupBy, group),
+                plan = (_b = (_a = config === null || config === void 0 ? void 0 : config.extensions) === null || _a === void 0 ? void 0 : _a.grafast) === null || _b === void 0 ? void 0 : _b.applyPlan;
+              if (typeof plan === "function") plan($pgSelect);
+            }
+            return null;
+          }
+        },
+        having: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect) {
+            return $pgSelect.havingPlan();
+          }
+        }
+      }
     }
   },
   UpvoteEdge: {
@@ -8882,6 +12429,273 @@ export const plans = {
     },
     node($edge) {
       return $edge.node();
+    }
+  },
+  UpvoteAggregates: {
+    __assertStep: assertPgClassSingleStep,
+    keys($pgSelectSingle) {
+      const groups = $pgSelectSingle.getClassStep().getGroups();
+      if (groups.length > 0) return $pgSelectSingle.select(sql`json_build_array(${sql.join(groups.map(g => g.fragment), ", ")})`, TYPES.json);else return constant(null);
+    },
+    distinctCount($pgSelectSingle) {
+      return $pgSelectSingle;
+    }
+  },
+  UpvoteDistinctCountAggregates: {
+    rowId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    postId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("post_id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    userId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("user_id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    createdAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    updatedAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("updated_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    }
+  },
+  UpvoteGroupBy: {
+    POST_ID: {
+      applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan
+    },
+    USER_ID: {
+      applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan2
+    },
+    CREATED_AT: {
+      applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan3
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan4
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan5
+    },
+    UPDATED_AT: {
+      applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan6
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan7
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: UpvoteGroupBy_extensions_grafast_applyPlan8
+    }
+  },
+  UpvoteHavingInput: {
+    AND: {
+      applyPlan($where, input) {
+        input.apply($where);
+        return null;
+      }
+    },
+    OR: {
+      applyPlan($where, input) {
+        const $or = new PgOrFilterStep($where);
+        input.apply($or);
+        return null;
+      }
+    },
+    sum: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    distinctCount: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    min: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    max: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    average: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevPopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    varianceSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    variancePopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    }
+  },
+  UpvoteHavingSumInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UpvoteHavingDistinctCountInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UpvoteHavingMinInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UpvoteHavingMaxInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UpvoteHavingAverageInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UpvoteHavingStddevSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UpvoteHavingStddevPopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UpvoteHavingVarianceSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UpvoteHavingVariancePopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_upvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
     }
   },
   UpvoteOrderBy: {
@@ -9161,6 +12975,36 @@ export const plans = {
     },
     totalCount($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+    },
+    aggregates($connection) {
+      return $connection.cloneSubplanWithoutPagination("aggregate").single();
+    },
+    groupedAggregates: {
+      plan($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate");
+      },
+      args: {
+        groupBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect, input) {
+            var _a, _b;
+            const val = input.getRaw().eval();
+            if (!Array.isArray(val)) throw new Error("Invalid!");
+            for (const group of val) {
+              const config = getEnumValueConfig(UserGroupBy, group),
+                plan = (_b = (_a = config === null || config === void 0 ? void 0 : config.extensions) === null || _a === void 0 ? void 0 : _a.grafast) === null || _b === void 0 ? void 0 : _b.applyPlan;
+              if (typeof plan === "function") plan($pgSelect);
+            }
+            return null;
+          }
+        },
+        having: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect) {
+            return $pgSelect.havingPlan();
+          }
+        }
+      }
     }
   },
   UserEdge: {
@@ -9170,6 +13014,262 @@ export const plans = {
     },
     node($edge) {
       return $edge.node();
+    }
+  },
+  UserAggregates: {
+    __assertStep: assertPgClassSingleStep,
+    keys($pgSelectSingle) {
+      const groups = $pgSelectSingle.getClassStep().getGroups();
+      if (groups.length > 0) return $pgSelectSingle.select(sql`json_build_array(${sql.join(groups.map(g => g.fragment), ", ")})`, TYPES.json);else return constant(null);
+    },
+    distinctCount($pgSelectSingle) {
+      return $pgSelectSingle;
+    }
+  },
+  UserDistinctCountAggregates: {
+    rowId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    walletAddress($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("wallet_address")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    createdAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    updatedAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("updated_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    }
+  },
+  UserGroupBy: {
+    CREATED_AT: {
+      applyPlan: UserGroupBy_extensions_grafast_applyPlan
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: UserGroupBy_extensions_grafast_applyPlan2
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: UserGroupBy_extensions_grafast_applyPlan3
+    },
+    UPDATED_AT: {
+      applyPlan: UserGroupBy_extensions_grafast_applyPlan4
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: UserGroupBy_extensions_grafast_applyPlan5
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: UserGroupBy_extensions_grafast_applyPlan6
+    }
+  },
+  UserHavingInput: {
+    AND: {
+      applyPlan($where, input) {
+        input.apply($where);
+        return null;
+      }
+    },
+    OR: {
+      applyPlan($where, input) {
+        const $or = new PgOrFilterStep($where);
+        input.apply($or);
+        return null;
+      }
+    },
+    sum: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    distinctCount: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    min: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    max: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    average: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevPopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    varianceSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    variancePopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    }
+  },
+  UserHavingSumInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UserHavingDistinctCountInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UserHavingMinInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UserHavingMaxInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UserHavingAverageInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UserHavingStddevSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UserHavingStddevPopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UserHavingVarianceSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  UserHavingVariancePopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
     }
   },
   UserOrderBy: {
@@ -9311,6 +13411,614 @@ export const plans = {
         });
         if (false) plan.setOrderIsUnique();
       }
+    },
+    POSTS_COUNT_ASC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_COUNT_DESC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_TITLE_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.title.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.title.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_TITLE_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.title.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.title.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_DESCRIPTION_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.description.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.description.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_DESCRIPTION_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.description.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.description.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_PROJECT_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.project_id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.project_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_PROJECT_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.project_id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.project_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_USER_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.user_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_USER_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.user_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_CREATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.created_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_CREATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.created_at.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_UPDATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.updated_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POSTS_DISTINCT_COUNT_UPDATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_post.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_post.attributes.updated_at.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_COUNT_ASC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_COUNT_DESC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_POST_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.post_id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.post_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_POST_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.post_id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.post_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_USER_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.user_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_USER_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.user_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_CREATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.created_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_CREATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.created_at.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_UPDATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.updated_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    UPVOTES_DISTINCT_COUNT_UPDATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
+from ${pgResource_upvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_upvote.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_upvote.attributes.updated_at.codec,
+          direction: "DESC"
+        });
+      }
     }
   },
   UserCondition: {
@@ -9404,6 +14112,36 @@ export const plans = {
     },
     totalCount($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+    },
+    aggregates($connection) {
+      return $connection.cloneSubplanWithoutPagination("aggregate").single();
+    },
+    groupedAggregates: {
+      plan($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate");
+      },
+      args: {
+        groupBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect, input) {
+            var _a, _b;
+            const val = input.getRaw().eval();
+            if (!Array.isArray(val)) throw new Error("Invalid!");
+            for (const group of val) {
+              const config = getEnumValueConfig(OrganizationGroupBy, group),
+                plan = (_b = (_a = config === null || config === void 0 ? void 0 : config.extensions) === null || _a === void 0 ? void 0 : _a.grafast) === null || _b === void 0 ? void 0 : _b.applyPlan;
+              if (typeof plan === "function") plan($pgSelect);
+            }
+            return null;
+          }
+        },
+        having: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect) {
+            return $pgSelect.havingPlan();
+          }
+        }
+      }
     }
   },
   OrganizationEdge: {
@@ -9413,6 +14151,267 @@ export const plans = {
     },
     node($edge) {
       return $edge.node();
+    }
+  },
+  OrganizationAggregates: {
+    __assertStep: assertPgClassSingleStep,
+    keys($pgSelectSingle) {
+      const groups = $pgSelectSingle.getClassStep().getGroups();
+      if (groups.length > 0) return $pgSelectSingle.select(sql`json_build_array(${sql.join(groups.map(g => g.fragment), ", ")})`, TYPES.json);else return constant(null);
+    },
+    distinctCount($pgSelectSingle) {
+      return $pgSelectSingle;
+    }
+  },
+  OrganizationDistinctCountAggregates: {
+    rowId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    name($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("name")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    slug($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("slug")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    createdAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    updatedAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("updated_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    }
+  },
+  OrganizationGroupBy: {
+    CREATED_AT: {
+      applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan2
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan3
+    },
+    UPDATED_AT: {
+      applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan4
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan5
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: OrganizationGroupBy_extensions_grafast_applyPlan6
+    }
+  },
+  OrganizationHavingInput: {
+    AND: {
+      applyPlan($where, input) {
+        input.apply($where);
+        return null;
+      }
+    },
+    OR: {
+      applyPlan($where, input) {
+        const $or = new PgOrFilterStep($where);
+        input.apply($or);
+        return null;
+      }
+    },
+    sum: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    distinctCount: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    min: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    max: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    average: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevPopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    varianceSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    variancePopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    }
+  },
+  OrganizationHavingSumInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_organization.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_organization.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  OrganizationHavingDistinctCountInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_organization.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_organization.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  OrganizationHavingMinInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_organization.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_organization.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  OrganizationHavingMaxInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_organization.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_organization.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  OrganizationHavingAverageInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_organization.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_organization.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  OrganizationHavingStddevSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_organization.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_organization.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  OrganizationHavingStddevPopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_organization.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_organization.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  OrganizationHavingVarianceSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_organization.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_organization.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  OrganizationHavingVariancePopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_organization.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_organization.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
     }
   },
   OrganizationOrderBy: {
@@ -9579,6 +14578,398 @@ export const plans = {
           } : null)
         });
         if (false) plan.setOrderIsUnique();
+      }
+    },
+    PROJECTS_COUNT_ASC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "ASC"
+        });
+      }
+    },
+    PROJECTS_COUNT_DESC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "DESC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_project.attributes.id.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_project.attributes.id.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_NAME_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.name.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.name.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_NAME_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.name.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.name.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_IMAGE_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("image")}`, spec_project.attributes.image.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.image.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.image.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_IMAGE_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("image")}`, spec_project.attributes.image.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.image.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.image.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_SLUG_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("slug")}`, spec_project.attributes.slug.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.slug.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.slug.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_SLUG_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("slug")}`, spec_project.attributes.slug.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.slug.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.slug.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_project.attributes.description.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.description.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.description.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_project.attributes.description.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.description.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.description.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_project.attributes.organization_id.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.organization_id.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.organization_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_project.attributes.organization_id.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.organization_id.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.organization_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_project.attributes.created_at.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.created_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_project.attributes.created_at.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.created_at.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_project.attributes.updated_at.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.updated_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_project.attributes.updated_at.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_project.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_project.attributes.updated_at.codec,
+          direction: "DESC"
+        });
       }
     }
   },

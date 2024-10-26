@@ -1,3 +1,4 @@
+import { PgAggregatesPreset } from "@graphile/pg-aggregates";
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
 import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
 import { makePgService } from "postgraphile/adaptors/pg";
@@ -12,6 +13,7 @@ const preset: GraphileConfig.Preset = {
     PostGraphileAmberPreset,
     PostGraphileConnectionFilterPreset,
     PgSimplifyInflectionPreset,
+    PgAggregatesPreset,
   ],
   // @ts-ignore TODO: fix
   schema: {
