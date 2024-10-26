@@ -6,6 +6,8 @@ import { projectTable } from "./project.table";
 import { upvoteTable } from "./upvote.table";
 import { userTable } from "./user.table";
 
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
 /**
  * Post table.
  */
@@ -42,3 +44,9 @@ export const postRelations = relations(postTable, ({ one, many }) => ({
   }),
   upvotes: many(upvoteTable),
 }));
+
+/**
+ * Type helpers related to the post table.
+ */
+export type InsertPost = InferInsertModel<typeof postTable>;
+export type SelectPost = InferSelectModel<typeof postTable>;

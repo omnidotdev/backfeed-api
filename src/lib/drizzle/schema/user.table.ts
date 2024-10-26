@@ -5,6 +5,8 @@ import { defaultDate, defaultId } from "./constants";
 import { postTable } from "./post.table";
 import { upvoteTable } from "./upvote.table";
 
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
 /**
  * User table.
  */
@@ -22,3 +24,9 @@ export const userRelations = relations(userTable, ({ many }) => ({
   posts: many(postTable),
   upvotes: many(upvoteTable),
 }));
+
+/**
+ * Type helpers related to the user table.
+ */
+export type InsertUser = InferInsertModel<typeof userTable>;
+export type SelectUser = InferSelectModel<typeof userTable>;

@@ -5,6 +5,8 @@ import { defaultDate, defaultId } from "./constants";
 import { organizationTable } from "./organization.table";
 import { postTable } from "./post.table";
 
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
 /**
  * Project table.
  */
@@ -39,3 +41,9 @@ export const projectRelations = relations(projectTable, ({ one, many }) => ({
   }),
   posts: many(postTable),
 }));
+
+/**
+ * Type helpers related to the project table.
+ */
+export type InsertProject = InferInsertModel<typeof projectTable>;
+export type SelectProject = InferSelectModel<typeof projectTable>;
