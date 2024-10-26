@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { eq } from "drizzle-orm";
 
 import { DATABASE_URL, isDev } from "lib/config/env";
-import { db } from "lib/db/db";
+import { dbPool } from "lib/db/db";
 import {
   organizations,
   posts,
@@ -28,7 +28,7 @@ const seedData = async () => {
 
   console.log("Seeding database...");
 
-  await db.transaction(async (tx) => {
+  await dbPool.transaction(async (tx) => {
     // Users
     await tx.delete(users);
 

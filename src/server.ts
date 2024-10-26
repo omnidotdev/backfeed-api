@@ -3,15 +3,11 @@ import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import { createYoga } from "graphql-yoga";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { Pool } from "pg";
 
 import { schema } from "graphql/generated/schema.executable";
 import { app as appConfig } from "lib/config/app";
-import { DATABASE_URL, HOST, PORT, isDev, isProd } from "lib/config/env";
-
-const pool = new Pool({
-  connectionString: DATABASE_URL,
-});
+import { HOST, PORT, isDev, isProd } from "lib/config/env";
+import { pool } from "lib/db/pool";
 
 const withPgClient = createWithPgClient({ pool });
 
