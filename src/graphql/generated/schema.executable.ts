@@ -144,7 +144,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "17965",
+    oid: "18310",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -248,7 +248,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "17979",
+    oid: "18324",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -364,7 +364,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "17991",
+    oid: "18336",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -444,7 +444,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "18005",
+    oid: "18350",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -512,7 +512,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "18015",
+    oid: "18360",
     isTableLike: true,
     pg: {
       serviceName: "main",

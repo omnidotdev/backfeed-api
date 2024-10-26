@@ -14,6 +14,7 @@
     "db:migrate:drop": "bun --env-file .env.local drizzle-kit drop",
     "db:pull": "bun --env-file .env.local drizzle-kit introspect",
     "db:push": "bun --env-file .env.local drizzle-kit push",
+    "db:seed": "NODE_ENV=development bun run --env-file .env.local src/scripts/seed.ts",
     "db:studio": "bun --env-file .env.local drizzle-kit studio",
     "db:up": "bun --env-file .env.local drizzle-kit up",
     "graphile:generate": "NODE_ENV=development bun run --env-file .env.local src/scripts/generate-schema.ts",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@faker-js/faker": "^9.0.3",
     "@types/bun": "^1.1.11",
     "@types/node": "^20.2.5",
     "@types/pg": "^8.11.10",

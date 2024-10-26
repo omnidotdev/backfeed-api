@@ -8,4 +8,5 @@ const pool = new Pool({
   connectionString: DATABASE_URL,
 });
 
-export const db = drizzle(pool, { schema });
+// !!NB: important to match the casing in the config here. Otherwise, scripts will fail
+export const db = drizzle({ client: pool, schema, casing: "snake_case" });

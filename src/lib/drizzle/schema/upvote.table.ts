@@ -2,26 +2,26 @@ import { relations } from "drizzle-orm";
 import { pgTable, unique, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-import { postTable } from "./post.table";
-import { userTable } from "./user.table";
+import { posts } from "./post.table";
+import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Upvote table.
  */
-export const upvoteTable = pgTable(
+export const upvotes = pgTable(
   "upvote",
   {
     id: defaultId(),
     postId: uuid()
       .notNull()
-      .references(() => postTable.id, {
+      .references(() => posts.id, {
         onDelete: "cascade",
       }),
     userId: uuid()
       .notNull()
-      .references(() => userTable.id, {
+      .references(() => users.id, {
         onDelete: "cascade",
       }),
     createdAt: defaultDate(),
@@ -35,19 +35,19 @@ export const upvoteTable = pgTable(
 /**
  * Relations for the upvote table.
  */
-export const upvoteRelations = relations(upvoteTable, ({ one }) => ({
-  post: one(postTable, {
-    fields: [upvoteTable.postId],
-    references: [postTable.id],
+export const upvoteRelations = relations(upvotes, ({ one }) => ({
+  post: one(posts, {
+    fields: [upvotes.postId],
+    references: [posts.id],
   }),
-  user: one(userTable, {
-    fields: [upvoteTable.userId],
-    references: [userTable.id],
+  user: one(users, {
+    fields: [upvotes.userId],
+    references: [users.id],
   }),
 }));
 
 /**
  * Type helpers related to the upvote table.
  */
-export type InsertUpvote = InferInsertModel<typeof upvoteTable>;
-export type SelectUpvote = InferSelectModel<typeof upvoteTable>;
+export type InsertUpvote = InferInsertModel<typeof upvotes>;
+export type SelectUpvote = InferSelectModel<typeof upvotes>;

@@ -2,15 +2,15 @@ import { relations } from "drizzle-orm";
 import { pgTable, text, unique, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-import { organizationTable } from "./organization.table";
-import { postTable } from "./post.table";
+import { organizations } from "./organization.table";
+import { posts } from "./post.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Project table.
  */
-export const projectTable = pgTable(
+export const projects = pgTable(
   "project",
   {
     id: defaultId(),
@@ -20,7 +20,7 @@ export const projectTable = pgTable(
     description: text(),
     organizationId: uuid()
       .notNull()
-      .references(() => organizationTable.id, {
+      .references(() => organizations.id, {
         onDelete: "cascade",
       }),
     createdAt: defaultDate(),
@@ -34,16 +34,16 @@ export const projectTable = pgTable(
 /**
  * Relations for the project table.
  */
-export const projectRelations = relations(projectTable, ({ one, many }) => ({
-  organization: one(organizationTable, {
-    fields: [projectTable.organizationId],
-    references: [organizationTable.id],
+export const projectRelations = relations(projects, ({ one, many }) => ({
+  organization: one(organizations, {
+    fields: [projects.organizationId],
+    references: [organizations.id],
   }),
-  posts: many(postTable),
+  posts: many(posts),
 }));
 
 /**
  * Type helpers related to the project table.
  */
-export type InsertProject = InferInsertModel<typeof projectTable>;
-export type SelectProject = InferSelectModel<typeof projectTable>;
+export type InsertProject = InferInsertModel<typeof projects>;
+export type SelectProject = InferSelectModel<typeof projects>;
