@@ -36,7 +36,7 @@ app.use(
     origin: isProd ? appConfig.appUrl : "http://localhost:3000",
     credentials: true,
     allowMethods: ["POST"],
-  }),
+  })
 );
 
 // mount GraphQL API
