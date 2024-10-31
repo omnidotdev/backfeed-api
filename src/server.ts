@@ -11,9 +11,16 @@ import { pool } from "lib/db/pool";
 
 const withPgClient = createWithPgClient({ pool });
 
+/**
+ * GraphQL Yoga configuration.
+ * @see https://the-guild.dev/graphql/yoga-server
+ */
 const yoga = createYoga({
   schema,
-  context: { withPgClient },
+  context: {
+    // inject Postgres client into GraphQL context
+    withPgClient,
+  },
   // only enable web UIs in development
   // NB: can also provide an object of GraphiQL options instead of a boolean
   graphiql: isDev,
@@ -28,7 +35,7 @@ app.use(
     origin: isProd ? appConfig.appUrl : "http://localhost:3000",
     credentials: true,
     allowMethods: ["POST"],
-  })
+  }),
 );
 
 app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));
