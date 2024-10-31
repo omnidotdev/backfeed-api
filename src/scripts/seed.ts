@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { DATABASE_URL, isDev } from "lib/config/env";
 import { dbPool } from "lib/db/db";
@@ -9,6 +9,7 @@ import {
   projects,
   upvotes,
   users,
+  usersToOrganizations,
 } from "lib/drizzle/schema";
 
 import type {
@@ -98,6 +99,26 @@ const seedData = async () => {
         .select()
         .from(users)
         .where(eq(users.walletAddress, randomUser.walletAddress!));
+
+      const [userOrganization] = await tx
+        .select()
+        .from(usersToOrganizations)
+        .where(
+          and(
+            eq(usersToOrganizations.userId, selectedUser.id),
+            eq(
+              usersToOrganizations.organizationId,
+              selectedProject.organizationId
+            )
+          )
+        );
+
+      if (!userOrganization) {
+        await tx.insert(usersToOrganizations).values({
+          userId: selectedUser.id,
+          organizationId: selectedProject.organizationId,
+        });
+      }
 
       newPosts.push({
         title: `${faker.commerce.productAdjective()} ${faker.commerce.product()}`,
