@@ -1,12 +1,5 @@
 import { faker } from "@faker-js/faker";
-import {
-  type TableConfig,
-  type TablesRelationalConfig,
-  and,
-  eq,
-} from "drizzle-orm";
-import type { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
-import type { PgTable, PgTransaction } from "drizzle-orm/pg-core";
+import { and, eq } from "drizzle-orm";
 
 import { DATABASE_URL, isDev } from "lib/config/env";
 import { dbPool } from "lib/db/db";
@@ -18,6 +11,10 @@ import {
   users,
   usersToOrganizations,
 } from "lib/drizzle/schema";
+
+import type { TableConfig, TablesRelationalConfig } from "drizzle-orm";
+import type { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
+import type { PgTable, PgTransaction } from "drizzle-orm/pg-core";
 
 /**
  * Seed a database entity with sample data.
