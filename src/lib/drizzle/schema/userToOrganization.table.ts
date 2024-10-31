@@ -1,7 +1,11 @@
+import {
+  type InferInsertModel,
+  type InferSelectModel,
+  relations,
+} from "drizzle-orm";
 import { pgTable, uuid } from "drizzle-orm/pg-core";
-import { users } from "./user.table";
 import { organizations } from "./organization.table";
-import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
+import { users } from "./user.table";
 
 /**
  * Users to organizations join table.
@@ -19,6 +23,9 @@ export const usersToOrganizations = pgTable("user_organization", {
     }),
 });
 
+/**
+ * Relations for the users to organizations join table.
+ */
 export const usersToOrganizationsRelations = relations(
   usersToOrganizations,
   ({ one }) => ({
