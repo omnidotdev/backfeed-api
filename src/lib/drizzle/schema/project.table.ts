@@ -8,7 +8,7 @@ import { posts } from "./post.table";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Project table.
+ * Project table. Projects contain a collection of feedback items and are nested under organizations.
  */
 export const projects = pgTable(
   "project",
@@ -28,7 +28,7 @@ export const projects = pgTable(
   },
   (table) => ({
     uniqueSlug: unique().on(table.slug, table.organizationId),
-  })
+  }),
 );
 
 /**
