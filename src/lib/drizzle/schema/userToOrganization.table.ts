@@ -3,25 +3,34 @@ import {
   type InferSelectModel,
   relations,
 } from "drizzle-orm";
-import { pgTable, uuid } from "drizzle-orm/pg-core";
+import { pgTable, unique, uuid } from "drizzle-orm/pg-core";
+
+import { defaultDate } from "./constants";
 import { organizations } from "./organization.table";
 import { users } from "./user.table";
 
 /**
  * Users to organizations join table.
  */
-export const usersToOrganizations = pgTable("user_organization", {
-  userId: uuid()
-    .notNull()
-    .references(() => users.id, {
-      onDelete: "cascade",
-    }),
-  organizationId: uuid()
-    .notNull()
-    .references(() => organizations.id, {
-      onDelete: "cascade",
-    }),
-});
+export const usersToOrganizations = pgTable(
+  "user_organization",
+  {
+    userId: uuid()
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+    organizationId: uuid()
+      .notNull()
+      .references(() => organizations.id, {
+        onDelete: "cascade",
+      }),
+    createdAt: defaultDate(),
+  },
+  (table) => ({
+    uniqueUserToOrganization: unique().on(table.userId, table.organizationId),
+  })
+);
 
 /**
  * Relations for the users to organizations join table.
@@ -37,7 +46,7 @@ export const usersToOrganizationsRelations = relations(
       fields: [usersToOrganizations.organizationId],
       references: [organizations.id],
     }),
-  }),
+  })
 );
 
 /**

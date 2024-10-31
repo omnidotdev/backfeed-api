@@ -13,8 +13,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
  */
 export const posts = pgTable("post", {
   id: defaultId(),
-  // TODO: discuss if this should be unique
-  title: text().unique(),
+  title: text(),
   description: text(),
   projectId: uuid()
     .notNull()

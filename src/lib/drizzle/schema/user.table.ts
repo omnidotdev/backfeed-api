@@ -2,9 +2,9 @@ import { relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-import { organizations } from "./organization.table";
 import { posts } from "./post.table";
 import { upvotes } from "./upvote.table";
+import { usersToOrganizations } from "./userToOrganization.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -23,7 +23,7 @@ export const users = pgTable("user", {
  * Relations for the user table.
  */
 export const userRelations = relations(users, ({ many }) => ({
-  organizations: many(organizations),
+  organizations: many(usersToOrganizations),
   posts: many(posts),
   upvotes: many(upvotes),
 }));
