@@ -12,6 +12,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
  */
 export const users = pgTable("user", {
   id: defaultId(),
+  // TODO refactor to HIDRA ID, currently here for testing
   walletAddress: text().unique(),
   createdAt: defaultDate(),
   updatedAt: defaultDate(),
