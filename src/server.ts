@@ -7,9 +7,9 @@ import { cors } from "hono/cors";
 import { schema } from "graphql/generated/schema.executable";
 import { app as appConfig } from "lib/config/app";
 import { HOST, PORT, isDev, isProd } from "lib/config/env";
-import { pool } from "lib/db/pool";
+import { pgPool } from "lib/db/pool";
 
-const withPgClient = createWithPgClient({ pool });
+const withPgClient = createWithPgClient({ pool: pgPool });
 
 /**
  * GraphQL Yoga configuration.
@@ -31,6 +31,7 @@ const yoga = createYoga({
 const app = new Hono();
 
 app.use(
+  // enable CORS
   cors({
     origin: isProd ? appConfig.appUrl : "http://localhost:3000",
     credentials: true,
@@ -38,6 +39,7 @@ app.use(
   }),
 );
 
+// mount GraphQL API
 app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));
 
 export default {
