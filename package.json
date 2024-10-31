@@ -14,7 +14,7 @@
     "db:migrate:drop": "bun --env-file .env.local drizzle-kit drop",
     "db:pull": "bun --env-file .env.local drizzle-kit introspect",
     "db:push": "bun --env-file .env.local drizzle-kit push",
-    "db:seed": "NODE_ENV=development bun run --env-file .env.local src/scripts/seed.ts",
+    "db:seed": "NODE_ENV=development bun run --env-file .env.local src/scripts/seedDatabase.ts",
     "db:studio": "bun --env-file .env.local drizzle-kit studio",
     "db:up": "bun --env-file .env.local drizzle-kit up",
     "graphile:generate": "NODE_ENV=development bun run --env-file .env.local src/scripts/generateGraphqlSchema.ts",
@@ -44,7 +44,5 @@
     "postgraphile": "^5.0.0-beta.32",
     "postgraphile-plugin-connection-filter": "^3.0.0-beta.5"
   },
-  "trustedDependencies": [
-    "@biomejs/biome"
-  ]
+  "trustedDependencies": ["@biomejs/biome"]
 }
