@@ -4,7 +4,7 @@ import { createYoga } from "graphql-yoga";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 
-import { schema } from "graphql/generated/schema.executable";
+import { schema } from "generated/graphql/schema.executable";
 import { app as appConfig } from "lib/config/app";
 import { HOST, PORT, isDev, isProd } from "lib/config/env";
 import { pgPool } from "lib/db/pool";
@@ -36,7 +36,7 @@ app.use(
     origin: isProd ? appConfig.appUrl : "http://localhost:3000",
     credentials: true,
     allowMethods: ["POST"],
-  })
+  }),
 );
 
 // mount GraphQL API

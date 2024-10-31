@@ -17,7 +17,7 @@
     "db:seed": "NODE_ENV=development bun run --env-file .env.local src/scripts/seed.ts",
     "db:studio": "bun --env-file .env.local drizzle-kit studio",
     "db:up": "bun --env-file .env.local drizzle-kit up",
-    "graphile:generate": "NODE_ENV=development bun run --env-file .env.local src/scripts/generate-schema.ts",
+    "graphile:generate": "NODE_ENV=development bun run --env-file .env.local src/scripts/generateGraphqlSchema.ts",
     "prepare": "husky"
   },
   "devDependencies": {

@@ -5,15 +5,21 @@ import { replaceInFile } from "replace-in-file";
 
 import preset from "../../graphile.config";
 
-const main = async () => {
+/**
+ * Generate a GraphQL schema from the database.
+ * @see https://postgraphile.org/postgraphile/next/exporting-schema
+ */
+const generateGraphqlSchema = async () => {
   const { schema } = await makeSchema(preset);
 
-  const generatedDirectory = `${__dirname}/../graphql/generated`;
+  const generatedDirectory = `${__dirname}/../generated/graphql`;
   const schemaFilePath = `${generatedDirectory}/schema.executable.ts`;
 
-  if (!existsSync(generatedDirectory)) {
-    mkdirSync(generatedDirectory);
-  }
+  // create generated directory if it doesn't exist
+  if (!existsSync(generatedDirectory))
+    mkdirSync(generatedDirectory, {
+      recursive: true,
+    });
 
   await exportSchema(schema, schemaFilePath, {
     mode: "typeDefs",
@@ -26,7 +32,7 @@ const main = async () => {
   });
 };
 
-await main()
+await generateGraphqlSchema()
   .then(() => process.exit(0))
   .catch((err) => {
     console.error(err);

@@ -20,8 +20,11 @@ import type {
   InsertUser,
 } from "lib/drizzle/schema";
 
-const seedData = async () => {
-  // !!NB: only run this script in development
+/**
+ * Seed the database with sample data.
+ */
+const seedDatabase = async () => {
+  // ! NB: only run this script in development
   if (!isDev || !DATABASE_URL?.includes("localhost")) {
     console.log("This script can only be run in development");
     process.exit(1);
@@ -30,7 +33,7 @@ const seedData = async () => {
   console.log("Seeding database...");
 
   await dbPool.transaction(async (tx) => {
-    // Users
+    // users
     await tx.delete(users);
 
     const newUsers: InsertUser[] = [];
@@ -43,7 +46,7 @@ const seedData = async () => {
 
     await tx.insert(users).values(newUsers);
 
-    // Organizations
+    // organizations
     await tx.delete(organizations);
 
     const newOrganizations: InsertOrganization[] = [];
@@ -56,7 +59,7 @@ const seedData = async () => {
 
     await tx.insert(organizations).values(newOrganizations);
 
-    // Projects
+    // projects
     await tx.delete(projects);
 
     const newProjects: InsertProject[] = [];
@@ -81,7 +84,7 @@ const seedData = async () => {
 
     await tx.insert(projects).values(newProjects);
 
-    // Posts
+    // posts
     await tx.delete(posts);
 
     const newPosts: InsertPost[] = [];
@@ -108,9 +111,9 @@ const seedData = async () => {
             eq(usersToOrganizations.userId, selectedUser.id),
             eq(
               usersToOrganizations.organizationId,
-              selectedProject.organizationId
-            )
-          )
+              selectedProject.organizationId,
+            ),
+          ),
         );
 
       if (!userOrganization) {
@@ -130,7 +133,7 @@ const seedData = async () => {
 
     await tx.insert(posts).values(newPosts);
 
-    // Upvotes
+    // upvotes
     await tx.delete(upvotes);
 
     const newUpvotes: InsertUpvote[] = [];
@@ -160,7 +163,7 @@ const seedData = async () => {
   console.log("Database has been seeded successfully!");
 };
 
-await seedData()
+await seedDatabase()
   .then(() => process.exit(0))
   .catch((err) => {
     console.error(err);
