@@ -3,11 +3,12 @@ import { pgTable, text } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { projects } from "./project.table";
+import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Organization table.
+ * Organization table. Organizations are used to group projects together and contain a set of users.
  */
 export const organizations = pgTable("organization", {
   id: defaultId(),
@@ -22,6 +23,7 @@ export const organizations = pgTable("organization", {
  */
 export const organizationRelations = relations(organizations, ({ many }) => ({
   projects: many(projects),
+  users: many(users),
 }));
 
 /**

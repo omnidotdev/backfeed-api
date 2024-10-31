@@ -28,7 +28,7 @@ export const projects = pgTable(
   },
   (table) => ({
     uniqueSlug: unique().on(table.slug, table.organizationId),
-  }),
+  })
 );
 
 /**
