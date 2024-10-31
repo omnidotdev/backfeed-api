@@ -8,7 +8,7 @@ import { users } from "./user.table";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Upvote table.
+ * Upvote table. Upvotes are used to represent positive sentiment on posts.
  */
 export const upvotes = pgTable(
   "upvote",
@@ -29,7 +29,7 @@ export const upvotes = pgTable(
   },
   (table) => ({
     uniqueUpvote: unique().on(table.postId, table.userId),
-  })
+  }),
 );
 
 /**
