@@ -15,7 +15,7 @@ const generateGraphqlSchema = async () => {
   const generatedDirectory = `${__dirname}/../generated/graphql`;
   const schemaFilePath = `${generatedDirectory}/schema.executable.ts`;
 
-  // create generated directory if it doesn't exist
+  // create artifacts directory if it doesn't exist
   if (!existsSync(generatedDirectory))
     mkdirSync(generatedDirectory, {
       recursive: true,
