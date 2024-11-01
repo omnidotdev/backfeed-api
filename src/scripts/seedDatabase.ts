@@ -13,11 +13,15 @@ import {
 } from "lib/drizzle/schema";
 
 import type {
-  InsertOrganization,
+  PgInsertValue,
+  PgTable,
+  PgTableWithColumns,
+  TableConfig,
+} from "drizzle-orm/pg-core";
+import type {
   InsertPost,
   InsertProject,
   InsertUpvote,
-  InsertUser,
 } from "lib/drizzle/schema";
 
 /**
@@ -33,131 +37,135 @@ const seedDatabase = async () => {
   console.log("Seeding database...");
 
   await dbPool.transaction(async (tx) => {
-    // users
-    await tx.delete(users);
+    const performTx = async <T extends TableConfig>(
+      entity: PgTableWithColumns<T>,
+      seedFn: () => Promise<PgInsertValue<PgTable<T>>[]>
+    ) => {
+      await tx.delete(entity);
 
-    const newUsers: InsertUser[] = [];
-    for (let i = 0; i < 10; i++) {
-      newUsers.push({
+      const newEntities = await seedFn();
+
+      // @ts-ignore TODO fix
+      await tx.insert(entity).values(newEntities);
+
+      return newEntities;
+    };
+
+    const newUsers = await performTx(users, async () => {
+      return Array.from({ length: 10 }, () => ({
         // hell yeah
         walletAddress: faker.finance.ethereumAddress(),
-      });
-    }
+      }));
+    });
 
-    await tx.insert(users).values(newUsers);
-
-    // organizations
-    await tx.delete(organizations);
-
-    const newOrganizations: InsertOrganization[] = [];
-    for (let i = 0; i < 10; i++) {
-      newOrganizations.push({
+    const newOrganizations = await performTx(organizations, async () => {
+      return Array.from({ length: 10 }, () => ({
         name: faker.company.name(),
         slug: faker.lorem.slug(),
-      });
-    }
+      }));
+    });
 
-    await tx.insert(organizations).values(newOrganizations);
+    const newProjects = await performTx(projects, async () => {
+      const newProjects: InsertProject[] = [];
 
-    // projects
-    await tx.delete(projects);
+      for (let i = 0; i < 10; i++) {
+        const randomOrganization =
+          newOrganizations[Math.floor(Math.random() * newOrganizations.length)];
 
-    const newProjects: InsertProject[] = [];
-    for (let i = 0; i < 10; i++) {
-      const randomOrganization =
-        newOrganizations[Math.floor(Math.random() * newOrganizations.length)];
+        const [selectedOrganization] = await tx
+          .select()
+          .from(organizations)
+          .where(eq(organizations.name, randomOrganization.name!));
 
-      const [selectedOrganization] = await tx
-        .select()
-        .from(organizations)
-        .where(eq(organizations.name, randomOrganization.name!));
-
-      newProjects.push({
-        // NB: using the index due to the unique constraint in the projects table
-        name: `${faker.company.buzzVerb()}-${i}`,
-        description: faker.lorem.paragraph(),
-        slug: faker.lorem.slug(),
-        image: faker.image.avatar(),
-        organizationId: selectedOrganization.id,
-      });
-    }
-
-    await tx.insert(projects).values(newProjects);
-
-    // posts
-    await tx.delete(posts);
-
-    const newPosts: InsertPost[] = [];
-
-    for (let i = 0; i < 10; i++) {
-      const randomProject =
-        newProjects[Math.floor(Math.random() * newProjects.length)];
-      const randomUser = newUsers[Math.floor(Math.random() * newUsers.length)];
-
-      const [selectedProject] = await tx
-        .select()
-        .from(projects)
-        .where(eq(projects.name, randomProject.name!));
-      const [selectedUser] = await tx
-        .select()
-        .from(users)
-        .where(eq(users.walletAddress, randomUser.walletAddress!));
-
-      const [userOrganization] = await tx
-        .select()
-        .from(usersToOrganizations)
-        .where(
-          and(
-            eq(usersToOrganizations.userId, selectedUser.id),
-            eq(
-              usersToOrganizations.organizationId,
-              selectedProject.organizationId
-            )
-          )
-        );
-
-      if (!userOrganization) {
-        await tx.insert(usersToOrganizations).values({
-          userId: selectedUser.id,
-          organizationId: selectedProject.organizationId,
+        newProjects.push({
+          // NB: using the index due to the unique constraint in the projects table
+          name: `${faker.company.buzzVerb()}-${i}`,
+          description: faker.lorem.paragraph(),
+          slug: faker.lorem.slug(),
+          image: faker.image.avatar(),
+          organizationId: selectedOrganization.id,
         });
       }
 
-      newPosts.push({
-        title: `${faker.commerce.productAdjective()} ${faker.commerce.product()}`,
-        description: faker.lorem.paragraph(),
-        projectId: selectedProject.id,
-        userId: selectedUser.id,
-      });
-    }
+      return newProjects;
+    });
 
-    await tx.insert(posts).values(newPosts);
+    const newPosts = await performTx(posts, async () => {
+      const newPosts: InsertPost[] = [];
 
-    // upvotes
-    await tx.delete(upvotes);
+      for (let i = 0; i < 10; i++) {
+        const randomProject =
+          newProjects[Math.floor(Math.random() * newProjects.length)];
+        const randomUser =
+          newUsers[Math.floor(Math.random() * newUsers.length)];
 
-    const newUpvotes: InsertUpvote[] = [];
-    for (let i = 0; i < 10; i++) {
-      // NB: not randomizing the user here due to the unique constraint in the upvotes table
-      const user = newUsers[i];
-      const randomPost = newPosts[Math.floor(Math.random() * newUsers.length)];
+        const [selectedProject] = await tx
+          .select()
+          .from(projects)
+          .where(eq(projects.name, randomProject.name!));
 
-      const [selectedUser] = await tx
-        .select()
-        .from(users)
-        .where(eq(users.walletAddress, user.walletAddress!));
-      const [selectedPost] = await tx
-        .select()
-        .from(posts)
-        .where(eq(posts.title, randomPost.title!));
+        const [selectedUser] = await tx
+          .select()
+          .from(users)
+          .where(eq(users.walletAddress, randomUser.walletAddress!));
 
-      newUpvotes.push({
-        postId: selectedPost.id,
-        userId: selectedUser.id,
-      });
-    }
+        const [userOrganization] = await tx
+          .select()
+          .from(usersToOrganizations)
+          .where(
+            and(
+              eq(usersToOrganizations.userId, selectedUser.id),
+              eq(
+                usersToOrganizations.organizationId,
+                selectedProject.organizationId
+              )
+            )
+          );
 
-    await tx.insert(upvotes).values(newUpvotes);
+        if (!userOrganization) {
+          await tx.insert(usersToOrganizations).values({
+            userId: selectedUser.id,
+            organizationId: selectedProject.organizationId,
+          });
+        }
+
+        newPosts.push({
+          title: `${faker.commerce.productAdjective()} ${faker.commerce.product()}`,
+          description: faker.lorem.paragraph(),
+          projectId: selectedProject.id,
+          userId: selectedUser.id,
+        });
+      }
+
+      return newPosts;
+    });
+
+    await performTx(upvotes, async () => {
+      const newUpvotes: InsertUpvote[] = [];
+
+      for (let i = 0; i < 10; i++) {
+        // NB: not randomizing the user here due to the unique constraint in the upvotes table
+        const user = newUsers[i];
+        const randomPost =
+          newPosts[Math.floor(Math.random() * newUsers.length)];
+
+        const [selectedUser] = await tx
+          .select()
+          .from(users)
+          .where(eq(users.walletAddress, user.walletAddress!));
+        const [selectedPost] = await tx
+          .select()
+          .from(posts)
+          .where(eq(posts.title, randomPost.title!));
+
+        newUpvotes.push({
+          postId: selectedPost.id,
+          userId: selectedUser.id,
+        });
+      }
+
+      return newUpvotes;
+    });
   });
 
   console.log("Database has been seeded successfully!");
