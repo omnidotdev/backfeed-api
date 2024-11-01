@@ -9,5 +9,5 @@ export const {
   DATABASE_URL,
 } = process.env;
 
-export const isDev = NODE_ENV === "development";
-export const isProd = NODE_ENV === "production";
+export const isDevEnv = NODE_ENV === "development";
+export const isProdEnv = NODE_ENV === "production";

@@ -1,3 +1,4 @@
 export const app = {
-  appUrl: "https://backfeed.omni.dev",
+  name: "Backfeed",
+  url: "https://backfeed.omni.dev",
 };
