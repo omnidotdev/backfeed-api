@@ -15,8 +15,7 @@ CREATE TABLE IF NOT EXISTS "post" (
 	"project_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"created_at" timestamp(6) with time zone DEFAULT now(),
-	"updated_at" timestamp(6) with time zone DEFAULT now(),
-	CONSTRAINT "post_title_unique" UNIQUE("title")
+	"updated_at" timestamp(6) with time zone DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "project" (
@@ -49,6 +48,13 @@ CREATE TABLE IF NOT EXISTS "user" (
 	CONSTRAINT "user_walletAddress_unique" UNIQUE("wallet_address")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "user_organization" (
+	"user_id" uuid NOT NULL,
+	"organization_id" uuid NOT NULL,
+	"created_at" timestamp(6) with time zone DEFAULT now(),
+	CONSTRAINT "user_organization_userId_organizationId_unique" UNIQUE("user_id","organization_id")
+);
+--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "post" ADD CONSTRAINT "post_project_id_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."project"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
@@ -75,6 +81,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "upvote" ADD CONSTRAINT "upvote_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "user_organization" ADD CONSTRAINT "user_organization_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "user_organization" ADD CONSTRAINT "user_organization_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organization"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

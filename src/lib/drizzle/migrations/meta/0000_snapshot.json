@@ -1,5 +1,5 @@
 {
-  "id": "95f49898-7d76-4163-a40b-e0cf75c97a55",
+  "id": "a57834d0-6d00-4482-885c-a98d8b3f3625",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -143,15 +143,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "post_title_unique": {
-          "name": "post_title_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "title"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "checkConstraints": {}
     },
     "public.project": {
@@ -367,6 +359,72 @@
           "nullsNotDistinct": false,
           "columns": [
             "wallet_address"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.user_organization": {
+      "name": "user_organization",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(6) with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_organization_user_id_user_id_fk": {
+          "name": "user_organization_user_id_user_id_fk",
+          "tableFrom": "user_organization",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_organization_organization_id_organization_id_fk": {
+          "name": "user_organization_organization_id_organization_id_fk",
+          "tableFrom": "user_organization",
+          "tableTo": "organization",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_organization_userId_organizationId_unique": {
+          "name": "user_organization_userId_organizationId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "organization_id"
           ]
         }
       },
