@@ -1,16 +1,22 @@
+import { PgAggregatesPreset } from "@graphile/pg-aggregates";
+import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
 import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 
-import { DATABASE_URL, isProd } from "./src/lib/config/env";
+import { DATABASE_URL, isProdEnv } from "./src/lib/config/env";
 
 import type { GraphileConfig } from "graphile-config";
 
 const preset: GraphileConfig.Preset = {
-  extends: [PostGraphileAmberPreset, PostGraphileConnectionFilterPreset],
-  // @ts-ignore TODO: fix
+  extends: [
+    PostGraphileAmberPreset,
+    PostGraphileConnectionFilterPreset,
+    PgSimplifyInflectionPreset,
+    PgAggregatesPreset,
+  ],
   schema: {
-    retryOnInitFail: isProd,
+    retryOnInitFail: isProdEnv,
     sortExport: true,
     pgForbidSetofFunctionsToReturnNull: false,
     jsonScalarAsString: false,
