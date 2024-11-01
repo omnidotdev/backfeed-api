@@ -4,8 +4,8 @@
   "main": "build/server.js",
   "scripts": {
     "dev": "GRAPHILE_ENV=development NODE_ENV=development bun run --hot src/server.ts",
-    "build": "bun build --target bun --outdir build src/server.ts",
-    "start": "NODE_ENV=production bun run build/server.js",
+    "build": "bun build --target node --outdir build src/server.ts",
+    "start": "GRAPHILE_ENV=production NODE_ENV=production bun run build/server.js",
     "lint": "biome lint src",
     "format": "biome format --write src",
     "db:check": "bun --env-file .env.local drizzle-kit check",

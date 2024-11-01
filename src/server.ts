@@ -9,6 +9,8 @@ import { app as appConfig } from "lib/config/app";
 import { HOST, PORT, isDev, isProd } from "lib/config/env";
 import { pgPool } from "lib/db/pool";
 
+// TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
+
 const withPgClient = createWithPgClient({ pool: pgPool });
 
 /**
@@ -33,7 +35,7 @@ const app = new Hono();
 app.use(
   // enable CORS
   cors({
-    origin: isProd ? appConfig.appUrl : "http://localhost:3000",
+    origin: isProd ? appConfig.url : "http://localhost:3000",
     credentials: true,
     allowMethods: ["POST"],
   }),
@@ -41,6 +43,12 @@ app.use(
 
 // mount GraphQL API
 app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));
+
+// GraphQL Yoga suppresses logging the startup message in production environments by default
+if (isProd)
+  console.log(
+    `🚀 ${appConfig.name} GraphQL API running at http://${HOST}:${PORT}`,
+  );
 
 export default {
   host: HOST,
