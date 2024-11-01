@@ -4,7 +4,7 @@ import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connecti
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 
-import { DATABASE_URL, isProd } from "./src/lib/config/env";
+import { DATABASE_URL, isProdEnv } from "./src/lib/config/env";
 
 import type { GraphileConfig } from "graphile-config";
 
@@ -16,7 +16,7 @@ const preset: GraphileConfig.Preset = {
     PgAggregatesPreset,
   ],
   schema: {
-    retryOnInitFail: isProd,
+    retryOnInitFail: isProdEnv,
     sortExport: true,
     pgForbidSetofFunctionsToReturnNull: false,
     jsonScalarAsString: false,

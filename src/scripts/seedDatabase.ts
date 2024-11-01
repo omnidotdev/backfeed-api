@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { and, eq } from "drizzle-orm";
 
-import { DATABASE_URL, isDev } from "lib/config/env";
+import { DATABASE_URL, isDevEnv } from "lib/config/env";
 import { dbPool } from "lib/db/db";
 import {
   organizations,
@@ -29,7 +29,7 @@ import type {
  */
 const seedDatabase = async () => {
   // ! NB: only run this script in development
-  if (!isDev || !DATABASE_URL?.includes("localhost")) {
+  if (!isDevEnv || !DATABASE_URL?.includes("localhost")) {
     console.log("This script can only be run in development");
     process.exit(1);
   }
@@ -39,7 +39,7 @@ const seedDatabase = async () => {
   await dbPool.transaction(async (tx) => {
     const performTx = async <T extends TableConfig>(
       entity: PgTableWithColumns<T>,
-      seedFn: () => Promise<PgInsertValue<PgTable<T>>[]>
+      seedFn: () => Promise<PgInsertValue<PgTable<T>>[]>,
     ) => {
       await tx.delete(entity);
 
@@ -117,9 +117,9 @@ const seedDatabase = async () => {
               eq(usersToOrganizations.userId, selectedUser.id),
               eq(
                 usersToOrganizations.organizationId,
-                selectedProject.organizationId
-              )
-            )
+                selectedProject.organizationId,
+              ),
+            ),
           );
 
         if (!userOrganization) {
