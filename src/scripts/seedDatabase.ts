@@ -16,8 +16,8 @@ import type {
   InsertOrganization,
   InsertPost,
   InsertProject,
-  InsertUser,
   InsertUpvote,
+  InsertUser,
 } from "lib/drizzle/schema";
 
 /**
