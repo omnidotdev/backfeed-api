@@ -26,7 +26,7 @@
     "@types/bun": "^1.1.12",
     "@types/node": "^22.8.6",
     "@types/pg": "^8.11.10",
-    "dotenv-cli": "^7.4.2",
+    "dotenv-cli": "^8.0.0",
     "drizzle-kit": "^0.27.0",
     "husky": "^9.1.6",
     "replace-in-file": "^8.2.0",
