@@ -45,8 +45,5 @@
     "postgraphile": "^5.0.0-beta.37",
     "postgraphile-plugin-connection-filter": "^3.0.0-beta.7"
   },
-  "trustedDependencies": [
-    "@biomejs/biome",
-    "esbuild"
-  ]
+  "trustedDependencies": ["@biomejs/biome", "esbuild"]
 }
