@@ -27,9 +27,7 @@ export const usersToOrganizations = pgTable(
       }),
     createdAt: defaultDate(),
   },
-  (table) => ({
-    uniqueUserToOrganization: unique().on(table.userId, table.organizationId),
-  })
+  (table) => [unique().on(table.userId, table.organizationId)]
 );
 
 /**

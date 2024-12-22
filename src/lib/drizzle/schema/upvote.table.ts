@@ -27,9 +27,7 @@ export const upvotes = pgTable(
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
-  (table) => ({
-    uniqueUpvote: unique().on(table.postId, table.userId),
-  }),
+  (table) => [unique().on(table.postId, table.userId)]
 );
 
 /**

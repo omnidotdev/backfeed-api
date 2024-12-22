@@ -26,9 +26,7 @@ export const projects = pgTable(
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
-  (table) => ({
-    uniqueSlug: unique().on(table.slug, table.organizationId),
-  })
+  (table) => [unique().on(table.slug, table.organizationId)]
 );
 
 /**

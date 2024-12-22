@@ -120,7 +120,7 @@ const spec_userOrganization = {
   }),
   description: undefined,
   extensions: {
-    oid: "31983",
+    oid: "54470",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -200,7 +200,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "31936",
+    oid: "54448",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -268,7 +268,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "31946",
+    oid: "54458",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -348,7 +348,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "31896",
+    oid: "54410",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -452,7 +452,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "31910",
+    oid: "54424",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -568,7 +568,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "31922",
+    oid: "54434",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1717,30 +1717,37 @@ const aggregateSpec = {
   }
 };
 const colSpec = {
+  fieldName: "rowId",
   attributeName: "id",
   attribute: spec_post.attributes.id
 };
 const colSpec2 = {
+  fieldName: "title",
   attributeName: "title",
   attribute: spec_post.attributes.title
 };
 const colSpec3 = {
+  fieldName: "description",
   attributeName: "description",
   attribute: spec_post.attributes.description
 };
 const colSpec4 = {
+  fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_post.attributes.project_id
 };
 const colSpec5 = {
+  fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_post.attributes.user_id
 };
 const colSpec6 = {
+  fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_post.attributes.created_at
 };
 const colSpec7 = {
+  fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_post.attributes.updated_at
 };
@@ -2266,7 +2273,9 @@ const PgAggregateConditionStep = class PgAggregateConditionStep extends Modifier
       } = this,
       sqlCondition = this.pgWhereConditionSpecListToSQL(this.alias, this.conditions),
       where = sqlCondition ? sql`where ${sqlCondition}` : sql.blank,
-      boolExpr = this.expressions.length === 0 ? sql.true : sql.parens(sql.join(this.expressions.map(expr => sql.parens(expr)), "\nand\n")),
+      boolExpr = this.expressions.length === 0 ? sql.true : sql.parens(sql.join(this.expressions.map(expr => sql.parens(expr)), `
+and
+`)),
       subquery = sql`(${sql.indent`\
 select ${boolExpr}
 from ${this.tableExpression} as ${this.alias}
@@ -2276,22 +2285,27 @@ group by ())`;
   }
 };
 const colSpec8 = {
+  fieldName: "rowId",
   attributeName: "id",
   attribute: spec_upvote.attributes.id
 };
 const colSpec9 = {
+  fieldName: "postId",
   attributeName: "post_id",
   attribute: spec_upvote.attributes.post_id
 };
 const colSpec10 = {
+  fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_upvote.attributes.user_id
 };
 const colSpec11 = {
+  fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_upvote.attributes.created_at
 };
 const colSpec12 = {
+  fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_upvote.attributes.updated_at
 };
@@ -2320,18 +2334,22 @@ function assertAllowed19(fieldArgs, mode) {
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec13 = {
+  fieldName: "rowId",
   attributeName: "id",
   attribute: spec_user.attributes.id
 };
 const colSpec14 = {
+  fieldName: "walletAddress",
   attributeName: "wallet_address",
   attribute: spec_user.attributes.wallet_address
 };
 const colSpec15 = {
+  fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_user.attributes.created_at
 };
 const colSpec16 = {
+  fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_user.attributes.updated_at
 };
@@ -2446,14 +2464,17 @@ function assertAllowed24(fieldArgs, mode) {
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec17 = {
+  fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_userOrganization.attributes.user_id
 };
 const colSpec18 = {
+  fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_userOrganization.attributes.organization_id
 };
 const colSpec19 = {
+  fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_userOrganization.attributes.created_at
 };
@@ -2482,22 +2503,27 @@ function assertAllowed26(fieldArgs, mode) {
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec20 = {
+  fieldName: "rowId",
   attributeName: "id",
   attribute: spec_organization.attributes.id
 };
 const colSpec21 = {
+  fieldName: "name",
   attributeName: "name",
   attribute: spec_organization.attributes.name
 };
 const colSpec22 = {
+  fieldName: "slug",
   attributeName: "slug",
   attribute: spec_organization.attributes.slug
 };
 const colSpec23 = {
+  fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_organization.attributes.created_at
 };
 const colSpec24 = {
+  fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_organization.attributes.updated_at
 };
@@ -2538,34 +2564,42 @@ function assertAllowed29(fieldArgs, mode) {
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec25 = {
+  fieldName: "rowId",
   attributeName: "id",
   attribute: spec_project.attributes.id
 };
 const colSpec26 = {
+  fieldName: "name",
   attributeName: "name",
   attribute: spec_project.attributes.name
 };
 const colSpec27 = {
+  fieldName: "image",
   attributeName: "image",
   attribute: spec_project.attributes.image
 };
 const colSpec28 = {
+  fieldName: "slug",
   attributeName: "slug",
   attribute: spec_project.attributes.slug
 };
 const colSpec29 = {
+  fieldName: "description",
   attributeName: "description",
   attribute: spec_project.attributes.description
 };
 const colSpec30 = {
+  fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_project.attributes.organization_id
 };
 const colSpec31 = {
+  fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_project.attributes.created_at
 };
 const colSpec32 = {
+  fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_project.attributes.updated_at
 };
@@ -3877,8 +3911,8 @@ enum PostOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  ID_ASC
-  ID_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
   TITLE_ASC
   TITLE_DESC
   DESCRIPTION_ASC
@@ -3893,8 +3927,8 @@ enum PostOrderBy {
   UPDATED_AT_DESC
   UPVOTES_COUNT_ASC
   UPVOTES_COUNT_DESC
-  UPVOTES_DISTINCT_COUNT_ID_ASC
-  UPVOTES_DISTINCT_COUNT_ID_DESC
+  UPVOTES_DISTINCT_COUNT_ROW_ID_ASC
+  UPVOTES_DISTINCT_COUNT_ROW_ID_DESC
   UPVOTES_DISTINCT_COUNT_POST_ID_ASC
   UPVOTES_DISTINCT_COUNT_POST_ID_DESC
   UPVOTES_DISTINCT_COUNT_USER_ID_ASC
@@ -4872,8 +4906,8 @@ enum UpvoteOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  ID_ASC
-  ID_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
   POST_ID_ASC
   POST_ID_DESC
   USER_ID_ASC
@@ -5294,8 +5328,8 @@ enum ProjectOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  ID_ASC
-  ID_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
   NAME_ASC
   NAME_DESC
   IMAGE_ASC
@@ -5312,8 +5346,8 @@ enum ProjectOrderBy {
   UPDATED_AT_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
-  POSTS_DISTINCT_COUNT_ID_ASC
-  POSTS_DISTINCT_COUNT_ID_DESC
+  POSTS_DISTINCT_COUNT_ROW_ID_ASC
+  POSTS_DISTINCT_COUNT_ROW_ID_DESC
   POSTS_DISTINCT_COUNT_TITLE_ASC
   POSTS_DISTINCT_COUNT_TITLE_DESC
   POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
@@ -5497,8 +5531,8 @@ enum UserOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  ID_ASC
-  ID_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
   WALLET_ADDRESS_ASC
   WALLET_ADDRESS_DESC
   CREATED_AT_ASC
@@ -5507,8 +5541,8 @@ enum UserOrderBy {
   UPDATED_AT_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
-  POSTS_DISTINCT_COUNT_ID_ASC
-  POSTS_DISTINCT_COUNT_ID_DESC
+  POSTS_DISTINCT_COUNT_ROW_ID_ASC
+  POSTS_DISTINCT_COUNT_ROW_ID_DESC
   POSTS_DISTINCT_COUNT_TITLE_ASC
   POSTS_DISTINCT_COUNT_TITLE_DESC
   POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
@@ -5523,8 +5557,8 @@ enum UserOrderBy {
   POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
   UPVOTES_COUNT_ASC
   UPVOTES_COUNT_DESC
-  UPVOTES_DISTINCT_COUNT_ID_ASC
-  UPVOTES_DISTINCT_COUNT_ID_DESC
+  UPVOTES_DISTINCT_COUNT_ROW_ID_ASC
+  UPVOTES_DISTINCT_COUNT_ROW_ID_DESC
   UPVOTES_DISTINCT_COUNT_POST_ID_ASC
   UPVOTES_DISTINCT_COUNT_POST_ID_DESC
   UPVOTES_DISTINCT_COUNT_USER_ID_ASC
@@ -5703,8 +5737,8 @@ enum OrganizationOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  ID_ASC
-  ID_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
   NAME_ASC
   NAME_DESC
   SLUG_ASC
@@ -5715,8 +5749,8 @@ enum OrganizationOrderBy {
   UPDATED_AT_DESC
   PROJECTS_COUNT_ASC
   PROJECTS_COUNT_DESC
-  PROJECTS_DISTINCT_COUNT_ID_ASC
-  PROJECTS_DISTINCT_COUNT_ID_DESC
+  PROJECTS_DISTINCT_COUNT_ROW_ID_ASC
+  PROJECTS_DISTINCT_COUNT_ROW_ID_DESC
   PROJECTS_DISTINCT_COUNT_NAME_ASC
   PROJECTS_DISTINCT_COUNT_NAME_DESC
   PROJECTS_DISTINCT_COUNT_IMAGE_ASC
@@ -7932,7 +7966,7 @@ export const plans = {
       return $connection.pageInfo();
     },
     totalCount($connection) {
-      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
     },
     aggregates($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").single();
@@ -8079,7 +8113,7 @@ export const plans = {
       return $connection.pageInfo();
     },
     totalCount($connection) {
-      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
     },
     aggregates($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").single();
@@ -8477,7 +8511,7 @@ export const plans = {
         step.setOrderIsUnique();
       }
     },
-    ID_ASC: {
+    ROW_ID_ASC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
@@ -8490,7 +8524,7 @@ export const plans = {
         if (true) plan.setOrderIsUnique();
       }
     },
-    ID_DESC: {
+    ROW_ID_DESC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
@@ -8699,7 +8733,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         });
       }
     },
-    UPVOTES_DISTINCT_COUNT_ID_ASC: {
+    UPVOTES_DISTINCT_COUNT_ROW_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
@@ -8721,7 +8755,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
-    UPVOTES_DISTINCT_COUNT_ID_DESC: {
+    UPVOTES_DISTINCT_COUNT_ROW_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
@@ -9213,10 +9247,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   UUIDFilter: {
     isNull: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9230,16 +9265,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec ? resolveInputCodec(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue ? resolveSqlValue($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "isNull"
+          });
         $where.where(fragment);
       }
     },
     equalTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9253,16 +9292,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve2(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve2(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "equalTo"
+          });
         $where.where(fragment);
       }
     },
     notEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9276,16 +9319,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve3(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve3(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notEqualTo"
+          });
         $where.where(fragment);
       }
     },
     distinctFrom: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9299,16 +9346,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve4(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve4(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "distinctFrom"
+          });
         $where.where(fragment);
       }
     },
     notDistinctFrom: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9322,16 +9373,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve5(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve5(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notDistinctFrom"
+          });
         $where.where(fragment);
       }
     },
     in: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9345,16 +9400,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec3 ? resolveInputCodec3(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve6(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve6(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "in"
+          });
         $where.where(fragment);
       }
     },
     notIn: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9368,16 +9427,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec3 ? resolveInputCodec3(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve7(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve7(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notIn"
+          });
         $where.where(fragment);
       }
     },
     lessThan: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9391,16 +9454,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve8(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve8(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThan"
+          });
         $where.where(fragment);
       }
     },
     lessThanOrEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9414,16 +9481,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve9(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve9(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThanOrEqualTo"
+          });
         $where.where(fragment);
       }
     },
     greaterThan: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9437,16 +9508,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve10(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve10(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThan"
+          });
         $where.where(fragment);
       }
     },
     greaterThanOrEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9460,7 +9535,10 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve11(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve11(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThanOrEqualTo"
+          });
         $where.where(fragment);
       }
     }
@@ -9468,10 +9546,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   StringFilter: {
     isNull: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9485,16 +9564,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec4 ? resolveInputCodec4(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue2 ? resolveSqlValue2($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve12(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve12(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "isNull"
+          });
         $where.where(fragment);
       }
     },
     equalTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9508,16 +9591,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve13(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve13(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "equalTo"
+          });
         $where.where(fragment);
       }
     },
     notEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9531,16 +9618,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve14(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve14(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notEqualTo"
+          });
         $where.where(fragment);
       }
     },
     distinctFrom: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9554,16 +9645,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve15(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve15(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "distinctFrom"
+          });
         $where.where(fragment);
       }
     },
     notDistinctFrom: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9577,16 +9672,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve16(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve16(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notDistinctFrom"
+          });
         $where.where(fragment);
       }
     },
     in: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9600,16 +9699,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec6 ? resolveInputCodec6(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve17(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve17(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "in"
+          });
         $where.where(fragment);
       }
     },
     notIn: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9623,16 +9726,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec6 ? resolveInputCodec6(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve18(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve18(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notIn"
+          });
         $where.where(fragment);
       }
     },
     lessThan: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9646,16 +9753,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve19(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve19(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThan"
+          });
         $where.where(fragment);
       }
     },
     lessThanOrEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9669,16 +9780,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve20(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve20(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThanOrEqualTo"
+          });
         $where.where(fragment);
       }
     },
     greaterThan: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9692,16 +9807,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve21(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve21(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThan"
+          });
         $where.where(fragment);
       }
     },
     greaterThanOrEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9715,16 +9834,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve22(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve22(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThanOrEqualTo"
+          });
         $where.where(fragment);
       }
     },
     includes: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9738,16 +9861,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput ? lambda($input, resolveInput) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve23(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve23(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "includes"
+          });
         $where.where(fragment);
       }
     },
     notIncludes: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9761,16 +9888,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput2 ? lambda($input, resolveInput2) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve24(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve24(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notIncludes"
+          });
         $where.where(fragment);
       }
     },
     includesInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9784,16 +9915,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput3 ? lambda($input, resolveInput3) : $input,
           inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve25(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve25(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "includesInsensitive"
+          });
         $where.where(fragment);
       }
     },
     notIncludesInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9807,16 +9942,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput4 ? lambda($input, resolveInput4) : $input,
           inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve26(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve26(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notIncludesInsensitive"
+          });
         $where.where(fragment);
       }
     },
     startsWith: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9830,16 +9969,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput5 ? lambda($input, resolveInput5) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve27(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve27(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "startsWith"
+          });
         $where.where(fragment);
       }
     },
     notStartsWith: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9853,16 +9996,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput6 ? lambda($input, resolveInput6) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve28(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve28(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notStartsWith"
+          });
         $where.where(fragment);
       }
     },
     startsWithInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9876,16 +10023,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput7 ? lambda($input, resolveInput7) : $input,
           inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve29(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve29(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "startsWithInsensitive"
+          });
         $where.where(fragment);
       }
     },
     notStartsWithInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9899,16 +10050,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput8 ? lambda($input, resolveInput8) : $input,
           inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve30(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve30(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notStartsWithInsensitive"
+          });
         $where.where(fragment);
       }
     },
     endsWith: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9922,16 +10077,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput9 ? lambda($input, resolveInput9) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve31(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve31(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "endsWith"
+          });
         $where.where(fragment);
       }
     },
     notEndsWith: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9945,16 +10104,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput10 ? lambda($input, resolveInput10) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve32(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve32(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notEndsWith"
+          });
         $where.where(fragment);
       }
     },
     endsWithInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9968,16 +10131,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput11 ? lambda($input, resolveInput11) : $input,
           inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve33(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve33(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "endsWithInsensitive"
+          });
         $where.where(fragment);
       }
     },
     notEndsWithInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -9991,16 +10158,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = resolveInput12 ? lambda($input, resolveInput12) : $input,
           inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve34(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve34(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notEndsWithInsensitive"
+          });
         $where.where(fragment);
       }
     },
     like: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10014,16 +10185,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve35(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve35(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "like"
+          });
         $where.where(fragment);
       }
     },
     notLike: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10037,16 +10212,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve36(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve36(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notLike"
+          });
         $where.where(fragment);
       }
     },
     likeInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10060,16 +10239,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve37(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve37(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "likeInsensitive"
+          });
         $where.where(fragment);
       }
     },
     notLikeInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10083,16 +10266,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve38(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve38(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notLikeInsensitive"
+          });
         $where.where(fragment);
       }
     },
     equalToInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10106,16 +10293,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec8 ? resolveInputCodec8(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue3 ? resolveSqlValue3($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve13(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve13(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "equalToInsensitive"
+          });
         $where.where(fragment);
       }
     },
     notEqualToInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10129,16 +10320,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec9 ? resolveInputCodec9(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue4 ? resolveSqlValue4($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve14(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve14(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notEqualToInsensitive"
+          });
         $where.where(fragment);
       }
     },
     distinctFromInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10152,16 +10347,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec10 ? resolveInputCodec10(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue5 ? resolveSqlValue5($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve15(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve15(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "distinctFromInsensitive"
+          });
         $where.where(fragment);
       }
     },
     notDistinctFromInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10175,16 +10374,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec11 ? resolveInputCodec11(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue6 ? resolveSqlValue6($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve16(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve16(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notDistinctFromInsensitive"
+          });
         $where.where(fragment);
       }
     },
     inInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10198,16 +10401,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec12 ? resolveInputCodec12(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue7 ? resolveSqlValue7($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve17(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve17(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "inInsensitive"
+          });
         $where.where(fragment);
       }
     },
     notInInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10221,16 +10428,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec13 ? resolveInputCodec13(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue8 ? resolveSqlValue8($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve18(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve18(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notInInsensitive"
+          });
         $where.where(fragment);
       }
     },
     lessThanInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10244,16 +10455,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec14 ? resolveInputCodec14(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue9 ? resolveSqlValue9($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve19(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve19(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThanInsensitive"
+          });
         $where.where(fragment);
       }
     },
     lessThanOrEqualToInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10267,16 +10482,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec15 ? resolveInputCodec15(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue10 ? resolveSqlValue10($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve20(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve20(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThanOrEqualToInsensitive"
+          });
         $where.where(fragment);
       }
     },
     greaterThanInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10290,16 +10509,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec16 ? resolveInputCodec16(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue11 ? resolveSqlValue11($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve21(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve21(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThanInsensitive"
+          });
         $where.where(fragment);
       }
     },
     greaterThanOrEqualToInsensitive: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10313,7 +10536,10 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec17 ? resolveInputCodec17(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue12 ? resolveSqlValue12($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve22(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve22(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThanOrEqualToInsensitive"
+          });
         $where.where(fragment);
       }
     }
@@ -10321,10 +10547,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   DatetimeFilter: {
     isNull: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10338,16 +10565,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec18 ? resolveInputCodec18(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue13 ? resolveSqlValue13($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve39(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve39(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "isNull"
+          });
         $where.where(fragment);
       }
     },
     equalTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10361,16 +10592,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve40(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve40(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "equalTo"
+          });
         $where.where(fragment);
       }
     },
     notEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10384,16 +10619,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve41(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve41(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notEqualTo"
+          });
         $where.where(fragment);
       }
     },
     distinctFrom: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10407,16 +10646,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve42(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve42(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "distinctFrom"
+          });
         $where.where(fragment);
       }
     },
     notDistinctFrom: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10430,16 +10673,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve43(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve43(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notDistinctFrom"
+          });
         $where.where(fragment);
       }
     },
     in: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10453,16 +10700,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec20 ? resolveInputCodec20(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve44(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve44(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "in"
+          });
         $where.where(fragment);
       }
     },
     notIn: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10476,16 +10727,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec20 ? resolveInputCodec20(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve45(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve45(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notIn"
+          });
         $where.where(fragment);
       }
     },
     lessThan: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10499,16 +10754,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve46(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve46(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThan"
+          });
         $where.where(fragment);
       }
     },
     lessThanOrEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10522,16 +10781,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve47(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve47(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThanOrEqualTo"
+          });
         $where.where(fragment);
       }
     },
     greaterThan: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10545,16 +10808,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve48(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve48(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThan"
+          });
         $where.where(fragment);
       }
     },
     greaterThanOrEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -10568,7 +10835,10 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve49(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve49(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThanOrEqualTo"
+          });
         $where.where(fragment);
       }
     }
@@ -11087,10 +11357,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   BigIntFilter: {
     isNull: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11104,16 +11375,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec21 ? resolveInputCodec21(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = resolveSqlValue14 ? resolveSqlValue14($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve50(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve50(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "isNull"
+          });
         $where.where(fragment);
       }
     },
     equalTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11127,16 +11402,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve51(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve51(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "equalTo"
+          });
         $where.where(fragment);
       }
     },
     notEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11150,16 +11429,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve52(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve52(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notEqualTo"
+          });
         $where.where(fragment);
       }
     },
     distinctFrom: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11173,16 +11456,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve53(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve53(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "distinctFrom"
+          });
         $where.where(fragment);
       }
     },
     notDistinctFrom: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11196,16 +11483,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve54(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve54(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notDistinctFrom"
+          });
         $where.where(fragment);
       }
     },
     in: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11219,16 +11510,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec23 ? resolveInputCodec23(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve55(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve55(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "in"
+          });
         $where.where(fragment);
       }
     },
     notIn: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11242,16 +11537,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec23 ? resolveInputCodec23(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve56(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve56(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notIn"
+          });
         $where.where(fragment);
       }
     },
     lessThan: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11265,16 +11564,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve57(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve57(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThan"
+          });
         $where.where(fragment);
       }
     },
     lessThanOrEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11288,16 +11591,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve58(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve58(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThanOrEqualTo"
+          });
         $where.where(fragment);
       }
     },
     greaterThan: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11311,16 +11618,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve59(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve59(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThan"
+          });
         $where.where(fragment);
       }
     },
     greaterThanOrEqualTo: {
       applyPlan($where, fieldArgs) {
-        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to \`postgraphile-plugin-connection-filter\` does not implement the required interfaces.");
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
         const $input = fieldArgs.getRaw();
         if ($input.evalIs(void 0)) return;
         const {
+            fieldName: parentFieldName,
             attributeName,
             attribute,
             codec,
@@ -11334,7 +11645,10 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $resolvedInput = undefined ? lambda($input, undefined) : $input,
           inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
           sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
-          fragment = resolve60(sqlIdentifier, sqlValue, $input, $where);
+          fragment = resolve60(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThanOrEqualTo"
+          });
         $where.where(fragment);
       }
     }
@@ -12362,7 +12676,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $connection.pageInfo();
     },
     totalCount($connection) {
-      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
     },
     aggregates($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").single();
@@ -12792,7 +13106,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         step.setOrderIsUnique();
       }
     },
-    ID_ASC: {
+    ROW_ID_ASC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
@@ -12805,7 +13119,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (true) plan.setOrderIsUnique();
       }
     },
-    ID_DESC: {
+    ROW_ID_DESC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
@@ -13032,7 +13346,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $connection.pageInfo();
     },
     totalCount($connection) {
-      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
     },
     aggregates($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").single();
@@ -14026,7 +14340,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         step.setOrderIsUnique();
       }
     },
-    ID_ASC: {
+    ROW_ID_ASC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
@@ -14039,7 +14353,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (true) plan.setOrderIsUnique();
       }
     },
-    ID_DESC: {
+    ROW_ID_DESC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
@@ -14274,7 +14588,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         });
       }
     },
-    POSTS_DISTINCT_COUNT_ID_ASC: {
+    POSTS_DISTINCT_COUNT_ROW_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
@@ -14296,7 +14610,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
-    POSTS_DISTINCT_COUNT_ID_DESC: {
+    POSTS_DISTINCT_COUNT_ROW_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
@@ -14749,7 +15063,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $connection.pageInfo();
     },
     totalCount($connection) {
-      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
     },
     aggregates($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").single();
@@ -15083,7 +15397,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         step.setOrderIsUnique();
       }
     },
-    ID_ASC: {
+    ROW_ID_ASC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
@@ -15096,7 +15410,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (true) plan.setOrderIsUnique();
       }
     },
-    ID_DESC: {
+    ROW_ID_DESC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
@@ -15227,7 +15541,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         });
       }
     },
-    POSTS_DISTINCT_COUNT_ID_ASC: {
+    POSTS_DISTINCT_COUNT_ROW_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
@@ -15249,7 +15563,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
-    POSTS_DISTINCT_COUNT_ID_DESC: {
+    POSTS_DISTINCT_COUNT_ROW_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
@@ -15575,7 +15889,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         });
       }
     },
-    UPVOTES_DISTINCT_COUNT_ID_ASC: {
+    UPVOTES_DISTINCT_COUNT_ROW_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
@@ -15597,7 +15911,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
-    UPVOTES_DISTINCT_COUNT_ID_DESC: {
+    UPVOTES_DISTINCT_COUNT_ROW_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
@@ -16058,7 +16372,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $connection.pageInfo();
     },
     totalCount($connection) {
-      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint);
+      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
     },
     aggregates($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").single();
@@ -16397,7 +16711,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         step.setOrderIsUnique();
       }
     },
-    ID_ASC: {
+    ROW_ID_ASC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
@@ -16410,7 +16724,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (true) plan.setOrderIsUnique();
       }
     },
-    ID_DESC: {
+    ROW_ID_DESC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
@@ -16567,7 +16881,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         });
       }
     },
-    PROJECTS_DISTINCT_COUNT_ID_ASC: {
+    PROJECTS_DISTINCT_COUNT_ROW_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
@@ -16589,7 +16903,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
-    PROJECTS_DISTINCT_COUNT_ID_DESC: {
+    PROJECTS_DISTINCT_COUNT_ROW_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
