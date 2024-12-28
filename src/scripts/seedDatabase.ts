@@ -24,6 +24,16 @@ const seedDatabase = async () => {
         name: f.companyName(),
       },
     },
+    posts: {
+      columns: {
+        title: f.companyName(),
+        description: f.loremIpsum(),
+        createdAt: f.date({
+          minDate: "2024-12-21",
+          maxDate: "2024-12-28",
+        }),
+      },
+    },
   }));
   console.log("Database has been seeded successfully!");
 };
