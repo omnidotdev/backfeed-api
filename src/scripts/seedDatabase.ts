@@ -29,6 +29,7 @@ const seedDatabase = async () => {
     projects: {
       count: 2000,
       columns: {
+        description: f.loremIpsum(),
         slug: f.string({
           isUnique: true,
         }),
