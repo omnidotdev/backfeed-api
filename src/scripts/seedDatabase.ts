@@ -20,19 +20,39 @@ const seedDatabase = async () => {
   console.log("Seeding database...");
   await seed(db, schema).refine((f) => ({
     organizations: {
+      count: 400,
       columns: {
         name: f.companyName(),
       },
     },
+    projects: {
+      count: 2000,
+      columns: {
+        slug: f.string({
+          isUnique: true,
+        }),
+      },
+    },
     posts: {
+      count: 10000,
       columns: {
         title: f.companyName(),
         description: f.loremIpsum(),
         createdAt: f.date({
+          // TODO: make dynamic around the current date
           minDate: "2024-12-21",
           maxDate: "2024-12-28",
         }),
       },
+    },
+    users: {
+      count: 500,
+    },
+    usersToOrganizations: {
+      count: 50,
+    },
+    upvotes: {
+      count: 1000,
     },
   }));
   console.log("Database has been seeded successfully!");
