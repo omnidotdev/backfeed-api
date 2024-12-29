@@ -18,6 +18,7 @@ const seedDatabase = async () => {
   await reset(db, schema);
 
   console.log("Seeding database...");
+
   await seed(db, schema).refine((f) => ({
     organizations: {
       count: 400,
@@ -55,6 +56,7 @@ const seedDatabase = async () => {
       count: 1000,
     },
   }));
+
   console.log("Database has been seeded successfully!");
 };
 
