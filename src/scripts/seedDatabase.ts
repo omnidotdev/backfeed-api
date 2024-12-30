@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { reset, seed } from "drizzle-seed";
 
@@ -41,9 +42,8 @@ const seedDatabase = async () => {
         title: f.companyName(),
         description: f.loremIpsum(),
         createdAt: f.date({
-          // TODO: make dynamic around the current date
-          minDate: "2024-12-21",
-          maxDate: "2024-12-28",
+          minDate: dayjs(new Date()).subtract(7, "day").format("YYYY-MM-DD"),
+          maxDate: dayjs(new Date()).format("YYYY-MM-DD"),
         }),
       },
     },

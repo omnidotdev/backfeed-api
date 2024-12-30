@@ -34,6 +34,7 @@
   "dependencies": {
     "@graphile/pg-aggregates": "^0.2.0-beta.7",
     "@graphile/simplify-inflection": "^8.0.0-beta.5",
+    "dayjs": "^1.11.13",
     "drizzle-orm": "^0.38.2",
     "drizzle-seed": "^0.2.1",
     "graphile-export": "^0.0.2-beta.24",
