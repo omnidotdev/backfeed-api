@@ -10,7 +10,7 @@
     "format": "biome format --write src",
     "db:check": "bun --env-file .env.local drizzle-kit check",
     "db:generate": "bun --env-file .env.local drizzle-kit generate",
-    "db:migrate": "bun --env-file .env.local drizzle-kit migrate",
+    "db:migrate": "bun --env-file .env.local drizzle-kit migrate && bun graphile:generate",
     "db:migrate:drop": "bun --env-file .env.local drizzle-kit drop",
     "db:pull": "bun --env-file .env.local drizzle-kit introspect",
     "db:push": "bun --env-file .env.local drizzle-kit push",
