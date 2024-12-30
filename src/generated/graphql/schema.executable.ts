@@ -120,7 +120,7 @@ const spec_userOrganization = {
   }),
   description: undefined,
   extensions: {
-    oid: "327569",
+    oid: "77600",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -200,7 +200,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "327547",
+    oid: "77578",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -280,7 +280,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "327509",
+    oid: "77540",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -384,7 +384,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "327523",
+    oid: "77554",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -500,7 +500,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "327533",
+    oid: "77564",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -604,7 +604,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "327557",
+    oid: "77588",
     isTableLike: true,
     pg: {
       serviceName: "main",
