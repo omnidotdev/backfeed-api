@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { posts } from "./post.table";
@@ -13,8 +13,11 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
  */
 export const users = pgTable("user", {
   id: defaultId(),
-  // TODO refactor to HIDRA ID, currently here for testing
-  walletAddress: text().unique(),
+  // HIDRA ID mapped to `sub` claim
+  hidraId: uuid().notNull().unique(),
+  username: text().unique(),
+  firstName: text(),
+  lastName: text(),
   createdAt: defaultDate(),
   updatedAt: defaultDate(),
 });
