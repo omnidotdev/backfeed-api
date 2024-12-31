@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 
+import { comments } from "./comment.table";
 import { defaultDate, defaultId } from "./constants";
 import { projects } from "./project.table";
 import { upvotes } from "./upvote.table";
@@ -41,6 +42,7 @@ export const postRelations = relations(posts, ({ one, many }) => ({
     fields: [posts.userId],
     references: [users.id],
   }),
+  comments: many(comments),
   upvotes: many(upvotes),
 }));
 

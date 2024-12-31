@@ -22,22 +22,26 @@ const seedDatabase = async () => {
 
   await seed(db, schema).refine((f) => ({
     organizations: {
-      count: 400,
+      count: 200,
       columns: {
         name: f.companyName(),
       },
+      with: {
+        projects: 50,
+      },
     },
     projects: {
-      count: 2000,
       columns: {
         description: f.loremIpsum(),
         slug: f.string({
           isUnique: true,
         }),
       },
+      with: {
+        posts: 20,
+      },
     },
     posts: {
-      count: 10000,
       columns: {
         title: f.companyName(),
         description: f.loremIpsum(),
@@ -46,15 +50,23 @@ const seedDatabase = async () => {
           maxDate: dayjs(new Date()).format("YYYY-MM-DD"),
         }),
       },
+      with: {
+        comments: 10,
+      },
     },
     users: {
       count: 500,
     },
     usersToOrganizations: {
-      count: 50,
+      count: 100,
     },
     upvotes: {
       count: 1000,
+    },
+    comments: {
+      columns: {
+        message: f.loremIpsum(),
+      },
     },
   }));
 

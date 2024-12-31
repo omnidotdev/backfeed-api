@@ -38,7 +38,7 @@ app.use(
     origin: isProdEnv ? appConfig.url : "http://localhost:3000",
     credentials: true,
     allowMethods: ["POST"],
-  }),
+  })
 );
 
 // mount GraphQL API
@@ -47,7 +47,7 @@ app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));
 // GraphQL Yoga suppresses logging the startup message in production environments by default
 if (isProdEnv)
   console.log(
-    `🚀 ${appConfig.name} GraphQL API running at http://${HOST}:${PORT}`,
+    `🚀 ${appConfig.name} GraphQL API running at http://${HOST}:${PORT}`
   );
 
 export default {
