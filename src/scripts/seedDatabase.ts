@@ -56,12 +56,13 @@ const seedDatabase = async () => {
     },
     users: {
       count: 500,
+      with: {
+        upvotes: 10,
+        downvotes: 10,
+      },
     },
     usersToOrganizations: {
       count: 100,
-    },
-    upvotes: {
-      count: 1000,
     },
     comments: {
       columns: {

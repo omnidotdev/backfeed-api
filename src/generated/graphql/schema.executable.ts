@@ -132,6 +132,86 @@ const spec_userOrganization = {
   executor: executor
 };
 const userOrganizationCodec = recordCodec(spec_userOrganization);
+const downvoteIdentifier = sql.identifier("public", "downvote");
+const spec_downvote = {
+  name: "downvote",
+  identifier: downvoteIdentifier,
+  attributes: Object.assign(Object.create(null), {
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    post_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    user_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: false,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: false,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  }),
+  description: undefined,
+  extensions: {
+    oid: "78725",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "downvote"
+    },
+    tags: Object.create(null)
+  },
+  executor: executor
+};
+const downvoteCodec = recordCodec(spec_downvote);
 const upvoteIdentifier = sql.identifier("public", "upvote");
 const spec_upvote = {
   name: "upvote",
@@ -741,6 +821,47 @@ const registryConfig_pgResources_user_organization_user_organization = {
     canDelete: true
   }
 };
+const downvoteUniques = [{
+  isPrimary: true,
+  attributes: ["id"],
+  description: undefined,
+  extensions: {
+    tags: Object.create(null)
+  }
+}, {
+  isPrimary: false,
+  attributes: ["post_id", "user_id"],
+  description: undefined,
+  extensions: {
+    tags: Object.create(null)
+  }
+}];
+const registryConfig_pgResources_downvote_downvote = {
+  executor: executor,
+  name: "downvote",
+  identifier: "main.public.downvote",
+  from: downvoteIdentifier,
+  codec: downvoteCodec,
+  uniques: downvoteUniques,
+  isVirtual: false,
+  description: undefined,
+  extensions: {
+    description: undefined,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "downvote"
+    },
+    isInsertable: true,
+    isUpdatable: true,
+    isDeletable: true,
+    tags: {},
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  }
+};
 const upvoteUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1002,6 +1123,7 @@ const registryConfig = {
     userOrganization: userOrganizationCodec,
     uuid: TYPES.uuid,
     timestamptz: TYPES.timestamptz,
+    downvote: downvoteCodec,
     upvote: upvoteCodec,
     organization: organizationCodec,
     text: TYPES.text,
@@ -1012,6 +1134,7 @@ const registryConfig = {
   }),
   pgResources: Object.assign(Object.create(null), {
     user_organization: registryConfig_pgResources_user_organization_user_organization,
+    downvote: registryConfig_pgResources_downvote_downvote,
     upvote: registryConfig_pgResources_upvote_upvote,
     organization: registryConfig_pgResources_organization_organization,
     comment: registryConfig_pgResources_comment_comment,
@@ -1038,6 +1161,38 @@ const registryConfig = {
       },
       userByMyUserId: {
         localCodec: commentCodec,
+        remoteResourceOptions: registryConfig_pgResources_user_user,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["user_id"],
+        remoteAttributes: ["id"],
+        isUnique: true,
+        isReferencee: false,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
+      }
+    }),
+    downvote: Object.assign(Object.create(null), {
+      postByMyPostId: {
+        localCodec: downvoteCodec,
+        remoteResourceOptions: registryConfig_pgResources_post_post,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["post_id"],
+        remoteAttributes: ["id"],
+        isUnique: true,
+        isReferencee: false,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
+      },
+      userByMyUserId: {
+        localCodec: downvoteCodec,
         remoteResourceOptions: registryConfig_pgResources_user_user,
         localCodecPolymorphicTypes: undefined,
         localAttributes: ["user_id"],
@@ -1133,6 +1288,21 @@ const registryConfig = {
       commentsByTheirPostId: {
         localCodec: postCodec,
         remoteResourceOptions: registryConfig_pgResources_comment_comment,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["id"],
+        remoteAttributes: ["post_id"],
+        isUnique: false,
+        isReferencee: true,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
+      },
+      downvotesByTheirPostId: {
+        localCodec: postCodec,
+        remoteResourceOptions: registryConfig_pgResources_downvote_downvote,
         localCodecPolymorphicTypes: undefined,
         localAttributes: ["id"],
         remoteAttributes: ["post_id"],
@@ -1270,6 +1440,21 @@ const registryConfig = {
             behavior: []
           }
         }
+      },
+      downvotesByTheirUserId: {
+        localCodec: userCodec,
+        remoteResourceOptions: registryConfig_pgResources_downvote_downvote,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["id"],
+        remoteAttributes: ["user_id"],
+        isUnique: false,
+        isReferencee: true,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
       }
     }),
     userOrganization: Object.assign(Object.create(null), {
@@ -1307,6 +1492,7 @@ const registryConfig = {
   })
 };
 const registry = makeRegistry(registryConfig);
+const pgResource_downvotePgResource = registry.pgResources["downvote"];
 const pgResource_upvotePgResource = registry.pgResources["upvote"];
 const pgResource_organizationPgResource = registry.pgResources["organization"];
 const pgResource_commentPgResource = registry.pgResources["comment"];
@@ -1315,6 +1501,25 @@ const pgResource_userPgResource = registry.pgResources["user"];
 const pgResource_projectPgResource = registry.pgResources["project"];
 const nodeIdHandlerByTypeName = Object.assign(Object.create(null), {
   Query: handler,
+  Downvote: {
+    typeName: "Downvote",
+    codec: nodeIdCodecs_base64JSON_base64JSON,
+    deprecationReason: undefined,
+    plan($record) {
+      return list([constant("Downvote", false), $record.get("id")]);
+    },
+    getSpec($list) {
+      return {
+        id: inhibitOnNull(access($list, [1]))
+      };
+    },
+    get(spec) {
+      return pgResource_downvotePgResource.get(spec);
+    },
+    match(obj) {
+      return obj[0] === "Downvote";
+    }
+  },
   Upvote: {
     typeName: "Upvote",
     codec: nodeIdCodecs_base64JSON_base64JSON,
@@ -1450,7 +1655,7 @@ const fetcher = (handler => {
   };
   fn.deprecationReason = handler.deprecationReason;
   return fn;
-})(nodeIdHandlerByTypeName.Upvote);
+})(nodeIdHandlerByTypeName.Downvote);
 const fetcher2 = (handler => {
   const fn = $nodeId => {
     const $decoded = lambda($nodeId, specForHandler(handler));
@@ -1458,7 +1663,7 @@ const fetcher2 = (handler => {
   };
   fn.deprecationReason = handler.deprecationReason;
   return fn;
-})(nodeIdHandlerByTypeName.Organization);
+})(nodeIdHandlerByTypeName.Upvote);
 const fetcher3 = (handler => {
   const fn = $nodeId => {
     const $decoded = lambda($nodeId, specForHandler(handler));
@@ -1466,7 +1671,7 @@ const fetcher3 = (handler => {
   };
   fn.deprecationReason = handler.deprecationReason;
   return fn;
-})(nodeIdHandlerByTypeName.Comment);
+})(nodeIdHandlerByTypeName.Organization);
 const fetcher4 = (handler => {
   const fn = $nodeId => {
     const $decoded = lambda($nodeId, specForHandler(handler));
@@ -1474,7 +1679,7 @@ const fetcher4 = (handler => {
   };
   fn.deprecationReason = handler.deprecationReason;
   return fn;
-})(nodeIdHandlerByTypeName.Post);
+})(nodeIdHandlerByTypeName.Comment);
 const fetcher5 = (handler => {
   const fn = $nodeId => {
     const $decoded = lambda($nodeId, specForHandler(handler));
@@ -1482,8 +1687,16 @@ const fetcher5 = (handler => {
   };
   fn.deprecationReason = handler.deprecationReason;
   return fn;
-})(nodeIdHandlerByTypeName.User);
+})(nodeIdHandlerByTypeName.Post);
 const fetcher6 = (handler => {
+  const fn = $nodeId => {
+    const $decoded = lambda($nodeId, specForHandler(handler));
+    return handler.get(handler.getSpec($decoded));
+  };
+  fn.deprecationReason = handler.deprecationReason;
+  return fn;
+})(nodeIdHandlerByTypeName.User);
+const fetcher7 = (handler => {
   const fn = $nodeId => {
     const $decoded = lambda($nodeId, specForHandler(handler));
     return handler.get(handler.getSpec($decoded));
@@ -1590,13 +1803,6 @@ function assertAllowed7(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function UUIDSerialize(value) {
-  return "" + value;
-}
-const coerce = string => {
-  if (!/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i.test(string)) throw new GraphQLError("Invalid UUID, expected 32 hexadecimal characters, optionally with hypens");
-  return string;
-};
 function assertAllowed8(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -1609,7 +1815,26 @@ function assertAllowed8(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+function UUIDSerialize(value) {
+  return "" + value;
+}
+const coerce = string => {
+  if (!/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i.test(string)) throw new GraphQLError("Invalid UUID, expected 32 hexadecimal characters, optionally with hypens");
+  return string;
+};
 function assertAllowed9(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed10(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -1775,7 +2000,7 @@ export const ProjectGroupBy = new GraphQLEnumType({
     }
   })
 });
-function assertAllowed10(fieldArgs, mode) {
+function assertAllowed11(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -1923,18 +2148,6 @@ export const PostGroupBy = new GraphQLEnumType({
     }
   })
 });
-function assertAllowed11(fieldArgs, mode) {
-  const $raw = fieldArgs.getRaw();
-  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !false && "evalLength" in $raw) {
-    const l = $raw.evalLength();
-    if (l != null) for (let i = 0; i < l; i++) {
-      const $entry = $raw.at(i);
-      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed12(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -1995,6 +2208,42 @@ function assertAllowed16(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+function assertAllowed17(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed18(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed19(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
 const relation = registry.pgRelations["post"]["upvotesByTheirPostId"];
 const dataTypeToAggregateTypeMap = {};
 const aggregateSpec = {
@@ -2014,6 +2263,7 @@ const aggregateSpec = {
   }
 };
 const relation2 = registry.pgRelations["post"]["commentsByTheirPostId"];
+const relation3 = registry.pgRelations["post"]["downvotesByTheirPostId"];
 const colSpec = {
   fieldName: "rowId",
   attributeName: "id",
@@ -2049,7 +2299,7 @@ const colSpec7 = {
   attributeName: "updated_at",
   attribute: spec_post.attributes.updated_at
 };
-function assertAllowed17(fieldArgs, mode) {
+function assertAllowed20(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2061,7 +2311,7 @@ function assertAllowed17(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed18(fieldArgs, mode) {
+function assertAllowed21(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2073,7 +2323,7 @@ function assertAllowed18(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed19(fieldArgs, mode) {
+function assertAllowed22(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2507,7 +2757,7 @@ const resolve46 = (i, v) => sql`${i} < ${v}`;
 const resolve47 = (i, v) => sql`${i} <= ${v}`;
 const resolve48 = (i, v) => sql`${i} > ${v}`;
 const resolve49 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed20(fieldArgs, mode) {
+function assertAllowed23(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2607,7 +2857,7 @@ const colSpec12 = {
   attributeName: "updated_at",
   attribute: spec_upvote.attributes.updated_at
 };
-function assertAllowed21(fieldArgs, mode) {
+function assertAllowed24(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2619,7 +2869,7 @@ function assertAllowed21(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed22(fieldArgs, mode) {
+function assertAllowed25(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2666,7 +2916,7 @@ const colSpec19 = {
   attributeName: "last_name",
   attribute: spec_user.attributes.last_name
 };
-function assertAllowed23(fieldArgs, mode) {
+function assertAllowed26(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2678,7 +2928,7 @@ function assertAllowed23(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed24(fieldArgs, mode) {
+function assertAllowed27(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2690,7 +2940,7 @@ function assertAllowed24(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed25(fieldArgs, mode) {
+function assertAllowed28(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2752,7 +3002,7 @@ const resolve57 = (i, v) => sql`${i} < ${v}`;
 const resolve58 = (i, v) => sql`${i} <= ${v}`;
 const resolve59 = (i, v) => sql`${i} > ${v}`;
 const resolve60 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed26(fieldArgs, mode) {
+function assertAllowed29(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2764,7 +3014,7 @@ function assertAllowed26(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed27(fieldArgs, mode) {
+function assertAllowed30(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2791,7 +3041,7 @@ const colSpec22 = {
   attributeName: "created_at",
   attribute: spec_userOrganization.attributes.created_at
 };
-function assertAllowed28(fieldArgs, mode) {
+function assertAllowed31(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2803,7 +3053,7 @@ function assertAllowed28(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed29(fieldArgs, mode) {
+function assertAllowed32(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2840,7 +3090,7 @@ const colSpec27 = {
   attributeName: "updated_at",
   attribute: spec_organization.attributes.updated_at
 };
-function assertAllowed30(fieldArgs, mode) {
+function assertAllowed33(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2852,7 +3102,7 @@ function assertAllowed30(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed31(fieldArgs, mode) {
+function assertAllowed34(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2864,7 +3114,7 @@ function assertAllowed31(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed32(fieldArgs, mode) {
+function assertAllowed35(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -2916,42 +3166,6 @@ const colSpec35 = {
   attributeName: "updated_at",
   attribute: spec_project.attributes.updated_at
 };
-function assertAllowed33(fieldArgs, mode) {
-  const $raw = fieldArgs.getRaw();
-  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !false && "evalLength" in $raw) {
-    const l = $raw.evalLength();
-    if (l != null) for (let i = 0; i < l; i++) {
-      const $entry = $raw.at(i);
-      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed34(fieldArgs, mode) {
-  const $raw = fieldArgs.getRaw();
-  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !false && "evalLength" in $raw) {
-    const l = $raw.evalLength();
-    if (l != null) for (let i = 0; i < l; i++) {
-      const $entry = $raw.at(i);
-      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed35(fieldArgs, mode) {
-  const $raw = fieldArgs.getRaw();
-  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !false && "evalLength" in $raw) {
-    const l = $raw.evalLength();
-    if (l != null) for (let i = 0; i < l; i++) {
-      const $entry = $raw.at(i);
-      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed36(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -2977,6 +3191,42 @@ function assertAllowed37(fieldArgs, mode) {
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed38(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed39(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed40(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed41(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -3018,7 +3268,7 @@ const colSpec41 = {
   attributeName: "updated_at",
   attribute: spec_comment.attributes.updated_at
 };
-function assertAllowed39(fieldArgs, mode) {
+function assertAllowed42(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -3030,7 +3280,7 @@ function assertAllowed39(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed40(fieldArgs, mode) {
+function assertAllowed43(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -3042,7 +3292,80 @@ function assertAllowed40(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed41(fieldArgs, mode) {
+function assertAllowed44(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+const colSpec42 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_downvote.attributes.id
+};
+const colSpec43 = {
+  fieldName: "postId",
+  attributeName: "post_id",
+  attribute: spec_downvote.attributes.post_id
+};
+const colSpec44 = {
+  fieldName: "userId",
+  attributeName: "user_id",
+  attribute: spec_downvote.attributes.user_id
+};
+const colSpec45 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_downvote.attributes.created_at
+};
+const colSpec46 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_downvote.attributes.updated_at
+};
+function assertAllowed45(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed46(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed47(fieldArgs, mode) {
+  const $raw = fieldArgs.getRaw();
+  if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !false && "evalLength" in $raw) {
+    const l = $raw.evalLength();
+    if (l != null) for (let i = 0; i < l; i++) {
+      const $entry = $raw.at(i);
+      if ("evalIsEmpty" in $entry && $entry.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed48(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !false && "evalLength" in $raw) {
@@ -3510,7 +3833,117 @@ export const CommentGroupBy = new GraphQLEnumType({
     }
   })
 });
-const relation3 = registry.pgRelations["project"]["postsByTheirProjectId"];
+function DownvoteGroupBy_extensions_grafast_applyPlan($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("post_id")}`
+  });
+}
+function DownvoteGroupBy_extensions_grafast_applyPlan2($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("user_id")}`
+  });
+}
+function DownvoteGroupBy_extensions_grafast_applyPlan3($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
+  });
+}
+function DownvoteGroupBy_extensions_grafast_applyPlan4($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function DownvoteGroupBy_extensions_grafast_applyPlan5($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+  });
+}
+function DownvoteGroupBy_extensions_grafast_applyPlan6($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
+  });
+}
+function DownvoteGroupBy_extensions_grafast_applyPlan7($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+function DownvoteGroupBy_extensions_grafast_applyPlan8($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+  });
+}
+export const DownvoteGroupBy = new GraphQLEnumType({
+  name: "DownvoteGroupBy",
+  description: "Grouping methods for `Downvote` for usage during aggregation.",
+  values: Object.assign(Object.create(null), {
+    POST_ID: {
+      value: "POST_ID",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan
+        }
+      })
+    },
+    USER_ID: {
+      value: "USER_ID",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan2
+        }
+      })
+    },
+    CREATED_AT: {
+      value: "CREATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan3
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      value: "CREATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan4
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      value: "CREATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan5
+        }
+      })
+    },
+    UPDATED_AT: {
+      value: "UPDATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan6
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      value: "UPDATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan7
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      value: "UPDATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan8
+        }
+      })
+    }
+  })
+});
+const relation4 = registry.pgRelations["project"]["postsByTheirProjectId"];
 function OrganizationGroupBy_extensions_grafast_applyPlan($pgSelect) {
   $pgSelect.groupBy({
     fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
@@ -3595,8 +4028,8 @@ export const OrganizationGroupBy = new GraphQLEnumType({
     }
   })
 });
-const relation4 = registry.pgRelations["organization"]["projectsByTheirOrganizationId"];
-const relation5 = registry.pgRelations["organization"]["userOrganizationsByTheirOrganizationId"];
+const relation5 = registry.pgRelations["organization"]["projectsByTheirOrganizationId"];
+const relation6 = registry.pgRelations["organization"]["userOrganizationsByTheirOrganizationId"];
 function UserGroupBy_extensions_grafast_applyPlan($pgSelect) {
   $pgSelect.groupBy({
     fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
@@ -3707,55 +4140,64 @@ export const UserGroupBy = new GraphQLEnumType({
     }
   })
 });
-const relation6 = registry.pgRelations["user"]["postsByTheirUserId"];
-const relation7 = registry.pgRelations["user"]["upvotesByTheirUserId"];
-const relation8 = registry.pgRelations["user"]["userOrganizationsByTheirUserId"];
-const relation9 = registry.pgRelations["user"]["commentsByTheirUserId"];
+const relation7 = registry.pgRelations["user"]["postsByTheirUserId"];
+const relation8 = registry.pgRelations["user"]["upvotesByTheirUserId"];
+const relation9 = registry.pgRelations["user"]["userOrganizationsByTheirUserId"];
+const relation10 = registry.pgRelations["user"]["commentsByTheirUserId"];
+const relation11 = registry.pgRelations["user"]["downvotesByTheirUserId"];
 const specFromArgs = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Upvote, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.Downvote, $nodeId);
 };
 const specFromArgs2 = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Organization, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.Upvote, $nodeId);
 };
 const specFromArgs3 = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Comment, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.Organization, $nodeId);
 };
 const specFromArgs4 = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Post, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.Comment, $nodeId);
 };
 const specFromArgs5 = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.User, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.Post, $nodeId);
 };
 const specFromArgs6 = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Project, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.User, $nodeId);
 };
 const specFromArgs7 = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Upvote, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.Project, $nodeId);
 };
 const specFromArgs8 = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Organization, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.Downvote, $nodeId);
 };
 const specFromArgs9 = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Comment, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.Upvote, $nodeId);
 };
 const specFromArgs10 = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Post, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.Organization, $nodeId);
 };
 const specFromArgs11 = args => {
   const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.User, $nodeId);
+  return specFromNodeId(nodeIdHandlerByTypeName.Comment, $nodeId);
 };
 const specFromArgs12 = args => {
+  const $nodeId = args.get(["input", "id"]);
+  return specFromNodeId(nodeIdHandlerByTypeName.Post, $nodeId);
+};
+const specFromArgs13 = args => {
+  const $nodeId = args.get(["input", "id"]);
+  return specFromNodeId(nodeIdHandlerByTypeName.User, $nodeId);
+};
+const specFromArgs14 = args => {
   const $nodeId = args.get(["input", "id"]);
   return specFromNodeId(nodeIdHandlerByTypeName.Project, $nodeId);
 };
@@ -3780,6 +4222,12 @@ type Query implements Node {
 
   """Get a single \`UserOrganization\`."""
   userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: UUID!): UserOrganization
+
+  """Get a single \`Downvote\`."""
+  downvote(rowId: UUID!): Downvote
+
+  """Get a single \`Downvote\`."""
+  downvoteByPostIdAndUserId(postId: UUID!, userId: UUID!): Downvote
 
   """Get a single \`Upvote\`."""
   upvote(rowId: UUID!): Upvote
@@ -3819,6 +4267,12 @@ type Query implements Node {
 
   """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
+
+  """Reads a single \`Downvote\` using its globally unique \`ID\`."""
+  downvoteById(
+    """The globally unique \`ID\` to be used in selecting a single \`Downvote\`."""
+    id: ID!
+  ): Downvote
 
   """Reads a single \`Upvote\` using its globally unique \`ID\`."""
   upvoteById(
@@ -3891,6 +4345,40 @@ type Query implements Node {
     """
     filter: UserOrganizationFilter
   ): UserOrganizationConnection
+
+  """Reads and enables pagination through a set of \`Downvote\`."""
+  downvotes(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering \`Downvote\`."""
+    orderBy: [DownvoteOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DownvoteCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: DownvoteFilter
+  ): DownvoteConnection
 
   """Reads and enables pagination through a set of \`Upvote\`."""
   upvotes(
@@ -4417,6 +4905,40 @@ type Post implements Node {
     """
     filter: CommentFilter
   ): CommentConnection!
+
+  """Reads and enables pagination through a set of \`Downvote\`."""
+  downvotes(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering \`Downvote\`."""
+    orderBy: [DownvoteOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DownvoteCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: DownvoteFilter
+  ): DownvoteConnection!
 }
 
 type User implements Node {
@@ -4567,6 +5089,40 @@ type User implements Node {
     """
     filter: CommentFilter
   ): CommentConnection!
+
+  """Reads and enables pagination through a set of \`Downvote\`."""
+  downvotes(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering \`Downvote\`."""
+    orderBy: [DownvoteOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DownvoteCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: DownvoteFilter
+  ): DownvoteConnection!
 }
 
 """A location in a connection that can be used for resuming pagination."""
@@ -4617,6 +5173,18 @@ enum PostOrderBy {
   COMMENTS_DISTINCT_COUNT_CREATED_AT_DESC
   COMMENTS_DISTINCT_COUNT_UPDATED_AT_ASC
   COMMENTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  DOWNVOTES_COUNT_ASC
+  DOWNVOTES_COUNT_DESC
+  DOWNVOTES_DISTINCT_COUNT_ROW_ID_ASC
+  DOWNVOTES_DISTINCT_COUNT_ROW_ID_DESC
+  DOWNVOTES_DISTINCT_COUNT_POST_ID_ASC
+  DOWNVOTES_DISTINCT_COUNT_POST_ID_DESC
+  DOWNVOTES_DISTINCT_COUNT_USER_ID_ASC
+  DOWNVOTES_DISTINCT_COUNT_USER_ID_DESC
+  DOWNVOTES_DISTINCT_COUNT_CREATED_AT_ASC
+  DOWNVOTES_DISTINCT_COUNT_CREATED_AT_DESC
+  DOWNVOTES_DISTINCT_COUNT_UPDATED_AT_ASC
+  DOWNVOTES_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """
@@ -4681,6 +5249,12 @@ input PostFilter {
 
   """Some related \`comments\` exist."""
   commentsExist: Boolean
+
+  """Filter by the object’s \`downvotes\` relation."""
+  downvotes: PostToManyDownvoteFilter
+
+  """Some related \`downvotes\` exist."""
+  downvotesExist: Boolean
 
   """Filter by the object’s \`project\` relation."""
   project: ProjectFilter
@@ -5020,6 +5594,12 @@ input UserFilter {
 
   """Some related \`comments\` exist."""
   commentsExist: Boolean
+
+  """Filter by the object’s \`downvotes\` relation."""
+  downvotes: UserToManyDownvoteFilter
+
+  """Some related \`downvotes\` exist."""
+  downvotesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [UserFilter!]
@@ -5502,6 +6082,83 @@ input CommentDistinctCountAggregateFilter {
 }
 
 """
+A filter to be used against many \`Downvote\` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyDownvoteFilter {
+  """
+  Every related \`Downvote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: DownvoteFilter
+
+  """
+  Some related \`Downvote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: DownvoteFilter
+
+  """
+  No related \`Downvote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: DownvoteFilter
+
+  """Aggregates across related \`Downvote\` match the filter criteria."""
+  aggregates: DownvoteAggregatesFilter
+}
+
+"""
+A filter to be used against \`Downvote\` object types. All fields are combined with a logical ‘and.’
+"""
+input DownvoteFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`postId\` field."""
+  postId: UUIDFilter
+
+  """Filter by the object’s \`userId\` field."""
+  userId: UUIDFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s \`post\` relation."""
+  post: PostFilter
+
+  """Filter by the object’s \`user\` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [DownvoteFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [DownvoteFilter!]
+
+  """Negates the expression."""
+  not: DownvoteFilter
+}
+
+"""A filter to be used against aggregates of \`Downvote\` object types."""
+input DownvoteAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`Downvote\` object to be included within the aggregate.
+  """
+  filter: DownvoteFilter
+
+  """Distinct count aggregate over matching \`Downvote\` objects."""
+  distinctCount: DownvoteDistinctCountAggregateFilter
+}
+
+input DownvoteDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  postId: BigIntFilter
+  userId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+"""
 A filter to be used against many \`Comment\` object types. All fields are combined with a logical ‘and.’
 """
 input PostToManyCommentFilter {
@@ -5522,6 +6179,29 @@ input PostToManyCommentFilter {
 
   """Aggregates across related \`Comment\` match the filter criteria."""
   aggregates: CommentAggregatesFilter
+}
+
+"""
+A filter to be used against many \`Downvote\` object types. All fields are combined with a logical ‘and.’
+"""
+input PostToManyDownvoteFilter {
+  """
+  Every related \`Downvote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: DownvoteFilter
+
+  """
+  Some related \`Downvote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: DownvoteFilter
+
+  """
+  No related \`Downvote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: DownvoteFilter
+
+  """Aggregates across related \`Downvote\` match the filter criteria."""
+  aggregates: DownvoteAggregatesFilter
 }
 
 """A connection to a list of \`Upvote\` values."""
@@ -6086,6 +6766,202 @@ input CommentCondition {
 
   """Checks for equality with the object’s \`message\` field."""
   message: String
+
+  """Checks for equality with the object’s \`postId\` field."""
+  postId: UUID
+
+  """Checks for equality with the object’s \`userId\` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+}
+
+"""A connection to a list of \`Downvote\` values."""
+type DownvoteConnection {
+  """A list of \`Downvote\` objects."""
+  nodes: [Downvote]!
+
+  """
+  A list of edges which contains the \`Downvote\` and cursor to aid in pagination.
+  """
+  edges: [DownvoteEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Downvote\` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: DownvoteAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`Downvote\` for these aggregates."""
+    groupBy: [DownvoteGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: DownvoteHavingInput
+  ): [DownvoteAggregates!]
+}
+
+type Downvote implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  postId: UUID!
+  userId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Post\` that is related to this \`Downvote\`."""
+  post: Post
+
+  """Reads a single \`User\` that is related to this \`Downvote\`."""
+  user: User
+}
+
+"""A \`Downvote\` edge in the connection."""
+type DownvoteEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Downvote\` at the end of the edge."""
+  node: Downvote
+}
+
+type DownvoteAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: DownvoteDistinctCountAggregates
+}
+
+type DownvoteDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of postId across the matching connection"""
+  postId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for \`Downvote\` for usage during aggregation."""
+enum DownvoteGroupBy {
+  POST_ID
+  USER_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`Downvote\` aggregates."""
+input DownvoteHavingInput {
+  AND: [DownvoteHavingInput!]
+  OR: [DownvoteHavingInput!]
+  sum: DownvoteHavingSumInput
+  distinctCount: DownvoteHavingDistinctCountInput
+  min: DownvoteHavingMinInput
+  max: DownvoteHavingMaxInput
+  average: DownvoteHavingAverageInput
+  stddevSample: DownvoteHavingStddevSampleInput
+  stddevPopulation: DownvoteHavingStddevPopulationInput
+  varianceSample: DownvoteHavingVarianceSampleInput
+  variancePopulation: DownvoteHavingVariancePopulationInput
+}
+
+input DownvoteHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input DownvoteHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input DownvoteHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input DownvoteHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input DownvoteHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input DownvoteHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input DownvoteHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input DownvoteHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input DownvoteHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""Methods to use when ordering \`Downvote\`."""
+enum DownvoteOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  POST_ID_ASC
+  POST_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+"""
+A condition to be used against \`Downvote\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input DownvoteCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
 
   """Checks for equality with the object’s \`postId\` field."""
   postId: UUID
@@ -6818,6 +7694,18 @@ enum UserOrderBy {
   COMMENTS_DISTINCT_COUNT_CREATED_AT_DESC
   COMMENTS_DISTINCT_COUNT_UPDATED_AT_ASC
   COMMENTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  DOWNVOTES_COUNT_ASC
+  DOWNVOTES_COUNT_DESC
+  DOWNVOTES_DISTINCT_COUNT_ROW_ID_ASC
+  DOWNVOTES_DISTINCT_COUNT_ROW_ID_DESC
+  DOWNVOTES_DISTINCT_COUNT_POST_ID_ASC
+  DOWNVOTES_DISTINCT_COUNT_POST_ID_DESC
+  DOWNVOTES_DISTINCT_COUNT_USER_ID_ASC
+  DOWNVOTES_DISTINCT_COUNT_USER_ID_DESC
+  DOWNVOTES_DISTINCT_COUNT_CREATED_AT_ASC
+  DOWNVOTES_DISTINCT_COUNT_CREATED_AT_DESC
+  DOWNVOTES_DISTINCT_COUNT_UPDATED_AT_ASC
+  DOWNVOTES_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """
@@ -6857,6 +7745,14 @@ type Mutation {
     """
     input: CreateUserOrganizationInput!
   ): CreateUserOrganizationPayload
+
+  """Creates a single \`Downvote\`."""
+  createDownvote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateDownvoteInput!
+  ): CreateDownvotePayload
 
   """Creates a single \`Upvote\`."""
   createUpvote(
@@ -6913,6 +7809,30 @@ type Mutation {
     """
     input: UpdateUserOrganizationByUserIdAndOrganizationIdInput!
   ): UpdateUserOrganizationPayload
+
+  """Updates a single \`Downvote\` using its globally unique id and a patch."""
+  updateDownvoteById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDownvoteByIdInput!
+  ): UpdateDownvotePayload
+
+  """Updates a single \`Downvote\` using a unique key and a patch."""
+  updateDownvote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDownvoteInput!
+  ): UpdateDownvotePayload
+
+  """Updates a single \`Downvote\` using a unique key and a patch."""
+  updateDownvoteByPostIdAndUserId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDownvoteByPostIdAndUserIdInput!
+  ): UpdateDownvotePayload
 
   """Updates a single \`Upvote\` using its globally unique id and a patch."""
   updateUpvoteById(
@@ -7075,6 +7995,30 @@ type Mutation {
     """
     input: DeleteUserOrganizationByUserIdAndOrganizationIdInput!
   ): DeleteUserOrganizationPayload
+
+  """Deletes a single \`Downvote\` using its globally unique id."""
+  deleteDownvoteById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDownvoteByIdInput!
+  ): DeleteDownvotePayload
+
+  """Deletes a single \`Downvote\` using a unique key."""
+  deleteDownvote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDownvoteInput!
+  ): DeleteDownvotePayload
+
+  """Deletes a single \`Downvote\` using a unique key."""
+  deleteDownvoteByPostIdAndUserId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDownvoteByPostIdAndUserIdInput!
+  ): DeleteDownvotePayload
 
   """Deletes a single \`Upvote\` using its globally unique id."""
   deleteUpvoteById(
@@ -7263,6 +8207,50 @@ input UserOrganizationInput {
   userId: UUID!
   organizationId: UUID!
   createdAt: Datetime
+}
+
+"""The output of our create \`Downvote\` mutation."""
+type CreateDownvotePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Downvote\` that was created by this mutation."""
+  downvote: Downvote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Downvote\`. May be used by Relay 1."""
+  downvoteEdge(
+    """The method to use when ordering \`Downvote\`."""
+    orderBy: [DownvoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DownvoteEdge
+}
+
+"""All input for the create \`Downvote\` mutation."""
+input CreateDownvoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Downvote\` to be created by this mutation."""
+  downvote: DownvoteInput!
+}
+
+"""An input for mutations affecting \`Downvote\`"""
+input DownvoteInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create \`Upvote\` mutation."""
@@ -7579,6 +8567,90 @@ input UserOrganizationPatch {
   userId: UUID
   organizationId: UUID
   createdAt: Datetime
+}
+
+"""The output of our update \`Downvote\` mutation."""
+type UpdateDownvotePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Downvote\` that was updated by this mutation."""
+  downvote: Downvote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Downvote\`. May be used by Relay 1."""
+  downvoteEdge(
+    """The method to use when ordering \`Downvote\`."""
+    orderBy: [DownvoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DownvoteEdge
+}
+
+"""All input for the \`updateDownvoteById\` mutation."""
+input UpdateDownvoteByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Downvote\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Downvote\` being updated.
+  """
+  patch: DownvotePatch!
+}
+
+"""
+Represents an update to a \`Downvote\`. Fields that are set will be updated.
+"""
+input DownvotePatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateDownvote\` mutation."""
+input UpdateDownvoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Downvote\` being updated.
+  """
+  patch: DownvotePatch!
+}
+
+"""All input for the \`updateDownvoteByPostIdAndUserId\` mutation."""
+input UpdateDownvoteByPostIdAndUserIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  postId: UUID!
+  userId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Downvote\` being updated.
+  """
+  patch: DownvotePatch!
 }
 
 """The output of our update \`Upvote\` mutation."""
@@ -8130,6 +9202,65 @@ input DeleteUserOrganizationByUserIdAndOrganizationIdInput {
   organizationId: UUID!
 }
 
+"""The output of our delete \`Downvote\` mutation."""
+type DeleteDownvotePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Downvote\` that was deleted by this mutation."""
+  downvote: Downvote
+  deletedDownvoteId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Downvote\`. May be used by Relay 1."""
+  downvoteEdge(
+    """The method to use when ordering \`Downvote\`."""
+    orderBy: [DownvoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DownvoteEdge
+}
+
+"""All input for the \`deleteDownvoteById\` mutation."""
+input DeleteDownvoteByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Downvote\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteDownvote\` mutation."""
+input DeleteDownvoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""All input for the \`deleteDownvoteByPostIdAndUserId\` mutation."""
+input DeleteDownvoteByPostIdAndUserIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  postId: UUID!
+  userId: UUID!
+}
+
 """The output of our delete \`Upvote\` mutation."""
 type DeleteUpvotePayload {
   """
@@ -8521,6 +9652,28 @@ export const plans = {
         organizationId: undefined
       }
     },
+    downvote: {
+      plan(_$root, args) {
+        return pgResource_downvotePgResource.get({
+          id: args.get("rowId")
+        });
+      },
+      args: {
+        rowId: undefined
+      }
+    },
+    downvoteByPostIdAndUserId: {
+      plan(_$root, args) {
+        return pgResource_downvotePgResource.get({
+          post_id: args.get("postId"),
+          user_id: args.get("userId")
+        });
+      },
+      args: {
+        postId: undefined,
+        userId: undefined
+      }
+    },
     upvote: {
       plan(_$root, args) {
         return pgResource_upvotePgResource.get({
@@ -8655,7 +9808,7 @@ export const plans = {
         organizationId: undefined
       }
     },
-    upvoteById: {
+    downvoteById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher($nodeId);
@@ -8664,7 +9817,7 @@ export const plans = {
         id: undefined
       }
     },
-    organizationById: {
+    upvoteById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher2($nodeId);
@@ -8673,7 +9826,7 @@ export const plans = {
         id: undefined
       }
     },
-    commentById: {
+    organizationById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher3($nodeId);
@@ -8682,7 +9835,7 @@ export const plans = {
         id: undefined
       }
     },
-    postById: {
+    commentById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher4($nodeId);
@@ -8691,7 +9844,7 @@ export const plans = {
         id: undefined
       }
     },
-    userById: {
+    postById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher5($nodeId);
@@ -8700,10 +9853,19 @@ export const plans = {
         id: undefined
       }
     },
-    projectById: {
+    userById: {
       plan(_$parent, args) {
         const $nodeId = args.get("id");
         return fetcher6($nodeId);
+      },
+      args: {
+        id: undefined
+      }
+    },
+    projectById: {
+      plan(_$parent, args) {
+        const $nodeId = args.get("id");
+        return fetcher7($nodeId);
       },
       args: {
         id: undefined
@@ -8772,6 +9934,69 @@ export const plans = {
         }
       }
     },
+    downvotes: {
+      plan() {
+        return connection(pgResource_downvotePgResource.find());
+      },
+      args: {
+        first: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          }
+        },
+        last: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          }
+        },
+        offset: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          }
+        },
+        before: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          }
+        },
+        after: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          }
+        },
+        orderBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val, info) {
+            const $value = val.getRaw(),
+              $select = $connection.getSubplan();
+            applyOrderToPlan($select, $value, info.schema.getType("DownvoteOrderBy"));
+            return null;
+          }
+        },
+        condition: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_condition, $connection) {
+            return $connection.getSubplan().wherePlan();
+          }
+        },
+        filter: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, fieldArgs) {
+            assertAllowed2(fieldArgs, "object");
+            const $where = $connection.getSubplan().wherePlan();
+            if (null) $where.extensions.pgFilterAttribute = {
+              codec: null
+            };
+            fieldArgs.apply($where);
+          }
+        }
+      }
+    },
     upvotes: {
       plan() {
         return connection(pgResource_upvotePgResource.find());
@@ -8825,7 +10050,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed2(fieldArgs, "object");
+            assertAllowed3(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -8888,7 +10113,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed3(fieldArgs, "object");
+            assertAllowed4(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -8951,7 +10176,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed4(fieldArgs, "object");
+            assertAllowed5(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9014,7 +10239,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed5(fieldArgs, "object");
+            assertAllowed6(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9077,7 +10302,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed6(fieldArgs, "object");
+            assertAllowed7(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9140,7 +10365,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed7(fieldArgs, "object");
+            assertAllowed8(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9268,7 +10493,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed8(fieldArgs, "object");
+            assertAllowed9(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9334,7 +10559,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed9(fieldArgs, "object");
+            assertAllowed10(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9481,7 +10706,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed10(fieldArgs, "object");
+            assertAllowed11(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9630,7 +10855,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed11(fieldArgs, "object");
+            assertAllowed12(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9696,7 +10921,73 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed12(fieldArgs, "object");
+            assertAllowed13(fieldArgs, "object");
+            const $where = $connection.getSubplan().wherePlan();
+            if (null) $where.extensions.pgFilterAttribute = {
+              codec: null
+            };
+            fieldArgs.apply($where);
+          }
+        }
+      }
+    },
+    downvotes: {
+      plan($record) {
+        const $records = pgResource_downvotePgResource.find({
+          post_id: $record.get("id")
+        });
+        return connection($records);
+      },
+      args: {
+        first: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          }
+        },
+        last: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          }
+        },
+        offset: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          }
+        },
+        before: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          }
+        },
+        after: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          }
+        },
+        orderBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val, info) {
+            const $value = val.getRaw(),
+              $select = $connection.getSubplan();
+            applyOrderToPlan($select, $value, info.schema.getType("DownvoteOrderBy"));
+            return null;
+          }
+        },
+        condition: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_condition, $connection) {
+            return $connection.getSubplan().wherePlan();
+          }
+        },
+        filter: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, fieldArgs) {
+            assertAllowed14(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9790,7 +11081,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed13(fieldArgs, "object");
+            assertAllowed15(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9856,7 +11147,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed14(fieldArgs, "object");
+            assertAllowed16(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9922,7 +11213,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed15(fieldArgs, "object");
+            assertAllowed17(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -9988,7 +11279,73 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed16(fieldArgs, "object");
+            assertAllowed18(fieldArgs, "object");
+            const $where = $connection.getSubplan().wherePlan();
+            if (null) $where.extensions.pgFilterAttribute = {
+              codec: null
+            };
+            fieldArgs.apply($where);
+          }
+        }
+      }
+    },
+    downvotes: {
+      plan($record) {
+        const $records = pgResource_downvotePgResource.find({
+          user_id: $record.get("id")
+        });
+        return connection($records);
+      },
+      args: {
+        first: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          }
+        },
+        last: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          }
+        },
+        offset: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          }
+        },
+        before: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          }
+        },
+        after: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          }
+        },
+        orderBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val, info) {
+            const $value = val.getRaw(),
+              $select = $connection.getSubplan();
+            applyOrderToPlan($select, $value, info.schema.getType("DownvoteOrderBy"));
+            return null;
+          }
+        },
+        condition: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_condition, $connection) {
+            return $connection.getSubplan().wherePlan();
+          }
+        },
+        filter: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, fieldArgs) {
+            assertAllowed19(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -10788,6 +12145,266 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       }
+    },
+    DOWNVOTES_COUNT_ASC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_COUNT_DESC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_ROW_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_ROW_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_POST_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.post_id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.post_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_POST_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.post_id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.post_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_USER_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.user_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_USER_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.user_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_CREATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.created_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_CREATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.created_at.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_UPDATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.updated_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_UPDATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.updated_at.codec,
+          direction: "DESC"
+        });
+      }
     }
   },
   PostCondition: {
@@ -11005,7 +12622,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     upvotes: {
       applyPlan($where, fieldArgs) {
-        assertAllowed17(fieldArgs, "object");
+        assertAllowed20(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: upvoteIdentifier,
@@ -11018,7 +12635,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     upvotesExist: {
       applyPlan($where, fieldArgs) {
-        assertAllowed17(fieldArgs, "scalar");
+        assertAllowed20(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: upvoteIdentifier,
           alias: pgResource_upvotePgResource.name,
@@ -11032,7 +12649,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     comments: {
       applyPlan($where, fieldArgs) {
-        assertAllowed17(fieldArgs, "object");
+        assertAllowed20(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: commentIdentifier,
@@ -11045,7 +12662,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     commentsExist: {
       applyPlan($where, fieldArgs) {
-        assertAllowed17(fieldArgs, "scalar");
+        assertAllowed20(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: commentIdentifier,
           alias: pgResource_commentPgResource.name,
@@ -11057,9 +12674,36 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
+    downvotes: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed20(fieldArgs, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: downvoteIdentifier,
+          alias: pgResource_downvotePgResource.name,
+          localAttributes: registryConfig.pgRelations.post.downvotesByTheirPostId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.post.downvotesByTheirPostId.remoteAttributes
+        };
+        fieldArgs.apply($rel);
+      }
+    },
+    downvotesExist: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed20(fieldArgs, "scalar");
+        const $subQuery = $where.existsPlan({
+          tableExpression: downvoteIdentifier,
+          alias: pgResource_downvotePgResource.name,
+          $equals: fieldArgs.get()
+        });
+        registryConfig.pgRelations.post.downvotesByTheirPostId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.post.downvotesByTheirPostId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      }
+    },
     project: {
       applyPlan($where, fieldArgs) {
-        assertAllowed18(fieldArgs, "object");
+        assertAllowed21(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
           alias: pgResource_projectPgResource.name
@@ -11073,7 +12717,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     user: {
       applyPlan($where, fieldArgs) {
-        assertAllowed18(fieldArgs, "object");
+        assertAllowed21(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
           alias: pgResource_userPgResource.name
@@ -11087,21 +12731,21 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     and: {
       applyPlan($where, fieldArgs) {
-        assertAllowed19(fieldArgs, "list");
+        assertAllowed22(fieldArgs, "list");
         const $and = $where.andPlan();
         fieldArgs.apply($and);
       }
     },
     or: {
       applyPlan($where, fieldArgs) {
-        assertAllowed19(fieldArgs, "list");
+        assertAllowed22(fieldArgs, "list");
         const $or = $where.orPlan();
         fieldArgs.apply(() => $or.andPlan());
       }
     },
     not: {
       applyPlan($where, fieldArgs) {
-        assertAllowed19(fieldArgs, "object");
+        assertAllowed22(fieldArgs, "object");
         const $and = $where.notPlan().andPlan();
         fieldArgs.apply($and);
       }
@@ -12709,7 +14353,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   PostToManyUpvoteFilter: {
     every: {
       applyPlan($where, fieldArgs) {
-        assertAllowed20(fieldArgs, "object");
+        assertAllowed23(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -12730,7 +14374,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     some: {
       applyPlan($where, fieldArgs) {
-        assertAllowed20(fieldArgs, "object");
+        assertAllowed23(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -12751,7 +14395,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     none: {
       applyPlan($where, fieldArgs) {
-        assertAllowed20(fieldArgs, "object");
+        assertAllowed23(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -12850,7 +14494,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     post: {
       applyPlan($where, fieldArgs) {
-        assertAllowed21(fieldArgs, "object");
+        assertAllowed24(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
           alias: pgResource_postPgResource.name
@@ -12864,7 +14508,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     user: {
       applyPlan($where, fieldArgs) {
-        assertAllowed21(fieldArgs, "object");
+        assertAllowed24(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
           alias: pgResource_userPgResource.name
@@ -12878,21 +14522,21 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     and: {
       applyPlan($where, fieldArgs) {
-        assertAllowed22(fieldArgs, "list");
+        assertAllowed25(fieldArgs, "list");
         const $and = $where.andPlan();
         fieldArgs.apply($and);
       }
     },
     or: {
       applyPlan($where, fieldArgs) {
-        assertAllowed22(fieldArgs, "list");
+        assertAllowed25(fieldArgs, "list");
         const $or = $where.orPlan();
         fieldArgs.apply(() => $or.andPlan());
       }
     },
     not: {
       applyPlan($where, fieldArgs) {
-        assertAllowed22(fieldArgs, "object");
+        assertAllowed25(fieldArgs, "object");
         const $and = $where.notPlan().andPlan();
         fieldArgs.apply($and);
       }
@@ -12978,7 +14622,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     posts: {
       applyPlan($where, fieldArgs) {
-        assertAllowed23(fieldArgs, "object");
+        assertAllowed26(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: postIdentifier,
@@ -12991,7 +14635,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     postsExist: {
       applyPlan($where, fieldArgs) {
-        assertAllowed23(fieldArgs, "scalar");
+        assertAllowed26(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
           alias: pgResource_postPgResource.name,
@@ -13005,7 +14649,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     upvotes: {
       applyPlan($where, fieldArgs) {
-        assertAllowed23(fieldArgs, "object");
+        assertAllowed26(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: upvoteIdentifier,
@@ -13018,7 +14662,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     upvotesExist: {
       applyPlan($where, fieldArgs) {
-        assertAllowed23(fieldArgs, "scalar");
+        assertAllowed26(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: upvoteIdentifier,
           alias: pgResource_upvotePgResource.name,
@@ -13032,7 +14676,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     userOrganizations: {
       applyPlan($where, fieldArgs) {
-        assertAllowed23(fieldArgs, "object");
+        assertAllowed26(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userOrganizationIdentifier,
@@ -13045,7 +14689,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     userOrganizationsExist: {
       applyPlan($where, fieldArgs) {
-        assertAllowed23(fieldArgs, "scalar");
+        assertAllowed26(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: userOrganizationIdentifier,
           alias: resource_user_organizationPgResource.name,
@@ -13059,7 +14703,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     comments: {
       applyPlan($where, fieldArgs) {
-        assertAllowed23(fieldArgs, "object");
+        assertAllowed26(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: commentIdentifier,
@@ -13072,7 +14716,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     commentsExist: {
       applyPlan($where, fieldArgs) {
-        assertAllowed23(fieldArgs, "scalar");
+        assertAllowed26(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: commentIdentifier,
           alias: pgResource_commentPgResource.name,
@@ -13084,23 +14728,50 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
+    downvotes: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed26(fieldArgs, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: downvoteIdentifier,
+          alias: pgResource_downvotePgResource.name,
+          localAttributes: registryConfig.pgRelations.user.downvotesByTheirUserId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.user.downvotesByTheirUserId.remoteAttributes
+        };
+        fieldArgs.apply($rel);
+      }
+    },
+    downvotesExist: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed26(fieldArgs, "scalar");
+        const $subQuery = $where.existsPlan({
+          tableExpression: downvoteIdentifier,
+          alias: pgResource_downvotePgResource.name,
+          $equals: fieldArgs.get()
+        });
+        registryConfig.pgRelations.user.downvotesByTheirUserId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.user.downvotesByTheirUserId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      }
+    },
     and: {
       applyPlan($where, fieldArgs) {
-        assertAllowed24(fieldArgs, "list");
+        assertAllowed27(fieldArgs, "list");
         const $and = $where.andPlan();
         fieldArgs.apply($and);
       }
     },
     or: {
       applyPlan($where, fieldArgs) {
-        assertAllowed24(fieldArgs, "list");
+        assertAllowed27(fieldArgs, "list");
         const $or = $where.orPlan();
         fieldArgs.apply(() => $or.andPlan());
       }
     },
     not: {
       applyPlan($where, fieldArgs) {
-        assertAllowed24(fieldArgs, "object");
+        assertAllowed27(fieldArgs, "object");
         const $and = $where.notPlan().andPlan();
         fieldArgs.apply($and);
       }
@@ -13109,7 +14780,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   UserToManyPostFilter: {
     every: {
       applyPlan($where, fieldArgs) {
-        assertAllowed25(fieldArgs, "object");
+        assertAllowed28(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -13130,7 +14801,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     some: {
       applyPlan($where, fieldArgs) {
-        assertAllowed25(fieldArgs, "object");
+        assertAllowed28(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -13151,7 +14822,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     none: {
       applyPlan($where, fieldArgs) {
-        assertAllowed25(fieldArgs, "object");
+        assertAllowed28(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -13587,7 +15258,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   UserToManyUpvoteFilter: {
     every: {
       applyPlan($where, fieldArgs) {
-        assertAllowed26(fieldArgs, "object");
+        assertAllowed29(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -13608,7 +15279,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     some: {
       applyPlan($where, fieldArgs) {
-        assertAllowed26(fieldArgs, "object");
+        assertAllowed29(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -13629,7 +15300,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     none: {
       applyPlan($where, fieldArgs) {
-        assertAllowed26(fieldArgs, "object");
+        assertAllowed29(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -13738,7 +15409,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   UserToManyUserOrganizationFilter: {
     every: {
       applyPlan($where, fieldArgs) {
-        assertAllowed27(fieldArgs, "object");
+        assertAllowed30(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -13759,7 +15430,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     some: {
       applyPlan($where, fieldArgs) {
-        assertAllowed27(fieldArgs, "object");
+        assertAllowed30(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -13780,7 +15451,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     none: {
       applyPlan($where, fieldArgs) {
-        assertAllowed27(fieldArgs, "object");
+        assertAllowed30(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -13857,7 +15528,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     organization: {
       applyPlan($where, fieldArgs) {
-        assertAllowed28(fieldArgs, "object");
+        assertAllowed31(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: organizationIdentifier,
           alias: pgResource_organizationPgResource.name
@@ -13871,7 +15542,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     user: {
       applyPlan($where, fieldArgs) {
-        assertAllowed28(fieldArgs, "object");
+        assertAllowed31(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
           alias: pgResource_userPgResource.name
@@ -13885,21 +15556,21 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     and: {
       applyPlan($where, fieldArgs) {
-        assertAllowed29(fieldArgs, "list");
+        assertAllowed32(fieldArgs, "list");
         const $and = $where.andPlan();
         fieldArgs.apply($and);
       }
     },
     or: {
       applyPlan($where, fieldArgs) {
-        assertAllowed29(fieldArgs, "list");
+        assertAllowed32(fieldArgs, "list");
         const $or = $where.orPlan();
         fieldArgs.apply(() => $or.andPlan());
       }
     },
     not: {
       applyPlan($where, fieldArgs) {
-        assertAllowed29(fieldArgs, "object");
+        assertAllowed32(fieldArgs, "object");
         const $and = $where.notPlan().andPlan();
         fieldArgs.apply($and);
       }
@@ -13963,7 +15634,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     projects: {
       applyPlan($where, fieldArgs) {
-        assertAllowed30(fieldArgs, "object");
+        assertAllowed33(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: projectIdentifier,
@@ -13976,7 +15647,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     projectsExist: {
       applyPlan($where, fieldArgs) {
-        assertAllowed30(fieldArgs, "scalar");
+        assertAllowed33(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
           alias: pgResource_projectPgResource.name,
@@ -13990,7 +15661,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     userOrganizations: {
       applyPlan($where, fieldArgs) {
-        assertAllowed30(fieldArgs, "object");
+        assertAllowed33(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userOrganizationIdentifier,
@@ -14003,7 +15674,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     userOrganizationsExist: {
       applyPlan($where, fieldArgs) {
-        assertAllowed30(fieldArgs, "scalar");
+        assertAllowed33(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: userOrganizationIdentifier,
           alias: resource_user_organizationPgResource.name,
@@ -14017,21 +15688,21 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     and: {
       applyPlan($where, fieldArgs) {
-        assertAllowed31(fieldArgs, "list");
+        assertAllowed34(fieldArgs, "list");
         const $and = $where.andPlan();
         fieldArgs.apply($and);
       }
     },
     or: {
       applyPlan($where, fieldArgs) {
-        assertAllowed31(fieldArgs, "list");
+        assertAllowed34(fieldArgs, "list");
         const $or = $where.orPlan();
         fieldArgs.apply(() => $or.andPlan());
       }
     },
     not: {
       applyPlan($where, fieldArgs) {
-        assertAllowed31(fieldArgs, "object");
+        assertAllowed34(fieldArgs, "object");
         const $and = $where.notPlan().andPlan();
         fieldArgs.apply($and);
       }
@@ -14040,7 +15711,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   OrganizationToManyProjectFilter: {
     every: {
       applyPlan($where, fieldArgs) {
-        assertAllowed32(fieldArgs, "object");
+        assertAllowed35(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14061,7 +15732,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     some: {
       applyPlan($where, fieldArgs) {
-        assertAllowed32(fieldArgs, "object");
+        assertAllowed35(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14082,7 +15753,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     none: {
       applyPlan($where, fieldArgs) {
-        assertAllowed32(fieldArgs, "object");
+        assertAllowed35(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14214,7 +15885,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     posts: {
       applyPlan($where, fieldArgs) {
-        assertAllowed33(fieldArgs, "object");
+        assertAllowed36(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: postIdentifier,
@@ -14227,7 +15898,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     postsExist: {
       applyPlan($where, fieldArgs) {
-        assertAllowed33(fieldArgs, "scalar");
+        assertAllowed36(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
           alias: pgResource_postPgResource.name,
@@ -14241,7 +15912,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     organization: {
       applyPlan($where, fieldArgs) {
-        assertAllowed34(fieldArgs, "object");
+        assertAllowed37(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: organizationIdentifier,
           alias: pgResource_organizationPgResource.name
@@ -14255,21 +15926,21 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     and: {
       applyPlan($where, fieldArgs) {
-        assertAllowed35(fieldArgs, "list");
+        assertAllowed38(fieldArgs, "list");
         const $and = $where.andPlan();
         fieldArgs.apply($and);
       }
     },
     or: {
       applyPlan($where, fieldArgs) {
-        assertAllowed35(fieldArgs, "list");
+        assertAllowed38(fieldArgs, "list");
         const $or = $where.orPlan();
         fieldArgs.apply(() => $or.andPlan());
       }
     },
     not: {
       applyPlan($where, fieldArgs) {
-        assertAllowed35(fieldArgs, "object");
+        assertAllowed38(fieldArgs, "object");
         const $and = $where.notPlan().andPlan();
         fieldArgs.apply($and);
       }
@@ -14278,7 +15949,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   ProjectToManyPostFilter: {
     every: {
       applyPlan($where, fieldArgs) {
-        assertAllowed36(fieldArgs, "object");
+        assertAllowed39(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14299,7 +15970,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     some: {
       applyPlan($where, fieldArgs) {
-        assertAllowed36(fieldArgs, "object");
+        assertAllowed39(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14320,7 +15991,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     none: {
       applyPlan($where, fieldArgs) {
-        assertAllowed36(fieldArgs, "object");
+        assertAllowed39(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14459,7 +16130,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   OrganizationToManyUserOrganizationFilter: {
     every: {
       applyPlan($where, fieldArgs) {
-        assertAllowed37(fieldArgs, "object");
+        assertAllowed40(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14480,7 +16151,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     some: {
       applyPlan($where, fieldArgs) {
-        assertAllowed37(fieldArgs, "object");
+        assertAllowed40(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14501,7 +16172,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     none: {
       applyPlan($where, fieldArgs) {
-        assertAllowed37(fieldArgs, "object");
+        assertAllowed40(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14590,7 +16261,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   UserToManyCommentFilter: {
     every: {
       applyPlan($where, fieldArgs) {
-        assertAllowed38(fieldArgs, "object");
+        assertAllowed41(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14611,7 +16282,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     some: {
       applyPlan($where, fieldArgs) {
-        assertAllowed38(fieldArgs, "object");
+        assertAllowed41(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14632,7 +16303,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     none: {
       applyPlan($where, fieldArgs) {
-        assertAllowed38(fieldArgs, "object");
+        assertAllowed41(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14742,7 +16413,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     post: {
       applyPlan($where, fieldArgs) {
-        assertAllowed39(fieldArgs, "object");
+        assertAllowed42(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
           alias: pgResource_postPgResource.name
@@ -14756,7 +16427,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     user: {
       applyPlan($where, fieldArgs) {
-        assertAllowed39(fieldArgs, "object");
+        assertAllowed42(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
           alias: pgResource_userPgResource.name
@@ -14770,21 +16441,21 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     and: {
       applyPlan($where, fieldArgs) {
-        assertAllowed40(fieldArgs, "list");
+        assertAllowed43(fieldArgs, "list");
         const $and = $where.andPlan();
         fieldArgs.apply($and);
       }
     },
     or: {
       applyPlan($where, fieldArgs) {
-        assertAllowed40(fieldArgs, "list");
+        assertAllowed43(fieldArgs, "list");
         const $or = $where.orPlan();
         fieldArgs.apply(() => $or.andPlan());
       }
     },
     not: {
       applyPlan($where, fieldArgs) {
-        assertAllowed40(fieldArgs, "object");
+        assertAllowed43(fieldArgs, "object");
         const $and = $where.notPlan().andPlan();
         fieldArgs.apply($and);
       }
@@ -14865,10 +16536,10 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
-  PostToManyCommentFilter: {
+  UserToManyDownvoteFilter: {
     every: {
       applyPlan($where, fieldArgs) {
-        assertAllowed41(fieldArgs, "object");
+        assertAllowed44(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14889,7 +16560,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     some: {
       applyPlan($where, fieldArgs) {
-        assertAllowed41(fieldArgs, "object");
+        assertAllowed44(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -14910,7 +16581,350 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     none: {
       applyPlan($where, fieldArgs) {
-        assertAllowed41(fieldArgs, "object");
+        assertAllowed44(fieldArgs, "object");
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.notPlan().existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    },
+    aggregates: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = new PgAggregateConditionStep($where, {
+            sql,
+            tableExpression,
+            alias
+          }, pgWhereConditionSpecListToSQL);
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    }
+  },
+  DownvoteFilter: {
+    rowId: {
+      applyPlan($where, fieldArgs) {
+        const $raw = fieldArgs.getRaw();
+        if ($raw.evalIs(void 0)) return;
+        if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+        if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $col = new PgConditionStep($where);
+        $col.extensions.pgFilterAttribute = colSpec42;
+        fieldArgs.apply($col);
+      }
+    },
+    postId: {
+      applyPlan($where, fieldArgs) {
+        const $raw = fieldArgs.getRaw();
+        if ($raw.evalIs(void 0)) return;
+        if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+        if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $col = new PgConditionStep($where);
+        $col.extensions.pgFilterAttribute = colSpec43;
+        fieldArgs.apply($col);
+      }
+    },
+    userId: {
+      applyPlan($where, fieldArgs) {
+        const $raw = fieldArgs.getRaw();
+        if ($raw.evalIs(void 0)) return;
+        if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+        if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $col = new PgConditionStep($where);
+        $col.extensions.pgFilterAttribute = colSpec44;
+        fieldArgs.apply($col);
+      }
+    },
+    createdAt: {
+      applyPlan($where, fieldArgs) {
+        const $raw = fieldArgs.getRaw();
+        if ($raw.evalIs(void 0)) return;
+        if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+        if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $col = new PgConditionStep($where);
+        $col.extensions.pgFilterAttribute = colSpec45;
+        fieldArgs.apply($col);
+      }
+    },
+    updatedAt: {
+      applyPlan($where, fieldArgs) {
+        const $raw = fieldArgs.getRaw();
+        if ($raw.evalIs(void 0)) return;
+        if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+        if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $col = new PgConditionStep($where);
+        $col.extensions.pgFilterAttribute = colSpec46;
+        fieldArgs.apply($col);
+      }
+    },
+    post: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed45(fieldArgs, "object");
+        const $subQuery = $where.existsPlan({
+          tableExpression: postIdentifier,
+          alias: pgResource_postPgResource.name
+        });
+        registryConfig.pgRelations.downvote.postByMyPostId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.downvote.postByMyPostId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    },
+    user: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed45(fieldArgs, "object");
+        const $subQuery = $where.existsPlan({
+          tableExpression: userIdentifier,
+          alias: pgResource_userPgResource.name
+        });
+        registryConfig.pgRelations.downvote.userByMyUserId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.downvote.userByMyUserId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    },
+    and: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed46(fieldArgs, "list");
+        const $and = $where.andPlan();
+        fieldArgs.apply($and);
+      }
+    },
+    or: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed46(fieldArgs, "list");
+        const $or = $where.orPlan();
+        fieldArgs.apply(() => $or.andPlan());
+      }
+    },
+    not: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed46(fieldArgs, "object");
+        const $and = $where.notPlan().andPlan();
+        fieldArgs.apply($and);
+      }
+    }
+  },
+  DownvoteAggregatesFilter: {
+    filter: {
+      applyPlan($subquery, fieldArgs) {
+        const $condition = new PgConditionStep($subquery, !1, "AND");
+        fieldArgs.apply($condition);
+      }
+    },
+    distinctCount: {
+      applyPlan($subquery, fieldArgs) {
+        fieldArgs.apply($subquery.forAggregate(aggregateSpec));
+      }
+    }
+  },
+  DownvoteDistinctCountAggregateFilter: {
+    rowId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: aggregateSpec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    postId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: aggregateSpec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    userId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: aggregateSpec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    createdAt: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: aggregateSpec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    updatedAt: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: aggregateSpec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    }
+  },
+  PostToManyCommentFilter: {
+    every: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed47(fieldArgs, "object");
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.notPlan().existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery.notPlan().andPlan());
+      }
+    },
+    some: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed47(fieldArgs, "object");
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    },
+    none: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed47(fieldArgs, "object");
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.notPlan().existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    },
+    aggregates: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = new PgAggregateConditionStep($where, {
+            sql,
+            tableExpression,
+            alias
+          }, pgWhereConditionSpecListToSQL);
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    }
+  },
+  PostToManyDownvoteFilter: {
+    every: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed48(fieldArgs, "object");
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.notPlan().existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery.notPlan().andPlan());
+      }
+    },
+    some: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed48(fieldArgs, "object");
+        if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        fieldArgs.apply($subQuery);
+      }
+    },
+    none: {
+      applyPlan($where, fieldArgs) {
+        assertAllowed48(fieldArgs, "object");
         if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
             localAttributes,
@@ -16675,6 +18689,623 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       autoApplyAfterParentApplyPlan: true
     }
   },
+  DownvoteConnection: {
+    __assertStep: ConnectionStep,
+    nodes($connection) {
+      return $connection.nodes();
+    },
+    edges($connection) {
+      return $connection.edges();
+    },
+    pageInfo($connection) {
+      return $connection.pageInfo();
+    },
+    totalCount($connection) {
+      return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
+    },
+    aggregates($connection) {
+      return $connection.cloneSubplanWithoutPagination("aggregate").single();
+    },
+    groupedAggregates: {
+      plan($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate");
+      },
+      args: {
+        groupBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect, input) {
+            var _a, _b;
+            const val = input.getRaw().eval();
+            if (!Array.isArray(val)) throw new Error("Invalid!");
+            for (const group of val) {
+              const config = getEnumValueConfig(DownvoteGroupBy, group),
+                plan = (_b = (_a = config === null || config === void 0 ? void 0 : config.extensions) === null || _a === void 0 ? void 0 : _a.grafast) === null || _b === void 0 ? void 0 : _b.applyPlan;
+              if (typeof plan === "function") plan($pgSelect);
+            }
+            return null;
+          }
+        },
+        having: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_$parent, $pgSelect) {
+            return $pgSelect.havingPlan();
+          }
+        }
+      }
+    }
+  },
+  Downvote: {
+    __assertStep: assertPgClassSingleStep,
+    id($parent) {
+      const specifier = nodeIdHandlerByTypeName.Downvote.plan($parent);
+      return lambda(specifier, nodeIdCodecs[nodeIdHandlerByTypeName.Downvote.codec.name].encode);
+    },
+    rowId($record) {
+      return $record.get("id");
+    },
+    postId($record) {
+      return $record.get("post_id");
+    },
+    userId($record) {
+      return $record.get("user_id");
+    },
+    createdAt($record) {
+      return $record.get("created_at");
+    },
+    updatedAt($record) {
+      return $record.get("updated_at");
+    },
+    post($record) {
+      return pgResource_postPgResource.get({
+        id: $record.get("post_id")
+      });
+    },
+    user($record) {
+      return pgResource_userPgResource.get({
+        id: $record.get("user_id")
+      });
+    }
+  },
+  DownvoteEdge: {
+    __assertStep: assertEdgeCapableStep,
+    cursor($edge) {
+      return $edge.cursor();
+    },
+    node($edge) {
+      return $edge.node();
+    }
+  },
+  DownvoteAggregates: {
+    __assertStep: assertPgClassSingleStep,
+    keys($pgSelectSingle) {
+      const groups = $pgSelectSingle.getClassStep().getGroups();
+      if (groups.length > 0) return $pgSelectSingle.select(sql`json_build_array(${sql.join(groups.map(g => g.fragment), ", ")})`, TYPES.json);else return constant(null);
+    },
+    distinctCount($pgSelectSingle) {
+      return $pgSelectSingle;
+    }
+  },
+  DownvoteDistinctCountAggregates: {
+    rowId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
+        sqlAggregate = aggregateSpec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    postId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("post_id")}`,
+        sqlAggregate = aggregateSpec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    userId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("user_id")}`,
+        sqlAggregate = aggregateSpec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    createdAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
+        sqlAggregate = aggregateSpec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    updatedAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("updated_at")}`,
+        sqlAggregate = aggregateSpec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    }
+  },
+  DownvoteGroupBy: {
+    POST_ID: {
+      applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan
+    },
+    USER_ID: {
+      applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan2
+    },
+    CREATED_AT: {
+      applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan3
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan4
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan5
+    },
+    UPDATED_AT: {
+      applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan6
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan7
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: DownvoteGroupBy_extensions_grafast_applyPlan8
+    }
+  },
+  DownvoteHavingInput: {
+    AND: {
+      applyPlan($where, input) {
+        input.apply($where);
+        return null;
+      }
+    },
+    OR: {
+      applyPlan($where, input) {
+        const $or = new PgOrFilterStep($where);
+        input.apply($or);
+        return null;
+      }
+    },
+    sum: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    distinctCount: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    min: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    max: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    average: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    stddevPopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    varianceSample: {
+      applyPlan($having) {
+        return $having;
+      }
+    },
+    variancePopulation: {
+      applyPlan($having) {
+        return $having;
+      }
+    }
+  },
+  DownvoteHavingSumInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  DownvoteHavingDistinctCountInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  DownvoteHavingMinInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  DownvoteHavingMaxInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  DownvoteHavingAverageInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  DownvoteHavingStddevSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  DownvoteHavingStddevPopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  DownvoteHavingVarianceSampleInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  DownvoteHavingVariancePopulationInput: {
+    createdAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = aggregateSpec9.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.created_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    updatedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = aggregateSpec9.sqlAggregateWrap(attributeExpression, spec_downvote.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    }
+  },
+  DownvoteOrderBy: {
+    NATURAL: {
+      applyPlan() {}
+    },
+    PRIMARY_KEY_ASC: {
+      applyPlan(step) {
+        downvoteUniques[0].attributes.forEach(attributeName => {
+          const attribute = downvoteCodec.attributes[attributeName];
+          step.orderBy({
+            codec: attribute.codec,
+            fragment: sql`${step}.${sql.identifier(attributeName)}`,
+            direction: "ASC",
+            ...(undefined != null ? {
+              nulls: undefined ? "LAST" : "FIRST"
+            } : null)
+          });
+        });
+        step.setOrderIsUnique();
+      }
+    },
+    PRIMARY_KEY_DESC: {
+      applyPlan(step) {
+        downvoteUniques[0].attributes.forEach(attributeName => {
+          const attribute = downvoteCodec.attributes[attributeName];
+          step.orderBy({
+            codec: attribute.codec,
+            fragment: sql`${step}.${sql.identifier(attributeName)}`,
+            direction: "DESC",
+            ...(undefined != null ? {
+              nulls: undefined ? "LAST" : "FIRST"
+            } : null)
+          });
+        });
+        step.setOrderIsUnique();
+      }
+    },
+    ROW_ID_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "id",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (true) plan.setOrderIsUnique();
+      }
+    },
+    ROW_ID_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "id",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (true) plan.setOrderIsUnique();
+      }
+    },
+    POST_ID_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "post_id",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (true) plan.setOrderIsUnique();
+      }
+    },
+    POST_ID_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "post_id",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (true) plan.setOrderIsUnique();
+      }
+    },
+    USER_ID_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "user_id",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    USER_ID_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "user_id",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    CREATED_AT_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "created_at",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    CREATED_AT_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "created_at",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    UPDATED_AT_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "updated_at",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    UPDATED_AT_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "updated_at",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    }
+  },
+  DownvoteCondition: {
+    rowId: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "id",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "id",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_downvote.attributes.id.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    postId: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "post_id",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "post_id",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_downvote.attributes.post_id.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    userId: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "user_id",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "user_id",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_downvote.attributes.user_id.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    createdAt: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "created_at",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "created_at",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_downvote.attributes.created_at.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    updatedAt: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "updated_at",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "updated_at",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_downvote.attributes.updated_at.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
   PostEdge: {
     __assertStep: assertEdgeCapableStep,
     cursor($edge) {
@@ -17513,8 +20144,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17533,8 +20164,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17554,8 +20185,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17576,8 +20207,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17598,8 +20229,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17620,8 +20251,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17642,8 +20273,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17664,8 +20295,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17686,8 +20317,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17708,8 +20339,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17730,8 +20361,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17752,8 +20383,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17774,8 +20405,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17796,8 +20427,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17818,8 +20449,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -17840,8 +20471,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation3.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation3.remoteAttributes[i];
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18497,8 +21128,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18517,8 +21148,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18538,8 +21169,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18560,8 +21191,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18582,8 +21213,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18604,8 +21235,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18626,8 +21257,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18648,8 +21279,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18670,8 +21301,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18692,8 +21323,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18714,8 +21345,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18736,8 +21367,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18758,8 +21389,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18780,8 +21411,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18802,8 +21433,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18824,8 +21455,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18846,8 +21477,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18868,8 +21499,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
-        relation4.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation4.remoteAttributes[i];
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18889,8 +21520,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18909,8 +21540,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18930,8 +21561,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18952,8 +21583,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18974,8 +21605,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -18996,8 +21627,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19018,8 +21649,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19040,8 +21671,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19708,8 +22339,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19728,8 +22359,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19749,8 +22380,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19771,8 +22402,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19793,8 +22424,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19815,8 +22446,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19837,8 +22468,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19859,8 +22490,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19881,8 +22512,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19903,8 +22534,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19925,8 +22556,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19947,8 +22578,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19969,8 +22600,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -19991,8 +22622,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20013,8 +22644,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20035,8 +22666,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20056,8 +22687,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20076,8 +22707,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20097,8 +22728,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20119,8 +22750,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20141,8 +22772,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20163,8 +22794,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20185,8 +22816,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20207,8 +22838,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20229,8 +22860,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20251,8 +22882,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20273,8 +22904,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20295,8 +22926,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
@@ -20316,8 +22947,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20336,8 +22967,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20357,8 +22988,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20379,8 +23010,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20401,8 +23032,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20423,8 +23054,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20445,8 +23076,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20467,8 +23098,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20488,8 +23119,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20508,8 +23139,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20529,8 +23160,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20551,8 +23182,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20573,8 +23204,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20595,8 +23226,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20617,8 +23248,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20639,8 +23270,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20661,8 +23292,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20683,8 +23314,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20705,8 +23336,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20727,8 +23358,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20749,8 +23380,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20771,8 +23402,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
@@ -20783,6 +23414,266 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_comment.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_comment.attributes.updated_at.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_COUNT_ASC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_COUNT_DESC: {
+      applyPlan($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_ROW_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_ROW_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_POST_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.post_id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.post_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_POST_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.post_id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.post_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_USER_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.user_id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_USER_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.user_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_CREATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.created_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_CREATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.created_at.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_UPDATED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.updated_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    DOWNVOTES_DISTINCT_COUNT_UPDATED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
+from ${pgResource_downvotePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = aggregateSpec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(aggregateSpec, spec_downvote.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_downvote.attributes.updated_at.codec,
           direction: "DESC"
         });
       }
@@ -20942,6 +23833,23 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
+    createDownvote: {
+      plan(_, args) {
+        const plan = object({
+          result: pgInsertSingle(pgResource_downvotePgResource, Object.create(null))
+        });
+        args.apply(plan);
+        return plan;
+      },
+      args: {
+        input: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
     createUpvote: {
       plan(_, args) {
         const plan = object({
@@ -21063,10 +23971,63 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
+    updateDownvoteById: {
+      plan(_$root, args) {
+        const plan = object({
+          result: pgUpdateSingle(pgResource_downvotePgResource, specFromArgs(args))
+        });
+        args.apply(plan);
+        return plan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    updateDownvote: {
+      plan(_$root, args) {
+        const plan = object({
+          result: pgUpdateSingle(pgResource_downvotePgResource, {
+            id: args.get(['input', "rowId"])
+          })
+        });
+        args.apply(plan);
+        return plan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    updateDownvoteByPostIdAndUserId: {
+      plan(_$root, args) {
+        const plan = object({
+          result: pgUpdateSingle(pgResource_downvotePgResource, {
+            post_id: args.get(['input', "postId"]),
+            user_id: args.get(['input', "userId"])
+          })
+        });
+        args.apply(plan);
+        return plan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
     updateUpvoteById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_upvotePgResource, specFromArgs(args))
+          result: pgUpdateSingle(pgResource_upvotePgResource, specFromArgs2(args))
         });
         args.apply(plan);
         return plan;
@@ -21119,7 +24080,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     updateOrganizationById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_organizationPgResource, specFromArgs2(args))
+          result: pgUpdateSingle(pgResource_organizationPgResource, specFromArgs3(args))
         });
         args.apply(plan);
         return plan;
@@ -21189,7 +24150,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     updateCommentById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_commentPgResource, specFromArgs3(args))
+          result: pgUpdateSingle(pgResource_commentPgResource, specFromArgs4(args))
         });
         args.apply(plan);
         return plan;
@@ -21223,7 +24184,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     updatePostById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_postPgResource, specFromArgs4(args))
+          result: pgUpdateSingle(pgResource_postPgResource, specFromArgs5(args))
         });
         args.apply(plan);
         return plan;
@@ -21257,7 +24218,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     updateUserById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_userPgResource, specFromArgs5(args))
+          result: pgUpdateSingle(pgResource_userPgResource, specFromArgs6(args))
         });
         args.apply(plan);
         return plan;
@@ -21327,7 +24288,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     updateProjectById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_projectPgResource, specFromArgs6(args))
+          result: pgUpdateSingle(pgResource_projectPgResource, specFromArgs7(args))
         });
         args.apply(plan);
         return plan;
@@ -21414,10 +24375,63 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
+    deleteDownvoteById: {
+      plan(_$root, args) {
+        const plan = object({
+          result: pgDeleteSingle(pgResource_downvotePgResource, specFromArgs8(args))
+        });
+        args.apply(plan);
+        return plan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    deleteDownvote: {
+      plan(_$root, args) {
+        const plan = object({
+          result: pgDeleteSingle(pgResource_downvotePgResource, {
+            id: args.get(['input', "rowId"])
+          })
+        });
+        args.apply(plan);
+        return plan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    deleteDownvoteByPostIdAndUserId: {
+      plan(_$root, args) {
+        const plan = object({
+          result: pgDeleteSingle(pgResource_downvotePgResource, {
+            post_id: args.get(['input', "postId"]),
+            user_id: args.get(['input', "userId"])
+          })
+        });
+        args.apply(plan);
+        return plan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
     deleteUpvoteById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_upvotePgResource, specFromArgs7(args))
+          result: pgDeleteSingle(pgResource_upvotePgResource, specFromArgs9(args))
         });
         args.apply(plan);
         return plan;
@@ -21470,7 +24484,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     deleteOrganizationById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_organizationPgResource, specFromArgs8(args))
+          result: pgDeleteSingle(pgResource_organizationPgResource, specFromArgs10(args))
         });
         args.apply(plan);
         return plan;
@@ -21540,7 +24554,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     deleteCommentById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_commentPgResource, specFromArgs9(args))
+          result: pgDeleteSingle(pgResource_commentPgResource, specFromArgs11(args))
         });
         args.apply(plan);
         return plan;
@@ -21574,7 +24588,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     deletePostById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_postPgResource, specFromArgs10(args))
+          result: pgDeleteSingle(pgResource_postPgResource, specFromArgs12(args))
         });
         args.apply(plan);
         return plan;
@@ -21608,7 +24622,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     deleteUserById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_userPgResource, specFromArgs11(args))
+          result: pgDeleteSingle(pgResource_userPgResource, specFromArgs13(args))
         });
         args.apply(plan);
         return plan;
@@ -21678,7 +24692,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     deleteProjectById: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_projectPgResource, specFromArgs12(args))
+          result: pgDeleteSingle(pgResource_projectPgResource, specFromArgs14(args))
         });
         args.apply(plan);
         return plan;
@@ -21794,6 +24808,95 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     createdAt: {
       applyPlan($insert, val) {
         $insert.set("created_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
+  CreateDownvotePayload: {
+    __assertStep: assertExecutableStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    downvote($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    downvoteEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = downvoteUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return pgResource_downvotePgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("DownvoteOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  CreateDownvoteInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      },
+      autoApplyAfterParentApplyPlan: true
+    },
+    downvote: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      },
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
+  DownvoteInput: {
+    "__inputPlan": function DownvoteInput_inputPlan() {
+      return object(Object.create(null));
+    },
+    rowId: {
+      applyPlan($insert, val) {
+        $insert.set("id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    postId: {
+      applyPlan($insert, val) {
+        $insert.set("post_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    userId: {
+      applyPlan($insert, val) {
+        $insert.set("user_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    createdAt: {
+      applyPlan($insert, val) {
+        $insert.set("created_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    updatedAt: {
+      applyPlan($insert, val) {
+        $insert.set("updated_at", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
@@ -22439,6 +25542,121 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
+    }
+  },
+  UpdateDownvotePayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    downvote($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    downvoteEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = downvoteUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return pgResource_downvotePgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("DownvoteOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  UpdateDownvoteByIdInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    id: undefined,
+    patch: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      }
+    }
+  },
+  DownvotePatch: {
+    "__inputPlan": function DownvotePatch_inputPlan() {
+      return object(Object.create(null));
+    },
+    rowId: {
+      applyPlan($insert, val) {
+        $insert.set("id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    postId: {
+      applyPlan($insert, val) {
+        $insert.set("post_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    userId: {
+      applyPlan($insert, val) {
+        $insert.set("user_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    createdAt: {
+      applyPlan($insert, val) {
+        $insert.set("created_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    updatedAt: {
+      applyPlan($insert, val) {
+        $insert.set("updated_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
+  UpdateDownvoteInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    rowId: undefined,
+    patch: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      }
+    }
+  },
+  UpdateDownvoteByPostIdAndUserIdInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    postId: undefined,
+    userId: undefined,
+    patch: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      }
     }
   },
   UpdateUpvotePayload: {
@@ -23216,6 +26434,71 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     userId: undefined,
     organizationId: undefined
+  },
+  DeleteDownvotePayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    downvote($object) {
+      return $object.get("result");
+    },
+    deletedDownvoteId($object) {
+      const $record = $object.getStepForKey("result"),
+        specifier = nodeIdHandlerByTypeName.Downvote.plan($record);
+      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
+    },
+    query() {
+      return rootValue();
+    },
+    downvoteEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = downvoteUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return pgResource_downvotePgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("DownvoteOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  DeleteDownvoteByIdInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    id: undefined
+  },
+  DeleteDownvoteInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    rowId: undefined
+  },
+  DeleteDownvoteByPostIdAndUserIdInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    postId: undefined,
+    userId: undefined
   },
   DeleteUpvotePayload: {
     __assertStep: ObjectStep,

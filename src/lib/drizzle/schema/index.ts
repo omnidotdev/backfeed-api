@@ -1,4 +1,5 @@
 export * from "./comment.table";
+export * from "./downvote.table";
 export * from "./organization.table";
 export * from "./post.table";
 export * from "./project.table";
