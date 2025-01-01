@@ -1,8 +1,11 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 
+import { comments } from "./comment.table";
 import { defaultDate, defaultId } from "./constants";
+import { downvotes } from "./downvote.table";
 import { posts } from "./post.table";
+import { upvotes } from "./upvote.table";
 import { usersToOrganizations } from "./userToOrganization.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -27,6 +30,9 @@ export const users = pgTable("user", {
 export const userRelations = relations(users, ({ many }) => ({
   organizations: many(usersToOrganizations),
   posts: many(posts),
+  comments: many(comments),
+  upvotes: many(upvotes),
+  downvotes: many(downvotes),
 }));
 
 /**
