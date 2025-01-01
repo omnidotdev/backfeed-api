@@ -8,7 +8,7 @@ import { users } from "./user.table";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Comment table. Comments reperesent feedback item comments.
+ * Comment table. Comments serve as units of feedback item discourse.
  */
 export const comments = pgTable("comment", {
   id: defaultId(),
