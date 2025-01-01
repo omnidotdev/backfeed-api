@@ -8,7 +8,7 @@ import { users } from "./user.table";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Downvote table. Upvotes are used to represent negative sentiment on posts.
+ * Downvote table. Downvotes are used to represent negative sentiment on posts.
  */
 export const downvotes = pgTable(
   "downvote",
