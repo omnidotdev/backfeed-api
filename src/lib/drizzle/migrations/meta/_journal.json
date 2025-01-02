@@ -15,6 +15,20 @@
       "when": 1735577973197,
       "tag": "0001_thankful_shinko_yamashiro",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1735611260906,
+      "tag": "0002_high_ender_wiggin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1735658626719,
+      "tag": "0003_medical_paper_doll",
+      "breakpoints": true
     }
   ]
 }

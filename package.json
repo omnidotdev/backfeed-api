@@ -36,7 +36,7 @@
     "@graphile/simplify-inflection": "^8.0.0-beta.5",
     "dayjs": "^1.11.13",
     "drizzle-orm": "^0.38.2",
-    "drizzle-seed": "^0.2.1",
+    "drizzle-seed": "^0.3.0",
     "graphile-export": "^0.0.2-beta.24",
     "graphql": "^16.9.0",
     "graphql-yoga": "^5.8.0",
