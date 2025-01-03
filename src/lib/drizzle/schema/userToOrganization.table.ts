@@ -5,10 +5,7 @@ import { defaultDate } from "./constants";
 import { organizations } from "./organization.table";
 import { users } from "./user.table";
 
-import type {
-  InferInsertModel,
-  InferSelectModel,
-} from "drizzle-orm";
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Users to organizations join table.

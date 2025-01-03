@@ -27,7 +27,6 @@ export const posts = pgTable("post", {
   updatedAt: defaultDate(),
 });
 
-
 /**
  * Type helpers related to the post table.
  */
