@@ -13,7 +13,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const organizations = pgTable("organization", {
   id: defaultId(),
   name: text().unique(),
-  slug: text().unique(),
+  slug: text().unique().notNull(),
   createdAt: defaultDate(),
   updatedAt: defaultDate(),
 });

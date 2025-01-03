@@ -120,7 +120,7 @@ const spec_userOrganization = {
   }),
   description: undefined,
   extensions: {
-    oid: "77872",
+    oid: "80353",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -200,7 +200,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "78725",
+    oid: "80418",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -280,7 +280,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "77850",
+    oid: "80331",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -324,7 +324,7 @@ const spec_organization = {
     slug: {
       description: undefined,
       codec: TYPES.text,
-      notNull: false,
+      notNull: true,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -360,7 +360,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "77812",
+    oid: "80293",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -452,7 +452,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "78467",
+    oid: "80398",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -556,7 +556,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "77826",
+    oid: "80307",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -612,7 +612,7 @@ const spec_project = {
     slug: {
       description: undefined,
       codec: TYPES.text,
-      notNull: false,
+      notNull: true,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -672,7 +672,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "77836",
+    oid: "80317",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -776,7 +776,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "77860",
+    oid: "80341",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4628,7 +4628,7 @@ type Organization implements Node {
   id: ID!
   rowId: UUID!
   name: String
-  slug: String
+  slug: String!
   createdAt: Datetime
   updatedAt: Datetime
 
@@ -4742,7 +4742,7 @@ type Project implements Node {
   rowId: UUID!
   name: String
   image: String
-  slug: String
+  slug: String!
   description: String
   organizationId: UUID!
   createdAt: Datetime
@@ -8336,7 +8336,7 @@ input CreateOrganizationInput {
 input OrganizationInput {
   rowId: UUID
   name: String
-  slug: String
+  slug: String!
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -8518,7 +8518,7 @@ input ProjectInput {
   rowId: UUID
   name: String
   image: String
-  slug: String
+  slug: String!
   description: String
   organizationId: UUID!
   createdAt: Datetime
