@@ -1,4 +1,3 @@
-import { relations } from "drizzle-orm";
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
@@ -26,20 +25,6 @@ export const comments = pgTable("comment", {
   createdAt: defaultDate(),
   updatedAt: defaultDate(),
 });
-
-/**
- * Relations for the comment table.
- */
-export const commentRelations = relations(comments, ({ one }) => ({
-  post: one(posts, {
-    fields: [comments.postId],
-    references: [posts.id],
-  }),
-  user: one(users, {
-    fields: [comments.userId],
-    references: [users.id],
-  }),
-}));
 
 /**
  * Type helpers related to the comment table.

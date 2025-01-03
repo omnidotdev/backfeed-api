@@ -1,9 +1,6 @@
-import { relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-import { projects } from "./project.table";
-import { usersToOrganizations } from "./userToOrganization.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -17,14 +14,6 @@ export const organizations = pgTable("organization", {
   createdAt: defaultDate(),
   updatedAt: defaultDate(),
 });
-
-/**
- * Relations for the organization table.
- */
-export const organizationRelations = relations(organizations, ({ many }) => ({
-  projects: many(projects),
-  users: many(usersToOrganizations),
-}));
 
 /**
  * Type helpers related to the organization table.
