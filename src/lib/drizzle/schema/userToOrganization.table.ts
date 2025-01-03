@@ -1,13 +1,14 @@
-import {
-  type InferInsertModel,
-  type InferSelectModel,
-  relations,
-} from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import { pgTable, unique, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate } from "./constants";
 import { organizations } from "./organization.table";
 import { users } from "./user.table";
+
+import type {
+  InferInsertModel,
+  InferSelectModel,
+} from "drizzle-orm";
 
 /**
  * Users to organizations join table.

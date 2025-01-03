@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+// import { relations } from "drizzle-orm";
 import { pgTable, unique, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
@@ -29,20 +29,6 @@ export const downvotes = pgTable(
   },
   (table) => [unique().on(table.postId, table.userId)]
 );
-
-/**
- * Relations for the downvote table.
- */
-export const downvoteRelations = relations(downvotes, ({ one }) => ({
-  post: one(posts, {
-    fields: [downvotes.postId],
-    references: [posts.id],
-  }),
-  user: one(users, {
-    fields: [downvotes.userId],
-    references: [users.id],
-  }),
-}));
 
 /**
  * Type helpers related to the downvote table.
