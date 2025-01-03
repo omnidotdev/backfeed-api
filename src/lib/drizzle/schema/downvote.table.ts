@@ -20,7 +20,7 @@ export const downvotes = pgTable(
       }),
     userId: uuid()
       .notNull()
-      .references(() => users.id, {
+      .references(() => users.hidraId, {
         onDelete: "cascade",
       }),
     createdAt: defaultDate(),

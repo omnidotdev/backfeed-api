@@ -36,6 +36,20 @@
       "when": 1735865647094,
       "tag": "0004_easy_lockheed",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1735921429085,
+      "tag": "0005_nice_talkback",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1735921719688,
+      "tag": "0006_goofy_harry_osborn",
+      "breakpoints": true
     }
   ]
 }

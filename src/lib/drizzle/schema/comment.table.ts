@@ -19,7 +19,7 @@ export const comments = pgTable("comment", {
     }),
   userId: uuid()
     .notNull()
-    .references(() => users.id, {
+    .references(() => users.hidraId, {
       onDelete: "cascade",
     }),
   createdAt: defaultDate(),

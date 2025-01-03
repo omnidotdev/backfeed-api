@@ -20,7 +20,7 @@ export const posts = pgTable("post", {
     }),
   userId: uuid()
     .notNull()
-    .references(() => users.id, {
+    .references(() => users.hidraId, {
       onDelete: "cascade",
     }),
   createdAt: defaultDate(),
