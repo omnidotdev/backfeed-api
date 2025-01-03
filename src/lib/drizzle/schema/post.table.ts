@@ -1,11 +1,7 @@
-import { relations } from "drizzle-orm";
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 
-import { comments } from "./comment.table";
 import { defaultDate, defaultId } from "./constants";
-import { downvotes } from "./downvote.table";
 import { projects } from "./project.table";
-import { upvotes } from "./upvote.table";
 import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -30,23 +26,6 @@ export const posts = pgTable("post", {
   createdAt: defaultDate(),
   updatedAt: defaultDate(),
 });
-
-/**
- * Relations for the post table.
- */
-export const postRelations = relations(posts, ({ one, many }) => ({
-  project: one(projects, {
-    fields: [posts.projectId],
-    references: [projects.id],
-  }),
-  user: one(users, {
-    fields: [posts.userId],
-    references: [users.id],
-  }),
-  comments: many(comments),
-  upvotes: many(upvotes),
-  downvotes: many(downvotes),
-}));
 
 /**
  * Type helpers related to the post table.
