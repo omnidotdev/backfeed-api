@@ -14,7 +14,7 @@ export const usersToOrganizations = pgTable(
   {
     userId: uuid()
       .notNull()
-      .references(() => users.hidraId, {
+      .references(() => users.id, {
         onDelete: "cascade",
       }),
     organizationId: uuid()
