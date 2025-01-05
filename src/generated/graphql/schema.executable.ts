@@ -120,7 +120,7 @@ const spec_userOrganization = {
   }),
   description: undefined,
   extensions: {
-    oid: "80353",
+    oid: "81017",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -200,7 +200,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "80418",
+    oid: "81082",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -280,7 +280,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "80331",
+    oid: "80995",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -360,7 +360,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "80293",
+    oid: "80957",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -452,7 +452,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "80398",
+    oid: "81062",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -556,7 +556,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "80307",
+    oid: "80971",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -672,7 +672,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "80317",
+    oid: "80981",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -776,7 +776,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "80341",
+    oid: "81005",
     isTableLike: true,
     pg: {
       serviceName: "main",
