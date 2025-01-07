@@ -14,7 +14,7 @@ export const projects = pgTable(
     id: defaultId(),
     name: text().unique(),
     image: text(),
-    slug: text(),
+    slug: text().notNull(),
     description: text(),
     organizationId: uuid()
       .notNull()
