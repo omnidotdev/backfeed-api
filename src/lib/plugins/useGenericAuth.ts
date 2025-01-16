@@ -24,7 +24,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
     if (!payload) throw new Error("Invalid or missing session token");
 
-    const [upsertedUser] = await context.db
+    const [user] = await context.db
       .insert(users)
       .values({
         // @ts-ignore TODO: figure out why there is a type error here
@@ -44,7 +44,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       })
       .returning();
 
-    return upsertedUser;
+    return user;
   } catch (e) {
     // TODO: generalize error message?
     console.error(e);
