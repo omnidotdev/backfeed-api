@@ -1,4 +1,3 @@
-import { createWithPgClient } from "@dataplan/pg/adaptors/pg";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import { createYoga } from "graphql-yoga";
 import { Hono } from "hono";
@@ -7,11 +6,10 @@ import { cors } from "hono/cors";
 import { schema } from "generated/graphql/schema.executable";
 import { app as appConfig } from "lib/config/app";
 import { HOST, PORT, isDevEnv, isProdEnv } from "lib/config/env";
-import { pgPool } from "lib/db/pool";
+import { createGraphQLContext } from "lib/graphql/context";
+import { useGenericAuth } from "lib/plugins";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
-
-const withPgClient = createWithPgClient({ pool: pgPool });
 
 /**
  * GraphQL Yoga configuration.
@@ -19,15 +17,12 @@ const withPgClient = createWithPgClient({ pool: pgPool });
  */
 const yoga = createYoga({
   schema,
-  context: {
-    // inject Postgres client into GraphQL context
-    withPgClient,
-  },
+  context: createGraphQLContext,
   // only enable web UIs in development
   // NB: can also provide an object of GraphiQL options instead of a boolean
   graphiql: isDevEnv,
   landingPage: isDevEnv,
-  plugins: [useMoreDetailedErrors(), useGrafast()],
+  plugins: [useGenericAuth(), useMoreDetailedErrors(), useGrafast()],
 });
 
 const app = new Hono();
