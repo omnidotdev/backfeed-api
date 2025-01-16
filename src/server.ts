@@ -7,7 +7,7 @@ import { schema } from "generated/graphql/schema.executable";
 import { app as appConfig } from "lib/config/app";
 import { HOST, PORT, isDevEnv, isProdEnv } from "lib/config/env";
 import { createGraphQLContext } from "lib/graphql/context";
-import { useGenericAuth } from "lib/plugins";
+import { useAuth } from "lib/plugins";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
@@ -22,7 +22,7 @@ const yoga = createYoga({
   // NB: can also provide an object of GraphiQL options instead of a boolean
   graphiql: isDevEnv,
   landingPage: isDevEnv,
-  plugins: [useGenericAuth(), useMoreDetailedErrors(), useGrafast()],
+  plugins: [useAuth(), useMoreDetailedErrors(), useGrafast()],
 });
 
 const app = new Hono();

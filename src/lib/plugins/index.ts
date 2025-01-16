@@ -1,1 +1,1 @@
-export { default as useGenericAuth } from "./useGenericAuth";
+export { default as useAuth } from "./useGenericAuth";

@@ -1,4 +1,4 @@
-import { useGenericAuth as useEnvelopGenericAuth } from "@envelop/generic-auth";
+import { useGenericAuth } from "@envelop/generic-auth";
 import * as jose from "jose";
 
 import { AUTH_JWKS_URL } from "lib/config/env";
@@ -53,10 +53,10 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
   }
 };
 
-const useGenericAuth = () =>
-  useEnvelopGenericAuth({
+const useAuth = () =>
+  useGenericAuth({
     resolveUserFn: resolveUser,
     mode: "protect-all",
   });
 
-export default useGenericAuth;
+export default useAuth;
