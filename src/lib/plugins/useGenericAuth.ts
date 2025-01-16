@@ -30,7 +30,6 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
     const getKey = (header: JwtHeader, callback: SigningKeyCallback) => {
       jwks.getSigningKey(header.kid, (err, key) => {
-        // @ts-ignore
         const signingKey = key?.getPublicKey();
         // TODO: figure out why this is coming back as undefined
         console.log(signingKey);
