@@ -30,9 +30,11 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
     const getKey = (header: JwtHeader, callback: SigningKeyCallback) => {
       jwks.getSigningKey(header.kid, (err, key) => {
+        if (err) {
+          console.error(err);
+        }
+
         const signingKey = key?.getPublicKey();
-        // TODO: figure out why this is coming back as undefined
-        console.log(signingKey);
         callback(null, signingKey);
       });
     };
@@ -42,11 +44,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       getKey,
       { algorithms: ["RS256"] },
       async (err, decoded) => {
-        if (err) {
-          // TODO: remove
-          console.error(err);
-          throw new Error("Failed to verify session token");
-        }
+        if (err) throw new Error("Failed to verify session token");
 
         const decodedToken = decoded as jwt.JwtPayload;
 
