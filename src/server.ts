@@ -37,7 +37,7 @@ app.use(
   cors({
     origin: isProdEnv ? appConfig.url : "http://localhost:3000",
     credentials: true,
-    allowMethods: ["POST"],
+    allowMethods: ["GET", "POST"],
   })
 );
 
