@@ -5,7 +5,7 @@ import { AUTH_JWKS_URL } from "lib/config/env";
 import { users } from "lib/drizzle/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
-import type { SelectUser } from "lib/drizzle/schema";
+import type { InsertUser, SelectUser } from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 
 const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
@@ -24,21 +24,22 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
     if (!payload) throw new Error("Invalid or missing session token");
 
+    const insertedUser: InsertUser = {
+      hidraId: payload.sub!,
+      username: payload.preferred_username as string,
+      firstName: payload.given_name as string,
+      lastName: payload.family_name as string,
+    };
+
+    const { hidraId, ...rest } = insertedUser;
+
     const [user] = await context.db
       .insert(users)
-      .values({
-        // @ts-ignore TODO: figure out why there is a type error here
-        hidraId: payload.sub!,
-        username: payload.preferred_username,
-        firstName: payload.given_name,
-        lastName: payload.family_name,
-      })
+      .values(insertedUser)
       .onConflictDoUpdate({
         target: users.hidraId,
         set: {
-          username: payload.preferred_username as string,
-          firstName: payload.given_name as string,
-          lastName: payload.family_name as string,
+          ...rest,
           updatedAt: new Date().toISOString(),
         },
       })
