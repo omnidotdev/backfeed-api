@@ -1,12 +1,11 @@
 import { useGenericAuth } from "@envelop/generic-auth";
-import { eq } from "drizzle-orm";
 import * as jose from "jose";
 
 import { AUTH_JWKS_URL } from "lib/config/env";
 import { users } from "lib/drizzle/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
-import type { SelectUser } from "lib/drizzle/schema";
+import type { InsertUser, SelectUser } from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 
 const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
@@ -25,12 +24,26 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
     if (!payload) throw new Error("Invalid or missing session token");
 
-    const [user] = await context.db
-      .select()
-      .from(users)
-      .where(eq(users.hidraId, payload.sub!));
+    const insertedUser: InsertUser = {
+      hidraId: payload.sub!,
+      username: payload.preferred_username as string,
+      firstName: payload.given_name as string,
+      lastName: payload.family_name as string,
+    };
 
-    if (!user) throw new Error("No user found with the given HIDRA ID");
+    const { hidraId, ...rest } = insertedUser;
+
+    const [user] = await context.db
+      .insert(users)
+      .values(insertedUser)
+      .onConflictDoUpdate({
+        target: users.hidraId,
+        set: {
+          ...rest,
+          updatedAt: new Date().toISOString(),
+        },
+      })
+      .returning();
 
     return user;
   } catch (e) {
