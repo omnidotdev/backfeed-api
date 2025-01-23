@@ -15,6 +15,10 @@ export interface GraphQLContext {
   withPgClient: WithPgClient<NodePostgresPgClient>;
 }
 
+/**
+ * Create a GraphQL context.
+ * @see https://graphql.org/learn/execution/#root-fields-and-resolvers
+ */
 export const createGraphQLContext = async ({
   request,
 }: YogaInitialContext): Promise<GraphQLContext> => ({
