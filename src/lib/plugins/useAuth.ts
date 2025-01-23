@@ -46,9 +46,8 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       .returning();
 
     return user;
-  } catch (e) {
-    // TODO: generalize error message?
-    console.error(e);
+  } catch (err) {
+    console.error(err);
 
     return null;
   }
