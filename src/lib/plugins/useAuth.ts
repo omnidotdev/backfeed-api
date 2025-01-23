@@ -8,6 +8,10 @@ import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { InsertUser, SelectUser } from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 
+/**
+ * Validate user session and resolve user if successful.
+ * @see https://the-guild.dev/graphql/envelop/plugins/use-generic-auth#getting-started
+ */
 const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
   context
 ) => {
