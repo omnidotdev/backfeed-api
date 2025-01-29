@@ -41,10 +41,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 )
               );
 
+            // Only allow owners to delete organizations
             if (scope === "delete" && userRole.role !== "owner") {
               throw new Error("Insufficient permissions");
             }
 
+            // Only allow admins and owners to update organizations
             if (
               scope === "update" &&
               (!userRole || userRole.role === "member")
@@ -59,6 +61,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [and, eq, dbSchema, context, sideEffect, propName, scope]
   );
 
+/**
+ * Plugin that handles API access for organization table mutations.
+ */
 const OrganizationRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
     updateOrganization: validatePermissions("rowId", "update"),

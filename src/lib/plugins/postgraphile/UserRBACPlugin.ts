@@ -18,6 +18,8 @@ const validatePermissions = (propName: string) =>
             throw new Error("Unauthorized");
           }
 
+          // Disallow updating or deleting a user record that is not your own
+          // TODO: this is scoped to the `user` table, so it is beyond the scope of RBAC. Discuss how to handle API admin access
           if (userId !== currentUser.id) {
             throw new Error("Insufficient permissions");
           }
@@ -28,6 +30,9 @@ const validatePermissions = (propName: string) =>
     [context, sideEffect, propName]
   );
 
+/**
+ * Plugin that handles API access for user table mutations.
+ */
 const UserRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
     updateUser: validatePermissions("rowId"),

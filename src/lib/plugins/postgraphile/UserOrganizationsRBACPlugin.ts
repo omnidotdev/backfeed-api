@@ -45,13 +45,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   (user) => user.userId === currentUser.id
                 )?.role;
 
-                // NB: allow users to join an organization as a member
+                // Allow users to join an organization as a member
                 if (!userRole) {
                   if (userId !== currentUser.id || role !== "member") {
                     throw new Error("Insufficient permissions");
                   }
                 } else {
-                  // NB: if the user is already a member, they must be an owner to invite a new member to the organization
+                  // If the user is already a member, they must be an owner to invite a new member to the organization
                   if (userRole !== "owner") {
                     throw new Error("Insufficient permissions");
                   }
@@ -77,11 +77,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                     )
                   );
 
+                // Only allow owners to update roles and/or kick other members from the organization
                 if (userRole.role !== "owner") {
                   throw new Error("Insufficient permissions");
                 }
               } else {
-                // NB: current users can not update their own role unless they are an owner
+                // Restrict current users from updating their own role unless they are an owner
                 if (scope === "update" && userOrganization.role !== "owner") {
                   throw new Error("Insufficient permissions");
                 }
@@ -95,6 +96,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [and, eq, dbSchema, context, sideEffect, propName, scope]
   );
 
+/**
+ * Plugin that handles API access for userOrganization table mutations.
+ */
 const UserOrganizationsRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
     createUserOrganization: validatePermissions("userOrganization", "create"),

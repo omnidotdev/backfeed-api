@@ -51,6 +51,7 @@ const validatePermissions = (propName: string) =>
                   )
                 );
 
+              // Allow admins and owners to edit and delete comments
               if (!userRole || userRole.role === "member") {
                 throw new Error("Insufficient permissions");
               }
@@ -63,6 +64,9 @@ const validatePermissions = (propName: string) =>
     [and, eq, dbSchema, context, sideEffect, propName]
   );
 
+/**
+ * Plugin that handles API access for comment table mutations.
+ */
 const CommentRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
     updateComment: validatePermissions("rowId"),

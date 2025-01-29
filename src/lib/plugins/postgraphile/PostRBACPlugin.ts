@@ -46,6 +46,7 @@ const validatePermissions = (propName: string) =>
                   )
                 );
 
+              // Allow admins and owners to update and delete posts
               if (!userRole || userRole.role === "member") {
                 throw new Error("Insufficient permissions");
               }
@@ -58,6 +59,9 @@ const validatePermissions = (propName: string) =>
     [and, eq, dbSchema, context, sideEffect, propName]
   );
 
+/**
+ * Plugin that handles API access for post table mutations.
+ */
 const PostRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
     updatePost: validatePermissions("rowId"),

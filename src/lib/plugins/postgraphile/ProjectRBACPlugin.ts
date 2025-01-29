@@ -52,6 +52,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 )
               );
 
+            // Only allow owners and admins to create, update, and delete projects
             if (!userRole || userRole.role === "member") {
               throw new Error("Insufficient permissions");
             }
@@ -63,6 +64,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [and, eq, dbSchema, context, sideEffect, propName, scope]
   );
 
+/**
+ * Plugin that handles API access for project table mutations.
+ */
 const ProjectRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
     createProject: validatePermissions("project", "create"),

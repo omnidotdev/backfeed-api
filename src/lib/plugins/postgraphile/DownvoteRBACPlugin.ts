@@ -31,6 +31,7 @@ const validatePermissions = (propName: string) =>
               .from(downvotes)
               .where(eq(downvotes.id, downvoteId as string));
 
+            // Only allow the user who downvoted to update or delete their own downvote
             if (currentUser.id !== downvote.userId) {
               throw new Error("Insufficient permissions");
             }
@@ -42,6 +43,9 @@ const validatePermissions = (propName: string) =>
     [and, eq, dbSchema, context, sideEffect, propName]
   );
 
+/**
+ * Plugin that handles API access for downvote table mutations.
+ */
 const DownvoteRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
     updateDownvote: validatePermissions("rowId"),

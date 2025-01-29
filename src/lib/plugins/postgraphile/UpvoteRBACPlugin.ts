@@ -31,6 +31,7 @@ const validatePermissions = (propName: string) =>
               .from(upvotes)
               .where(eq(upvotes.id, upvoteId as string));
 
+            // Only allow the user who upvoted to update or delete their own upvote
             if (currentUser.id !== upvote.userId) {
               throw new Error("Insufficient permissions");
             }
@@ -42,6 +43,9 @@ const validatePermissions = (propName: string) =>
     [and, eq, dbSchema, context, sideEffect, propName]
   );
 
+/**
+ * Plugin that handles API access for upvote table mutations.
+ */
 const UpvoteRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
     updateUpvote: validatePermissions("rowId"),
