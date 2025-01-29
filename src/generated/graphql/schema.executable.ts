@@ -4131,14 +4131,16 @@ const planWrapper2 = (plan, _, fieldArgs) => {
     } = lib_drizzle_schema;
     if ("create" === "create") {
       const {
+          role,
           userId,
           organizationId
         } = input,
         organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
       if (organizationUsers.length) {
         const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
-        if (!userRole && userId !== currentUser.id) throw new Error("Insufficient permissions");
-        if (userRole && userRole !== "owner") throw new Error("Insufficient permissions");
+        if (!userRole) {
+          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
+        } else if (userRole !== "owner") throw new Error("Insufficient permissions");
       }
     } else {
       const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
@@ -4342,14 +4344,16 @@ const planWrapper9 = (plan, _, fieldArgs) => {
     } = lib_drizzle_schema;
     if ("update" === "create") {
       const {
+          role,
           userId,
           organizationId
         } = input,
         organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
       if (organizationUsers.length) {
         const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
-        if (!userRole && userId !== currentUser.id) throw new Error("Insufficient permissions");
-        if (userRole && userRole !== "owner") throw new Error("Insufficient permissions");
+        if (!userRole) {
+          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
+        } else if (userRole !== "owner") throw new Error("Insufficient permissions");
       }
     } else {
       const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
@@ -4553,14 +4557,16 @@ const planWrapper16 = (plan, _, fieldArgs) => {
     } = lib_drizzle_schema;
     if ("delete" === "create") {
       const {
+          role,
           userId,
           organizationId
         } = input,
         organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
       if (organizationUsers.length) {
         const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
-        if (!userRole && userId !== currentUser.id) throw new Error("Insufficient permissions");
-        if (userRole && userRole !== "owner") throw new Error("Insufficient permissions");
+        if (!userRole) {
+          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
+        } else if (userRole !== "owner") throw new Error("Insufficient permissions");
       }
     } else {
       const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));

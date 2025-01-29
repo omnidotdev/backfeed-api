@@ -30,6 +30,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             const { usersToOrganizations } = dbSchema;
 
             if (scope === "create") {
+              const role = (input as InsertUserToOrganization).role;
               const userId = (input as InsertUserToOrganization).userId;
               const organizationId = (input as InsertUserToOrganization)
                 .organizationId;
@@ -44,14 +45,16 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   (user) => user.userId === currentUser.id
                 )?.role;
 
-                // NB: this allows anyone to join an organization if they are not currently a member
-                if (!userRole && userId !== currentUser.id) {
-                  throw new Error("Insufficient permissions");
-                }
-
-                // NB: if the user is already a member, they must be an owner to invite a new member to the organization
-                if (userRole && userRole !== "owner") {
-                  throw new Error("Insufficient permissions");
+                // NB: allow users to join an organization as a member
+                if (!userRole) {
+                  if (userId !== currentUser.id || role !== "member") {
+                    throw new Error("Insufficient permissions");
+                  }
+                } else {
+                  // NB: if the user is already a member, they must be an owner to invite a new member to the organization
+                  if (userRole !== "owner") {
+                    throw new Error("Insufficient permissions");
+                  }
                 }
               }
             } else {
