@@ -51,7 +51,7 @@ const validatePermissions = (propName: string) =>
     [and, eq, dbSchema, context, sideEffect, propName]
   );
 
-const RBACPlugin = makeWrapPlansPlugin({
+const ProjectRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
     createProject: validatePermissions("project"),
     updateProject: validatePermissions("patch"),
@@ -59,4 +59,4 @@ const RBACPlugin = makeWrapPlansPlugin({
   },
 });
 
-export default RBACPlugin;
+export default ProjectRBACPlugin;

@@ -8,7 +8,7 @@ import { DATABASE_URL, isProdEnv } from "./src/lib/config/env";
 import {
   NonNullablePlugin,
   PrimaryKeyMutationsOnlyPlugin,
-  RBACPlugin,
+  ProjectRBACPlugin,
 } from "./src/lib/plugins/postgraphile";
 
 import type { GraphileConfig } from "graphile-config";
@@ -28,7 +28,11 @@ const preset: GraphileConfig.Preset = {
     defaultBehavior: "-type:node -interface:node",
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
-  plugins: [NonNullablePlugin, PrimaryKeyMutationsOnlyPlugin, RBACPlugin],
+  plugins: [
+    NonNullablePlugin,
+    PrimaryKeyMutationsOnlyPlugin,
+    ProjectRBACPlugin,
+  ],
   grafserv: {
     graphiql: false,
   },
