@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "87793",
+    oid: "88050",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "87706",
+    oid: "87963",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "87668",
+    oid: "87925",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +400,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "87773",
+    oid: "88030",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -504,7 +504,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "87682",
+    oid: "87939",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -620,7 +620,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "87692",
+    oid: "87949",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -724,7 +724,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "87716",
+    oid: "87973",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -743,7 +743,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "87812",
+    oid: "88069",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -803,11 +803,23 @@ const spec_userOrganization = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   }),
   description: undefined,
   extensions: {
-    oid: "87728",
+    oid: "87985",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1077,41 +1089,6 @@ const registryConfig_pgResources_user_user = {
     canDelete: true
   }
 };
-const registryConfig_pgResources_user_organization_user_organization = {
-  executor: executor,
-  name: "user_organization",
-  identifier: "main.public.user_organization",
-  from: userOrganizationIdentifier,
-  codec: userOrganizationCodec,
-  uniques: [{
-    isPrimary: false,
-    attributes: ["user_id", "organization_id"],
-    description: undefined,
-    extensions: {
-      tags: Object.assign(Object.create(null), {
-        behavior: ["-update", "-delete"]
-      })
-    }
-  }],
-  isVirtual: false,
-  description: undefined,
-  extensions: {
-    description: undefined,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "user_organization"
-    },
-    isInsertable: true,
-    isUpdatable: true,
-    isDeletable: true,
-    tags: {},
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  }
-};
 const projectUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1164,6 +1141,49 @@ const registryConfig_pgResources_project_project = {
     canDelete: true
   }
 };
+const user_organizationUniques = [{
+  isPrimary: true,
+  attributes: ["id"],
+  description: undefined,
+  extensions: {
+    tags: Object.create(null)
+  }
+}, {
+  isPrimary: false,
+  attributes: ["user_id", "organization_id"],
+  description: undefined,
+  extensions: {
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
+  }
+}];
+const registryConfig_pgResources_user_organization_user_organization = {
+  executor: executor,
+  name: "user_organization",
+  identifier: "main.public.user_organization",
+  from: userOrganizationIdentifier,
+  codec: userOrganizationCodec,
+  uniques: user_organizationUniques,
+  isVirtual: false,
+  description: undefined,
+  extensions: {
+    description: undefined,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "user_organization"
+    },
+    isInsertable: true,
+    isUpdatable: true,
+    isDeletable: true,
+    tags: {},
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  }
+};
 const registryConfig = {
   pgExecutors: Object.assign(Object.create(null), {
     main: executor
@@ -1189,8 +1209,8 @@ const registryConfig = {
     comment: registryConfig_pgResources_comment_comment,
     post: registryConfig_pgResources_post_post,
     user: registryConfig_pgResources_user_user,
-    user_organization: registryConfig_pgResources_user_organization_user_organization,
-    project: registryConfig_pgResources_project_project
+    project: registryConfig_pgResources_project_project,
+    user_organization: registryConfig_pgResources_user_organization_user_organization
   }),
   pgRelations: Object.assign(Object.create(null), {
     comment: Object.assign(Object.create(null), {
@@ -1548,8 +1568,8 @@ const resource_organizationPgResource = registry.pgResources["organization"];
 const resource_commentPgResource = registry.pgResources["comment"];
 const resource_postPgResource = registry.pgResources["post"];
 const resource_userPgResource = registry.pgResources["user"];
-const resource_user_organizationPgResource = registry.pgResources["user_organization"];
 const resource_projectPgResource = registry.pgResources["project"];
+const resource_user_organizationPgResource = registry.pgResources["user_organization"];
 const applyOrderToPlan = ($select, $value, TableOrderByType) => {
   if (!("evalLength" in $value)) return;
   const length = $value.evalLength();
@@ -2934,6 +2954,11 @@ const colSpec31 = {
   attributeName: "role",
   attribute: spec_userOrganization.attributes.role
 };
+const colSpec32 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_userOrganization.attributes.id
+};
 function assertAllowed30(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -3008,27 +3033,27 @@ const resolve68 = (i, v) => sql`${i} < ${v}`;
 const resolve69 = (i, v) => sql`${i} <= ${v}`;
 const resolve70 = (i, v) => sql`${i} > ${v}`;
 const resolve71 = (i, v) => sql`${i} >= ${v}`;
-const colSpec32 = {
+const colSpec33 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_organization.attributes.id
 };
-const colSpec33 = {
+const colSpec34 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_organization.attributes.name
 };
-const colSpec34 = {
+const colSpec35 = {
   fieldName: "slug",
   attributeName: "slug",
   attribute: spec_organization.attributes.slug
 };
-const colSpec35 = {
+const colSpec36 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_organization.attributes.created_at
 };
-const colSpec36 = {
+const colSpec37 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_organization.attributes.updated_at
@@ -3093,32 +3118,32 @@ function assertAllowed36(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec37 = {
+const colSpec38 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_comment.attributes.id
 };
-const colSpec38 = {
+const colSpec39 = {
   fieldName: "message",
   attributeName: "message",
   attribute: spec_comment.attributes.message
 };
-const colSpec39 = {
+const colSpec40 = {
   fieldName: "postId",
   attributeName: "post_id",
   attribute: spec_comment.attributes.post_id
 };
-const colSpec40 = {
+const colSpec41 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_comment.attributes.user_id
 };
-const colSpec41 = {
+const colSpec42 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_comment.attributes.created_at
 };
-const colSpec42 = {
+const colSpec43 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_comment.attributes.updated_at
@@ -3159,27 +3184,27 @@ function assertAllowed39(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec43 = {
+const colSpec44 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_downvote.attributes.id
 };
-const colSpec44 = {
+const colSpec45 = {
   fieldName: "postId",
   attributeName: "post_id",
   attribute: spec_downvote.attributes.post_id
 };
-const colSpec45 = {
+const colSpec46 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_downvote.attributes.user_id
 };
-const colSpec46 = {
+const colSpec47 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_downvote.attributes.created_at
 };
-const colSpec47 = {
+const colSpec48 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_downvote.attributes.updated_at
@@ -4088,7 +4113,46 @@ const planWrapper = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan2 = (_$root, args) => {
+function oldPlan2(_, args) {
+  const plan = object({
+    result: pgInsertSingle(resource_user_organizationPgResource, Object.create(null))
+  });
+  args.apply(plan);
+  return plan;
+}
+const planWrapper2 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "userOrganization"]),
+    $currentUser = context().get("currentUser"),
+    $db = context().get("db");
+  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
+    const {
+      usersToOrganizations
+    } = lib_drizzle_schema;
+    if ("create" === "create") {
+      const {
+          userId,
+          organizationId
+        } = input,
+        organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
+      if (organizationUsers.length) {
+        const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
+        if (!userRole && userId !== currentUser.id) throw new Error("Insufficient permissions");
+        if (userRole && userRole !== "owner") throw new Error("Insufficient permissions");
+      }
+    } else {
+      const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
+      if (currentUser.id !== userOrganization.userId) {
+        const [userRole] = await db.select({
+          role: usersToOrganizations.role
+        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
+        if (userRole.role !== "owner") throw new Error("Insufficient permissions");
+      } else if ("create" === "update" && userOrganization.role !== "owner") throw new Error("Insufficient permissions");
+    }
+  });
+  return plan();
+};
+const oldPlan3 = (_$root, args) => {
   const plan = object({
     result: pgUpdateSingle(resource_downvotePgResource, {
       id: args.get(['input', "rowId"])
@@ -4097,7 +4161,7 @@ const oldPlan2 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper2 = (plan, _, fieldArgs) => {
+const planWrapper3 = (plan, _, fieldArgs) => {
   const $downvoteId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4111,7 +4175,7 @@ const planWrapper2 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan3 = (_$root, args) => {
+const oldPlan4 = (_$root, args) => {
   const plan = object({
     result: pgUpdateSingle(resource_upvotePgResource, {
       id: args.get(['input', "rowId"])
@@ -4120,7 +4184,7 @@ const oldPlan3 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper3 = (plan, _, fieldArgs) => {
+const planWrapper4 = (plan, _, fieldArgs) => {
   const $upvoteId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4134,7 +4198,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan4 = (_$root, args) => {
+const oldPlan5 = (_$root, args) => {
   const plan = object({
     result: pgUpdateSingle(resource_organizationPgResource, {
       id: args.get(['input', "rowId"])
@@ -4143,7 +4207,7 @@ const oldPlan4 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper4 = (plan, _, fieldArgs) => {
+const planWrapper5 = (plan, _, fieldArgs) => {
   const $organizationId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4160,7 +4224,7 @@ const planWrapper4 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan5 = (_$root, args) => {
+const oldPlan6 = (_$root, args) => {
   const plan = object({
     result: pgUpdateSingle(resource_commentPgResource, {
       id: args.get(['input', "rowId"])
@@ -4169,7 +4233,7 @@ const oldPlan5 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper5 = (plan, _, fieldArgs) => {
+const planWrapper6 = (plan, _, fieldArgs) => {
   const $commentId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4194,7 +4258,7 @@ const planWrapper5 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan6 = (_$root, args) => {
+const oldPlan7 = (_$root, args) => {
   const plan = object({
     result: pgUpdateSingle(resource_postPgResource, {
       id: args.get(['input', "rowId"])
@@ -4203,7 +4267,7 @@ const oldPlan6 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper6 = (plan, _, fieldArgs) => {
+const planWrapper7 = (plan, _, fieldArgs) => {
   const $postId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4227,7 +4291,7 @@ const planWrapper6 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan7 = (_$root, args) => {
+const oldPlan8 = (_$root, args) => {
   const plan = object({
     result: pgUpdateSingle(resource_projectPgResource, {
       id: args.get(['input', "rowId"])
@@ -4236,7 +4300,7 @@ const oldPlan7 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper7 = (plan, _, fieldArgs) => {
+const planWrapper8 = (plan, _, fieldArgs) => {
   const $project = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4258,7 +4322,48 @@ const planWrapper7 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan8 = (_$root, args) => {
+const oldPlan9 = (_$root, args) => {
+  const plan = object({
+    result: pgUpdateSingle(resource_user_organizationPgResource, {
+      id: args.get(['input', "rowId"])
+    })
+  });
+  args.apply(plan);
+  return plan;
+};
+const planWrapper9 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $currentUser = context().get("currentUser"),
+    $db = context().get("db");
+  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
+    const {
+      usersToOrganizations
+    } = lib_drizzle_schema;
+    if ("update" === "create") {
+      const {
+          userId,
+          organizationId
+        } = input,
+        organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
+      if (organizationUsers.length) {
+        const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
+        if (!userRole && userId !== currentUser.id) throw new Error("Insufficient permissions");
+        if (userRole && userRole !== "owner") throw new Error("Insufficient permissions");
+      }
+    } else {
+      const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
+      if (currentUser.id !== userOrganization.userId) {
+        const [userRole] = await db.select({
+          role: usersToOrganizations.role
+        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
+        if (userRole.role !== "owner") throw new Error("Insufficient permissions");
+      } else if ("update" === "update" && userOrganization.role !== "owner") throw new Error("Insufficient permissions");
+    }
+  });
+  return plan();
+};
+const oldPlan10 = (_$root, args) => {
   const plan = object({
     result: pgDeleteSingle(resource_downvotePgResource, {
       id: args.get(['input', "rowId"])
@@ -4267,7 +4372,7 @@ const oldPlan8 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper8 = (plan, _, fieldArgs) => {
+const planWrapper10 = (plan, _, fieldArgs) => {
   const $downvoteId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4281,7 +4386,7 @@ const planWrapper8 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan9 = (_$root, args) => {
+const oldPlan11 = (_$root, args) => {
   const plan = object({
     result: pgDeleteSingle(resource_upvotePgResource, {
       id: args.get(['input', "rowId"])
@@ -4290,7 +4395,7 @@ const oldPlan9 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper9 = (plan, _, fieldArgs) => {
+const planWrapper11 = (plan, _, fieldArgs) => {
   const $upvoteId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4304,7 +4409,7 @@ const planWrapper9 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan10 = (_$root, args) => {
+const oldPlan12 = (_$root, args) => {
   const plan = object({
     result: pgDeleteSingle(resource_organizationPgResource, {
       id: args.get(['input', "rowId"])
@@ -4313,7 +4418,7 @@ const oldPlan10 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper10 = (plan, _, fieldArgs) => {
+const planWrapper12 = (plan, _, fieldArgs) => {
   const $organizationId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4330,7 +4435,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan11 = (_$root, args) => {
+const oldPlan13 = (_$root, args) => {
   const plan = object({
     result: pgDeleteSingle(resource_commentPgResource, {
       id: args.get(['input', "rowId"])
@@ -4339,7 +4444,7 @@ const oldPlan11 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper11 = (plan, _, fieldArgs) => {
+const planWrapper13 = (plan, _, fieldArgs) => {
   const $commentId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4364,7 +4469,7 @@ const planWrapper11 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan12 = (_$root, args) => {
+const oldPlan14 = (_$root, args) => {
   const plan = object({
     result: pgDeleteSingle(resource_postPgResource, {
       id: args.get(['input', "rowId"])
@@ -4373,7 +4478,7 @@ const oldPlan12 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper12 = (plan, _, fieldArgs) => {
+const planWrapper14 = (plan, _, fieldArgs) => {
   const $postId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4397,7 +4502,7 @@ const planWrapper12 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan13 = (_$root, args) => {
+const oldPlan15 = (_$root, args) => {
   const plan = object({
     result: pgDeleteSingle(resource_projectPgResource, {
       id: args.get(['input', "rowId"])
@@ -4406,7 +4511,7 @@ const oldPlan13 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper13 = (plan, _, fieldArgs) => {
+const planWrapper15 = (plan, _, fieldArgs) => {
   const $project = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -4425,6 +4530,47 @@ const planWrapper13 = (plan, _, fieldArgs) => {
       role: usersToOrganizations.role
     }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+  });
+  return plan();
+};
+const oldPlan16 = (_$root, args) => {
+  const plan = object({
+    result: pgDeleteSingle(resource_user_organizationPgResource, {
+      id: args.get(['input', "rowId"])
+    })
+  });
+  args.apply(plan);
+  return plan;
+};
+const planWrapper16 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $currentUser = context().get("currentUser"),
+    $db = context().get("db");
+  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
+    const {
+      usersToOrganizations
+    } = lib_drizzle_schema;
+    if ("delete" === "create") {
+      const {
+          userId,
+          organizationId
+        } = input,
+        organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
+      if (organizationUsers.length) {
+        const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
+        if (!userRole && userId !== currentUser.id) throw new Error("Insufficient permissions");
+        if (userRole && userRole !== "owner") throw new Error("Insufficient permissions");
+      }
+    } else {
+      const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
+      if (currentUser.id !== userOrganization.userId) {
+        const [userRole] = await db.select({
+          role: usersToOrganizations.role
+        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
+        if (userRole.role !== "owner") throw new Error("Insufficient permissions");
+      } else if ("delete" === "update" && userOrganization.role !== "owner") throw new Error("Insufficient permissions");
+    }
   });
   return plan();
 };
@@ -4483,9 +4629,6 @@ type Query implements Node {
   """Get a single \`User\`."""
   userByUsername(username: String!): User
 
-  """Get a single \`UserOrganization\`."""
-  userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: UUID!): UserOrganization
-
   """Get a single \`Project\`."""
   project(rowId: UUID!): Project
 
@@ -4494,6 +4637,12 @@ type Query implements Node {
 
   """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
+
+  """Get a single \`UserOrganization\`."""
+  userOrganization(rowId: UUID!): UserOrganization
+
+  """Get a single \`UserOrganization\`."""
+  userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: UUID!): UserOrganization
 
   """Reads and enables pagination through a set of \`Downvote\`."""
   downvotes(
@@ -4699,40 +4848,6 @@ type Query implements Node {
     filter: UserFilter
   ): UserConnection
 
-  """Reads and enables pagination through a set of \`UserOrganization\`."""
-  userOrganizations(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!] = [NATURAL]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserOrganizationCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: UserOrganizationFilter
-  ): UserOrganizationConnection
-
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
     """Only read the first \`n\` values of the set."""
@@ -4766,6 +4881,40 @@ type Query implements Node {
     """
     filter: ProjectFilter
   ): ProjectConnection
+
+  """Reads and enables pagination through a set of \`UserOrganization\`."""
+  userOrganizations(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering \`UserOrganization\`."""
+    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserOrganizationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: UserOrganizationFilter
+  ): UserOrganizationConnection
 }
 
 """An object with a globally unique \`ID\`."""
@@ -5032,7 +5181,7 @@ type Organization {
     after: Cursor
 
     """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!] = [NATURAL]
+    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
 
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -5936,6 +6085,9 @@ input UserOrganizationFilter {
   """Filter by the object’s \`role\` field."""
   role: RoleFilter
 
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
   """Filter by the object’s \`organization\` relation."""
   organization: OrganizationFilter
 
@@ -6129,6 +6281,7 @@ input UserOrganizationDistinctCountAggregateFilter {
   organizationId: BigIntFilter
   createdAt: BigIntFilter
   role: BigIntFilter
+  rowId: BigIntFilter
 }
 
 """
@@ -6377,6 +6530,7 @@ type UserOrganization {
   organizationId: UUID!
   createdAt: Datetime
   role: Role!
+  rowId: UUID!
 
   """
   Reads a single \`Organization\` that is related to this \`UserOrganization\`.
@@ -6485,7 +6639,7 @@ type User {
     after: Cursor
 
     """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!] = [NATURAL]
+    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
 
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -6994,6 +7148,8 @@ input UpvoteCondition {
 """Methods to use when ordering \`UserOrganization\`."""
 enum UserOrganizationOrderBy {
   NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
   USER_ID_ASC
   USER_ID_DESC
   ORGANIZATION_ID_ASC
@@ -7002,6 +7158,8 @@ enum UserOrganizationOrderBy {
   CREATED_AT_DESC
   ROLE_ASC
   ROLE_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
 }
 
 """
@@ -7020,6 +7178,9 @@ input UserOrganizationCondition {
 
   """Checks for equality with the object’s \`role\` field."""
   role: Role
+
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
 }
 
 """A connection to a list of \`Comment\` values."""
@@ -7431,6 +7592,9 @@ type UserOrganizationDistinctCountAggregates {
 
   """Distinct count of role across the matching connection"""
   role: BigInt
+
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
 }
 
 """Grouping methods for \`UserOrganization\` for usage during aggregation."""
@@ -7675,6 +7839,8 @@ enum OrganizationOrderBy {
   USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC
   USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_ASC
   USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_DESC
+  USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC
+  USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC
 }
 
 """
@@ -7901,6 +8067,8 @@ enum UserOrderBy {
   USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC
   USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_ASC
   USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_DESC
+  USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC
+  USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC
   COMMENTS_COUNT_ASC
   COMMENTS_COUNT_DESC
   COMMENTS_DISTINCT_COUNT_ROW_ID_ASC
@@ -8007,14 +8175,6 @@ type Mutation {
     input: CreateUserInput!
   ): CreateUserPayload
 
-  """Creates a single \`UserOrganization\`."""
-  createUserOrganization(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUserOrganizationInput!
-  ): CreateUserOrganizationPayload
-
   """Creates a single \`Project\`."""
   createProject(
     """
@@ -8022,6 +8182,14 @@ type Mutation {
     """
     input: CreateProjectInput!
   ): CreateProjectPayload
+
+  """Creates a single \`UserOrganization\`."""
+  createUserOrganization(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserOrganizationInput!
+  ): CreateUserOrganizationPayload
 
   """Updates a single \`Downvote\` using a unique key and a patch."""
   updateDownvote(
@@ -8079,6 +8247,14 @@ type Mutation {
     input: UpdateProjectInput!
   ): UpdateProjectPayload
 
+  """Updates a single \`UserOrganization\` using a unique key and a patch."""
+  updateUserOrganization(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserOrganizationInput!
+  ): UpdateUserOrganizationPayload
+
   """Deletes a single \`Downvote\` using a unique key."""
   deleteDownvote(
     """
@@ -8134,6 +8310,14 @@ type Mutation {
     """
     input: DeleteProjectInput!
   ): DeleteProjectPayload
+
+  """Deletes a single \`UserOrganization\` using a unique key."""
+  deleteUserOrganization(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserOrganizationInput!
+  ): DeleteUserOrganizationPayload
 }
 
 """The output of our create \`Downvote\` mutation."""
@@ -8405,43 +8589,6 @@ input UserInput {
   lastName: String
 }
 
-"""The output of our create \`UserOrganization\` mutation."""
-type CreateUserOrganizationPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`UserOrganization\` that was created by this mutation."""
-  userOrganization: UserOrganization
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the create \`UserOrganization\` mutation."""
-input CreateUserOrganizationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`UserOrganization\` to be created by this mutation."""
-  userOrganization: UserOrganizationInput!
-}
-
-"""An input for mutations affecting \`UserOrganization\`"""
-input UserOrganizationInput {
-  userId: UUID!
-  organizationId: UUID!
-  createdAt: Datetime
-  role: Role!
-}
-
 """The output of our create \`Project\` mutation."""
 type CreateProjectPayload {
   """
@@ -8487,6 +8634,50 @@ input ProjectInput {
   organizationId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`UserOrganization\` mutation."""
+type CreateUserOrganizationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`UserOrganization\` that was created by this mutation."""
+  userOrganization: UserOrganization
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
+  userOrganizationEdge(
+    """The method to use when ordering \`UserOrganization\`."""
+    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserOrganizationEdge
+}
+
+"""All input for the create \`UserOrganization\` mutation."""
+input CreateUserOrganizationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`UserOrganization\` to be created by this mutation."""
+  userOrganization: UserOrganizationInput!
+}
+
+"""An input for mutations affecting \`UserOrganization\`"""
+input UserOrganizationInput {
+  userId: UUID!
+  organizationId: UUID!
+  createdAt: Datetime
+  role: Role!
+  rowId: UUID
 }
 
 """The output of our update \`Downvote\` mutation."""
@@ -8836,6 +9027,55 @@ input ProjectPatch {
   updatedAt: Datetime
 }
 
+"""The output of our update \`UserOrganization\` mutation."""
+type UpdateUserOrganizationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`UserOrganization\` that was updated by this mutation."""
+  userOrganization: UserOrganization
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
+  userOrganizationEdge(
+    """The method to use when ordering \`UserOrganization\`."""
+    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserOrganizationEdge
+}
+
+"""All input for the \`updateUserOrganization\` mutation."""
+input UpdateUserOrganizationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`UserOrganization\` being updated.
+  """
+  patch: UserOrganizationPatch!
+}
+
+"""
+Represents an update to a \`UserOrganization\`. Fields that are set will be updated.
+"""
+input UserOrganizationPatch {
+  userId: UUID
+  organizationId: UUID
+  createdAt: Datetime
+  role: Role
+  rowId: UUID
+}
+
 """The output of our delete \`Downvote\` mutation."""
 type DeleteDownvotePayload {
   """
@@ -9065,6 +9305,39 @@ input DeleteProjectInput {
   """
   clientMutationId: String
   rowId: UUID!
+}
+
+"""The output of our delete \`UserOrganization\` mutation."""
+type DeleteUserOrganizationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`UserOrganization\` that was deleted by this mutation."""
+  userOrganization: UserOrganization
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
+  userOrganizationEdge(
+    """The method to use when ordering \`UserOrganization\`."""
+    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserOrganizationEdge
+}
+
+"""All input for the \`deleteUserOrganization\` mutation."""
+input DeleteUserOrganizationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
 }`;
 export const plans = {
   Query: {
@@ -9210,18 +9483,6 @@ export const plans = {
         username: undefined
       }
     },
-    userOrganizationByUserIdAndOrganizationId: {
-      plan(_$root, args) {
-        return resource_user_organizationPgResource.get({
-          user_id: args.get("userId"),
-          organization_id: args.get("organizationId")
-        });
-      },
-      args: {
-        userId: undefined,
-        organizationId: undefined
-      }
-    },
     project: {
       plan(_$root, args) {
         return resource_projectPgResource.get({
@@ -9251,6 +9512,28 @@ export const plans = {
       },
       args: {
         slug: undefined,
+        organizationId: undefined
+      }
+    },
+    userOrganization: {
+      plan(_$root, args) {
+        return resource_user_organizationPgResource.get({
+          id: args.get("rowId")
+        });
+      },
+      args: {
+        rowId: undefined
+      }
+    },
+    userOrganizationByUserIdAndOrganizationId: {
+      plan(_$root, args) {
+        return resource_user_organizationPgResource.get({
+          user_id: args.get("userId"),
+          organization_id: args.get("organizationId")
+        });
+      },
+      args: {
+        userId: undefined,
         organizationId: undefined
       }
     },
@@ -9632,69 +9915,6 @@ export const plans = {
         }
       }
     },
-    userOrganizations: {
-      plan() {
-        return connection(resource_user_organizationPgResource.find());
-      },
-      args: {
-        first: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, arg) {
-            $connection.setFirst(arg.getRaw());
-          }
-        },
-        last: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setLast(val.getRaw());
-          }
-        },
-        offset: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setOffset(val.getRaw());
-          }
-        },
-        before: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setBefore(val.getRaw());
-          }
-        },
-        after: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setAfter(val.getRaw());
-          }
-        },
-        orderBy: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val, info) {
-            const $value = val.getRaw(),
-              $select = $connection.getSubplan();
-            applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
-            return null;
-          }
-        },
-        condition: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_condition, $connection) {
-            return $connection.getSubplan().wherePlan();
-          }
-        },
-        filter: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, fieldArgs) {
-            assertAllowed7(fieldArgs, "object");
-            const $where = $connection.getSubplan().wherePlan();
-            if (null) $where.extensions.pgFilterAttribute = {
-              codec: null
-            };
-            fieldArgs.apply($where);
-          }
-        }
-      }
-    },
     projects: {
       plan() {
         return connection(resource_projectPgResource.find());
@@ -9736,6 +9956,69 @@ export const plans = {
             const $value = val.getRaw(),
               $select = $connection.getSubplan();
             applyOrderToPlan($select, $value, info.schema.getType("ProjectOrderBy"));
+            return null;
+          }
+        },
+        condition: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_condition, $connection) {
+            return $connection.getSubplan().wherePlan();
+          }
+        },
+        filter: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, fieldArgs) {
+            assertAllowed7(fieldArgs, "object");
+            const $where = $connection.getSubplan().wherePlan();
+            if (null) $where.extensions.pgFilterAttribute = {
+              codec: null
+            };
+            fieldArgs.apply($where);
+          }
+        }
+      }
+    },
+    userOrganizations: {
+      plan() {
+        return connection(resource_user_organizationPgResource.find());
+      },
+      args: {
+        first: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          }
+        },
+        last: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          }
+        },
+        offset: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          }
+        },
+        before: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          }
+        },
+        after: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          }
+        },
+        orderBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val, info) {
+            const $value = val.getRaw(),
+              $select = $connection.getSubplan();
+            applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
             return null;
           }
         },
@@ -14668,6 +14951,17 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         fieldArgs.apply($col);
       }
     },
+    rowId: {
+      applyPlan($where, fieldArgs) {
+        const $raw = fieldArgs.getRaw();
+        if ($raw.evalIs(void 0)) return;
+        if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+        if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $col = new PgConditionStep($where);
+        $col.extensions.pgFilterAttribute = colSpec32;
+        fieldArgs.apply($col);
+      }
+    },
     organization: {
       applyPlan($where, fieldArgs) {
         assertAllowed30(fieldArgs, "object");
@@ -15025,7 +15319,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec32;
+        $col.extensions.pgFilterAttribute = colSpec33;
         fieldArgs.apply($col);
       }
     },
@@ -15036,7 +15330,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec33;
+        $col.extensions.pgFilterAttribute = colSpec34;
         fieldArgs.apply($col);
       }
     },
@@ -15047,7 +15341,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec34;
+        $col.extensions.pgFilterAttribute = colSpec35;
         fieldArgs.apply($col);
       }
     },
@@ -15058,7 +15352,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec35;
+        $col.extensions.pgFilterAttribute = colSpec36;
         fieldArgs.apply($col);
       }
     },
@@ -15069,7 +15363,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec36;
+        $col.extensions.pgFilterAttribute = colSpec37;
         fieldArgs.apply($col);
       }
     },
@@ -15469,6 +15763,16 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         };
         fieldArgs.apply($col);
       }
+    },
+    rowId: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_userOrganization.attributes.id.codec)
+        };
+        fieldArgs.apply($col);
+      }
     }
   },
   UserToManyCommentFilter: {
@@ -15565,7 +15869,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec37;
+        $col.extensions.pgFilterAttribute = colSpec38;
         fieldArgs.apply($col);
       }
     },
@@ -15576,7 +15880,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec38;
+        $col.extensions.pgFilterAttribute = colSpec39;
         fieldArgs.apply($col);
       }
     },
@@ -15587,7 +15891,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec39;
+        $col.extensions.pgFilterAttribute = colSpec40;
         fieldArgs.apply($col);
       }
     },
@@ -15598,7 +15902,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec40;
+        $col.extensions.pgFilterAttribute = colSpec41;
         fieldArgs.apply($col);
       }
     },
@@ -15609,7 +15913,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec41;
+        $col.extensions.pgFilterAttribute = colSpec42;
         fieldArgs.apply($col);
       }
     },
@@ -15620,7 +15924,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec42;
+        $col.extensions.pgFilterAttribute = colSpec43;
         fieldArgs.apply($col);
       }
     },
@@ -15843,7 +16147,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec43;
+        $col.extensions.pgFilterAttribute = colSpec44;
         fieldArgs.apply($col);
       }
     },
@@ -15854,7 +16158,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec44;
+        $col.extensions.pgFilterAttribute = colSpec45;
         fieldArgs.apply($col);
       }
     },
@@ -15865,7 +16169,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec45;
+        $col.extensions.pgFilterAttribute = colSpec46;
         fieldArgs.apply($col);
       }
     },
@@ -15876,7 +16180,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec46;
+        $col.extensions.pgFilterAttribute = colSpec47;
         fieldArgs.apply($col);
       }
     },
@@ -15887,7 +16191,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec47;
+        $col.extensions.pgFilterAttribute = colSpec48;
         fieldArgs.apply($col);
       }
     },
@@ -16236,6 +16540,9 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     role($record) {
       return $record.get("role");
+    },
+    rowId($record) {
+      return $record.get("id");
     },
     organization($record) {
       return resource_organizationPgResource.get({
@@ -18734,6 +19041,38 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     NATURAL: {
       applyPlan() {}
     },
+    PRIMARY_KEY_ASC: {
+      applyPlan(step) {
+        user_organizationUniques[0].attributes.forEach(attributeName => {
+          const attribute = userOrganizationCodec.attributes[attributeName];
+          step.orderBy({
+            codec: attribute.codec,
+            fragment: sql`${step}.${sql.identifier(attributeName)}`,
+            direction: "ASC",
+            ...(undefined != null ? {
+              nulls: undefined ? "LAST" : "FIRST"
+            } : null)
+          });
+        });
+        step.setOrderIsUnique();
+      }
+    },
+    PRIMARY_KEY_DESC: {
+      applyPlan(step) {
+        user_organizationUniques[0].attributes.forEach(attributeName => {
+          const attribute = userOrganizationCodec.attributes[attributeName];
+          step.orderBy({
+            codec: attribute.codec,
+            fragment: sql`${step}.${sql.identifier(attributeName)}`,
+            direction: "DESC",
+            ...(undefined != null ? {
+              nulls: undefined ? "LAST" : "FIRST"
+            } : null)
+          });
+        });
+        step.setOrderIsUnique();
+      }
+    },
     USER_ID_ASC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
@@ -18837,6 +19176,32 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
         if (false) plan.setOrderIsUnique();
       }
+    },
+    ROW_ID_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "id",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (true) plan.setOrderIsUnique();
+      }
+    },
+    ROW_ID_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "id",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (true) plan.setOrderIsUnique();
+      }
     }
   },
   UserOrganizationCondition: {
@@ -18910,6 +19275,25 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           attribute: "role",
           callback(expression) {
             return sql`${expression} = ${$condition.placeholder(val.get(), spec_userOrganization.attributes.role.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    rowId: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "id",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "id",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_userOrganization.attributes.id.codec)}`;
           }
         });
       },
@@ -20210,6 +20594,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("role")}`,
         sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, roleCodec);
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    rowId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
   UserOrganizationGroupBy: {
@@ -21458,6 +21847,50 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.role.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.role.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_userOrganization.attributes.id.codec)}
+from ${resource_user_organizationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_userOrganization.attributes.id.codec)}
+from ${resource_user_organizationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.id.codec,
           direction: "DESC"
         });
       }
@@ -22933,6 +23366,50 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
+    USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_userOrganization.attributes.id.codec)}
+from ${resource_user_organizationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.id.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_userOrganization.attributes.id.codec)}
+from ${resource_user_organizationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.id.codec,
+          direction: "DESC"
+        });
+      }
+    },
     COMMENTS_COUNT_ASC: {
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
@@ -23737,23 +24214,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    createUserOrganization: {
-      plan(_, args) {
-        const plan = object({
-          result: pgInsertSingle(resource_user_organizationPgResource, Object.create(null))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     createProject: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
@@ -23780,12 +24240,12 @@ ${String(oldPlan)}`);
         }
       }
     },
-    updateDownvote: {
+    createUserOrganization: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan2(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateDownvote"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"createUserOrganization"}, but that function did not return a step!
 ${String(oldPlan2)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -23799,18 +24259,19 @@ ${String(oldPlan2)}`);
       },
       args: {
         input: {
+          autoApplyAfterParentPlan: true,
           applyPlan(_, $object) {
             return $object;
           }
         }
       }
     },
-    updateUpvote: {
+    updateDownvote: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan3(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUpvote"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateDownvote"}, but that function did not return a step!
 ${String(oldPlan3)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -23830,12 +24291,12 @@ ${String(oldPlan3)}`);
         }
       }
     },
-    updateOrganization: {
+    updateUpvote: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan4(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateOrganization"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUpvote"}, but that function did not return a step!
 ${String(oldPlan4)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -23855,12 +24316,12 @@ ${String(oldPlan4)}`);
         }
       }
     },
-    updateComment: {
+    updateOrganization: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan5(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateComment"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateOrganization"}, but that function did not return a step!
 ${String(oldPlan5)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -23880,12 +24341,12 @@ ${String(oldPlan5)}`);
         }
       }
     },
-    updatePost: {
+    updateComment: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan6(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"updatePost"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateComment"}, but that function did not return a step!
 ${String(oldPlan6)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -23893,6 +24354,31 @@ ${String(oldPlan6)}`);
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
+        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        return $newPlan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    updatePost: {
+      plan(...planParams) {
+        const smartPlan = (...overrideParams) => {
+            const $prev = oldPlan7(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            if (!($prev instanceof ExecutableStep)) {
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updatePost"}, but that function did not return a step!
+${String(oldPlan7)}`);
+              throw new Error("Wrapped a plan function, but that function did not return a step!");
+            }
+            return $prev;
+          },
+          [$source, fieldArgs, info] = planParams,
+          $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
         if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
         if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
@@ -23926,34 +24412,9 @@ ${String(oldPlan6)}`);
     updateProject: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
-            const $prev = oldPlan7(...overrideParams.concat(planParams.slice(overrideParams.length)));
-            if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProject"}, but that function did not return a step!
-${String(oldPlan7)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
-            }
-            return $prev;
-          },
-          [$source, fieldArgs, info] = planParams,
-          $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-        return $newPlan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteDownvote: {
-      plan(...planParams) {
-        const smartPlan = (...overrideParams) => {
             const $prev = oldPlan8(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteDownvote"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProject"}, but that function did not return a step!
 ${String(oldPlan8)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -23973,12 +24434,12 @@ ${String(oldPlan8)}`);
         }
       }
     },
-    deleteUpvote: {
+    updateUserOrganization: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan9(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUpvote"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUserOrganization"}, but that function did not return a step!
 ${String(oldPlan9)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -23998,12 +24459,12 @@ ${String(oldPlan9)}`);
         }
       }
     },
-    deleteOrganization: {
+    deleteDownvote: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan10(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteOrganization"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteDownvote"}, but that function did not return a step!
 ${String(oldPlan10)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -24023,12 +24484,12 @@ ${String(oldPlan10)}`);
         }
       }
     },
-    deleteComment: {
+    deleteUpvote: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan11(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteComment"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUpvote"}, but that function did not return a step!
 ${String(oldPlan11)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -24048,12 +24509,12 @@ ${String(oldPlan11)}`);
         }
       }
     },
-    deletePost: {
+    deleteOrganization: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan12(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"deletePost"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteOrganization"}, but that function did not return a step!
 ${String(oldPlan12)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -24061,6 +24522,56 @@ ${String(oldPlan12)}`);
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        return $newPlan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    deleteComment: {
+      plan(...planParams) {
+        const smartPlan = (...overrideParams) => {
+            const $prev = oldPlan13(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            if (!($prev instanceof ExecutableStep)) {
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteComment"}, but that function did not return a step!
+${String(oldPlan13)}`);
+              throw new Error("Wrapped a plan function, but that function did not return a step!");
+            }
+            return $prev;
+          },
+          [$source, fieldArgs, info] = planParams,
+          $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        return $newPlan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    deletePost: {
+      plan(...planParams) {
+        const smartPlan = (...overrideParams) => {
+            const $prev = oldPlan14(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            if (!($prev instanceof ExecutableStep)) {
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deletePost"}, but that function did not return a step!
+${String(oldPlan14)}`);
+              throw new Error("Wrapped a plan function, but that function did not return a step!");
+            }
+            return $prev;
+          },
+          [$source, fieldArgs, info] = planParams,
+          $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
         if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
         if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
@@ -24094,16 +24605,41 @@ ${String(oldPlan12)}`);
     deleteProject: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
-            const $prev = oldPlan13(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            const $prev = oldPlan15(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
-${String(oldPlan13)}`);
+${String(oldPlan15)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
-          $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+          $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
+        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        return $newPlan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    deleteUserOrganization: {
+      plan(...planParams) {
+        const smartPlan = (...overrideParams) => {
+            const $prev = oldPlan16(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            if (!($prev instanceof ExecutableStep)) {
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUserOrganization"}, but that function did not return a step!
+${String(oldPlan16)}`);
+              throw new Error("Wrapped a plan function, but that function did not return a step!");
+            }
+            return $prev;
+          },
+          [$source, fieldArgs, info] = planParams,
+          $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
         if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
         if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
@@ -24686,65 +25222,6 @@ ${String(oldPlan13)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  CreateUserOrganizationPayload: {
-    __assertStep: assertExecutableStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
-    },
-    userOrganization($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    }
-  },
-  CreateUserOrganizationInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      },
-      autoApplyAfterParentApplyPlan: true
-    },
-    userOrganization: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      },
-      autoApplyAfterParentApplyPlan: true
-    }
-  },
-  UserOrganizationInput: {
-    "__inputPlan": function UserOrganizationInput_inputPlan() {
-      return object(Object.create(null));
-    },
-    userId: {
-      applyPlan($insert, val) {
-        $insert.set("user_id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    organizationId: {
-      applyPlan($insert, val) {
-        $insert.set("organization_id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    createdAt: {
-      applyPlan($insert, val) {
-        $insert.set("created_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    role: {
-      applyPlan($insert, val) {
-        $insert.set("role", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    }
-  },
   CreateProjectPayload: {
     __assertStep: assertExecutableStep,
     clientMutationId($mutation) {
@@ -24850,6 +25327,95 @@ ${String(oldPlan13)}`);
     updatedAt: {
       applyPlan($insert, val) {
         $insert.set("updated_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
+  CreateUserOrganizationPayload: {
+    __assertStep: assertExecutableStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    userOrganization($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    userOrganizationEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = user_organizationUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return resource_user_organizationPgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  CreateUserOrganizationInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      },
+      autoApplyAfterParentApplyPlan: true
+    },
+    userOrganization: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      },
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
+  UserOrganizationInput: {
+    "__inputPlan": function UserOrganizationInput_inputPlan() {
+      return object(Object.create(null));
+    },
+    userId: {
+      applyPlan($insert, val) {
+        $insert.set("user_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    organizationId: {
+      applyPlan($insert, val) {
+        $insert.set("organization_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    createdAt: {
+      applyPlan($insert, val) {
+        $insert.set("created_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    role: {
+      applyPlan($insert, val) {
+        $insert.set("role", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    rowId: {
+      applyPlan($insert, val) {
+        $insert.set("id", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
@@ -25527,6 +26093,94 @@ ${String(oldPlan13)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
+  UpdateUserOrganizationPayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    userOrganization($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    userOrganizationEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = user_organizationUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return resource_user_organizationPgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  UpdateUserOrganizationInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    rowId: undefined,
+    patch: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      }
+    }
+  },
+  UserOrganizationPatch: {
+    "__inputPlan": function UserOrganizationPatch_inputPlan() {
+      return object(Object.create(null));
+    },
+    userId: {
+      applyPlan($insert, val) {
+        $insert.set("user_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    organizationId: {
+      applyPlan($insert, val) {
+        $insert.set("organization_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    createdAt: {
+      applyPlan($insert, val) {
+        $insert.set("created_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    role: {
+      applyPlan($insert, val) {
+        $insert.set("role", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    rowId: {
+      applyPlan($insert, val) {
+        $insert.set("id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
   DeleteDownvotePayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -25821,6 +26475,49 @@ ${String(oldPlan13)}`);
     }
   },
   DeleteProjectInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    rowId: undefined
+  },
+  DeleteUserOrganizationPayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    userOrganization($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    userOrganizationEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = user_organizationUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return resource_user_organizationPgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  DeleteUserOrganizationInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());

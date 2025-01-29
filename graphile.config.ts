@@ -13,6 +13,7 @@ import {
   PrimaryKeyMutationsOnlyPlugin,
   ProjectRBACPlugin,
   UpvoteRBACPlugin,
+  UserOrganizationsRBACPlugin,
 } from "./src/lib/plugins/postgraphile";
 
 import type { GraphileConfig } from "graphile-config";
@@ -35,6 +36,7 @@ const preset: GraphileConfig.Preset = {
   plugins: [
     PrimaryKeyMutationsOnlyPlugin,
     OrganizationRBACPlugin,
+    UserOrganizationsRBACPlugin,
     ProjectRBACPlugin,
     PostRBACPlugin,
     DownvoteRBACPlugin,

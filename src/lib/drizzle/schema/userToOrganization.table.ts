@@ -1,6 +1,13 @@
-import { index, pgEnum, pgTable, unique, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgEnum,
+  pgTable,
+  unique,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
-import { defaultDate } from "./constants";
+import { defaultDate, defaultId } from "./constants";
 import { organizations } from "./organization.table";
 import { users } from "./user.table";
 
@@ -17,6 +24,7 @@ export const role = pgEnum("role", ["owner", "admin", "member"]);
 export const usersToOrganizations = pgTable(
   "user_organization",
   {
+    id: defaultId(),
     userId: uuid()
       .notNull()
       .references(() => users.id, {
@@ -32,6 +40,7 @@ export const usersToOrganizations = pgTable(
   },
   (table) => [
     unique().on(table.userId, table.organizationId),
+    uniqueIndex().on(table.id),
     index().on(table.userId),
     index().on(table.organizationId),
   ]
