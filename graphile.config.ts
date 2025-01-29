@@ -6,7 +6,6 @@ import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 
 import { DATABASE_URL, isProdEnv } from "./src/lib/config/env";
 import {
-  NonNullablePlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectRBACPlugin,
 } from "./src/lib/plugins/postgraphile";
@@ -28,11 +27,7 @@ const preset: GraphileConfig.Preset = {
     defaultBehavior: "-type:node -interface:node",
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
-  plugins: [
-    NonNullablePlugin,
-    PrimaryKeyMutationsOnlyPlugin,
-    ProjectRBACPlugin,
-  ],
+  plugins: [PrimaryKeyMutationsOnlyPlugin, ProjectRBACPlugin],
   grafserv: {
     graphiql: false,
   },

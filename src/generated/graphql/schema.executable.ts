@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "87230",
+    oid: "87793",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "87143",
+    oid: "87706",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "87105",
+    oid: "87668",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +400,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "87210",
+    oid: "87773",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -504,7 +504,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "87119",
+    oid: "87682",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -620,7 +620,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "87129",
+    oid: "87692",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -724,7 +724,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "87153",
+    oid: "87716",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -743,7 +743,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "87249",
+    oid: "87812",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -807,7 +807,7 @@ const spec_userOrganization = {
   }),
   description: undefined,
   extensions: {
-    oid: "87165",
+    oid: "87728",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4071,12 +4071,20 @@ const planWrapper = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
-    const organizationId = project.organizationId;
     if (!currentUser) throw new Error("Unauthorized");
+    let organizationId;
+    const {
+      usersToOrganizations,
+      projects
+    } = lib_drizzle_schema;
+    if ("create" === "create") organizationId = project.organizationId;else {
+      const [currentProject] = await db.select().from(projects).where(eq(projects.id, project));
+      organizationId = currentProject.organizationId;
+    }
     const [userRole] = await db.select({
-      role: lib_drizzle_schema.usersToOrganizations.role
-    }).from(lib_drizzle_schema.usersToOrganizations).where(and(eq(lib_drizzle_schema.usersToOrganizations.userId, currentUser.id), eq(lib_drizzle_schema.usersToOrganizations.organizationId, organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Unauthorized");
+      role: usersToOrganizations.role
+    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, organizationId)));
+    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4090,16 +4098,55 @@ const oldPlan2 = (_$root, args) => {
   return plan;
 };
 const planWrapper2 = (plan, _, fieldArgs) => {
-  const $project = fieldArgs.getRaw(["input", "patch"]),
+  const $project = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
-    const organizationId = project.organizationId;
     if (!currentUser) throw new Error("Unauthorized");
+    let organizationId;
+    const {
+      usersToOrganizations,
+      projects
+    } = lib_drizzle_schema;
+    if ("update" === "create") organizationId = project.organizationId;else {
+      const [currentProject] = await db.select().from(projects).where(eq(projects.id, project));
+      organizationId = currentProject.organizationId;
+    }
     const [userRole] = await db.select({
-      role: lib_drizzle_schema.usersToOrganizations.role
-    }).from(lib_drizzle_schema.usersToOrganizations).where(and(eq(lib_drizzle_schema.usersToOrganizations.userId, currentUser.id), eq(lib_drizzle_schema.usersToOrganizations.organizationId, organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Unauthorized");
+      role: usersToOrganizations.role
+    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, organizationId)));
+    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+  });
+  return plan();
+};
+const oldPlan3 = (_$root, args) => {
+  const plan = object({
+    result: pgDeleteSingle(resource_projectPgResource, {
+      id: args.get(['input', "rowId"])
+    })
+  });
+  args.apply(plan);
+  return plan;
+};
+const planWrapper3 = (plan, _, fieldArgs) => {
+  const $project = fieldArgs.getRaw(["input", "rowId"]),
+    $currentUser = context().get("currentUser"),
+    $db = context().get("db");
+  sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
+    let organizationId;
+    const {
+      usersToOrganizations,
+      projects
+    } = lib_drizzle_schema;
+    if ("delete" === "create") organizationId = project.organizationId;else {
+      const [currentProject] = await db.select().from(projects).where(eq(projects.id, project));
+      organizationId = currentProject.organizationId;
+    }
+    const [userRole] = await db.select({
+      role: usersToOrganizations.role
+    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, organizationId)));
+    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -8207,8 +8254,8 @@ Represents an update to a \`Downvote\`. Fields that are set will be updated.
 """
 input DownvotePatch {
   rowId: UUID
-  postId: UUID!
-  userId: UUID!
+  postId: UUID
+  userId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -8256,8 +8303,8 @@ Represents an update to a \`Upvote\`. Fields that are set will be updated.
 """
 input UpvotePatch {
   rowId: UUID
-  postId: UUID!
-  userId: UUID!
+  postId: UUID
+  userId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -8304,7 +8351,7 @@ input UpdateOrganizationInput {
 Represents an update to a \`Organization\`. Fields that are set will be updated.
 """
 input OrganizationPatch {
-  rowId: UUID!
+  rowId: UUID
   name: String
   slug: String
   createdAt: Datetime
@@ -8355,8 +8402,8 @@ Represents an update to a \`Comment\`. Fields that are set will be updated.
 input CommentPatch {
   rowId: UUID
   message: String
-  postId: UUID!
-  userId: UUID!
+  postId: UUID
+  userId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -8404,8 +8451,8 @@ input PostPatch {
   rowId: UUID
   title: String
   description: String
-  projectId: UUID!
-  userId: UUID!
+  projectId: UUID
+  userId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -8506,7 +8553,7 @@ input ProjectPatch {
   image: String
   slug: String
   description: String
-  organizationId: UUID!
+  organizationId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -23697,14 +23744,21 @@ ${String(oldPlan2)}`);
       }
     },
     deleteProject: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(resource_projectPgResource, {
-            id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
+      plan(...planParams) {
+        const smartPlan = (...overrideParams) => {
+            const $prev = oldPlan3(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            if (!($prev instanceof ExecutableStep)) {
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
+${String(oldPlan3)}`);
+              throw new Error("Wrapped a plan function, but that function did not return a step!");
+            }
+            return $prev;
+          },
+          [$source, fieldArgs, info] = planParams,
+          $newPlan = planWrapper3(smartPlan, $source, fieldArgs, info);
+        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        return $newPlan;
       },
       args: {
         input: {

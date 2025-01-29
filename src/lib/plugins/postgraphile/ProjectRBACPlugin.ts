@@ -9,9 +9,11 @@ import type { InsertProject } from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 
-const validatePermissions = (propName: string) =>
+type MutationScope = "create" | "update" | "delete";
+
+const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName: string) =>
+    (and, eq, dbSchema, context, sideEffect, propName, scope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $project = fieldArgs.getRaw(["input", propName]);
@@ -21,41 +23,51 @@ const validatePermissions = (propName: string) =>
         sideEffect(
           [$project, $currentUser, $db],
           async ([project, currentUser, db]) => {
-            const organizationId = (project as InsertProject).organizationId;
-
             if (!currentUser) {
               throw new Error("Unauthorized");
             }
 
+            let organizationId: string;
+
+            const { usersToOrganizations, projects } = dbSchema;
+
+            if (scope === "create") {
+              organizationId = (project as InsertProject).organizationId;
+            } else {
+              const [currentProject] = await db
+                .select()
+                .from(projects)
+                .where(eq(projects.id, project as string));
+
+              organizationId = currentProject.organizationId;
+            }
+
             const [userRole] = await db
-              .select({ role: dbSchema.usersToOrganizations.role })
-              .from(dbSchema.usersToOrganizations)
+              .select({ role: usersToOrganizations.role })
+              .from(usersToOrganizations)
               .where(
                 and(
-                  eq(dbSchema.usersToOrganizations.userId, currentUser.id),
-                  eq(
-                    dbSchema.usersToOrganizations.organizationId,
-                    organizationId
-                  )
+                  eq(usersToOrganizations.userId, currentUser.id),
+                  eq(usersToOrganizations.organizationId, organizationId)
                 )
               );
 
             if (!userRole || userRole.role === "member") {
-              throw new Error("Unauthorized");
+              throw new Error("Insufficient permissions");
             }
           }
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName]
+    [and, eq, dbSchema, context, sideEffect, propName, scope]
   );
 
 const ProjectRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
-    createProject: validatePermissions("project"),
-    updateProject: validatePermissions("patch"),
-    // deleteProject: validatePermissions("rowId"),
+    createProject: validatePermissions("project", "create"),
+    updateProject: validatePermissions("rowId", "update"),
+    deleteProject: validatePermissions("rowId", "delete"),
   },
 });
 
