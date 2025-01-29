@@ -5,7 +5,7 @@ import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 
 import { DATABASE_URL, isProdEnv } from "./src/lib/config/env";
-import { RBACPlugin } from "./src/lib/plugins";
+import { NonNullablePlugin, RBACPlugin } from "./src/lib/plugins";
 
 import type { GraphileConfig } from "graphile-config";
 
@@ -21,9 +21,10 @@ const preset: GraphileConfig.Preset = {
     sortExport: true,
     pgForbidSetofFunctionsToReturnNull: false,
     jsonScalarAsString: false,
+    defaultBehavior: "-nodeId:resource:update -nodeId:resource:delete",
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
-  plugins: [RBACPlugin],
+  plugins: [NonNullablePlugin, RBACPlugin],
   grafserv: {
     graphiql: false,
   },

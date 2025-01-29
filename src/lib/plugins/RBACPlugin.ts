@@ -54,6 +54,7 @@ const validatePermissions = (propName: string) =>
 const RBACPlugin = makeWrapPlansPlugin({
   Mutation: {
     createProject: validatePermissions("project"),
+    updateProject: validatePermissions("patch"),
     // deleteProject: validatePermissions("rowId"),
   },
 });

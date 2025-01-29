@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { PgBooleanFilterStep, PgConditionStep, PgDeleteSingleStep, PgExecutor, PgOrFilterStep, PgSelectStep, PgUnionAllStep, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec } from "@dataplan/pg";
 import { and, eq } from "drizzle-orm";
-import { ConnectionStep, EdgeStep, ExecutableStep, ModifierStep, ObjectStep, SafeError, __ValueStep, access, assertEdgeCapableStep, assertExecutableStep, assertPageInfoCapableStep, connection, constant, context, first, getEnumValueConfig, inhibitOnNull, isExecutableStep, lambda, list, makeGrafastSchema, node, object, rootValue, sideEffect, specFromNodeId } from "grafast";
+import { ConnectionStep, EdgeStep, ExecutableStep, ModifierStep, ObjectStep, SafeError, __ValueStep, access, assertEdgeCapableStep, assertExecutableStep, assertPageInfoCapableStep, connection, constant, context, first, getEnumValueConfig, inhibitOnNull, isExecutableStep, lambda, list, makeGrafastSchema, node, object, rootValue, sideEffect } from "grafast";
 import { GraphQLEnumType, GraphQLError, Kind } from "graphql";
 import * as lib_drizzle_schema from "lib/drizzle/schema";
 import { sql } from "pg-sql2";
@@ -4264,61 +4264,28 @@ const planWrapper = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Downvote, $nodeId);
+const oldPlan2 = (_$root, args) => {
+  const plan = object({
+    result: pgUpdateSingle(pgResource_projectPgResource, {
+      id: args.get(['input', "rowId"])
+    })
+  });
+  args.apply(plan);
+  return plan;
 };
-const specFromArgs2 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Upvote, $nodeId);
-};
-const specFromArgs3 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Organization, $nodeId);
-};
-const specFromArgs4 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Comment, $nodeId);
-};
-const specFromArgs5 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Post, $nodeId);
-};
-const specFromArgs6 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.User, $nodeId);
-};
-const specFromArgs7 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Project, $nodeId);
-};
-const specFromArgs8 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Downvote, $nodeId);
-};
-const specFromArgs9 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Upvote, $nodeId);
-};
-const specFromArgs10 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Organization, $nodeId);
-};
-const specFromArgs11 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Comment, $nodeId);
-};
-const specFromArgs12 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Post, $nodeId);
-};
-const specFromArgs13 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.User, $nodeId);
-};
-const specFromArgs14 = args => {
-  const $nodeId = args.get(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Project, $nodeId);
+const planWrapper2 = (plan, _, fieldArgs) => {
+  const $project = fieldArgs.getRaw(["input", "patch"]),
+    $currentUser = context().get("currentUser"),
+    $db = context().get("db");
+  sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
+    const organizationId = project.organizationId;
+    if (!currentUser) throw new Error("Unauthorized");
+    const [userRole] = await db.select({
+      role: lib_drizzle_schema.usersToOrganizations.role
+    }).from(lib_drizzle_schema.usersToOrganizations).where(and(eq(lib_drizzle_schema.usersToOrganizations.userId, currentUser.id), eq(lib_drizzle_schema.usersToOrganizations.organizationId, organizationId)));
+    if (!userRole || userRole.role === "member") throw new Error("Unauthorized");
+  });
+  return plan();
 };
 export const typeDefs = /* GraphQL */`"""The root query type which gives access points into the data universe."""
 type Query implements Node {
@@ -7987,14 +7954,6 @@ type Mutation {
     input: CreateProjectInput!
   ): CreateProjectPayload
 
-  """Updates a single \`Downvote\` using its globally unique id and a patch."""
-  updateDownvoteById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateDownvoteByIdInput!
-  ): UpdateDownvotePayload
-
   """Updates a single \`Downvote\` using a unique key and a patch."""
   updateDownvote(
     """
@@ -8011,14 +7970,6 @@ type Mutation {
     input: UpdateDownvoteByPostIdAndUserIdInput!
   ): UpdateDownvotePayload
 
-  """Updates a single \`Upvote\` using its globally unique id and a patch."""
-  updateUpvoteById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUpvoteByIdInput!
-  ): UpdateUpvotePayload
-
   """Updates a single \`Upvote\` using a unique key and a patch."""
   updateUpvote(
     """
@@ -8034,16 +7985,6 @@ type Mutation {
     """
     input: UpdateUpvoteByPostIdAndUserIdInput!
   ): UpdateUpvotePayload
-
-  """
-  Updates a single \`Organization\` using its globally unique id and a patch.
-  """
-  updateOrganizationById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateOrganizationByIdInput!
-  ): UpdateOrganizationPayload
 
   """Updates a single \`Organization\` using a unique key and a patch."""
   updateOrganization(
@@ -8069,14 +8010,6 @@ type Mutation {
     input: UpdateOrganizationBySlugInput!
   ): UpdateOrganizationPayload
 
-  """Updates a single \`Comment\` using its globally unique id and a patch."""
-  updateCommentById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCommentByIdInput!
-  ): UpdateCommentPayload
-
   """Updates a single \`Comment\` using a unique key and a patch."""
   updateComment(
     """
@@ -8085,14 +8018,6 @@ type Mutation {
     input: UpdateCommentInput!
   ): UpdateCommentPayload
 
-  """Updates a single \`Post\` using its globally unique id and a patch."""
-  updatePostById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePostByIdInput!
-  ): UpdatePostPayload
-
   """Updates a single \`Post\` using a unique key and a patch."""
   updatePost(
     """
@@ -8100,14 +8025,6 @@ type Mutation {
     """
     input: UpdatePostInput!
   ): UpdatePostPayload
-
-  """Updates a single \`User\` using its globally unique id and a patch."""
-  updateUserById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserByIdInput!
-  ): UpdateUserPayload
 
   """Updates a single \`User\` using a unique key and a patch."""
   updateUser(
@@ -8141,14 +8058,6 @@ type Mutation {
     input: UpdateUserOrganizationByUserIdAndOrganizationIdInput!
   ): UpdateUserOrganizationPayload
 
-  """Updates a single \`Project\` using its globally unique id and a patch."""
-  updateProjectById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectByIdInput!
-  ): UpdateProjectPayload
-
   """Updates a single \`Project\` using a unique key and a patch."""
   updateProject(
     """
@@ -8173,14 +8082,6 @@ type Mutation {
     input: UpdateProjectBySlugAndOrganizationIdInput!
   ): UpdateProjectPayload
 
-  """Deletes a single \`Downvote\` using its globally unique id."""
-  deleteDownvoteById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteDownvoteByIdInput!
-  ): DeleteDownvotePayload
-
   """Deletes a single \`Downvote\` using a unique key."""
   deleteDownvote(
     """
@@ -8197,14 +8098,6 @@ type Mutation {
     input: DeleteDownvoteByPostIdAndUserIdInput!
   ): DeleteDownvotePayload
 
-  """Deletes a single \`Upvote\` using its globally unique id."""
-  deleteUpvoteById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUpvoteByIdInput!
-  ): DeleteUpvotePayload
-
   """Deletes a single \`Upvote\` using a unique key."""
   deleteUpvote(
     """
@@ -8220,14 +8113,6 @@ type Mutation {
     """
     input: DeleteUpvoteByPostIdAndUserIdInput!
   ): DeleteUpvotePayload
-
-  """Deletes a single \`Organization\` using its globally unique id."""
-  deleteOrganizationById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteOrganizationByIdInput!
-  ): DeleteOrganizationPayload
 
   """Deletes a single \`Organization\` using a unique key."""
   deleteOrganization(
@@ -8253,14 +8138,6 @@ type Mutation {
     input: DeleteOrganizationBySlugInput!
   ): DeleteOrganizationPayload
 
-  """Deletes a single \`Comment\` using its globally unique id."""
-  deleteCommentById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCommentByIdInput!
-  ): DeleteCommentPayload
-
   """Deletes a single \`Comment\` using a unique key."""
   deleteComment(
     """
@@ -8269,14 +8146,6 @@ type Mutation {
     input: DeleteCommentInput!
   ): DeleteCommentPayload
 
-  """Deletes a single \`Post\` using its globally unique id."""
-  deletePostById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePostByIdInput!
-  ): DeletePostPayload
-
   """Deletes a single \`Post\` using a unique key."""
   deletePost(
     """
@@ -8284,14 +8153,6 @@ type Mutation {
     """
     input: DeletePostInput!
   ): DeletePostPayload
-
-  """Deletes a single \`User\` using its globally unique id."""
-  deleteUserById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserByIdInput!
-  ): DeleteUserPayload
 
   """Deletes a single \`User\` using a unique key."""
   deleteUser(
@@ -8324,14 +8185,6 @@ type Mutation {
     """
     input: DeleteUserOrganizationByUserIdAndOrganizationIdInput!
   ): DeleteUserOrganizationPayload
-
-  """Deletes a single \`Project\` using its globally unique id."""
-  deleteProjectById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectByIdInput!
-  ): DeleteProjectPayload
 
   """Deletes a single \`Project\` using a unique key."""
   deleteProject(
@@ -8734,36 +8587,6 @@ type UpdateDownvotePayload {
   ): DownvoteEdge
 }
 
-"""All input for the \`updateDownvoteById\` mutation."""
-input UpdateDownvoteByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Downvote\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Downvote\` being updated.
-  """
-  patch: DownvotePatch!
-}
-
-"""
-Represents an update to a \`Downvote\`. Fields that are set will be updated.
-"""
-input DownvotePatch {
-  rowId: UUID
-  postId: UUID
-  userId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """All input for the \`updateDownvote\` mutation."""
 input UpdateDownvoteInput {
   """
@@ -8777,6 +8600,17 @@ input UpdateDownvoteInput {
   An object where the defined keys will be set on the \`Downvote\` being updated.
   """
   patch: DownvotePatch!
+}
+
+"""
+Represents an update to a \`Downvote\`. Fields that are set will be updated.
+"""
+input DownvotePatch {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """All input for the \`updateDownvoteByPostIdAndUserId\` mutation."""
@@ -8818,36 +8652,6 @@ type UpdateUpvotePayload {
   ): UpvoteEdge
 }
 
-"""All input for the \`updateUpvoteById\` mutation."""
-input UpdateUpvoteByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Upvote\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Upvote\` being updated.
-  """
-  patch: UpvotePatch!
-}
-
-"""
-Represents an update to a \`Upvote\`. Fields that are set will be updated.
-"""
-input UpvotePatch {
-  rowId: UUID
-  postId: UUID
-  userId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """All input for the \`updateUpvote\` mutation."""
 input UpdateUpvoteInput {
   """
@@ -8861,6 +8665,17 @@ input UpdateUpvoteInput {
   An object where the defined keys will be set on the \`Upvote\` being updated.
   """
   patch: UpvotePatch!
+}
+
+"""
+Represents an update to a \`Upvote\`. Fields that are set will be updated.
+"""
+input UpvotePatch {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """All input for the \`updateUpvoteByPostIdAndUserId\` mutation."""
@@ -8902,36 +8717,6 @@ type UpdateOrganizationPayload {
   ): OrganizationEdge
 }
 
-"""All input for the \`updateOrganizationById\` mutation."""
-input UpdateOrganizationByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Organization\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Organization\` being updated.
-  """
-  patch: OrganizationPatch!
-}
-
-"""
-Represents an update to a \`Organization\`. Fields that are set will be updated.
-"""
-input OrganizationPatch {
-  rowId: UUID
-  name: String
-  slug: String
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """All input for the \`updateOrganization\` mutation."""
 input UpdateOrganizationInput {
   """
@@ -8945,6 +8730,17 @@ input UpdateOrganizationInput {
   An object where the defined keys will be set on the \`Organization\` being updated.
   """
   patch: OrganizationPatch!
+}
+
+"""
+Represents an update to a \`Organization\`. Fields that are set will be updated.
+"""
+input OrganizationPatch {
+  rowId: UUID!
+  name: String
+  slug: String
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """All input for the \`updateOrganizationByName\` mutation."""
@@ -9000,37 +8796,6 @@ type UpdateCommentPayload {
   ): CommentEdge
 }
 
-"""All input for the \`updateCommentById\` mutation."""
-input UpdateCommentByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Comment\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Comment\` being updated.
-  """
-  patch: CommentPatch!
-}
-
-"""
-Represents an update to a \`Comment\`. Fields that are set will be updated.
-"""
-input CommentPatch {
-  rowId: UUID
-  message: String
-  postId: UUID
-  userId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """All input for the \`updateComment\` mutation."""
 input UpdateCommentInput {
   """
@@ -9044,6 +8809,18 @@ input UpdateCommentInput {
   An object where the defined keys will be set on the \`Comment\` being updated.
   """
   patch: CommentPatch!
+}
+
+"""
+Represents an update to a \`Comment\`. Fields that are set will be updated.
+"""
+input CommentPatch {
+  rowId: UUID
+  message: String
+  postId: UUID!
+  userId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our update \`Post\` mutation."""
@@ -9069,36 +8846,6 @@ type UpdatePostPayload {
   ): PostEdge
 }
 
-"""All input for the \`updatePostById\` mutation."""
-input UpdatePostByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Post\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Post\` being updated.
-  """
-  patch: PostPatch!
-}
-
-"""Represents an update to a \`Post\`. Fields that are set will be updated."""
-input PostPatch {
-  rowId: UUID
-  title: String
-  description: String
-  projectId: UUID
-  userId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """All input for the \`updatePost\` mutation."""
 input UpdatePostInput {
   """
@@ -9112,6 +8859,17 @@ input UpdatePostInput {
   An object where the defined keys will be set on the \`Post\` being updated.
   """
   patch: PostPatch!
+}
+
+"""Represents an update to a \`Post\`. Fields that are set will be updated."""
+input PostPatch {
+  rowId: UUID
+  title: String
+  description: String
+  projectId: UUID!
+  userId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our update \`User\` mutation."""
@@ -9137,18 +8895,14 @@ type UpdateUserPayload {
   ): UserEdge
 }
 
-"""All input for the \`updateUserById\` mutation."""
-input UpdateUserByIdInput {
+"""All input for the \`updateUser\` mutation."""
+input UpdateUserInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`User\` to be updated.
-  """
-  id: ID!
+  rowId: UUID!
 
   """
   An object where the defined keys will be set on the \`User\` being updated.
@@ -9165,21 +8919,6 @@ input UserPatch {
   username: String
   firstName: String
   lastName: String
-}
-
-"""All input for the \`updateUser\` mutation."""
-input UpdateUserInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`User\` being updated.
-  """
-  patch: UserPatch!
 }
 
 """All input for the \`updateUserByHidraId\` mutation."""
@@ -9280,18 +9019,14 @@ type UpdateProjectPayload {
   ): ProjectEdge
 }
 
-"""All input for the \`updateProjectById\` mutation."""
-input UpdateProjectByIdInput {
+"""All input for the \`updateProject\` mutation."""
+input UpdateProjectInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Project\` to be updated.
-  """
-  id: ID!
+  rowId: UUID!
 
   """
   An object where the defined keys will be set on the \`Project\` being updated.
@@ -9308,24 +9043,9 @@ input ProjectPatch {
   image: String
   slug: String
   description: String
-  organizationId: UUID
+  organizationId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
-}
-
-"""All input for the \`updateProject\` mutation."""
-input UpdateProjectInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Project\` being updated.
-  """
-  patch: ProjectPatch!
 }
 
 """All input for the \`updateProjectByName\` mutation."""
@@ -9383,20 +9103,6 @@ type DeleteDownvotePayload {
   ): DownvoteEdge
 }
 
-"""All input for the \`deleteDownvoteById\` mutation."""
-input DeleteDownvoteByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Downvote\` to be deleted.
-  """
-  id: ID!
-}
-
 """All input for the \`deleteDownvote\` mutation."""
 input DeleteDownvoteInput {
   """
@@ -9442,20 +9148,6 @@ type DeleteUpvotePayload {
   ): UpvoteEdge
 }
 
-"""All input for the \`deleteUpvoteById\` mutation."""
-input DeleteUpvoteByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Upvote\` to be deleted.
-  """
-  id: ID!
-}
-
 """All input for the \`deleteUpvote\` mutation."""
 input DeleteUpvoteInput {
   """
@@ -9499,20 +9191,6 @@ type DeleteOrganizationPayload {
     """The method to use when ordering \`Organization\`."""
     orderBy: [OrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
   ): OrganizationEdge
-}
-
-"""All input for the \`deleteOrganizationById\` mutation."""
-input DeleteOrganizationByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Organization\` to be deleted.
-  """
-  id: ID!
 }
 
 """All input for the \`deleteOrganization\` mutation."""
@@ -9569,20 +9247,6 @@ type DeleteCommentPayload {
   ): CommentEdge
 }
 
-"""All input for the \`deleteCommentById\` mutation."""
-input DeleteCommentByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Comment\` to be deleted.
-  """
-  id: ID!
-}
-
 """All input for the \`deleteComment\` mutation."""
 input DeleteCommentInput {
   """
@@ -9617,20 +9281,6 @@ type DeletePostPayload {
   ): PostEdge
 }
 
-"""All input for the \`deletePostById\` mutation."""
-input DeletePostByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Post\` to be deleted.
-  """
-  id: ID!
-}
-
 """All input for the \`deletePost\` mutation."""
 input DeletePostInput {
   """
@@ -9663,20 +9313,6 @@ type DeleteUserPayload {
     """The method to use when ordering \`User\`."""
     orderBy: [UserOrderBy!]! = [PRIMARY_KEY_ASC]
   ): UserEdge
-}
-
-"""All input for the \`deleteUserById\` mutation."""
-input DeleteUserByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`User\` to be deleted.
-  """
-  id: ID!
 }
 
 """All input for the \`deleteUser\` mutation."""
@@ -9761,20 +9397,6 @@ type DeleteProjectPayload {
     """The method to use when ordering \`Project\`."""
     orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
   ): ProjectEdge
-}
-
-"""All input for the \`deleteProjectById\` mutation."""
-input DeleteProjectByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Project\` to be deleted.
-  """
-  id: ID!
 }
 
 """All input for the \`deleteProject\` mutation."""
@@ -24612,22 +24234,6 @@ ${String(oldPlan)}`);
         }
       }
     },
-    updateDownvoteById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_downvotePgResource, specFromArgs(args))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     updateDownvote: {
       plan(_$root, args) {
         const plan = object({
@@ -24665,22 +24271,6 @@ ${String(oldPlan)}`);
         }
       }
     },
-    updateUpvoteById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_upvotePgResource, specFromArgs2(args))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     updateUpvote: {
       plan(_$root, args) {
         const plan = object({
@@ -24706,22 +24296,6 @@ ${String(oldPlan)}`);
             post_id: args.get(['input', "postId"]),
             user_id: args.get(['input', "userId"])
           })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    updateOrganizationById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_organizationPgResource, specFromArgs3(args))
         });
         args.apply(plan);
         return plan;
@@ -24788,22 +24362,6 @@ ${String(oldPlan)}`);
         }
       }
     },
-    updateCommentById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_commentPgResource, specFromArgs4(args))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     updateComment: {
       plan(_$root, args) {
         const plan = object({
@@ -24822,44 +24380,12 @@ ${String(oldPlan)}`);
         }
       }
     },
-    updatePostById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_postPgResource, specFromArgs5(args))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     updatePost: {
       plan(_$root, args) {
         const plan = object({
           result: pgUpdateSingle(pgResource_postPgResource, {
             id: args.get(['input', "rowId"])
           })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    updateUserById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_userPgResource, specFromArgs6(args))
         });
         args.apply(plan);
         return plan;
@@ -24945,31 +24471,22 @@ ${String(oldPlan)}`);
         }
       }
     },
-    updateProjectById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_projectPgResource, specFromArgs7(args))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     updateProject: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_projectPgResource, {
-            id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
+      plan(...planParams) {
+        const smartPlan = (...overrideParams) => {
+            const $prev = oldPlan2(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            if (!($prev instanceof ExecutableStep)) {
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProject"}, but that function did not return a step!
+${String(oldPlan2)}`);
+              throw new Error("Wrapped a plan function, but that function did not return a step!");
+            }
+            return $prev;
+          },
+          [$source, fieldArgs, info] = planParams,
+          $newPlan = planWrapper2(smartPlan, $source, fieldArgs, info);
+        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        return $newPlan;
       },
       args: {
         input: {
@@ -25004,22 +24521,6 @@ ${String(oldPlan)}`);
             slug: args.get(['input', "slug"]),
             organization_id: args.get(['input', "organizationId"])
           })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteDownvoteById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_downvotePgResource, specFromArgs8(args))
         });
         args.apply(plan);
         return plan;
@@ -25069,22 +24570,6 @@ ${String(oldPlan)}`);
         }
       }
     },
-    deleteUpvoteById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_upvotePgResource, specFromArgs9(args))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     deleteUpvote: {
       plan(_$root, args) {
         const plan = object({
@@ -25110,22 +24595,6 @@ ${String(oldPlan)}`);
             post_id: args.get(['input', "postId"]),
             user_id: args.get(['input', "userId"])
           })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteOrganizationById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_organizationPgResource, specFromArgs10(args))
         });
         args.apply(plan);
         return plan;
@@ -25192,22 +24661,6 @@ ${String(oldPlan)}`);
         }
       }
     },
-    deleteCommentById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_commentPgResource, specFromArgs11(args))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     deleteComment: {
       plan(_$root, args) {
         const plan = object({
@@ -25226,44 +24679,12 @@ ${String(oldPlan)}`);
         }
       }
     },
-    deletePostById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_postPgResource, specFromArgs12(args))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     deletePost: {
       plan(_$root, args) {
         const plan = object({
           result: pgDeleteSingle(pgResource_postPgResource, {
             id: args.get(['input', "rowId"])
           })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteUserById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_userPgResource, specFromArgs13(args))
         });
         args.apply(plan);
         return plan;
@@ -25337,22 +24758,6 @@ ${String(oldPlan)}`);
             user_id: args.get(['input', "userId"]),
             organization_id: args.get(['input', "organizationId"])
           })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteProjectById: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_projectPgResource, specFromArgs14(args))
         });
         args.apply(plan);
         return plan;
@@ -26194,13 +25599,13 @@ ${String(oldPlan)}`);
       }
     }
   },
-  UpdateDownvoteByIdInput: {
+  UpdateDownvoteInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
-    id: undefined,
+    rowId: undefined,
     patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
@@ -26245,19 +25650,6 @@ ${String(oldPlan)}`);
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
-    }
-  },
-  UpdateDownvoteInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
     }
   },
   UpdateDownvoteByPostIdAndUserIdInput: {
@@ -26309,13 +25701,13 @@ ${String(oldPlan)}`);
       }
     }
   },
-  UpdateUpvoteByIdInput: {
+  UpdateUpvoteInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
-    id: undefined,
+    rowId: undefined,
     patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
@@ -26360,19 +25752,6 @@ ${String(oldPlan)}`);
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
-    }
-  },
-  UpdateUpvoteInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
     }
   },
   UpdateUpvoteByPostIdAndUserIdInput: {
@@ -26424,13 +25803,13 @@ ${String(oldPlan)}`);
       }
     }
   },
-  UpdateOrganizationByIdInput: {
+  UpdateOrganizationInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
-    id: undefined,
+    rowId: undefined,
     patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
@@ -26475,19 +25854,6 @@ ${String(oldPlan)}`);
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
-    }
-  },
-  UpdateOrganizationInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
     }
   },
   UpdateOrganizationByNameInput: {
@@ -26551,13 +25917,13 @@ ${String(oldPlan)}`);
       }
     }
   },
-  UpdateCommentByIdInput: {
+  UpdateCommentInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
-    id: undefined,
+    rowId: undefined,
     patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
@@ -26611,19 +25977,6 @@ ${String(oldPlan)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateCommentInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
   UpdatePostPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -26659,13 +26012,13 @@ ${String(oldPlan)}`);
       }
     }
   },
-  UpdatePostByIdInput: {
+  UpdatePostInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
-    id: undefined,
+    rowId: undefined,
     patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
@@ -26726,19 +26079,6 @@ ${String(oldPlan)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdatePostInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
   UpdateUserPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -26774,13 +26114,13 @@ ${String(oldPlan)}`);
       }
     }
   },
-  UpdateUserByIdInput: {
+  UpdateUserInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
-    id: undefined,
+    rowId: undefined,
     patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
@@ -26839,19 +26179,6 @@ ${String(oldPlan)}`);
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
-    }
-  },
-  UpdateUserInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
     }
   },
   UpdateUserByHidraIdInput: {
@@ -26974,13 +26301,13 @@ ${String(oldPlan)}`);
       }
     }
   },
-  UpdateProjectByIdInput: {
+  UpdateProjectInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       }
     },
-    id: undefined,
+    rowId: undefined,
     patch: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
@@ -27046,19 +26373,6 @@ ${String(oldPlan)}`);
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
-    }
-  },
-  UpdateProjectInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
     }
   },
   UpdateProjectByNameInput: {
@@ -27128,14 +26442,6 @@ ${String(oldPlan)}`);
       }
     }
   },
-  DeleteDownvoteByIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    id: undefined
-  },
   DeleteDownvoteInput: {
     clientMutationId: {
       applyPlan($input, val) {
@@ -27193,14 +26499,6 @@ ${String(oldPlan)}`);
       }
     }
   },
-  DeleteUpvoteByIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    id: undefined
-  },
   DeleteUpvoteInput: {
     clientMutationId: {
       applyPlan($input, val) {
@@ -27257,14 +26555,6 @@ ${String(oldPlan)}`);
         orderBy: undefined
       }
     }
-  },
-  DeleteOrganizationByIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    id: undefined
   },
   DeleteOrganizationInput: {
     clientMutationId: {
@@ -27330,14 +26620,6 @@ ${String(oldPlan)}`);
       }
     }
   },
-  DeleteCommentByIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    id: undefined
-  },
   DeleteCommentInput: {
     clientMutationId: {
       applyPlan($input, val) {
@@ -27386,14 +26668,6 @@ ${String(oldPlan)}`);
       }
     }
   },
-  DeletePostByIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    id: undefined
-  },
   DeletePostInput: {
     clientMutationId: {
       applyPlan($input, val) {
@@ -27441,14 +26715,6 @@ ${String(oldPlan)}`);
         orderBy: undefined
       }
     }
-  },
-  DeleteUserByIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    id: undefined
   },
   DeleteUserInput: {
     clientMutationId: {
@@ -27534,14 +26800,6 @@ ${String(oldPlan)}`);
         orderBy: undefined
       }
     }
-  },
-  DeleteProjectByIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    id: undefined
   },
   DeleteProjectInput: {
     clientMutationId: {
