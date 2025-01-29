@@ -1,4 +1,4 @@
-import { pgEnum, pgTable, unique, uuid } from "drizzle-orm/pg-core";
+import { index, pgEnum, pgTable, unique, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate } from "./constants";
 import { organizations } from "./organization.table";
@@ -30,7 +30,11 @@ export const usersToOrganizations = pgTable(
     role: role().notNull(),
     createdAt: defaultDate(),
   },
-  (table) => [unique().on(table.userId, table.organizationId)]
+  (table) => [
+    unique().on(table.userId, table.organizationId),
+    index().on(table.userId),
+    index().on(table.organizationId),
+  ]
 );
 
 /**
