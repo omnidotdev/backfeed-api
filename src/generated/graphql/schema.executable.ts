@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { PgBooleanFilterStep, PgConditionStep, PgDeleteSingleStep, PgExecutor, PgOrFilterStep, PgSelectStep, PgUnionAllStep, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec } from "@dataplan/pg";
 import { and, eq } from "drizzle-orm";
-import { ConnectionStep, EdgeStep, ExecutableStep, ModifierStep, ObjectStep, SafeError, __ValueStep, access, assertEdgeCapableStep, assertExecutableStep, assertPageInfoCapableStep, connection, constant, context, first, getEnumValueConfig, inhibitOnNull, isExecutableStep, lambda, list, makeGrafastSchema, node, object, rootValue, sideEffect } from "grafast";
+import { ConnectionStep, EdgeStep, ExecutableStep, ModifierStep, ObjectStep, SafeError, __ValueStep, assertEdgeCapableStep, assertExecutableStep, assertPageInfoCapableStep, connection, constant, context, first, getEnumValueConfig, isExecutableStep, lambda, makeGrafastSchema, node, object, rootValue, sideEffect } from "grafast";
 import { GraphQLEnumType, GraphQLError, Kind } from "graphql";
 import * as lib_drizzle_schema from "lib/drizzle/schema";
 import { sql } from "pg-sql2";
@@ -34,26 +34,25 @@ const handler = {
     return constant`query`;
   }
 };
-const nodeIdCodecs_base64JSON_base64JSON = {
-  name: "base64JSON",
-  encode: (() => {
-    function base64JSONEncode(value) {
-      return Buffer.from(JSON.stringify(value), "utf8").toString("base64");
-    }
-    base64JSONEncode.isSyncAndSafe = !0;
-    return base64JSONEncode;
-  })(),
-  decode: (() => {
-    function base64JSONDecode(value) {
-      return JSON.parse(Buffer.from(value, "base64").toString("utf8"));
-    }
-    base64JSONDecode.isSyncAndSafe = !0;
-    return base64JSONDecode;
-  })()
-};
 const nodeIdCodecs = Object.assign(Object.create(null), {
   raw: handler.codec,
-  base64JSON: nodeIdCodecs_base64JSON_base64JSON,
+  base64JSON: {
+    name: "base64JSON",
+    encode: (() => {
+      function base64JSONEncode(value) {
+        return Buffer.from(JSON.stringify(value), "utf8").toString("base64");
+      }
+      base64JSONEncode.isSyncAndSafe = !0;
+      return base64JSONEncode;
+    })(),
+    decode: (() => {
+      function base64JSONDecode(value) {
+        return JSON.parse(Buffer.from(value, "base64").toString("utf8"));
+      }
+      base64JSONDecode.isSyncAndSafe = !0;
+      return base64JSONDecode;
+    })()
+  },
   pipeString: {
     name: "pipeString",
     encode: Object.assign(function pipeStringEncode(value) {
@@ -67,6 +66,9 @@ const nodeIdCodecs = Object.assign(Object.create(null), {
       isSyncAndSafe: true
     })
   }
+});
+const nodeIdHandlerByTypeName = Object.assign(Object.create(null), {
+  Query: handler
 });
 const executor = new PgExecutor({
   name: "main",
@@ -829,7 +831,9 @@ const downvoteUniques = [{
   attributes: ["post_id", "user_id"],
   description: undefined,
   extensions: {
-    tags: Object.create(null)
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
   }
 }];
 const registryConfig_pgResources_downvote_downvote = {
@@ -870,7 +874,9 @@ const upvoteUniques = [{
   attributes: ["post_id", "user_id"],
   description: undefined,
   extensions: {
-    tags: Object.create(null)
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
   }
 }];
 const registryConfig_pgResources_upvote_upvote = {
@@ -911,14 +917,18 @@ const organizationUniques = [{
   attributes: ["name"],
   description: undefined,
   extensions: {
-    tags: Object.create(null)
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
   }
 }, {
   isPrimary: false,
   attributes: ["slug"],
   description: undefined,
   extensions: {
-    tags: Object.create(null)
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
   }
 }];
 const registryConfig_pgResources_organization_organization = {
@@ -1027,14 +1037,18 @@ const userUniques = [{
   attributes: ["hidra_id"],
   description: undefined,
   extensions: {
-    tags: Object.create(null)
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
   }
 }, {
   isPrimary: false,
   attributes: ["username"],
   description: undefined,
   extensions: {
-    tags: Object.create(null)
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
   }
 }];
 const registryConfig_pgResources_user_user = {
@@ -1074,7 +1088,9 @@ const registryConfig_pgResources_user_organization_user_organization = {
     attributes: ["user_id", "organization_id"],
     description: undefined,
     extensions: {
-      tags: Object.create(null)
+      tags: Object.assign(Object.create(null), {
+        behavior: ["-update", "-delete"]
+      })
     }
   }],
   isVirtual: false,
@@ -1108,14 +1124,18 @@ const projectUniques = [{
   attributes: ["name"],
   description: undefined,
   extensions: {
-    tags: Object.create(null)
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
   }
 }, {
   isPrimary: false,
   attributes: ["slug", "organization_id"],
   description: undefined,
   extensions: {
-    tags: Object.create(null)
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
   }
 }];
 const registryConfig_pgResources_project_project = {
@@ -1522,218 +1542,14 @@ const registryConfig = {
   })
 };
 const registry = makeRegistry(registryConfig);
-const pgResource_downvotePgResource = registry.pgResources["downvote"];
-const pgResource_upvotePgResource = registry.pgResources["upvote"];
-const pgResource_organizationPgResource = registry.pgResources["organization"];
-const pgResource_commentPgResource = registry.pgResources["comment"];
-const pgResource_postPgResource = registry.pgResources["post"];
-const pgResource_userPgResource = registry.pgResources["user"];
-const pgResource_projectPgResource = registry.pgResources["project"];
-const nodeIdHandlerByTypeName = Object.assign(Object.create(null), {
-  Query: handler,
-  Downvote: {
-    typeName: "Downvote",
-    codec: nodeIdCodecs_base64JSON_base64JSON,
-    deprecationReason: undefined,
-    plan($record) {
-      return list([constant("Downvote", false), $record.get("id")]);
-    },
-    getSpec($list) {
-      return {
-        id: inhibitOnNull(access($list, [1]))
-      };
-    },
-    get(spec) {
-      return pgResource_downvotePgResource.get(spec);
-    },
-    match(obj) {
-      return obj[0] === "Downvote";
-    }
-  },
-  Upvote: {
-    typeName: "Upvote",
-    codec: nodeIdCodecs_base64JSON_base64JSON,
-    deprecationReason: undefined,
-    plan($record) {
-      return list([constant("Upvote", false), $record.get("id")]);
-    },
-    getSpec($list) {
-      return {
-        id: inhibitOnNull(access($list, [1]))
-      };
-    },
-    get(spec) {
-      return pgResource_upvotePgResource.get(spec);
-    },
-    match(obj) {
-      return obj[0] === "Upvote";
-    }
-  },
-  Organization: {
-    typeName: "Organization",
-    codec: nodeIdCodecs_base64JSON_base64JSON,
-    deprecationReason: undefined,
-    plan($record) {
-      return list([constant("Organization", false), $record.get("id")]);
-    },
-    getSpec($list) {
-      return {
-        id: inhibitOnNull(access($list, [1]))
-      };
-    },
-    get(spec) {
-      return pgResource_organizationPgResource.get(spec);
-    },
-    match(obj) {
-      return obj[0] === "Organization";
-    }
-  },
-  Comment: {
-    typeName: "Comment",
-    codec: nodeIdCodecs_base64JSON_base64JSON,
-    deprecationReason: undefined,
-    plan($record) {
-      return list([constant("Comment", false), $record.get("id")]);
-    },
-    getSpec($list) {
-      return {
-        id: inhibitOnNull(access($list, [1]))
-      };
-    },
-    get(spec) {
-      return pgResource_commentPgResource.get(spec);
-    },
-    match(obj) {
-      return obj[0] === "Comment";
-    }
-  },
-  Post: {
-    typeName: "Post",
-    codec: nodeIdCodecs_base64JSON_base64JSON,
-    deprecationReason: undefined,
-    plan($record) {
-      return list([constant("Post", false), $record.get("id")]);
-    },
-    getSpec($list) {
-      return {
-        id: inhibitOnNull(access($list, [1]))
-      };
-    },
-    get(spec) {
-      return pgResource_postPgResource.get(spec);
-    },
-    match(obj) {
-      return obj[0] === "Post";
-    }
-  },
-  User: {
-    typeName: "User",
-    codec: nodeIdCodecs_base64JSON_base64JSON,
-    deprecationReason: undefined,
-    plan($record) {
-      return list([constant("User", false), $record.get("id")]);
-    },
-    getSpec($list) {
-      return {
-        id: inhibitOnNull(access($list, [1]))
-      };
-    },
-    get(spec) {
-      return pgResource_userPgResource.get(spec);
-    },
-    match(obj) {
-      return obj[0] === "User";
-    }
-  },
-  Project: {
-    typeName: "Project",
-    codec: nodeIdCodecs_base64JSON_base64JSON,
-    deprecationReason: undefined,
-    plan($record) {
-      return list([constant("Project", false), $record.get("id")]);
-    },
-    getSpec($list) {
-      return {
-        id: inhibitOnNull(access($list, [1]))
-      };
-    },
-    get(spec) {
-      return pgResource_projectPgResource.get(spec);
-    },
-    match(obj) {
-      return obj[0] === "Project";
-    }
-  }
-});
+const resource_downvotePgResource = registry.pgResources["downvote"];
+const resource_upvotePgResource = registry.pgResources["upvote"];
+const resource_organizationPgResource = registry.pgResources["organization"];
+const resource_commentPgResource = registry.pgResources["comment"];
+const resource_postPgResource = registry.pgResources["post"];
+const resource_userPgResource = registry.pgResources["user"];
 const resource_user_organizationPgResource = registry.pgResources["user_organization"];
-function specForHandler(handler) {
-  function spec(nodeId) {
-    try {
-      const specifier = handler.codec.decode(nodeId);
-      if (handler.match(specifier)) return specifier;
-    } catch {}
-    return null;
-  }
-  spec.displayName = `specifier_${handler.typeName}_${handler.codec.name}`;
-  spec.isSyncAndSafe = !0;
-  return spec;
-}
-const fetcher = (handler => {
-  const fn = $nodeId => {
-    const $decoded = lambda($nodeId, specForHandler(handler));
-    return handler.get(handler.getSpec($decoded));
-  };
-  fn.deprecationReason = handler.deprecationReason;
-  return fn;
-})(nodeIdHandlerByTypeName.Downvote);
-const fetcher2 = (handler => {
-  const fn = $nodeId => {
-    const $decoded = lambda($nodeId, specForHandler(handler));
-    return handler.get(handler.getSpec($decoded));
-  };
-  fn.deprecationReason = handler.deprecationReason;
-  return fn;
-})(nodeIdHandlerByTypeName.Upvote);
-const fetcher3 = (handler => {
-  const fn = $nodeId => {
-    const $decoded = lambda($nodeId, specForHandler(handler));
-    return handler.get(handler.getSpec($decoded));
-  };
-  fn.deprecationReason = handler.deprecationReason;
-  return fn;
-})(nodeIdHandlerByTypeName.Organization);
-const fetcher4 = (handler => {
-  const fn = $nodeId => {
-    const $decoded = lambda($nodeId, specForHandler(handler));
-    return handler.get(handler.getSpec($decoded));
-  };
-  fn.deprecationReason = handler.deprecationReason;
-  return fn;
-})(nodeIdHandlerByTypeName.Comment);
-const fetcher5 = (handler => {
-  const fn = $nodeId => {
-    const $decoded = lambda($nodeId, specForHandler(handler));
-    return handler.get(handler.getSpec($decoded));
-  };
-  fn.deprecationReason = handler.deprecationReason;
-  return fn;
-})(nodeIdHandlerByTypeName.Post);
-const fetcher6 = (handler => {
-  const fn = $nodeId => {
-    const $decoded = lambda($nodeId, specForHandler(handler));
-    return handler.get(handler.getSpec($decoded));
-  };
-  fn.deprecationReason = handler.deprecationReason;
-  return fn;
-})(nodeIdHandlerByTypeName.User);
-const fetcher7 = (handler => {
-  const fn = $nodeId => {
-    const $decoded = lambda($nodeId, specForHandler(handler));
-    return handler.get(handler.getSpec($decoded));
-  };
-  fn.deprecationReason = handler.deprecationReason;
-  return fn;
-})(nodeIdHandlerByTypeName.Project);
+const resource_projectPgResource = registry.pgResources["project"];
 const applyOrderToPlan = ($select, $value, TableOrderByType) => {
   if (!("evalLength" in $value)) return;
   const length = $value.evalLength();
@@ -4245,7 +4061,7 @@ const relation10 = registry.pgRelations["user"]["commentsByTheirUserId"];
 const relation11 = registry.pgRelations["user"]["downvotesByTheirUserId"];
 function oldPlan(_, args) {
   const plan = object({
-    result: pgInsertSingle(pgResource_projectPgResource, Object.create(null))
+    result: pgInsertSingle(resource_projectPgResource, Object.create(null))
   });
   args.apply(plan);
   return plan;
@@ -4266,7 +4082,7 @@ const planWrapper = (plan, _, fieldArgs) => {
 };
 const oldPlan2 = (_$root, args) => {
   const plan = object({
-    result: pgUpdateSingle(pgResource_projectPgResource, {
+    result: pgUpdateSingle(resource_projectPgResource, {
       id: args.get(['input', "rowId"])
     })
   });
@@ -4353,50 +4169,6 @@ type Query implements Node {
 
   """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
-
-  """Reads a single \`Downvote\` using its globally unique \`ID\`."""
-  downvoteById(
-    """The globally unique \`ID\` to be used in selecting a single \`Downvote\`."""
-    id: ID!
-  ): Downvote
-
-  """Reads a single \`Upvote\` using its globally unique \`ID\`."""
-  upvoteById(
-    """The globally unique \`ID\` to be used in selecting a single \`Upvote\`."""
-    id: ID!
-  ): Upvote
-
-  """Reads a single \`Organization\` using its globally unique \`ID\`."""
-  organizationById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`Organization\`.
-    """
-    id: ID!
-  ): Organization
-
-  """Reads a single \`Comment\` using its globally unique \`ID\`."""
-  commentById(
-    """The globally unique \`ID\` to be used in selecting a single \`Comment\`."""
-    id: ID!
-  ): Comment
-
-  """Reads a single \`Post\` using its globally unique \`ID\`."""
-  postById(
-    """The globally unique \`ID\` to be used in selecting a single \`Post\`."""
-    id: ID!
-  ): Post
-
-  """Reads a single \`User\` using its globally unique \`ID\`."""
-  userById(
-    """The globally unique \`ID\` to be used in selecting a single \`User\`."""
-    id: ID!
-  ): User
-
-  """Reads a single \`Project\` using its globally unique \`ID\`."""
-  projectById(
-    """The globally unique \`ID\` to be used in selecting a single \`Project\`."""
-    id: ID!
-  ): Project
 
   """Reads and enables pagination through a set of \`Downvote\`."""
   downvotes(
@@ -4679,11 +4451,7 @@ interface Node {
   id: ID!
 }
 
-type Downvote implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
+type Downvote {
   rowId: UUID!
   postId: UUID!
   userId: UUID!
@@ -4711,11 +4479,7 @@ to unexpected results.
 """
 scalar Datetime
 
-type Post implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
+type Post {
   rowId: UUID!
   title: String
   description: String
@@ -4833,11 +4597,7 @@ type Post implements Node {
   ): DownvoteConnection!
 }
 
-type Project implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
+type Project {
   rowId: UUID!
   name: String
   image: String
@@ -4885,11 +4645,7 @@ type Project implements Node {
   ): PostConnection!
 }
 
-type Organization implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
+type Organization {
   rowId: UUID!
   name: String
   slug: String!
@@ -6306,11 +6062,7 @@ type UserOrganization {
   user: User
 }
 
-type User implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
+type User {
   rowId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
@@ -6756,11 +6508,7 @@ type UpvoteConnection {
   ): [UpvoteAggregates!]
 }
 
-type Upvote implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
+type Upvote {
   rowId: UUID!
   postId: UUID!
   userId: UUID!
@@ -6982,11 +6730,7 @@ type CommentConnection {
   ): [CommentAggregates!]
 }
 
-type Comment implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
+type Comment {
   rowId: UUID!
   message: String
   postId: UUID!
@@ -7962,14 +7706,6 @@ type Mutation {
     input: UpdateDownvoteInput!
   ): UpdateDownvotePayload
 
-  """Updates a single \`Downvote\` using a unique key and a patch."""
-  updateDownvoteByPostIdAndUserId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateDownvoteByPostIdAndUserIdInput!
-  ): UpdateDownvotePayload
-
   """Updates a single \`Upvote\` using a unique key and a patch."""
   updateUpvote(
     """
@@ -7978,36 +7714,12 @@ type Mutation {
     input: UpdateUpvoteInput!
   ): UpdateUpvotePayload
 
-  """Updates a single \`Upvote\` using a unique key and a patch."""
-  updateUpvoteByPostIdAndUserId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUpvoteByPostIdAndUserIdInput!
-  ): UpdateUpvotePayload
-
   """Updates a single \`Organization\` using a unique key and a patch."""
   updateOrganization(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateOrganizationInput!
-  ): UpdateOrganizationPayload
-
-  """Updates a single \`Organization\` using a unique key and a patch."""
-  updateOrganizationByName(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateOrganizationByNameInput!
-  ): UpdateOrganizationPayload
-
-  """Updates a single \`Organization\` using a unique key and a patch."""
-  updateOrganizationBySlug(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateOrganizationBySlugInput!
   ): UpdateOrganizationPayload
 
   """Updates a single \`Comment\` using a unique key and a patch."""
@@ -8034,52 +7746,12 @@ type Mutation {
     input: UpdateUserInput!
   ): UpdateUserPayload
 
-  """Updates a single \`User\` using a unique key and a patch."""
-  updateUserByHidraId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserByHidraIdInput!
-  ): UpdateUserPayload
-
-  """Updates a single \`User\` using a unique key and a patch."""
-  updateUserByUsername(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserByUsernameInput!
-  ): UpdateUserPayload
-
-  """Updates a single \`UserOrganization\` using a unique key and a patch."""
-  updateUserOrganizationByUserIdAndOrganizationId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserOrganizationByUserIdAndOrganizationIdInput!
-  ): UpdateUserOrganizationPayload
-
   """Updates a single \`Project\` using a unique key and a patch."""
   updateProject(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateProjectInput!
-  ): UpdateProjectPayload
-
-  """Updates a single \`Project\` using a unique key and a patch."""
-  updateProjectByName(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectByNameInput!
-  ): UpdateProjectPayload
-
-  """Updates a single \`Project\` using a unique key and a patch."""
-  updateProjectBySlugAndOrganizationId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectBySlugAndOrganizationIdInput!
   ): UpdateProjectPayload
 
   """Deletes a single \`Downvote\` using a unique key."""
@@ -8090,14 +7762,6 @@ type Mutation {
     input: DeleteDownvoteInput!
   ): DeleteDownvotePayload
 
-  """Deletes a single \`Downvote\` using a unique key."""
-  deleteDownvoteByPostIdAndUserId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteDownvoteByPostIdAndUserIdInput!
-  ): DeleteDownvotePayload
-
   """Deletes a single \`Upvote\` using a unique key."""
   deleteUpvote(
     """
@@ -8106,36 +7770,12 @@ type Mutation {
     input: DeleteUpvoteInput!
   ): DeleteUpvotePayload
 
-  """Deletes a single \`Upvote\` using a unique key."""
-  deleteUpvoteByPostIdAndUserId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUpvoteByPostIdAndUserIdInput!
-  ): DeleteUpvotePayload
-
   """Deletes a single \`Organization\` using a unique key."""
   deleteOrganization(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteOrganizationInput!
-  ): DeleteOrganizationPayload
-
-  """Deletes a single \`Organization\` using a unique key."""
-  deleteOrganizationByName(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteOrganizationByNameInput!
-  ): DeleteOrganizationPayload
-
-  """Deletes a single \`Organization\` using a unique key."""
-  deleteOrganizationBySlug(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteOrganizationBySlugInput!
   ): DeleteOrganizationPayload
 
   """Deletes a single \`Comment\` using a unique key."""
@@ -8162,52 +7802,12 @@ type Mutation {
     input: DeleteUserInput!
   ): DeleteUserPayload
 
-  """Deletes a single \`User\` using a unique key."""
-  deleteUserByHidraId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserByHidraIdInput!
-  ): DeleteUserPayload
-
-  """Deletes a single \`User\` using a unique key."""
-  deleteUserByUsername(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserByUsernameInput!
-  ): DeleteUserPayload
-
-  """Deletes a single \`UserOrganization\` using a unique key."""
-  deleteUserOrganizationByUserIdAndOrganizationId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserOrganizationByUserIdAndOrganizationIdInput!
-  ): DeleteUserOrganizationPayload
-
   """Deletes a single \`Project\` using a unique key."""
   deleteProject(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteProjectInput!
-  ): DeleteProjectPayload
-
-  """Deletes a single \`Project\` using a unique key."""
-  deleteProjectByName(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectByNameInput!
-  ): DeleteProjectPayload
-
-  """Deletes a single \`Project\` using a unique key."""
-  deleteProjectBySlugAndOrganizationId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectBySlugAndOrganizationIdInput!
   ): DeleteProjectPayload
 }
 
@@ -8613,22 +8213,6 @@ input DownvotePatch {
   updatedAt: Datetime
 }
 
-"""All input for the \`updateDownvoteByPostIdAndUserId\` mutation."""
-input UpdateDownvoteByPostIdAndUserIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  postId: UUID!
-  userId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Downvote\` being updated.
-  """
-  patch: DownvotePatch!
-}
-
 """The output of our update \`Upvote\` mutation."""
 type UpdateUpvotePayload {
   """
@@ -8678,22 +8262,6 @@ input UpvotePatch {
   updatedAt: Datetime
 }
 
-"""All input for the \`updateUpvoteByPostIdAndUserId\` mutation."""
-input UpdateUpvoteByPostIdAndUserIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  postId: UUID!
-  userId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Upvote\` being updated.
-  """
-  patch: UpvotePatch!
-}
-
 """The output of our update \`Organization\` mutation."""
 type UpdateOrganizationPayload {
   """
@@ -8741,36 +8309,6 @@ input OrganizationPatch {
   slug: String
   createdAt: Datetime
   updatedAt: Datetime
-}
-
-"""All input for the \`updateOrganizationByName\` mutation."""
-input UpdateOrganizationByNameInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  name: String!
-
-  """
-  An object where the defined keys will be set on the \`Organization\` being updated.
-  """
-  patch: OrganizationPatch!
-}
-
-"""All input for the \`updateOrganizationBySlug\` mutation."""
-input UpdateOrganizationBySlugInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  slug: String!
-
-  """
-  An object where the defined keys will be set on the \`Organization\` being updated.
-  """
-  patch: OrganizationPatch!
 }
 
 """The output of our update \`Comment\` mutation."""
@@ -8921,81 +8459,6 @@ input UserPatch {
   lastName: String
 }
 
-"""All input for the \`updateUserByHidraId\` mutation."""
-input UpdateUserByHidraIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  hidraId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`User\` being updated.
-  """
-  patch: UserPatch!
-}
-
-"""All input for the \`updateUserByUsername\` mutation."""
-input UpdateUserByUsernameInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  username: String!
-
-  """
-  An object where the defined keys will be set on the \`User\` being updated.
-  """
-  patch: UserPatch!
-}
-
-"""The output of our update \`UserOrganization\` mutation."""
-type UpdateUserOrganizationPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`UserOrganization\` that was updated by this mutation."""
-  userOrganization: UserOrganization
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""
-All input for the \`updateUserOrganizationByUserIdAndOrganizationId\` mutation.
-"""
-input UpdateUserOrganizationByUserIdAndOrganizationIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  userId: UUID!
-  organizationId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`UserOrganization\` being updated.
-  """
-  patch: UserOrganizationPatch!
-}
-
-"""
-Represents an update to a \`UserOrganization\`. Fields that are set will be updated.
-"""
-input UserOrganizationPatch {
-  userId: UUID
-  organizationId: UUID
-  createdAt: Datetime
-  role: Role
-}
-
 """The output of our update \`Project\` mutation."""
 type UpdateProjectPayload {
   """
@@ -9048,37 +8511,6 @@ input ProjectPatch {
   updatedAt: Datetime
 }
 
-"""All input for the \`updateProjectByName\` mutation."""
-input UpdateProjectByNameInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  name: String!
-
-  """
-  An object where the defined keys will be set on the \`Project\` being updated.
-  """
-  patch: ProjectPatch!
-}
-
-"""All input for the \`updateProjectBySlugAndOrganizationId\` mutation."""
-input UpdateProjectBySlugAndOrganizationIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  slug: String!
-  organizationId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Project\` being updated.
-  """
-  patch: ProjectPatch!
-}
-
 """The output of our delete \`Downvote\` mutation."""
 type DeleteDownvotePayload {
   """
@@ -9089,7 +8521,6 @@ type DeleteDownvotePayload {
 
   """The \`Downvote\` that was deleted by this mutation."""
   downvote: Downvote
-  deletedDownvoteId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -9113,17 +8544,6 @@ input DeleteDownvoteInput {
   rowId: UUID!
 }
 
-"""All input for the \`deleteDownvoteByPostIdAndUserId\` mutation."""
-input DeleteDownvoteByPostIdAndUserIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  postId: UUID!
-  userId: UUID!
-}
-
 """The output of our delete \`Upvote\` mutation."""
 type DeleteUpvotePayload {
   """
@@ -9134,7 +8554,6 @@ type DeleteUpvotePayload {
 
   """The \`Upvote\` that was deleted by this mutation."""
   upvote: Upvote
-  deletedUpvoteId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -9158,17 +8577,6 @@ input DeleteUpvoteInput {
   rowId: UUID!
 }
 
-"""All input for the \`deleteUpvoteByPostIdAndUserId\` mutation."""
-input DeleteUpvoteByPostIdAndUserIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  postId: UUID!
-  userId: UUID!
-}
-
 """The output of our delete \`Organization\` mutation."""
 type DeleteOrganizationPayload {
   """
@@ -9179,7 +8587,6 @@ type DeleteOrganizationPayload {
 
   """The \`Organization\` that was deleted by this mutation."""
   organization: Organization
-  deletedOrganizationId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -9203,26 +8610,6 @@ input DeleteOrganizationInput {
   rowId: UUID!
 }
 
-"""All input for the \`deleteOrganizationByName\` mutation."""
-input DeleteOrganizationByNameInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  name: String!
-}
-
-"""All input for the \`deleteOrganizationBySlug\` mutation."""
-input DeleteOrganizationBySlugInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  slug: String!
-}
-
 """The output of our delete \`Comment\` mutation."""
 type DeleteCommentPayload {
   """
@@ -9233,7 +8620,6 @@ type DeleteCommentPayload {
 
   """The \`Comment\` that was deleted by this mutation."""
   comment: Comment
-  deletedCommentId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -9267,7 +8653,6 @@ type DeletePostPayload {
 
   """The \`Post\` that was deleted by this mutation."""
   post: Post
-  deletedPostId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -9301,7 +8686,6 @@ type DeleteUserPayload {
 
   """The \`User\` that was deleted by this mutation."""
   user: User
-  deletedUserId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -9325,56 +8709,6 @@ input DeleteUserInput {
   rowId: UUID!
 }
 
-"""All input for the \`deleteUserByHidraId\` mutation."""
-input DeleteUserByHidraIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  hidraId: UUID!
-}
-
-"""All input for the \`deleteUserByUsername\` mutation."""
-input DeleteUserByUsernameInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  username: String!
-}
-
-"""The output of our delete \`UserOrganization\` mutation."""
-type DeleteUserOrganizationPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`UserOrganization\` that was deleted by this mutation."""
-  userOrganization: UserOrganization
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""
-All input for the \`deleteUserOrganizationByUserIdAndOrganizationId\` mutation.
-"""
-input DeleteUserOrganizationByUserIdAndOrganizationIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  userId: UUID!
-  organizationId: UUID!
-}
-
 """The output of our delete \`Project\` mutation."""
 type DeleteProjectPayload {
   """
@@ -9385,7 +8719,6 @@ type DeleteProjectPayload {
 
   """The \`Project\` that was deleted by this mutation."""
   project: Project
-  deletedProjectId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -9407,27 +8740,6 @@ input DeleteProjectInput {
   """
   clientMutationId: String
   rowId: UUID!
-}
-
-"""All input for the \`deleteProjectByName\` mutation."""
-input DeleteProjectByNameInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  name: String!
-}
-
-"""All input for the \`deleteProjectBySlugAndOrganizationId\` mutation."""
-input DeleteProjectBySlugAndOrganizationIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  slug: String!
-  organizationId: UUID!
 }`;
 export const plans = {
   Query: {
@@ -9451,7 +8763,7 @@ export const plans = {
     },
     downvote: {
       plan(_$root, args) {
-        return pgResource_downvotePgResource.get({
+        return resource_downvotePgResource.get({
           id: args.get("rowId")
         });
       },
@@ -9461,7 +8773,7 @@ export const plans = {
     },
     downvoteByPostIdAndUserId: {
       plan(_$root, args) {
-        return pgResource_downvotePgResource.get({
+        return resource_downvotePgResource.get({
           post_id: args.get("postId"),
           user_id: args.get("userId")
         });
@@ -9473,7 +8785,7 @@ export const plans = {
     },
     upvote: {
       plan(_$root, args) {
-        return pgResource_upvotePgResource.get({
+        return resource_upvotePgResource.get({
           id: args.get("rowId")
         });
       },
@@ -9483,7 +8795,7 @@ export const plans = {
     },
     upvoteByPostIdAndUserId: {
       plan(_$root, args) {
-        return pgResource_upvotePgResource.get({
+        return resource_upvotePgResource.get({
           post_id: args.get("postId"),
           user_id: args.get("userId")
         });
@@ -9495,7 +8807,7 @@ export const plans = {
     },
     organization: {
       plan(_$root, args) {
-        return pgResource_organizationPgResource.get({
+        return resource_organizationPgResource.get({
           id: args.get("rowId")
         });
       },
@@ -9505,7 +8817,7 @@ export const plans = {
     },
     organizationByName: {
       plan(_$root, args) {
-        return pgResource_organizationPgResource.get({
+        return resource_organizationPgResource.get({
           name: args.get("name")
         });
       },
@@ -9515,7 +8827,7 @@ export const plans = {
     },
     organizationBySlug: {
       plan(_$root, args) {
-        return pgResource_organizationPgResource.get({
+        return resource_organizationPgResource.get({
           slug: args.get("slug")
         });
       },
@@ -9525,7 +8837,7 @@ export const plans = {
     },
     comment: {
       plan(_$root, args) {
-        return pgResource_commentPgResource.get({
+        return resource_commentPgResource.get({
           id: args.get("rowId")
         });
       },
@@ -9535,7 +8847,7 @@ export const plans = {
     },
     post: {
       plan(_$root, args) {
-        return pgResource_postPgResource.get({
+        return resource_postPgResource.get({
           id: args.get("rowId")
         });
       },
@@ -9545,7 +8857,7 @@ export const plans = {
     },
     user: {
       plan(_$root, args) {
-        return pgResource_userPgResource.get({
+        return resource_userPgResource.get({
           id: args.get("rowId")
         });
       },
@@ -9555,7 +8867,7 @@ export const plans = {
     },
     userByHidraId: {
       plan(_$root, args) {
-        return pgResource_userPgResource.get({
+        return resource_userPgResource.get({
           hidra_id: args.get("hidraId")
         });
       },
@@ -9565,7 +8877,7 @@ export const plans = {
     },
     userByUsername: {
       plan(_$root, args) {
-        return pgResource_userPgResource.get({
+        return resource_userPgResource.get({
           username: args.get("username")
         });
       },
@@ -9587,7 +8899,7 @@ export const plans = {
     },
     project: {
       plan(_$root, args) {
-        return pgResource_projectPgResource.get({
+        return resource_projectPgResource.get({
           id: args.get("rowId")
         });
       },
@@ -9597,7 +8909,7 @@ export const plans = {
     },
     projectByName: {
       plan(_$root, args) {
-        return pgResource_projectPgResource.get({
+        return resource_projectPgResource.get({
           name: args.get("name")
         });
       },
@@ -9607,7 +8919,7 @@ export const plans = {
     },
     projectBySlugAndOrganizationId: {
       plan(_$root, args) {
-        return pgResource_projectPgResource.get({
+        return resource_projectPgResource.get({
           slug: args.get("slug"),
           organization_id: args.get("organizationId")
         });
@@ -9617,72 +8929,9 @@ export const plans = {
         organizationId: undefined
       }
     },
-    downvoteById: {
-      plan(_$parent, args) {
-        const $nodeId = args.get("id");
-        return fetcher($nodeId);
-      },
-      args: {
-        id: undefined
-      }
-    },
-    upvoteById: {
-      plan(_$parent, args) {
-        const $nodeId = args.get("id");
-        return fetcher2($nodeId);
-      },
-      args: {
-        id: undefined
-      }
-    },
-    organizationById: {
-      plan(_$parent, args) {
-        const $nodeId = args.get("id");
-        return fetcher3($nodeId);
-      },
-      args: {
-        id: undefined
-      }
-    },
-    commentById: {
-      plan(_$parent, args) {
-        const $nodeId = args.get("id");
-        return fetcher4($nodeId);
-      },
-      args: {
-        id: undefined
-      }
-    },
-    postById: {
-      plan(_$parent, args) {
-        const $nodeId = args.get("id");
-        return fetcher5($nodeId);
-      },
-      args: {
-        id: undefined
-      }
-    },
-    userById: {
-      plan(_$parent, args) {
-        const $nodeId = args.get("id");
-        return fetcher6($nodeId);
-      },
-      args: {
-        id: undefined
-      }
-    },
-    projectById: {
-      plan(_$parent, args) {
-        const $nodeId = args.get("id");
-        return fetcher7($nodeId);
-      },
-      args: {
-        id: undefined
-      }
-    },
     downvotes: {
       plan() {
-        return connection(pgResource_downvotePgResource.find());
+        return connection(resource_downvotePgResource.find());
       },
       args: {
         first: {
@@ -9745,7 +8994,7 @@ export const plans = {
     },
     upvotes: {
       plan() {
-        return connection(pgResource_upvotePgResource.find());
+        return connection(resource_upvotePgResource.find());
       },
       args: {
         first: {
@@ -9808,7 +9057,7 @@ export const plans = {
     },
     organizations: {
       plan() {
-        return connection(pgResource_organizationPgResource.find());
+        return connection(resource_organizationPgResource.find());
       },
       args: {
         first: {
@@ -9871,7 +9120,7 @@ export const plans = {
     },
     comments: {
       plan() {
-        return connection(pgResource_commentPgResource.find());
+        return connection(resource_commentPgResource.find());
       },
       args: {
         first: {
@@ -9934,7 +9183,7 @@ export const plans = {
     },
     posts: {
       plan() {
-        return connection(pgResource_postPgResource.find());
+        return connection(resource_postPgResource.find());
       },
       args: {
         first: {
@@ -9997,7 +9246,7 @@ export const plans = {
     },
     users: {
       plan() {
-        return connection(pgResource_userPgResource.find());
+        return connection(resource_userPgResource.find());
       },
       args: {
         first: {
@@ -10123,7 +9372,7 @@ export const plans = {
     },
     projects: {
       plan() {
-        return connection(pgResource_projectPgResource.find());
+        return connection(resource_projectPgResource.find());
       },
       args: {
         first: {
@@ -10187,10 +9436,6 @@ export const plans = {
   },
   Downvote: {
     __assertStep: assertPgClassSingleStep,
-    id($parent) {
-      const specifier = nodeIdHandlerByTypeName.Downvote.plan($parent);
-      return lambda(specifier, nodeIdCodecs[nodeIdHandlerByTypeName.Downvote.codec.name].encode);
-    },
     rowId($record) {
       return $record.get("id");
     },
@@ -10207,12 +9452,12 @@ export const plans = {
       return $record.get("updated_at");
     },
     post($record) {
-      return pgResource_postPgResource.get({
+      return resource_postPgResource.get({
         id: $record.get("post_id")
       });
     },
     user($record) {
-      return pgResource_userPgResource.get({
+      return resource_userPgResource.get({
         id: $record.get("user_id")
       });
     }
@@ -10237,10 +9482,6 @@ export const plans = {
   },
   Post: {
     __assertStep: assertPgClassSingleStep,
-    id($parent) {
-      const specifier = nodeIdHandlerByTypeName.Post.plan($parent);
-      return lambda(specifier, nodeIdCodecs[nodeIdHandlerByTypeName.Post.codec.name].encode);
-    },
     rowId($record) {
       return $record.get("id");
     },
@@ -10263,18 +9504,18 @@ export const plans = {
       return $record.get("updated_at");
     },
     project($record) {
-      return pgResource_projectPgResource.get({
+      return resource_projectPgResource.get({
         id: $record.get("project_id")
       });
     },
     user($record) {
-      return pgResource_userPgResource.get({
+      return resource_userPgResource.get({
         id: $record.get("user_id")
       });
     },
     upvotes: {
       plan($record) {
-        const $records = pgResource_upvotePgResource.find({
+        const $records = resource_upvotePgResource.find({
           post_id: $record.get("id")
         });
         return connection($records);
@@ -10340,7 +9581,7 @@ export const plans = {
     },
     comments: {
       plan($record) {
-        const $records = pgResource_commentPgResource.find({
+        const $records = resource_commentPgResource.find({
           post_id: $record.get("id")
         });
         return connection($records);
@@ -10406,7 +9647,7 @@ export const plans = {
     },
     downvotes: {
       plan($record) {
-        const $records = pgResource_downvotePgResource.find({
+        const $records = resource_downvotePgResource.find({
           post_id: $record.get("id")
         });
         return connection($records);
@@ -10473,10 +9714,6 @@ export const plans = {
   },
   Project: {
     __assertStep: assertPgClassSingleStep,
-    id($parent) {
-      const specifier = nodeIdHandlerByTypeName.Project.plan($parent);
-      return lambda(specifier, nodeIdCodecs[nodeIdHandlerByTypeName.Project.codec.name].encode);
-    },
     rowId($record) {
       return $record.get("id");
     },
@@ -10502,13 +9739,13 @@ export const plans = {
       return $record.get("updated_at");
     },
     organization($record) {
-      return pgResource_organizationPgResource.get({
+      return resource_organizationPgResource.get({
         id: $record.get("organization_id")
       });
     },
     posts: {
       plan($record) {
-        const $records = pgResource_postPgResource.find({
+        const $records = resource_postPgResource.find({
           project_id: $record.get("id")
         });
         return connection($records);
@@ -10575,10 +9812,6 @@ export const plans = {
   },
   Organization: {
     __assertStep: assertPgClassSingleStep,
-    id($parent) {
-      const specifier = nodeIdHandlerByTypeName.Organization.plan($parent);
-      return lambda(specifier, nodeIdCodecs[nodeIdHandlerByTypeName.Organization.codec.name].encode);
-    },
     rowId($record) {
       return $record.get("id");
     },
@@ -10596,7 +9829,7 @@ export const plans = {
     },
     projects: {
       plan($record) {
-        const $records = pgResource_projectPgResource.find({
+        const $records = resource_projectPgResource.find({
           organization_id: $record.get("id")
         });
         return connection($records);
@@ -11386,14 +10619,14 @@ export const plans = {
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -11406,14 +10639,14 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -11427,15 +10660,15 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11449,15 +10682,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11471,15 +10704,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11493,15 +10726,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11515,15 +10748,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11537,15 +10770,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11559,15 +10792,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11581,15 +10814,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11603,15 +10836,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11625,15 +10858,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11647,15 +10880,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11669,15 +10902,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11691,15 +10924,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11713,15 +10946,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -11980,7 +11213,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: postIdentifier,
-          alias: pgResource_postPgResource.name,
+          alias: resource_postPgResource.name,
           localAttributes: registryConfig.pgRelations.project.postsByTheirProjectId.localAttributes,
           remoteAttributes: registryConfig.pgRelations.project.postsByTheirProjectId.remoteAttributes
         };
@@ -11992,7 +11225,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed15(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
-          alias: pgResource_postPgResource.name,
+          alias: resource_postPgResource.name,
           $equals: fieldArgs.get()
         });
         registryConfig.pgRelations.project.postsByTheirProjectId.localAttributes.forEach((localAttribute, i) => {
@@ -12006,7 +11239,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed16(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: organizationIdentifier,
-          alias: pgResource_organizationPgResource.name
+          alias: resource_organizationPgResource.name
         });
         registryConfig.pgRelations.project.organizationByMyOrganizationId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.project.organizationByMyOrganizationId.remoteAttributes[i];
@@ -13806,7 +13039,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: upvoteIdentifier,
-          alias: pgResource_upvotePgResource.name,
+          alias: resource_upvotePgResource.name,
           localAttributes: registryConfig.pgRelations.post.upvotesByTheirPostId.localAttributes,
           remoteAttributes: registryConfig.pgRelations.post.upvotesByTheirPostId.remoteAttributes
         };
@@ -13818,7 +13051,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed19(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: upvoteIdentifier,
-          alias: pgResource_upvotePgResource.name,
+          alias: resource_upvotePgResource.name,
           $equals: fieldArgs.get()
         });
         registryConfig.pgRelations.post.upvotesByTheirPostId.localAttributes.forEach((localAttribute, i) => {
@@ -13833,7 +13066,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: commentIdentifier,
-          alias: pgResource_commentPgResource.name,
+          alias: resource_commentPgResource.name,
           localAttributes: registryConfig.pgRelations.post.commentsByTheirPostId.localAttributes,
           remoteAttributes: registryConfig.pgRelations.post.commentsByTheirPostId.remoteAttributes
         };
@@ -13845,7 +13078,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed19(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: commentIdentifier,
-          alias: pgResource_commentPgResource.name,
+          alias: resource_commentPgResource.name,
           $equals: fieldArgs.get()
         });
         registryConfig.pgRelations.post.commentsByTheirPostId.localAttributes.forEach((localAttribute, i) => {
@@ -13860,7 +13093,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: downvoteIdentifier,
-          alias: pgResource_downvotePgResource.name,
+          alias: resource_downvotePgResource.name,
           localAttributes: registryConfig.pgRelations.post.downvotesByTheirPostId.localAttributes,
           remoteAttributes: registryConfig.pgRelations.post.downvotesByTheirPostId.remoteAttributes
         };
@@ -13872,7 +13105,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed19(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: downvoteIdentifier,
-          alias: pgResource_downvotePgResource.name,
+          alias: resource_downvotePgResource.name,
           $equals: fieldArgs.get()
         });
         registryConfig.pgRelations.post.downvotesByTheirPostId.localAttributes.forEach((localAttribute, i) => {
@@ -13886,7 +13119,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed20(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
-          alias: pgResource_projectPgResource.name
+          alias: resource_projectPgResource.name
         });
         registryConfig.pgRelations.post.projectByMyProjectId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.post.projectByMyProjectId.remoteAttributes[i];
@@ -13900,7 +13133,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed20(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
-          alias: pgResource_userPgResource.name
+          alias: resource_userPgResource.name
         });
         registryConfig.pgRelations.post.userByMyUserId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.post.userByMyUserId.remoteAttributes[i];
@@ -14078,7 +13311,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed23(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
-          alias: pgResource_postPgResource.name
+          alias: resource_postPgResource.name
         });
         registryConfig.pgRelations.upvote.postByMyPostId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.upvote.postByMyPostId.remoteAttributes[i];
@@ -14092,7 +13325,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed23(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
-          alias: pgResource_userPgResource.name
+          alias: resource_userPgResource.name
         });
         registryConfig.pgRelations.upvote.userByMyUserId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.upvote.userByMyUserId.remoteAttributes[i];
@@ -14207,7 +13440,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: postIdentifier,
-          alias: pgResource_postPgResource.name,
+          alias: resource_postPgResource.name,
           localAttributes: registryConfig.pgRelations.user.postsByTheirUserId.localAttributes,
           remoteAttributes: registryConfig.pgRelations.user.postsByTheirUserId.remoteAttributes
         };
@@ -14219,7 +13452,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed25(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
-          alias: pgResource_postPgResource.name,
+          alias: resource_postPgResource.name,
           $equals: fieldArgs.get()
         });
         registryConfig.pgRelations.user.postsByTheirUserId.localAttributes.forEach((localAttribute, i) => {
@@ -14234,7 +13467,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: upvoteIdentifier,
-          alias: pgResource_upvotePgResource.name,
+          alias: resource_upvotePgResource.name,
           localAttributes: registryConfig.pgRelations.user.upvotesByTheirUserId.localAttributes,
           remoteAttributes: registryConfig.pgRelations.user.upvotesByTheirUserId.remoteAttributes
         };
@@ -14246,7 +13479,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed25(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: upvoteIdentifier,
-          alias: pgResource_upvotePgResource.name,
+          alias: resource_upvotePgResource.name,
           $equals: fieldArgs.get()
         });
         registryConfig.pgRelations.user.upvotesByTheirUserId.localAttributes.forEach((localAttribute, i) => {
@@ -14288,7 +13521,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: commentIdentifier,
-          alias: pgResource_commentPgResource.name,
+          alias: resource_commentPgResource.name,
           localAttributes: registryConfig.pgRelations.user.commentsByTheirUserId.localAttributes,
           remoteAttributes: registryConfig.pgRelations.user.commentsByTheirUserId.remoteAttributes
         };
@@ -14300,7 +13533,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed25(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: commentIdentifier,
-          alias: pgResource_commentPgResource.name,
+          alias: resource_commentPgResource.name,
           $equals: fieldArgs.get()
         });
         registryConfig.pgRelations.user.commentsByTheirUserId.localAttributes.forEach((localAttribute, i) => {
@@ -14315,7 +13548,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: downvoteIdentifier,
-          alias: pgResource_downvotePgResource.name,
+          alias: resource_downvotePgResource.name,
           localAttributes: registryConfig.pgRelations.user.downvotesByTheirUserId.localAttributes,
           remoteAttributes: registryConfig.pgRelations.user.downvotesByTheirUserId.remoteAttributes
         };
@@ -14327,7 +13560,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed25(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: downvoteIdentifier,
-          alias: pgResource_downvotePgResource.name,
+          alias: resource_downvotePgResource.name,
           $equals: fieldArgs.get()
         });
         registryConfig.pgRelations.user.downvotesByTheirUserId.localAttributes.forEach((localAttribute, i) => {
@@ -15115,7 +14348,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed30(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: organizationIdentifier,
-          alias: pgResource_organizationPgResource.name
+          alias: resource_organizationPgResource.name
         });
         registryConfig.pgRelations.userOrganization.organizationByMyOrganizationId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.userOrganization.organizationByMyOrganizationId.remoteAttributes[i];
@@ -15129,7 +14362,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed30(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
-          alias: pgResource_userPgResource.name
+          alias: resource_userPgResource.name
         });
         registryConfig.pgRelations.userOrganization.userByMyUserId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.userOrganization.userByMyUserId.remoteAttributes[i];
@@ -15521,7 +14754,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: projectIdentifier,
-          alias: pgResource_projectPgResource.name,
+          alias: resource_projectPgResource.name,
           localAttributes: registryConfig.pgRelations.organization.projectsByTheirOrganizationId.localAttributes,
           remoteAttributes: registryConfig.pgRelations.organization.projectsByTheirOrganizationId.remoteAttributes
         };
@@ -15533,7 +14766,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed32(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
-          alias: pgResource_projectPgResource.name,
+          alias: resource_projectPgResource.name,
           $equals: fieldArgs.get()
         });
         registryConfig.pgRelations.organization.projectsByTheirOrganizationId.localAttributes.forEach((localAttribute, i) => {
@@ -16071,7 +15304,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed37(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
-          alias: pgResource_postPgResource.name
+          alias: resource_postPgResource.name
         });
         registryConfig.pgRelations.comment.postByMyPostId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.comment.postByMyPostId.remoteAttributes[i];
@@ -16085,7 +15318,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed37(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
-          alias: pgResource_userPgResource.name
+          alias: resource_userPgResource.name
         });
         registryConfig.pgRelations.comment.userByMyUserId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.comment.userByMyUserId.remoteAttributes[i];
@@ -16338,7 +15571,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed40(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
-          alias: pgResource_postPgResource.name
+          alias: resource_postPgResource.name
         });
         registryConfig.pgRelations.downvote.postByMyPostId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.downvote.postByMyPostId.remoteAttributes[i];
@@ -16352,7 +15585,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed40(fieldArgs, "object");
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
-          alias: pgResource_userPgResource.name
+          alias: resource_userPgResource.name
         });
         registryConfig.pgRelations.downvote.userByMyUserId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.downvote.userByMyUserId.remoteAttributes[i];
@@ -16680,22 +15913,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $record.get("role");
     },
     organization($record) {
-      return pgResource_organizationPgResource.get({
+      return resource_organizationPgResource.get({
         id: $record.get("organization_id")
       });
     },
     user($record) {
-      return pgResource_userPgResource.get({
+      return resource_userPgResource.get({
         id: $record.get("user_id")
       });
     }
   },
   User: {
     __assertStep: assertPgClassSingleStep,
-    id($parent) {
-      const specifier = nodeIdHandlerByTypeName.User.plan($parent);
-      return lambda(specifier, nodeIdCodecs[nodeIdHandlerByTypeName.User.codec.name].encode);
-    },
     rowId($record) {
       return $record.get("id");
     },
@@ -16719,7 +15948,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     posts: {
       plan($record) {
-        const $records = pgResource_postPgResource.find({
+        const $records = resource_postPgResource.find({
           user_id: $record.get("id")
         });
         return connection($records);
@@ -16785,7 +16014,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     upvotes: {
       plan($record) {
-        const $records = pgResource_upvotePgResource.find({
+        const $records = resource_upvotePgResource.find({
           user_id: $record.get("id")
         });
         return connection($records);
@@ -16917,7 +16146,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     comments: {
       plan($record) {
-        const $records = pgResource_commentPgResource.find({
+        const $records = resource_commentPgResource.find({
           user_id: $record.get("id")
         });
         return connection($records);
@@ -16983,7 +16212,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     downvotes: {
       plan($record) {
-        const $records = pgResource_downvotePgResource.find({
+        const $records = resource_downvotePgResource.find({
           user_id: $record.get("id")
         });
         return connection($records);
@@ -17607,14 +16836,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -17627,14 +16856,14 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -17648,15 +16877,15 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17670,15 +16899,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17692,15 +16921,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17714,15 +16943,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17736,15 +16965,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17758,15 +16987,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17780,15 +17009,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17802,15 +17031,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17824,15 +17053,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17846,15 +17075,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation2.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation2.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17867,14 +17096,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -17887,14 +17116,14 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -17908,15 +17137,15 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_comment.attributes.id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17930,15 +17159,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_comment.attributes.id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17952,15 +17181,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("message")}`, spec_comment.attributes.message.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17974,15 +17203,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("message")}`, spec_comment.attributes.message.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -17996,15 +17225,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_comment.attributes.post_id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18018,15 +17247,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_comment.attributes.post_id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18040,15 +17269,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_comment.attributes.user_id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18062,15 +17291,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_comment.attributes.user_id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18084,15 +17313,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_comment.attributes.created_at.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18106,15 +17335,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_comment.attributes.created_at.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18128,15 +17357,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_comment.attributes.updated_at.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18150,15 +17379,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation3.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation3.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_comment.attributes.updated_at.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18171,14 +17400,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -18191,14 +17420,14 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -18212,15 +17441,15 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18234,15 +17463,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18256,15 +17485,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18278,15 +17507,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18300,15 +17529,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18322,15 +17551,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18344,15 +17573,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18366,15 +17595,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18388,15 +17617,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18410,15 +17639,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation4.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation4.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -18610,10 +17839,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   },
   Upvote: {
     __assertStep: assertPgClassSingleStep,
-    id($parent) {
-      const specifier = nodeIdHandlerByTypeName.Upvote.plan($parent);
-      return lambda(specifier, nodeIdCodecs[nodeIdHandlerByTypeName.Upvote.codec.name].encode);
-    },
     rowId($record) {
       return $record.get("id");
     },
@@ -18630,12 +17855,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $record.get("updated_at");
     },
     post($record) {
-      return pgResource_postPgResource.get({
+      return resource_postPgResource.get({
         id: $record.get("post_id")
       });
     },
     user($record) {
-      return pgResource_userPgResource.get({
+      return resource_userPgResource.get({
         id: $record.get("user_id")
       });
     }
@@ -19414,10 +18639,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   },
   Comment: {
     __assertStep: assertPgClassSingleStep,
-    id($parent) {
-      const specifier = nodeIdHandlerByTypeName.Comment.plan($parent);
-      return lambda(specifier, nodeIdCodecs[nodeIdHandlerByTypeName.Comment.codec.name].encode);
-    },
     rowId($record) {
       return $record.get("id");
     },
@@ -19437,12 +18658,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $record.get("updated_at");
     },
     post($record) {
-      return pgResource_postPgResource.get({
+      return resource_postPgResource.get({
         id: $record.get("post_id")
       });
     },
     user($record) {
-      return pgResource_userPgResource.get({
+      return resource_userPgResource.get({
         id: $record.get("user_id")
       });
     }
@@ -21312,14 +20533,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -21332,14 +20553,14 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -21353,15 +20574,15 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_project.attributes.id.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21375,15 +20596,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_project.attributes.id.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21397,15 +20618,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21419,15 +20640,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21441,15 +20662,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("image")}`, spec_project.attributes.image.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21463,15 +20684,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("image")}`, spec_project.attributes.image.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21485,15 +20706,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("slug")}`, spec_project.attributes.slug.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21507,15 +20728,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("slug")}`, spec_project.attributes.slug.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21529,15 +20750,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_project.attributes.description.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21551,15 +20772,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_project.attributes.description.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21573,15 +20794,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_project.attributes.organization_id.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21595,15 +20816,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_project.attributes.organization_id.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21617,15 +20838,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_project.attributes.created_at.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21639,15 +20860,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_project.attributes.created_at.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21661,15 +20882,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_project.attributes.updated_at.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -21683,15 +20904,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
         relation5.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation5.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_project.attributes.updated_at.codec)}
-from ${pgResource_projectPgResource.from} ${tableAlias}
+from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22567,14 +21788,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -22587,14 +21808,14 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -22608,15 +21829,15 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22630,15 +21851,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22652,15 +21873,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22674,15 +21895,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22696,15 +21917,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22718,15 +21939,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22740,15 +21961,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22762,15 +21983,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22784,15 +22005,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22806,15 +22027,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22828,15 +22049,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22850,15 +22071,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22872,15 +22093,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22894,15 +22115,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
         relation7.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
-from ${pgResource_postPgResource.from} ${tableAlias}
+from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22915,14 +22136,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -22935,14 +22156,14 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -22956,15 +22177,15 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -22978,15 +22199,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23000,15 +22221,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23022,15 +22243,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23044,15 +22265,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23066,15 +22287,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23088,15 +22309,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23110,15 +22331,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23132,15 +22353,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23154,15 +22375,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_upvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_upvotePgResource.name));
         relation8.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
-from ${pgResource_upvotePgResource.from} ${tableAlias}
+from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23391,14 +22612,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -23411,14 +22632,14 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -23432,15 +22653,15 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_comment.attributes.id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23454,15 +22675,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_comment.attributes.id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23476,15 +22697,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("message")}`, spec_comment.attributes.message.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23498,15 +22719,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("message")}`, spec_comment.attributes.message.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23520,15 +22741,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_comment.attributes.post_id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23542,15 +22763,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_comment.attributes.post_id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23564,15 +22785,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_comment.attributes.user_id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23586,15 +22807,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_comment.attributes.user_id.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23608,15 +22829,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_comment.attributes.created_at.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23630,15 +22851,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_comment.attributes.created_at.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23652,15 +22873,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_comment.attributes.updated_at.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23674,15 +22895,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_commentPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_commentPgResource.name));
         relation10.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_comment.attributes.updated_at.codec)}
-from ${pgResource_commentPgResource.from} ${tableAlias}
+from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23695,14 +22916,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -23715,14 +22936,14 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -23736,15 +22957,15 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23758,15 +22979,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23780,15 +23001,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23802,15 +23023,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23824,15 +23045,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23846,15 +23067,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23868,15 +23089,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23890,15 +23111,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23912,15 +23133,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -23934,15 +23155,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(pgResource_downvotePgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_downvotePgResource.name));
         relation11.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof pgResource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
-from ${pgResource_downvotePgResource.from} ${tableAlias}
+from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
@@ -24092,7 +23313,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     createDownvote: {
       plan(_, args) {
         const plan = object({
-          result: pgInsertSingle(pgResource_downvotePgResource, Object.create(null))
+          result: pgInsertSingle(resource_downvotePgResource, Object.create(null))
         });
         args.apply(plan);
         return plan;
@@ -24109,7 +23330,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     createUpvote: {
       plan(_, args) {
         const plan = object({
-          result: pgInsertSingle(pgResource_upvotePgResource, Object.create(null))
+          result: pgInsertSingle(resource_upvotePgResource, Object.create(null))
         });
         args.apply(plan);
         return plan;
@@ -24126,7 +23347,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     createOrganization: {
       plan(_, args) {
         const plan = object({
-          result: pgInsertSingle(pgResource_organizationPgResource, Object.create(null))
+          result: pgInsertSingle(resource_organizationPgResource, Object.create(null))
         });
         args.apply(plan);
         return plan;
@@ -24143,7 +23364,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     createComment: {
       plan(_, args) {
         const plan = object({
-          result: pgInsertSingle(pgResource_commentPgResource, Object.create(null))
+          result: pgInsertSingle(resource_commentPgResource, Object.create(null))
         });
         args.apply(plan);
         return plan;
@@ -24160,7 +23381,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     createPost: {
       plan(_, args) {
         const plan = object({
-          result: pgInsertSingle(pgResource_postPgResource, Object.create(null))
+          result: pgInsertSingle(resource_postPgResource, Object.create(null))
         });
         args.apply(plan);
         return plan;
@@ -24177,7 +23398,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     createUser: {
       plan(_, args) {
         const plan = object({
-          result: pgInsertSingle(pgResource_userPgResource, Object.create(null))
+          result: pgInsertSingle(resource_userPgResource, Object.create(null))
         });
         args.apply(plan);
         return plan;
@@ -24237,27 +23458,8 @@ ${String(oldPlan)}`);
     updateDownvote: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_downvotePgResource, {
+          result: pgUpdateSingle(resource_downvotePgResource, {
             id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    updateDownvoteByPostIdAndUserId: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_downvotePgResource, {
-            post_id: args.get(['input', "postId"]),
-            user_id: args.get(['input', "userId"])
           })
         });
         args.apply(plan);
@@ -24274,27 +23476,8 @@ ${String(oldPlan)}`);
     updateUpvote: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_upvotePgResource, {
+          result: pgUpdateSingle(resource_upvotePgResource, {
             id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    updateUpvoteByPostIdAndUserId: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_upvotePgResource, {
-            post_id: args.get(['input', "postId"]),
-            user_id: args.get(['input', "userId"])
           })
         });
         args.apply(plan);
@@ -24311,44 +23494,8 @@ ${String(oldPlan)}`);
     updateOrganization: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_organizationPgResource, {
+          result: pgUpdateSingle(resource_organizationPgResource, {
             id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    updateOrganizationByName: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_organizationPgResource, {
-            name: args.get(['input', "name"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    updateOrganizationBySlug: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_organizationPgResource, {
-            slug: args.get(['input', "slug"])
           })
         });
         args.apply(plan);
@@ -24365,7 +23512,7 @@ ${String(oldPlan)}`);
     updateComment: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_commentPgResource, {
+          result: pgUpdateSingle(resource_commentPgResource, {
             id: args.get(['input', "rowId"])
           })
         });
@@ -24383,7 +23530,7 @@ ${String(oldPlan)}`);
     updatePost: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_postPgResource, {
+          result: pgUpdateSingle(resource_postPgResource, {
             id: args.get(['input', "rowId"])
           })
         });
@@ -24401,63 +23548,8 @@ ${String(oldPlan)}`);
     updateUser: {
       plan(_$root, args) {
         const plan = object({
-          result: pgUpdateSingle(pgResource_userPgResource, {
+          result: pgUpdateSingle(resource_userPgResource, {
             id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    updateUserByHidraId: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_userPgResource, {
-            hidra_id: args.get(['input', "hidraId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    updateUserByUsername: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_userPgResource, {
-            username: args.get(['input', "username"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    updateUserOrganizationByUserIdAndOrganizationId: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(resource_user_organizationPgResource, {
-            user_id: args.get(['input', "userId"]),
-            organization_id: args.get(['input', "organizationId"])
           })
         });
         args.apply(plan);
@@ -24496,67 +23588,11 @@ ${String(oldPlan2)}`);
         }
       }
     },
-    updateProjectByName: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_projectPgResource, {
-            name: args.get(['input', "name"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    updateProjectBySlugAndOrganizationId: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(pgResource_projectPgResource, {
-            slug: args.get(['input', "slug"]),
-            organization_id: args.get(['input', "organizationId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     deleteDownvote: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_downvotePgResource, {
+          result: pgDeleteSingle(resource_downvotePgResource, {
             id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteDownvoteByPostIdAndUserId: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_downvotePgResource, {
-            post_id: args.get(['input', "postId"]),
-            user_id: args.get(['input', "userId"])
           })
         });
         args.apply(plan);
@@ -24573,27 +23609,8 @@ ${String(oldPlan2)}`);
     deleteUpvote: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_upvotePgResource, {
+          result: pgDeleteSingle(resource_upvotePgResource, {
             id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteUpvoteByPostIdAndUserId: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_upvotePgResource, {
-            post_id: args.get(['input', "postId"]),
-            user_id: args.get(['input', "userId"])
           })
         });
         args.apply(plan);
@@ -24610,44 +23627,8 @@ ${String(oldPlan2)}`);
     deleteOrganization: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_organizationPgResource, {
+          result: pgDeleteSingle(resource_organizationPgResource, {
             id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteOrganizationByName: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_organizationPgResource, {
-            name: args.get(['input', "name"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteOrganizationBySlug: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_organizationPgResource, {
-            slug: args.get(['input', "slug"])
           })
         });
         args.apply(plan);
@@ -24664,7 +23645,7 @@ ${String(oldPlan2)}`);
     deleteComment: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_commentPgResource, {
+          result: pgDeleteSingle(resource_commentPgResource, {
             id: args.get(['input', "rowId"])
           })
         });
@@ -24682,7 +23663,7 @@ ${String(oldPlan2)}`);
     deletePost: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_postPgResource, {
+          result: pgDeleteSingle(resource_postPgResource, {
             id: args.get(['input', "rowId"])
           })
         });
@@ -24700,63 +23681,8 @@ ${String(oldPlan2)}`);
     deleteUser: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_userPgResource, {
+          result: pgDeleteSingle(resource_userPgResource, {
             id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteUserByHidraId: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_userPgResource, {
-            hidra_id: args.get(['input', "hidraId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteUserByUsername: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_userPgResource, {
-            username: args.get(['input', "username"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteUserOrganizationByUserIdAndOrganizationId: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(resource_user_organizationPgResource, {
-            user_id: args.get(['input', "userId"]),
-            organization_id: args.get(['input', "organizationId"])
           })
         });
         args.apply(plan);
@@ -24773,45 +23699,8 @@ ${String(oldPlan2)}`);
     deleteProject: {
       plan(_$root, args) {
         const plan = object({
-          result: pgDeleteSingle(pgResource_projectPgResource, {
+          result: pgDeleteSingle(resource_projectPgResource, {
             id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteProjectByName: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_projectPgResource, {
-            name: args.get(['input', "name"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
-    deleteProjectBySlugAndOrganizationId: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(pgResource_projectPgResource, {
-            slug: args.get(['input', "slug"]),
-            organization_id: args.get(['input', "organizationId"])
           })
         });
         args.apply(plan);
@@ -24847,7 +23736,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_downvotePgResource.find(spec);
+              return resource_downvotePgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -24936,7 +23825,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_upvotePgResource.find(spec);
+              return resource_upvotePgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -25025,7 +23914,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_organizationPgResource.find(spec);
+              return resource_organizationPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -25114,7 +24003,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_commentPgResource.find(spec);
+              return resource_commentPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -25210,7 +24099,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_postPgResource.find(spec);
+              return resource_postPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -25313,7 +24202,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_userPgResource.find(spec);
+              return resource_userPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -25475,7 +24364,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_projectPgResource.find(spec);
+              return resource_projectPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -25585,7 +24474,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_downvotePgResource.find(spec);
+              return resource_downvotePgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -25652,20 +24541,6 @@ ${String(oldPlan2)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateDownvoteByPostIdAndUserIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    postId: undefined,
-    userId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
   UpdateUpvotePayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -25687,7 +24562,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_upvotePgResource.find(spec);
+              return resource_upvotePgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -25754,20 +24629,6 @@ ${String(oldPlan2)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateUpvoteByPostIdAndUserIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    postId: undefined,
-    userId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
   UpdateOrganizationPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -25789,7 +24650,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_organizationPgResource.find(spec);
+              return resource_organizationPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -25856,32 +24717,6 @@ ${String(oldPlan2)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateOrganizationByNameInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    name: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
-  UpdateOrganizationBySlugInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    slug: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
   UpdateCommentPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -25903,7 +24738,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_commentPgResource.find(spec);
+              return resource_commentPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -25998,7 +24833,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_postPgResource.find(spec);
+              return resource_postPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -26100,7 +24935,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_userPgResource.find(spec);
+              return resource_userPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -26181,91 +25016,6 @@ ${String(oldPlan2)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateUserByHidraIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    hidraId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
-  UpdateUserByUsernameInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    username: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
-  UpdateUserOrganizationPayload: {
-    __assertStep: ObjectStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
-    },
-    userOrganization($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    }
-  },
-  UpdateUserOrganizationByUserIdAndOrganizationIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    userId: undefined,
-    organizationId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
-  UserOrganizationPatch: {
-    "__inputPlan": function UserOrganizationPatch_inputPlan() {
-      return object(Object.create(null));
-    },
-    userId: {
-      applyPlan($insert, val) {
-        $insert.set("user_id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    organizationId: {
-      applyPlan($insert, val) {
-        $insert.set("organization_id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    createdAt: {
-      applyPlan($insert, val) {
-        $insert.set("created_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    role: {
-      applyPlan($insert, val) {
-        $insert.set("role", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    }
-  },
   UpdateProjectPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -26287,7 +25037,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_projectPgResource.find(spec);
+              return resource_projectPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -26375,33 +25125,6 @@ ${String(oldPlan2)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateProjectByNameInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    name: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
-  UpdateProjectBySlugAndOrganizationIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    slug: undefined,
-    organizationId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
   DeleteDownvotePayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -26409,11 +25132,6 @@ ${String(oldPlan2)}`);
     },
     downvote($object) {
       return $object.get("result");
-    },
-    deletedDownvoteId($object) {
-      const $record = $object.getStepForKey("result"),
-        specifier = nodeIdHandlerByTypeName.Downvote.plan($record);
-      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
     },
     query() {
       return rootValue();
@@ -26428,7 +25146,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_downvotePgResource.find(spec);
+              return resource_downvotePgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -26450,15 +25168,6 @@ ${String(oldPlan2)}`);
     },
     rowId: undefined
   },
-  DeleteDownvoteByPostIdAndUserIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    postId: undefined,
-    userId: undefined
-  },
   DeleteUpvotePayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -26466,11 +25175,6 @@ ${String(oldPlan2)}`);
     },
     upvote($object) {
       return $object.get("result");
-    },
-    deletedUpvoteId($object) {
-      const $record = $object.getStepForKey("result"),
-        specifier = nodeIdHandlerByTypeName.Upvote.plan($record);
-      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
     },
     query() {
       return rootValue();
@@ -26485,7 +25189,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_upvotePgResource.find(spec);
+              return resource_upvotePgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -26507,15 +25211,6 @@ ${String(oldPlan2)}`);
     },
     rowId: undefined
   },
-  DeleteUpvoteByPostIdAndUserIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    postId: undefined,
-    userId: undefined
-  },
   DeleteOrganizationPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -26523,11 +25218,6 @@ ${String(oldPlan2)}`);
     },
     organization($object) {
       return $object.get("result");
-    },
-    deletedOrganizationId($object) {
-      const $record = $object.getStepForKey("result"),
-        specifier = nodeIdHandlerByTypeName.Organization.plan($record);
-      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
     },
     query() {
       return rootValue();
@@ -26542,7 +25232,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_organizationPgResource.find(spec);
+              return resource_organizationPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -26564,22 +25254,6 @@ ${String(oldPlan2)}`);
     },
     rowId: undefined
   },
-  DeleteOrganizationByNameInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    name: undefined
-  },
-  DeleteOrganizationBySlugInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    slug: undefined
-  },
   DeleteCommentPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -26587,11 +25261,6 @@ ${String(oldPlan2)}`);
     },
     comment($object) {
       return $object.get("result");
-    },
-    deletedCommentId($object) {
-      const $record = $object.getStepForKey("result"),
-        specifier = nodeIdHandlerByTypeName.Comment.plan($record);
-      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
     },
     query() {
       return rootValue();
@@ -26606,7 +25275,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_commentPgResource.find(spec);
+              return resource_commentPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -26636,11 +25305,6 @@ ${String(oldPlan2)}`);
     post($object) {
       return $object.get("result");
     },
-    deletedPostId($object) {
-      const $record = $object.getStepForKey("result"),
-        specifier = nodeIdHandlerByTypeName.Post.plan($record);
-      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
-    },
     query() {
       return rootValue();
     },
@@ -26654,7 +25318,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_postPgResource.find(spec);
+              return resource_postPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -26684,11 +25348,6 @@ ${String(oldPlan2)}`);
     user($object) {
       return $object.get("result");
     },
-    deletedUserId($object) {
-      const $record = $object.getStepForKey("result"),
-        specifier = nodeIdHandlerByTypeName.User.plan($record);
-      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
-    },
     query() {
       return rootValue();
     },
@@ -26702,7 +25361,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_userPgResource.find(spec);
+              return resource_userPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -26724,43 +25383,6 @@ ${String(oldPlan2)}`);
     },
     rowId: undefined
   },
-  DeleteUserByHidraIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    hidraId: undefined
-  },
-  DeleteUserByUsernameInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    username: undefined
-  },
-  DeleteUserOrganizationPayload: {
-    __assertStep: ObjectStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
-    },
-    userOrganization($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    }
-  },
-  DeleteUserOrganizationByUserIdAndOrganizationIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    userId: undefined,
-    organizationId: undefined
-  },
   DeleteProjectPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -26768,11 +25390,6 @@ ${String(oldPlan2)}`);
     },
     project($object) {
       return $object.get("result");
-    },
-    deletedProjectId($object) {
-      const $record = $object.getStepForKey("result"),
-        specifier = nodeIdHandlerByTypeName.Project.plan($record);
-      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
     },
     query() {
       return rootValue();
@@ -26787,7 +25404,7 @@ ${String(oldPlan2)}`);
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return pgResource_projectPgResource.find(spec);
+              return resource_projectPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
@@ -26808,23 +25425,6 @@ ${String(oldPlan2)}`);
       }
     },
     rowId: undefined
-  },
-  DeleteProjectByNameInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    name: undefined
-  },
-  DeleteProjectBySlugAndOrganizationIdInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    slug: undefined,
-    organizationId: undefined
   }
 };
 export const schema = makeGrafastSchema({

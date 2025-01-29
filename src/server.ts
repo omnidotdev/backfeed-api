@@ -8,7 +8,7 @@ import { schema } from "generated/graphql/schema.executable";
 import { app as appConfig } from "lib/config/app";
 import { HOST, PORT, isDevEnv, isProdEnv } from "lib/config/env";
 import { createGraphQLContext } from "lib/graphql/context";
-import { useAuth } from "lib/plugins";
+import { useAuth } from "lib/plugins/envelop";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
