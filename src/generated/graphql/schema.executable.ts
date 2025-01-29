@@ -4250,7 +4250,7 @@ const planWrapper6 = (plan, _, fieldArgs) => {
       [comment] = await db.select({
         organizationId: projects.organizationId,
         userId: posts.userId
-      }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(posts.id, commentId));
+      }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(comments.id, commentId));
     if (currentUser.id !== comment.userId) {
       const [userRole] = await db.select({
         role: usersToOrganizations.role
@@ -4481,7 +4481,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
       [comment] = await db.select({
         organizationId: projects.organizationId,
         userId: posts.userId
-      }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(posts.id, commentId));
+      }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(comments.id, commentId));
     if (currentUser.id !== comment.userId) {
       const [userRole] = await db.select({
         role: usersToOrganizations.role

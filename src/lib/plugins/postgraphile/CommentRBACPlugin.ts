@@ -35,7 +35,7 @@ const validatePermissions = (propName: string) =>
               .from(comments)
               .innerJoin(posts, eq(comments.postId, posts.id))
               .innerJoin(projects, eq(posts.projectId, projects.id))
-              .where(eq(posts.id, commentId));
+              .where(eq(comments.id, commentId));
 
             if (currentUser.id !== comment.userId) {
               const [userRole] = await db
