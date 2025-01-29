@@ -6,9 +6,13 @@ import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 
 import { DATABASE_URL, isProdEnv } from "./src/lib/config/env";
 import {
+  CommentRBACPlugin,
+  DownvoteRBACPlugin,
   OrganizationRBACPlugin,
+  PostRBACPlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectRBACPlugin,
+  UpvoteRBACPlugin,
 } from "./src/lib/plugins/postgraphile";
 
 import type { GraphileConfig } from "graphile-config";
@@ -32,6 +36,10 @@ const preset: GraphileConfig.Preset = {
     PrimaryKeyMutationsOnlyPlugin,
     OrganizationRBACPlugin,
     ProjectRBACPlugin,
+    PostRBACPlugin,
+    DownvoteRBACPlugin,
+    UpvoteRBACPlugin,
+    CommentRBACPlugin,
   ],
   grafserv: {
     graphiql: false,
