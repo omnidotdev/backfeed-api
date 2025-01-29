@@ -5,6 +5,7 @@ import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 
 import { DATABASE_URL, isProdEnv } from "./src/lib/config/env";
+import { RBACPlugin } from "./src/lib/plugins";
 
 import type { GraphileConfig } from "graphile-config";
 
@@ -22,6 +23,7 @@ const preset: GraphileConfig.Preset = {
     jsonScalarAsString: false,
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
+  plugins: [RBACPlugin],
   grafserv: {
     graphiql: false,
   },

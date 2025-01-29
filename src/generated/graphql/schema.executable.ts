@@ -1,7 +1,9 @@
 // @ts-nocheck
 import { PgBooleanFilterStep, PgConditionStep, PgDeleteSingleStep, PgExecutor, PgOrFilterStep, PgSelectStep, PgUnionAllStep, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec } from "@dataplan/pg";
-import { ConnectionStep, EdgeStep, ModifierStep, ObjectStep, SafeError, __ValueStep, access, assertEdgeCapableStep, assertExecutableStep, assertPageInfoCapableStep, connection, constant, context, first, getEnumValueConfig, inhibitOnNull, lambda, list, makeGrafastSchema, node, object, rootValue, specFromNodeId } from "grafast";
+import { and, eq } from "drizzle-orm";
+import { ConnectionStep, EdgeStep, ExecutableStep, ModifierStep, ObjectStep, SafeError, __ValueStep, access, assertEdgeCapableStep, assertExecutableStep, assertPageInfoCapableStep, connection, constant, context, first, getEnumValueConfig, inhibitOnNull, isExecutableStep, lambda, list, makeGrafastSchema, node, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLEnumType, GraphQLError, Kind } from "graphql";
+import * as lib_drizzle_schema from "lib/drizzle/schema";
 import { sql } from "pg-sql2";
 import { inspect } from "util";
 const handler = {
@@ -4241,6 +4243,27 @@ const relation8 = registry.pgRelations["user"]["upvotesByTheirUserId"];
 const relation9 = registry.pgRelations["user"]["userOrganizationsByTheirUserId"];
 const relation10 = registry.pgRelations["user"]["commentsByTheirUserId"];
 const relation11 = registry.pgRelations["user"]["downvotesByTheirUserId"];
+function oldPlan(_, args) {
+  const plan = object({
+    result: pgInsertSingle(pgResource_projectPgResource, Object.create(null))
+  });
+  args.apply(plan);
+  return plan;
+}
+const planWrapper = (plan, _, fieldArgs) => {
+  const $project = fieldArgs.getRaw(["input", "project"]),
+    $currentUser = context().get("currentUser"),
+    $db = context().get("db");
+  sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
+    const organizationId = project.organizationId;
+    if (!currentUser) throw new Error("Unauthorized");
+    const [userRole] = await db.select({
+      role: lib_drizzle_schema.usersToOrganizations.role
+    }).from(lib_drizzle_schema.usersToOrganizations).where(and(eq(lib_drizzle_schema.usersToOrganizations.userId, currentUser.id), eq(lib_drizzle_schema.usersToOrganizations.organizationId, organizationId)));
+    if (!userRole || userRole.role === "member") throw new Error("Unauthorized");
+  });
+  return plan();
+};
 const specFromArgs = args => {
   const $nodeId = args.get(["input", "id"]);
   return specFromNodeId(nodeIdHandlerByTypeName.Downvote, $nodeId);
@@ -24564,12 +24587,21 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     },
     createProject: {
-      plan(_, args) {
-        const plan = object({
-          result: pgInsertSingle(pgResource_projectPgResource, Object.create(null))
-        });
-        args.apply(plan);
-        return plan;
+      plan(...planParams) {
+        const smartPlan = (...overrideParams) => {
+            const $prev = oldPlan(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            if (!($prev instanceof ExecutableStep)) {
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"createProject"}, but that function did not return a step!
+${String(oldPlan)}`);
+              throw new Error("Wrapped a plan function, but that function did not return a step!");
+            }
+            return $prev;
+          },
+          [$source, fieldArgs, info] = planParams,
+          $newPlan = planWrapper(smartPlan, $source, fieldArgs, info);
+        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        return $newPlan;
       },
       args: {
         input: {
