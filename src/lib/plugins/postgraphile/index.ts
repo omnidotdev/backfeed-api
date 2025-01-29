@@ -6,3 +6,4 @@ export { default as PrimaryKeyMutationsOnlyPlugin } from "./PrimaryKeyMutationsO
 export { default as ProjectRBACPlugin } from "./ProjectRBACPlugin";
 export { default as UpvoteRBACPlugin } from "./UpvoteRBACPlugin";
 export { default as UserOrganizationsRBACPlugin } from "./UserOrganizationsRBACPlugin";
+export { default as UserRBACPlugin } from "./UserRBACPlugin";
