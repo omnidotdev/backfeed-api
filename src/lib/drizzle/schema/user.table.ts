@@ -11,6 +11,8 @@ export const users = pgTable("user", {
   id: defaultId(),
   // HIDRA ID mapped to `sub` claim
   hidraId: uuid().notNull().unique(),
+  customerId: uuid().unique(),
+  productId: uuid(),
   username: text().unique(),
   firstName: text(),
   lastName: text(),
