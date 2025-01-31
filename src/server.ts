@@ -22,7 +22,7 @@ import { useAuth } from "lib/plugins";
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
 interface Variables {
-  customerId: string;
+  customerId: string | null;
 }
 
 /**
@@ -72,6 +72,7 @@ app.get(
   })
 );
 
+// TODO: discuss how to lock down this endpoint
 app.post(
   "/webhooks",
   Webhooks({
