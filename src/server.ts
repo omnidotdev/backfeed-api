@@ -1,7 +1,7 @@
 import { Checkout, CustomerPortal, Webhooks } from "@polar-sh/hono";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import { createYoga } from "graphql-yoga";
-import { type Context, Hono } from "hono";
+import { Hono } from "hono";
 import { cors } from "hono/cors";
 
 import { schema } from "generated/graphql/schema.executable";
@@ -16,14 +16,9 @@ import {
   isProdEnv,
 } from "lib/config/env";
 import { createGraphQLContext } from "lib/graphql/context";
-import { authMiddleware } from "lib/middleware";
 import { useAuth } from "lib/plugins";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
-
-interface Variables {
-  customerId: string;
-}
 
 /**
  * GraphQL Yoga configuration.
@@ -39,7 +34,7 @@ const yoga = createYoga({
   plugins: [useAuth(), useMoreDetailedErrors(), useGrafast()],
 });
 
-const app = new Hono<{ Variables: Variables }>();
+const app = new Hono();
 
 app.use(
   // enable CORS
@@ -52,7 +47,6 @@ app.use(
 
 app.get(
   "/checkout",
-  authMiddleware,
   Checkout({
     accessToken: POLAR_ACCESS_TOKEN!,
     successUrl: SUCCESS_URL!,
@@ -62,12 +56,10 @@ app.get(
 
 app.get(
   "/portal",
-  authMiddleware,
   CustomerPortal({
     accessToken: POLAR_ACCESS_TOKEN!,
-    // biome-ignore lint/complexity/noBannedTypes: match Hono type
-    getCustomerId: (c: Context<{ Variables: Variables }, "/portal", {}>) =>
-      new Promise(() => c.var.customerId),
+    // TODO: update
+    getCustomerId: (_event) => new Promise((resolve) => resolve("")),
     server: isDevEnv ? "sandbox" : "production",
   })
 );
