@@ -15,7 +15,7 @@ const withPgClient = createWithPgClient({ pool: pgPool });
 
 export interface GraphQLContext {
   /** The current user making the request. Injected by the `useAuth` plugin. */
-  currentUser: SelectUser | null;
+  observer: SelectUser | null;
   db: typeof dbPool;
   request: Request;
   withPgClient: WithPgClient<NodePostgresPgClient>;
@@ -32,7 +32,7 @@ export interface GraphQLContext {
 export const createGraphQLContext = async ({
   request,
 }: YogaInitialContext): Promise<
-  Omit<GraphQLContext, "currentUser" | "pgSettings" | "pgSubscriber">
+  Omit<GraphQLContext, "observer" | "pgSettings" | "pgSubscriber">
 > => ({
   db: dbPool,
   request,

@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "88050",
+    oid: "89333",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "87963",
+    oid: "89246",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "87925",
+    oid: "89208",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +400,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "88030",
+    oid: "89313",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -504,7 +504,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "87939",
+    oid: "89222",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -620,7 +620,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "87949",
+    oid: "89232",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -724,7 +724,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "87973",
+    oid: "89256",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -743,7 +743,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "88069",
+    oid: "89352",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -819,7 +819,7 @@ const spec_userOrganization = {
   }),
   description: undefined,
   extensions: {
-    oid: "87985",
+    oid: "89268",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4093,10 +4093,10 @@ function oldPlan(_, args) {
 }
 const planWrapper = (plan, _, fieldArgs) => {
   const $project = fieldArgs.getRaw(["input", "project"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$project, $observer, $db], async ([project, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     let organizationId;
     const {
       usersToOrganizations,
@@ -4108,7 +4108,7 @@ const planWrapper = (plan, _, fieldArgs) => {
     }
     const [userRole] = await db.select({
       role: usersToOrganizations.role
-    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, organizationId)));
+    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
   });
   return plan();
@@ -4122,10 +4122,10 @@ function oldPlan2(_, args) {
 }
 const planWrapper2 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "userOrganization"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
       usersToOrganizations
     } = lib_drizzle_schema;
@@ -4137,17 +4137,17 @@ const planWrapper2 = (plan, _, fieldArgs) => {
         } = input,
         organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
       if (organizationUsers.length) {
-        const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
+        const userRole = organizationUsers.find(user => user.userId === observer.id)?.role;
         if (!userRole) {
-          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
+          if (userId !== observer.id || role !== "member") throw new Error("Insufficient permissions");
         } else if (userRole !== "owner") throw new Error("Insufficient permissions");
       }
     } else {
       const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
-      if (currentUser.id !== userOrganization.userId) {
+      if (observer.id !== userOrganization.userId) {
         const [userRole] = await db.select({
           role: usersToOrganizations.role
-        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
+        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
       } else if ("create" === "update" && userOrganization.role !== "owner") throw new Error("Insufficient permissions");
     }
@@ -4165,15 +4165,15 @@ const oldPlan3 = (_$root, args) => {
 };
 const planWrapper3 = (plan, _, fieldArgs) => {
   const $downvoteId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$downvoteId, $currentUser, $db], async ([downvoteId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$downvoteId, $observer, $db], async ([downvoteId, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
         downvotes
       } = lib_drizzle_schema,
       [downvote] = await db.select().from(downvotes).where(eq(downvotes.id, downvoteId));
-    if (currentUser.id !== downvote.userId) throw new Error("Insufficient permissions");
+    if (observer.id !== downvote.userId) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4188,15 +4188,15 @@ const oldPlan4 = (_$root, args) => {
 };
 const planWrapper4 = (plan, _, fieldArgs) => {
   const $upvoteId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$upvoteId, $currentUser, $db], async ([upvoteId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$upvoteId, $observer, $db], async ([upvoteId, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
         upvotes
       } = lib_drizzle_schema,
       [upvote] = await db.select().from(upvotes).where(eq(upvotes.id, upvoteId));
-    if (currentUser.id !== upvote.userId) throw new Error("Insufficient permissions");
+    if (observer.id !== upvote.userId) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4211,16 +4211,16 @@ const oldPlan5 = (_$root, args) => {
 };
 const planWrapper5 = (plan, _, fieldArgs) => {
   const $organizationId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$organizationId, $currentUser, $db], async ([organizationId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$organizationId, $observer, $db], async ([organizationId, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
         usersToOrganizations
       } = lib_drizzle_schema,
       [userRole] = await db.select({
         role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, organizationId)));
+      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, organizationId)));
     if ("update" === "delete" && userRole.role !== "owner") throw new Error("Insufficient permissions");
     if ("update" === "update" && (!userRole || userRole.role === "member")) throw new Error("Insufficient permissions");
   });
@@ -4237,10 +4237,10 @@ const oldPlan6 = (_$root, args) => {
 };
 const planWrapper6 = (plan, _, fieldArgs) => {
   const $commentId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$commentId, $currentUser, $db], async ([commentId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$commentId, $observer, $db], async ([commentId, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
         usersToOrganizations,
         projects,
@@ -4251,10 +4251,10 @@ const planWrapper6 = (plan, _, fieldArgs) => {
         organizationId: projects.organizationId,
         userId: posts.userId
       }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(comments.id, commentId));
-    if (currentUser.id !== comment.userId) {
+    if (observer.id !== comment.userId) {
       const [userRole] = await db.select({
         role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, comment.organizationId)));
+      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, comment.organizationId)));
       if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
     }
   });
@@ -4271,10 +4271,10 @@ const oldPlan7 = (_$root, args) => {
 };
 const planWrapper7 = (plan, _, fieldArgs) => {
   const $postId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$postId, $currentUser, $db], async ([postId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$postId, $observer, $db], async ([postId, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
         usersToOrganizations,
         projects,
@@ -4284,10 +4284,10 @@ const planWrapper7 = (plan, _, fieldArgs) => {
         organizationId: projects.organizationId,
         userId: posts.userId
       }).from(posts).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(posts.id, postId));
-    if (currentUser.id !== post.userId) {
+    if (observer.id !== post.userId) {
       const [userRole] = await db.select({
         role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, post.organizationId)));
+      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, post.organizationId)));
       if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
     }
   });
@@ -4304,10 +4304,10 @@ const oldPlan8 = (_$root, args) => {
 };
 const planWrapper8 = (plan, _, fieldArgs) => {
   const $userId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser");
-  sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
-    if (!currentUser) throw new Error("Unauthorized");
-    if (userId !== currentUser.id) throw new Error("Insufficient permissions");
+    $observer = context().get("observer");
+  sideEffect([$userId, $observer], async ([userId, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+    if (userId !== observer.id) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4322,10 +4322,10 @@ const oldPlan9 = (_$root, args) => {
 };
 const planWrapper9 = (plan, _, fieldArgs) => {
   const $project = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$project, $observer, $db], async ([project, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     let organizationId;
     const {
       usersToOrganizations,
@@ -4337,7 +4337,7 @@ const planWrapper9 = (plan, _, fieldArgs) => {
     }
     const [userRole] = await db.select({
       role: usersToOrganizations.role
-    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, organizationId)));
+    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
   });
   return plan();
@@ -4353,10 +4353,10 @@ const oldPlan10 = (_$root, args) => {
 };
 const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
       usersToOrganizations
     } = lib_drizzle_schema;
@@ -4368,17 +4368,17 @@ const planWrapper10 = (plan, _, fieldArgs) => {
         } = input,
         organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
       if (organizationUsers.length) {
-        const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
+        const userRole = organizationUsers.find(user => user.userId === observer.id)?.role;
         if (!userRole) {
-          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
+          if (userId !== observer.id || role !== "member") throw new Error("Insufficient permissions");
         } else if (userRole !== "owner") throw new Error("Insufficient permissions");
       }
     } else {
       const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
-      if (currentUser.id !== userOrganization.userId) {
+      if (observer.id !== userOrganization.userId) {
         const [userRole] = await db.select({
           role: usersToOrganizations.role
-        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
+        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
       } else if ("update" === "update" && userOrganization.role !== "owner") throw new Error("Insufficient permissions");
     }
@@ -4396,15 +4396,15 @@ const oldPlan11 = (_$root, args) => {
 };
 const planWrapper11 = (plan, _, fieldArgs) => {
   const $downvoteId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$downvoteId, $currentUser, $db], async ([downvoteId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$downvoteId, $observer, $db], async ([downvoteId, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
         downvotes
       } = lib_drizzle_schema,
       [downvote] = await db.select().from(downvotes).where(eq(downvotes.id, downvoteId));
-    if (currentUser.id !== downvote.userId) throw new Error("Insufficient permissions");
+    if (observer.id !== downvote.userId) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4419,15 +4419,15 @@ const oldPlan12 = (_$root, args) => {
 };
 const planWrapper12 = (plan, _, fieldArgs) => {
   const $upvoteId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$upvoteId, $currentUser, $db], async ([upvoteId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$upvoteId, $observer, $db], async ([upvoteId, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
         upvotes
       } = lib_drizzle_schema,
       [upvote] = await db.select().from(upvotes).where(eq(upvotes.id, upvoteId));
-    if (currentUser.id !== upvote.userId) throw new Error("Insufficient permissions");
+    if (observer.id !== upvote.userId) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4442,16 +4442,16 @@ const oldPlan13 = (_$root, args) => {
 };
 const planWrapper13 = (plan, _, fieldArgs) => {
   const $organizationId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$organizationId, $currentUser, $db], async ([organizationId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$organizationId, $observer, $db], async ([organizationId, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
         usersToOrganizations
       } = lib_drizzle_schema,
       [userRole] = await db.select({
         role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, organizationId)));
+      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, organizationId)));
     if ("delete" === "delete" && userRole.role !== "owner") throw new Error("Insufficient permissions");
     if ("delete" === "update" && (!userRole || userRole.role === "member")) throw new Error("Insufficient permissions");
   });
@@ -4468,10 +4468,10 @@ const oldPlan14 = (_$root, args) => {
 };
 const planWrapper14 = (plan, _, fieldArgs) => {
   const $commentId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$commentId, $currentUser, $db], async ([commentId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$commentId, $observer, $db], async ([commentId, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
         usersToOrganizations,
         projects,
@@ -4482,10 +4482,10 @@ const planWrapper14 = (plan, _, fieldArgs) => {
         organizationId: projects.organizationId,
         userId: posts.userId
       }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(comments.id, commentId));
-    if (currentUser.id !== comment.userId) {
+    if (observer.id !== comment.userId) {
       const [userRole] = await db.select({
         role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, comment.organizationId)));
+      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, comment.organizationId)));
       if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
     }
   });
@@ -4502,10 +4502,10 @@ const oldPlan15 = (_$root, args) => {
 };
 const planWrapper15 = (plan, _, fieldArgs) => {
   const $postId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$postId, $currentUser, $db], async ([postId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$postId, $observer, $db], async ([postId, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
         usersToOrganizations,
         projects,
@@ -4515,10 +4515,10 @@ const planWrapper15 = (plan, _, fieldArgs) => {
         organizationId: projects.organizationId,
         userId: posts.userId
       }).from(posts).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(posts.id, postId));
-    if (currentUser.id !== post.userId) {
+    if (observer.id !== post.userId) {
       const [userRole] = await db.select({
         role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, post.organizationId)));
+      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, post.organizationId)));
       if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
     }
   });
@@ -4535,10 +4535,10 @@ const oldPlan16 = (_$root, args) => {
 };
 const planWrapper16 = (plan, _, fieldArgs) => {
   const $userId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser");
-  sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
-    if (!currentUser) throw new Error("Unauthorized");
-    if (userId !== currentUser.id) throw new Error("Insufficient permissions");
+    $observer = context().get("observer");
+  sideEffect([$userId, $observer], async ([userId, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+    if (userId !== observer.id) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4553,10 +4553,10 @@ const oldPlan17 = (_$root, args) => {
 };
 const planWrapper17 = (plan, _, fieldArgs) => {
   const $project = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$project, $observer, $db], async ([project, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     let organizationId;
     const {
       usersToOrganizations,
@@ -4568,7 +4568,7 @@ const planWrapper17 = (plan, _, fieldArgs) => {
     }
     const [userRole] = await db.select({
       role: usersToOrganizations.role
-    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, organizationId)));
+    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
   });
   return plan();
@@ -4584,10 +4584,10 @@ const oldPlan18 = (_$root, args) => {
 };
 const planWrapper18 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser"),
+    $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
     const {
       usersToOrganizations
     } = lib_drizzle_schema;
@@ -4599,17 +4599,17 @@ const planWrapper18 = (plan, _, fieldArgs) => {
         } = input,
         organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
       if (organizationUsers.length) {
-        const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
+        const userRole = organizationUsers.find(user => user.userId === observer.id)?.role;
         if (!userRole) {
-          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
+          if (userId !== observer.id || role !== "member") throw new Error("Insufficient permissions");
         } else if (userRole !== "owner") throw new Error("Insufficient permissions");
       }
     } else {
       const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
-      if (currentUser.id !== userOrganization.userId) {
+      if (observer.id !== userOrganization.userId) {
         const [userRole] = await db.select({
           role: usersToOrganizations.role
-        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, currentUser.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
+        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
       } else if ("delete" === "update" && userOrganization.role !== "owner") throw new Error("Insufficient permissions");
     }

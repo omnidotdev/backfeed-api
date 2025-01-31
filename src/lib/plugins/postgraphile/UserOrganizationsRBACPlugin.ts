@@ -17,79 +17,76 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context<GraphQLContext>().get("currentUser");
+        const $observer = context<GraphQLContext>().get("observer");
         const $db = context<GraphQLContext>().get("db");
 
-        sideEffect(
-          [$input, $currentUser, $db],
-          async ([input, currentUser, db]) => {
-            if (!currentUser) {
-              throw new Error("Unauthorized");
-            }
+        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+          if (!observer) {
+            throw new Error("Unauthorized");
+          }
 
-            const { usersToOrganizations } = dbSchema;
+          const { usersToOrganizations } = dbSchema;
 
-            if (scope === "create") {
-              const role = (input as InsertUserToOrganization).role;
-              const userId = (input as InsertUserToOrganization).userId;
-              const organizationId = (input as InsertUserToOrganization)
-                .organizationId;
+          if (scope === "create") {
+            const role = (input as InsertUserToOrganization).role;
+            const userId = (input as InsertUserToOrganization).userId;
+            const organizationId = (input as InsertUserToOrganization)
+              .organizationId;
 
-              const organizationUsers = await db
-                .select()
-                .from(usersToOrganizations)
-                .where(eq(usersToOrganizations.organizationId, organizationId));
+            const organizationUsers = await db
+              .select()
+              .from(usersToOrganizations)
+              .where(eq(usersToOrganizations.organizationId, organizationId));
 
-              if (organizationUsers.length) {
-                const userRole = organizationUsers.find(
-                  (user) => user.userId === currentUser.id
-                )?.role;
+            if (organizationUsers.length) {
+              const userRole = organizationUsers.find(
+                (user) => user.userId === observer.id
+              )?.role;
 
-                // Allow users to join an organization as a member
-                if (!userRole) {
-                  if (userId !== currentUser.id || role !== "member") {
-                    throw new Error("Insufficient permissions");
-                  }
-                } else {
-                  // If the user is already a member, they must be an owner to invite a new member to the organization
-                  if (userRole !== "owner") {
-                    throw new Error("Insufficient permissions");
-                  }
-                }
-              }
-            } else {
-              const [userOrganization] = await db
-                .select()
-                .from(usersToOrganizations)
-                .where(eq(usersToOrganizations.id, input));
-
-              if (currentUser.id !== userOrganization.userId) {
-                const [userRole] = await db
-                  .select({ role: usersToOrganizations.role })
-                  .from(usersToOrganizations)
-                  .where(
-                    and(
-                      eq(usersToOrganizations.userId, currentUser.id),
-                      eq(
-                        usersToOrganizations.organizationId,
-                        userOrganization.organizationId
-                      )
-                    )
-                  );
-
-                // Only allow owners to update roles and/or kick other members from the organization
-                if (userRole.role !== "owner") {
+              // Allow users to join an organization as a member
+              if (!userRole) {
+                if (userId !== observer.id || role !== "member") {
                   throw new Error("Insufficient permissions");
                 }
               } else {
-                // Restrict current users from updating their own role unless they are an owner
-                if (scope === "update" && userOrganization.role !== "owner") {
+                // If the user is already a member, they must be an owner to invite a new member to the organization
+                if (userRole !== "owner") {
                   throw new Error("Insufficient permissions");
                 }
               }
             }
+          } else {
+            const [userOrganization] = await db
+              .select()
+              .from(usersToOrganizations)
+              .where(eq(usersToOrganizations.id, input));
+
+            if (observer.id !== userOrganization.userId) {
+              const [userRole] = await db
+                .select({ role: usersToOrganizations.role })
+                .from(usersToOrganizations)
+                .where(
+                  and(
+                    eq(usersToOrganizations.userId, observer.id),
+                    eq(
+                      usersToOrganizations.organizationId,
+                      userOrganization.organizationId
+                    )
+                  )
+                );
+
+              // Only allow owners to update roles and/or kick other members from the organization
+              if (userRole.role !== "owner") {
+                throw new Error("Insufficient permissions");
+              }
+            } else {
+              // Restrict current users from updating their own role unless they are an owner
+              if (scope === "update" && userOrganization.role !== "owner") {
+                throw new Error("Insufficient permissions");
+              }
+            }
           }
-        );
+        });
 
         return plan();
       },
