@@ -35,7 +35,6 @@
     "@envelop/generic-auth": "^8.0.1",
     "@graphile/pg-aggregates": "^0.2.0-beta.7",
     "@graphile/simplify-inflection": "^8.0.0-beta.5",
-    "@polar-sh/hono": "^0.2.14",
     "dayjs": "^1.11.13",
     "drizzle-orm": "^0.38.2",
     "drizzle-seed": "^0.3.0",
