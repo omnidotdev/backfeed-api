@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { createMiddleware } from "hono/factory";
+import { HTTPException } from "hono/http-exception";
 import * as jose from "jose";
 
 import { AUTH_JWKS_URL } from "lib/config/env";
@@ -13,7 +14,9 @@ const authMiddleware = createMiddleware(async (c, next) => {
   const sessionToken = c.req.header("Authorization")?.split("Bearer ")[1];
 
   if (!sessionToken) {
-    return c.json({ error: "Invalid or missing session token" }, 401);
+    throw new HTTPException(401, {
+      message: "Invalid or missing session token",
+    });
   }
 
   const jwks = jose.createRemoteJWKSet(new URL(AUTH_JWKS_URL!));
@@ -21,7 +24,9 @@ const authMiddleware = createMiddleware(async (c, next) => {
   const { payload } = await jose.jwtVerify(sessionToken, jwks);
 
   if (!payload) {
-    return c.json({ error: "Invalid or missing session token" }, 401);
+    throw new HTTPException(401, {
+      message: "Invalid or missing session token",
+    });
   }
 
   const [user] = await db
@@ -30,7 +35,7 @@ const authMiddleware = createMiddleware(async (c, next) => {
     .where(eq(dbSchema.users.hidraId, payload.sub!));
 
   if (!user) {
-    return c.json({ error: "Unauthorized" }, 401);
+    throw new HTTPException(401, { message: "Unauthorized" });
   }
 
   c.set("customerId", user.customerId);
