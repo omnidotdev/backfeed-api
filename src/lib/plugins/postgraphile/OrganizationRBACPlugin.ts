@@ -16,28 +16,25 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $organizationId = fieldArgs.getRaw(["input", propName]);
-        const $observer = context<GraphQLContext>().get("observer");
+        const $currentUser = context<GraphQLContext>().get("currentUser");
         const $db = context<GraphQLContext>().get("db");
 
         sideEffect(
-          [$organizationId, $observer, $db],
-          async ([organizationId, observer, db]) => {
-            if (!observer) {
+          [$organizationId, $currentUser, $db],
+          async ([organizationId, currentUser, db]) => {
+            if (!currentUser) {
               throw new Error("Unauthorized");
             }
 
-            const { usersToOrganizations } = dbSchema;
+            const { members } = dbSchema;
 
             const [userRole] = await db
-              .select({ role: usersToOrganizations.role })
-              .from(usersToOrganizations)
+              .select({ role: members.role })
+              .from(members)
               .where(
                 and(
-                  eq(usersToOrganizations.userId, observer.id),
-                  eq(
-                    usersToOrganizations.organizationId,
-                    organizationId as string
-                  )
+                  eq(members.userId, currentUser.id),
+                  eq(members.organizationId, organizationId as string)
                 )
               );
 

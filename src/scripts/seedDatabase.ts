@@ -61,7 +61,7 @@ const seedDatabase = async () => {
         downvotes: 10,
       },
     },
-    usersToOrganizations: {
+    members: {
       count: 100,
     },
     comments: {

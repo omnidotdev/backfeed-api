@@ -19,10 +19,10 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const role = pgEnum("role", ["owner", "admin", "member"]);
 
 /**
- * Users to organizations join table.
+ * Organization members table.
  */
-export const usersToOrganizations = pgTable(
-  "user_organization",
+export const members = pgTable(
+  "member",
   {
     id: defaultId(),
     userId: uuid()
@@ -47,11 +47,7 @@ export const usersToOrganizations = pgTable(
 );
 
 /**
- * Type helpers related to the users to organizations join table.
+ * Type helpers related to the members table.
  */
-export type InsertUserToOrganization = InferInsertModel<
-  typeof usersToOrganizations
->;
-export type SelectUserToOrganization = InferSelectModel<
-  typeof usersToOrganizations
->;
+export type InsertMember = InferInsertModel<typeof members>;
+export type SelectMember = InferSelectModel<typeof members>;

@@ -14,17 +14,17 @@ const validatePermissions = (propName: string) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $postId = fieldArgs.getRaw(["input", propName]);
-        const $observer = context<GraphQLContext>().get("observer");
+        const $currentUser = context<GraphQLContext>().get("currentUser");
         const $db = context<GraphQLContext>().get("db");
 
         sideEffect(
-          [$postId, $observer, $db],
-          async ([postId, observer, db]) => {
-            if (!observer) {
+          [$postId, $currentUser, $db],
+          async ([postId, currentUser, db]) => {
+            if (!currentUser) {
               throw new Error("Unauthorized");
             }
 
-            const { usersToOrganizations, projects, posts } = dbSchema;
+            const { members, projects, posts } = dbSchema;
 
             const [post] = await db
               .select({
@@ -35,14 +35,14 @@ const validatePermissions = (propName: string) =>
               .innerJoin(projects, eq(posts.projectId, projects.id))
               .where(eq(posts.id, postId));
 
-            if (observer.id !== post.userId) {
+            if (currentUser.id !== post.userId) {
               const [userRole] = await db
-                .select({ role: usersToOrganizations.role })
-                .from(usersToOrganizations)
+                .select({ role: members.role })
+                .from(members)
                 .where(
                   and(
-                    eq(usersToOrganizations.userId, observer.id),
-                    eq(usersToOrganizations.organizationId, post.organizationId)
+                    eq(members.userId, currentUser.id),
+                    eq(members.organizationId, post.organizationId)
                   )
                 );
 

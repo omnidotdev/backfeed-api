@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "89333",
+    oid: "99430",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "89246",
+    oid: "99343",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "89208",
+    oid: "99305",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +400,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "89313",
+    oid: "99410",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -412,6 +412,101 @@ const spec_comment = {
   executor: executor
 };
 const commentCodec = recordCodec(spec_comment);
+const memberIdentifier = sql.identifier("public", "member");
+const roleCodec = enumCodec({
+  name: "role",
+  identifier: sql.identifier("public", "role"),
+  values: ["owner", "admin", "member"],
+  description: undefined,
+  extensions: {
+    oid: "99449",
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "role"
+    },
+    tags: Object.create(null)
+  }
+});
+const spec_member = {
+  name: "member",
+  identifier: memberIdentifier,
+  attributes: Object.assign(Object.create(null), {
+    user_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: false,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    role: {
+      description: undefined,
+      codec: roleCodec,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  }),
+  description: undefined,
+  extensions: {
+    oid: "99365",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "member"
+    },
+    tags: Object.create(null)
+  },
+  executor: executor
+};
+const memberCodec = recordCodec(spec_member);
 const postIdentifier = sql.identifier("public", "post");
 const spec_post = {
   name: "post",
@@ -504,7 +599,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "89222",
+    oid: "99319",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -620,7 +715,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "89232",
+    oid: "99329",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -724,7 +819,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "89256",
+    oid: "99353",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -736,101 +831,6 @@ const spec_user = {
   executor: executor
 };
 const userCodec = recordCodec(spec_user);
-const userOrganizationIdentifier = sql.identifier("public", "user_organization");
-const roleCodec = enumCodec({
-  name: "role",
-  identifier: sql.identifier("public", "role"),
-  values: ["owner", "admin", "member"],
-  description: undefined,
-  extensions: {
-    oid: "89352",
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "role"
-    },
-    tags: Object.create(null)
-  }
-});
-const spec_userOrganization = {
-  name: "userOrganization",
-  identifier: userOrganizationIdentifier,
-  attributes: Object.assign(Object.create(null), {
-    user_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    role: {
-      description: undefined,
-      codec: roleCodec,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  }),
-  description: undefined,
-  extensions: {
-    oid: "89268",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "user_organization"
-    },
-    tags: Object.create(null)
-  },
-  executor: executor
-};
-const userOrganizationCodec = recordCodec(spec_userOrganization);
 const downvoteUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1141,7 +1141,7 @@ const registryConfig_pgResources_project_project = {
     canDelete: true
   }
 };
-const user_organizationUniques = [{
+const memberUniques = [{
   isPrimary: true,
   attributes: ["id"],
   description: undefined,
@@ -1158,13 +1158,13 @@ const user_organizationUniques = [{
     })
   }
 }];
-const registryConfig_pgResources_user_organization_user_organization = {
+const registryConfig_pgResources_member_member = {
   executor: executor,
-  name: "user_organization",
-  identifier: "main.public.user_organization",
-  from: userOrganizationIdentifier,
-  codec: userOrganizationCodec,
-  uniques: user_organizationUniques,
+  name: "member",
+  identifier: "main.public.member",
+  from: memberIdentifier,
+  codec: memberCodec,
+  uniques: memberUniques,
   isVirtual: false,
   description: undefined,
   extensions: {
@@ -1172,7 +1172,7 @@ const registryConfig_pgResources_user_organization_user_organization = {
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "user_organization"
+      name: "member"
     },
     isInsertable: true,
     isUpdatable: true,
@@ -1196,11 +1196,11 @@ const registryConfig = {
     organization: organizationCodec,
     text: TYPES.text,
     comment: commentCodec,
+    member: memberCodec,
+    role: roleCodec,
     post: postCodec,
     project: projectCodec,
-    user: userCodec,
-    userOrganization: userOrganizationCodec,
-    role: roleCodec
+    user: userCodec
   }),
   pgResources: Object.assign(Object.create(null), {
     downvote: registryConfig_pgResources_downvote_downvote,
@@ -1210,7 +1210,7 @@ const registryConfig = {
     post: registryConfig_pgResources_post_post,
     user: registryConfig_pgResources_user_user,
     project: registryConfig_pgResources_project_project,
-    user_organization: registryConfig_pgResources_user_organization_user_organization
+    member: registryConfig_pgResources_member_member
   }),
   pgRelations: Object.assign(Object.create(null), {
     comment: Object.assign(Object.create(null), {
@@ -1277,6 +1277,38 @@ const registryConfig = {
         }
       }
     }),
+    member: Object.assign(Object.create(null), {
+      organizationByMyOrganizationId: {
+        localCodec: memberCodec,
+        remoteResourceOptions: registryConfig_pgResources_organization_organization,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["organization_id"],
+        remoteAttributes: ["id"],
+        isUnique: true,
+        isReferencee: false,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
+      },
+      userByMyUserId: {
+        localCodec: memberCodec,
+        remoteResourceOptions: registryConfig_pgResources_user_user,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["user_id"],
+        remoteAttributes: ["id"],
+        isUnique: true,
+        isReferencee: false,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
+      }
+    }),
     organization: Object.assign(Object.create(null), {
       projectsByTheirOrganizationId: {
         localCodec: organizationCodec,
@@ -1293,9 +1325,9 @@ const registryConfig = {
           }
         }
       },
-      userOrganizationsByTheirOrganizationId: {
+      membersByTheirOrganizationId: {
         localCodec: organizationCodec,
-        remoteResourceOptions: registryConfig_pgResources_user_organization_user_organization,
+        remoteResourceOptions: registryConfig_pgResources_member_member,
         localCodecPolymorphicTypes: undefined,
         localAttributes: ["id"],
         remoteAttributes: ["organization_id"],
@@ -1481,9 +1513,9 @@ const registryConfig = {
           }
         }
       },
-      userOrganizationsByTheirUserId: {
+      membersByTheirUserId: {
         localCodec: userCodec,
-        remoteResourceOptions: registryConfig_pgResources_user_organization_user_organization,
+        remoteResourceOptions: registryConfig_pgResources_member_member,
         localCodecPolymorphicTypes: undefined,
         localAttributes: ["id"],
         remoteAttributes: ["user_id"],
@@ -1526,38 +1558,6 @@ const registryConfig = {
           }
         }
       }
-    }),
-    userOrganization: Object.assign(Object.create(null), {
-      organizationByMyOrganizationId: {
-        localCodec: userOrganizationCodec,
-        remoteResourceOptions: registryConfig_pgResources_organization_organization,
-        localCodecPolymorphicTypes: undefined,
-        localAttributes: ["organization_id"],
-        remoteAttributes: ["id"],
-        isUnique: true,
-        isReferencee: false,
-        description: undefined,
-        extensions: {
-          tags: {
-            behavior: []
-          }
-        }
-      },
-      userByMyUserId: {
-        localCodec: userOrganizationCodec,
-        remoteResourceOptions: registryConfig_pgResources_user_user,
-        localCodecPolymorphicTypes: undefined,
-        localAttributes: ["user_id"],
-        remoteAttributes: ["id"],
-        isUnique: true,
-        isReferencee: false,
-        description: undefined,
-        extensions: {
-          tags: {
-            behavior: []
-          }
-        }
-      }
     })
   })
 };
@@ -1569,7 +1569,7 @@ const resource_commentPgResource = registry.pgResources["comment"];
 const resource_postPgResource = registry.pgResources["post"];
 const resource_userPgResource = registry.pgResources["user"];
 const resource_projectPgResource = registry.pgResources["project"];
-const resource_user_organizationPgResource = registry.pgResources["user_organization"];
+const resource_memberPgResource = registry.pgResources["member"];
 const applyOrderToPlan = ($select, $value, TableOrderByType) => {
   if (!("evalLength" in $value)) return;
   const length = $value.evalLength();
@@ -2937,27 +2937,27 @@ function assertAllowed29(fieldArgs, mode) {
 const colSpec28 = {
   fieldName: "userId",
   attributeName: "user_id",
-  attribute: spec_userOrganization.attributes.user_id
+  attribute: spec_member.attributes.user_id
 };
 const colSpec29 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
-  attribute: spec_userOrganization.attributes.organization_id
+  attribute: spec_member.attributes.organization_id
 };
 const colSpec30 = {
   fieldName: "createdAt",
   attributeName: "created_at",
-  attribute: spec_userOrganization.attributes.created_at
+  attribute: spec_member.attributes.created_at
 };
 const colSpec31 = {
   fieldName: "role",
   attributeName: "role",
-  attribute: spec_userOrganization.attributes.role
+  attribute: spec_member.attributes.role
 };
 const colSpec32 = {
   fieldName: "rowId",
   attributeName: "id",
-  attribute: spec_userOrganization.attributes.id
+  attribute: spec_member.attributes.id
 };
 function assertAllowed30(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
@@ -3257,45 +3257,45 @@ function assertAllowed43(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-function UserOrganizationGroupBy_extensions_grafast_applyPlan($pgSelect) {
+function MemberGroupBy_extensions_grafast_applyPlan($pgSelect) {
   $pgSelect.groupBy({
     fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("user_id")}`
   });
 }
-function UserOrganizationGroupBy_extensions_grafast_applyPlan2($pgSelect) {
+function MemberGroupBy_extensions_grafast_applyPlan2($pgSelect) {
   $pgSelect.groupBy({
     fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`
   });
 }
-function UserOrganizationGroupBy_extensions_grafast_applyPlan3($pgSelect) {
+function MemberGroupBy_extensions_grafast_applyPlan3($pgSelect) {
   $pgSelect.groupBy({
     fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
   });
 }
-function UserOrganizationGroupBy_extensions_grafast_applyPlan4($pgSelect) {
+function MemberGroupBy_extensions_grafast_applyPlan4($pgSelect) {
   $pgSelect.groupBy({
     fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
   });
 }
-function UserOrganizationGroupBy_extensions_grafast_applyPlan5($pgSelect) {
+function MemberGroupBy_extensions_grafast_applyPlan5($pgSelect) {
   $pgSelect.groupBy({
     fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
   });
 }
-function UserOrganizationGroupBy_extensions_grafast_applyPlan6($pgSelect) {
+function MemberGroupBy_extensions_grafast_applyPlan6($pgSelect) {
   $pgSelect.groupBy({
     fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("role")}`
   });
 }
-export const UserOrganizationGroupBy = new GraphQLEnumType({
-  name: "UserOrganizationGroupBy",
-  description: "Grouping methods for `UserOrganization` for usage during aggregation.",
+export const MemberGroupBy = new GraphQLEnumType({
+  name: "MemberGroupBy",
+  description: "Grouping methods for `Member` for usage during aggregation.",
   values: Object.assign(Object.create(null), {
     USER_ID: {
       value: "USER_ID",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan
+          applyPlan: MemberGroupBy_extensions_grafast_applyPlan
         }
       })
     },
@@ -3303,7 +3303,7 @@ export const UserOrganizationGroupBy = new GraphQLEnumType({
       value: "ORGANIZATION_ID",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan2
+          applyPlan: MemberGroupBy_extensions_grafast_applyPlan2
         }
       })
     },
@@ -3311,7 +3311,7 @@ export const UserOrganizationGroupBy = new GraphQLEnumType({
       value: "CREATED_AT",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan3
+          applyPlan: MemberGroupBy_extensions_grafast_applyPlan3
         }
       })
     },
@@ -3319,7 +3319,7 @@ export const UserOrganizationGroupBy = new GraphQLEnumType({
       value: "CREATED_AT_TRUNCATED_TO_HOUR",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan4
+          applyPlan: MemberGroupBy_extensions_grafast_applyPlan4
         }
       })
     },
@@ -3327,7 +3327,7 @@ export const UserOrganizationGroupBy = new GraphQLEnumType({
       value: "CREATED_AT_TRUNCATED_TO_DAY",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan5
+          applyPlan: MemberGroupBy_extensions_grafast_applyPlan5
         }
       })
     },
@@ -3335,7 +3335,7 @@ export const UserOrganizationGroupBy = new GraphQLEnumType({
       value: "ROLE",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan6
+          applyPlan: MemberGroupBy_extensions_grafast_applyPlan6
         }
       })
     }
@@ -3968,7 +3968,7 @@ export const OrganizationGroupBy = new GraphQLEnumType({
   })
 });
 const relation5 = registry.pgRelations["organization"]["projectsByTheirOrganizationId"];
-const relation6 = registry.pgRelations["organization"]["userOrganizationsByTheirOrganizationId"];
+const relation6 = registry.pgRelations["organization"]["membersByTheirOrganizationId"];
 function UserGroupBy_extensions_grafast_applyPlan($pgSelect) {
   $pgSelect.groupBy({
     fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
@@ -4081,7 +4081,7 @@ export const UserGroupBy = new GraphQLEnumType({
 });
 const relation7 = registry.pgRelations["user"]["postsByTheirUserId"];
 const relation8 = registry.pgRelations["user"]["upvotesByTheirUserId"];
-const relation9 = registry.pgRelations["user"]["userOrganizationsByTheirUserId"];
+const relation9 = registry.pgRelations["user"]["membersByTheirUserId"];
 const relation10 = registry.pgRelations["user"]["commentsByTheirUserId"];
 const relation11 = registry.pgRelations["user"]["downvotesByTheirUserId"];
 function oldPlan(_, args) {
@@ -4093,13 +4093,13 @@ function oldPlan(_, args) {
 }
 const planWrapper = (plan, _, fieldArgs) => {
   const $project = fieldArgs.getRaw(["input", "project"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$project, $observer, $db], async ([project, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     let organizationId;
     const {
-      usersToOrganizations,
+      members,
       projects
     } = lib_drizzle_schema;
     if ("create" === "create") organizationId = project.organizationId;else {
@@ -4107,27 +4107,27 @@ const planWrapper = (plan, _, fieldArgs) => {
       organizationId = currentProject.organizationId;
     }
     const [userRole] = await db.select({
-      role: usersToOrganizations.role
-    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, organizationId)));
+      role: members.role
+    }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
   });
   return plan();
 };
 function oldPlan2(_, args) {
   const plan = object({
-    result: pgInsertSingle(resource_user_organizationPgResource, Object.create(null))
+    result: pgInsertSingle(resource_memberPgResource, Object.create(null))
   });
   args.apply(plan);
   return plan;
 }
 const planWrapper2 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "userOrganization"]),
-    $observer = context().get("observer"),
+  const $input = fieldArgs.getRaw(["input", "member"]),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
-      usersToOrganizations
+      members
     } = lib_drizzle_schema;
     if ("create" === "create") {
       const {
@@ -4135,21 +4135,21 @@ const planWrapper2 = (plan, _, fieldArgs) => {
           userId,
           organizationId
         } = input,
-        organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
+        organizationUsers = await db.select().from(members).where(eq(members.organizationId, organizationId));
       if (organizationUsers.length) {
-        const userRole = organizationUsers.find(user => user.userId === observer.id)?.role;
+        const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
         if (!userRole) {
-          if (userId !== observer.id || role !== "member") throw new Error("Insufficient permissions");
+          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
         } else if (userRole !== "owner") throw new Error("Insufficient permissions");
       }
     } else {
-      const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
-      if (observer.id !== userOrganization.userId) {
+      const [member] = await db.select().from(members).where(eq(members.id, input));
+      if (currentUser.id !== member.userId) {
         const [userRole] = await db.select({
-          role: usersToOrganizations.role
-        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
+          role: members.role
+        }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
-      } else if ("create" === "update" && userOrganization.role !== "owner") throw new Error("Insufficient permissions");
+      } else if ("create" === "update" && member.role !== "owner") throw new Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4165,15 +4165,15 @@ const oldPlan3 = (_$root, args) => {
 };
 const planWrapper3 = (plan, _, fieldArgs) => {
   const $downvoteId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$downvoteId, $observer, $db], async ([downvoteId, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$downvoteId, $currentUser, $db], async ([downvoteId, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
         downvotes
       } = lib_drizzle_schema,
       [downvote] = await db.select().from(downvotes).where(eq(downvotes.id, downvoteId));
-    if (observer.id !== downvote.userId) throw new Error("Insufficient permissions");
+    if (currentUser.id !== downvote.userId) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4188,15 +4188,15 @@ const oldPlan4 = (_$root, args) => {
 };
 const planWrapper4 = (plan, _, fieldArgs) => {
   const $upvoteId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$upvoteId, $observer, $db], async ([upvoteId, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$upvoteId, $currentUser, $db], async ([upvoteId, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
         upvotes
       } = lib_drizzle_schema,
       [upvote] = await db.select().from(upvotes).where(eq(upvotes.id, upvoteId));
-    if (observer.id !== upvote.userId) throw new Error("Insufficient permissions");
+    if (currentUser.id !== upvote.userId) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4211,16 +4211,16 @@ const oldPlan5 = (_$root, args) => {
 };
 const planWrapper5 = (plan, _, fieldArgs) => {
   const $organizationId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$organizationId, $observer, $db], async ([organizationId, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$organizationId, $currentUser, $db], async ([organizationId, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
-        usersToOrganizations
+        members
       } = lib_drizzle_schema,
       [userRole] = await db.select({
-        role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, organizationId)));
+        role: members.role
+      }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
     if ("update" === "delete" && userRole.role !== "owner") throw new Error("Insufficient permissions");
     if ("update" === "update" && (!userRole || userRole.role === "member")) throw new Error("Insufficient permissions");
   });
@@ -4237,12 +4237,12 @@ const oldPlan6 = (_$root, args) => {
 };
 const planWrapper6 = (plan, _, fieldArgs) => {
   const $commentId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$commentId, $observer, $db], async ([commentId, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$commentId, $currentUser, $db], async ([commentId, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
-        usersToOrganizations,
+        members,
         projects,
         posts,
         comments
@@ -4251,10 +4251,10 @@ const planWrapper6 = (plan, _, fieldArgs) => {
         organizationId: projects.organizationId,
         userId: posts.userId
       }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(comments.id, commentId));
-    if (observer.id !== comment.userId) {
+    if (currentUser.id !== comment.userId) {
       const [userRole] = await db.select({
-        role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, comment.organizationId)));
+        role: members.role
+      }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, comment.organizationId)));
       if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
     }
   });
@@ -4271,12 +4271,12 @@ const oldPlan7 = (_$root, args) => {
 };
 const planWrapper7 = (plan, _, fieldArgs) => {
   const $postId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$postId, $observer, $db], async ([postId, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$postId, $currentUser, $db], async ([postId, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
-        usersToOrganizations,
+        members,
         projects,
         posts
       } = lib_drizzle_schema,
@@ -4284,10 +4284,10 @@ const planWrapper7 = (plan, _, fieldArgs) => {
         organizationId: projects.organizationId,
         userId: posts.userId
       }).from(posts).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(posts.id, postId));
-    if (observer.id !== post.userId) {
+    if (currentUser.id !== post.userId) {
       const [userRole] = await db.select({
-        role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, post.organizationId)));
+        role: members.role
+      }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, post.organizationId)));
       if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
     }
   });
@@ -4304,10 +4304,10 @@ const oldPlan8 = (_$root, args) => {
 };
 const planWrapper8 = (plan, _, fieldArgs) => {
   const $userId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer");
-  sideEffect([$userId, $observer], async ([userId, observer]) => {
-    if (!observer) throw new Error("Unauthorized");
-    if (userId !== observer.id) throw new Error("Insufficient permissions");
+    $currentUser = context().get("currentUser");
+  sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
+    if (!currentUser) throw new Error("Unauthorized");
+    if (userId !== currentUser.id) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4322,13 +4322,13 @@ const oldPlan9 = (_$root, args) => {
 };
 const planWrapper9 = (plan, _, fieldArgs) => {
   const $project = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$project, $observer, $db], async ([project, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     let organizationId;
     const {
-      usersToOrganizations,
+      members,
       projects
     } = lib_drizzle_schema;
     if ("update" === "create") organizationId = project.organizationId;else {
@@ -4336,15 +4336,15 @@ const planWrapper9 = (plan, _, fieldArgs) => {
       organizationId = currentProject.organizationId;
     }
     const [userRole] = await db.select({
-      role: usersToOrganizations.role
-    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, organizationId)));
+      role: members.role
+    }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
   });
   return plan();
 };
 const oldPlan10 = (_$root, args) => {
   const plan = object({
-    result: pgUpdateSingle(resource_user_organizationPgResource, {
+    result: pgUpdateSingle(resource_memberPgResource, {
       id: args.get(['input', "rowId"])
     })
   });
@@ -4353,12 +4353,12 @@ const oldPlan10 = (_$root, args) => {
 };
 const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
-      usersToOrganizations
+      members
     } = lib_drizzle_schema;
     if ("update" === "create") {
       const {
@@ -4366,21 +4366,21 @@ const planWrapper10 = (plan, _, fieldArgs) => {
           userId,
           organizationId
         } = input,
-        organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
+        organizationUsers = await db.select().from(members).where(eq(members.organizationId, organizationId));
       if (organizationUsers.length) {
-        const userRole = organizationUsers.find(user => user.userId === observer.id)?.role;
+        const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
         if (!userRole) {
-          if (userId !== observer.id || role !== "member") throw new Error("Insufficient permissions");
+          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
         } else if (userRole !== "owner") throw new Error("Insufficient permissions");
       }
     } else {
-      const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
-      if (observer.id !== userOrganization.userId) {
+      const [member] = await db.select().from(members).where(eq(members.id, input));
+      if (currentUser.id !== member.userId) {
         const [userRole] = await db.select({
-          role: usersToOrganizations.role
-        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
+          role: members.role
+        }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
-      } else if ("update" === "update" && userOrganization.role !== "owner") throw new Error("Insufficient permissions");
+      } else if ("update" === "update" && member.role !== "owner") throw new Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4396,15 +4396,15 @@ const oldPlan11 = (_$root, args) => {
 };
 const planWrapper11 = (plan, _, fieldArgs) => {
   const $downvoteId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$downvoteId, $observer, $db], async ([downvoteId, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$downvoteId, $currentUser, $db], async ([downvoteId, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
         downvotes
       } = lib_drizzle_schema,
       [downvote] = await db.select().from(downvotes).where(eq(downvotes.id, downvoteId));
-    if (observer.id !== downvote.userId) throw new Error("Insufficient permissions");
+    if (currentUser.id !== downvote.userId) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4419,15 +4419,15 @@ const oldPlan12 = (_$root, args) => {
 };
 const planWrapper12 = (plan, _, fieldArgs) => {
   const $upvoteId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$upvoteId, $observer, $db], async ([upvoteId, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$upvoteId, $currentUser, $db], async ([upvoteId, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
         upvotes
       } = lib_drizzle_schema,
       [upvote] = await db.select().from(upvotes).where(eq(upvotes.id, upvoteId));
-    if (observer.id !== upvote.userId) throw new Error("Insufficient permissions");
+    if (currentUser.id !== upvote.userId) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4442,16 +4442,16 @@ const oldPlan13 = (_$root, args) => {
 };
 const planWrapper13 = (plan, _, fieldArgs) => {
   const $organizationId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$organizationId, $observer, $db], async ([organizationId, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$organizationId, $currentUser, $db], async ([organizationId, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
-        usersToOrganizations
+        members
       } = lib_drizzle_schema,
       [userRole] = await db.select({
-        role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, organizationId)));
+        role: members.role
+      }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
     if ("delete" === "delete" && userRole.role !== "owner") throw new Error("Insufficient permissions");
     if ("delete" === "update" && (!userRole || userRole.role === "member")) throw new Error("Insufficient permissions");
   });
@@ -4468,12 +4468,12 @@ const oldPlan14 = (_$root, args) => {
 };
 const planWrapper14 = (plan, _, fieldArgs) => {
   const $commentId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$commentId, $observer, $db], async ([commentId, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$commentId, $currentUser, $db], async ([commentId, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
-        usersToOrganizations,
+        members,
         projects,
         posts,
         comments
@@ -4482,10 +4482,10 @@ const planWrapper14 = (plan, _, fieldArgs) => {
         organizationId: projects.organizationId,
         userId: posts.userId
       }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(comments.id, commentId));
-    if (observer.id !== comment.userId) {
+    if (currentUser.id !== comment.userId) {
       const [userRole] = await db.select({
-        role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, comment.organizationId)));
+        role: members.role
+      }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, comment.organizationId)));
       if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
     }
   });
@@ -4502,12 +4502,12 @@ const oldPlan15 = (_$root, args) => {
 };
 const planWrapper15 = (plan, _, fieldArgs) => {
   const $postId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$postId, $observer, $db], async ([postId, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$postId, $currentUser, $db], async ([postId, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
-        usersToOrganizations,
+        members,
         projects,
         posts
       } = lib_drizzle_schema,
@@ -4515,10 +4515,10 @@ const planWrapper15 = (plan, _, fieldArgs) => {
         organizationId: projects.organizationId,
         userId: posts.userId
       }).from(posts).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(posts.id, postId));
-    if (observer.id !== post.userId) {
+    if (currentUser.id !== post.userId) {
       const [userRole] = await db.select({
-        role: usersToOrganizations.role
-      }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, post.organizationId)));
+        role: members.role
+      }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, post.organizationId)));
       if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
     }
   });
@@ -4535,10 +4535,10 @@ const oldPlan16 = (_$root, args) => {
 };
 const planWrapper16 = (plan, _, fieldArgs) => {
   const $userId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer");
-  sideEffect([$userId, $observer], async ([userId, observer]) => {
-    if (!observer) throw new Error("Unauthorized");
-    if (userId !== observer.id) throw new Error("Insufficient permissions");
+    $currentUser = context().get("currentUser");
+  sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
+    if (!currentUser) throw new Error("Unauthorized");
+    if (userId !== currentUser.id) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4553,13 +4553,13 @@ const oldPlan17 = (_$root, args) => {
 };
 const planWrapper17 = (plan, _, fieldArgs) => {
   const $project = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$project, $observer, $db], async ([project, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     let organizationId;
     const {
-      usersToOrganizations,
+      members,
       projects
     } = lib_drizzle_schema;
     if ("delete" === "create") organizationId = project.organizationId;else {
@@ -4567,15 +4567,15 @@ const planWrapper17 = (plan, _, fieldArgs) => {
       organizationId = currentProject.organizationId;
     }
     const [userRole] = await db.select({
-      role: usersToOrganizations.role
-    }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, organizationId)));
+      role: members.role
+    }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
   });
   return plan();
 };
 const oldPlan18 = (_$root, args) => {
   const plan = object({
-    result: pgDeleteSingle(resource_user_organizationPgResource, {
+    result: pgDeleteSingle(resource_memberPgResource, {
       id: args.get(['input', "rowId"])
     })
   });
@@ -4584,12 +4584,12 @@ const oldPlan18 = (_$root, args) => {
 };
 const planWrapper18 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
+    $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
+  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
+    if (!currentUser) throw new Error("Unauthorized");
     const {
-      usersToOrganizations
+      members
     } = lib_drizzle_schema;
     if ("delete" === "create") {
       const {
@@ -4597,21 +4597,21 @@ const planWrapper18 = (plan, _, fieldArgs) => {
           userId,
           organizationId
         } = input,
-        organizationUsers = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.organizationId, organizationId));
+        organizationUsers = await db.select().from(members).where(eq(members.organizationId, organizationId));
       if (organizationUsers.length) {
-        const userRole = organizationUsers.find(user => user.userId === observer.id)?.role;
+        const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
         if (!userRole) {
-          if (userId !== observer.id || role !== "member") throw new Error("Insufficient permissions");
+          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
         } else if (userRole !== "owner") throw new Error("Insufficient permissions");
       }
     } else {
-      const [userOrganization] = await db.select().from(usersToOrganizations).where(eq(usersToOrganizations.id, input));
-      if (observer.id !== userOrganization.userId) {
+      const [member] = await db.select().from(members).where(eq(members.id, input));
+      if (currentUser.id !== member.userId) {
         const [userRole] = await db.select({
-          role: usersToOrganizations.role
-        }).from(usersToOrganizations).where(and(eq(usersToOrganizations.userId, observer.id), eq(usersToOrganizations.organizationId, userOrganization.organizationId)));
+          role: members.role
+        }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
-      } else if ("delete" === "update" && userOrganization.role !== "owner") throw new Error("Insufficient permissions");
+      } else if ("delete" === "update" && member.role !== "owner") throw new Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4680,11 +4680,11 @@ type Query implements Node {
   """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
 
-  """Get a single \`UserOrganization\`."""
-  userOrganization(rowId: UUID!): UserOrganization
+  """Get a single \`Member\`."""
+  member(rowId: UUID!): Member
 
-  """Get a single \`UserOrganization\`."""
-  userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: UUID!): UserOrganization
+  """Get a single \`Member\`."""
+  memberByUserIdAndOrganizationId(userId: UUID!, organizationId: UUID!): Member
 
   """Reads and enables pagination through a set of \`Downvote\`."""
   downvotes(
@@ -4924,8 +4924,8 @@ type Query implements Node {
     filter: ProjectFilter
   ): ProjectConnection
 
-  """Reads and enables pagination through a set of \`UserOrganization\`."""
-  userOrganizations(
+  """Reads and enables pagination through a set of \`Member\`."""
+  members(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -4944,19 +4944,19 @@ type Query implements Node {
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
+    """The method to use when ordering \`Member\`."""
+    orderBy: [MemberOrderBy!] = [PRIMARY_KEY_ASC]
 
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: UserOrganizationCondition
+    condition: MemberCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: UserOrganizationFilter
-  ): UserOrganizationConnection
+    filter: MemberFilter
+  ): MemberConnection
 }
 
 """An object with a globally unique \`ID\`."""
@@ -5202,8 +5202,8 @@ type Organization {
     filter: ProjectFilter
   ): ProjectConnection!
 
-  """Reads and enables pagination through a set of \`UserOrganization\`."""
-  userOrganizations(
+  """Reads and enables pagination through a set of \`Member\`."""
+  members(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -5222,19 +5222,19 @@ type Organization {
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
+    """The method to use when ordering \`Member\`."""
+    orderBy: [MemberOrderBy!] = [PRIMARY_KEY_ASC]
 
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: UserOrganizationCondition
+    condition: MemberCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: UserOrganizationFilter
-  ): UserOrganizationConnection!
+    filter: MemberFilter
+  ): MemberConnection!
 }
 
 """A connection to a list of \`Project\` values."""
@@ -5930,11 +5930,11 @@ input UserFilter {
   """Some related \`upvotes\` exist."""
   upvotesExist: Boolean
 
-  """Filter by the object’s \`userOrganizations\` relation."""
-  userOrganizations: UserToManyUserOrganizationFilter
+  """Filter by the object’s \`members\` relation."""
+  members: UserToManyMemberFilter
 
-  """Some related \`userOrganizations\` exist."""
-  userOrganizationsExist: Boolean
+  """Some related \`members\` exist."""
+  membersExist: Boolean
 
   """Filter by the object’s \`comments\` relation."""
   comments: UserToManyCommentFilter
@@ -6087,34 +6087,32 @@ input UpvoteDistinctCountAggregateFilter {
 }
 
 """
-A filter to be used against many \`UserOrganization\` object types. All fields are combined with a logical ‘and.’
+A filter to be used against many \`Member\` object types. All fields are combined with a logical ‘and.’
 """
-input UserToManyUserOrganizationFilter {
+input UserToManyMemberFilter {
   """
-  Every related \`UserOrganization\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  Every related \`Member\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  every: UserOrganizationFilter
+  every: MemberFilter
 
   """
-  Some related \`UserOrganization\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  Some related \`Member\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  some: UserOrganizationFilter
+  some: MemberFilter
 
   """
-  No related \`UserOrganization\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  No related \`Member\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  none: UserOrganizationFilter
+  none: MemberFilter
 
-  """
-  Aggregates across related \`UserOrganization\` match the filter criteria.
-  """
-  aggregates: UserOrganizationAggregatesFilter
+  """Aggregates across related \`Member\` match the filter criteria."""
+  aggregates: MemberAggregatesFilter
 }
 
 """
-A filter to be used against \`UserOrganization\` object types. All fields are combined with a logical ‘and.’
+A filter to be used against \`Member\` object types. All fields are combined with a logical ‘and.’
 """
-input UserOrganizationFilter {
+input MemberFilter {
   """Filter by the object’s \`userId\` field."""
   userId: UUIDFilter
 
@@ -6137,13 +6135,13 @@ input UserOrganizationFilter {
   user: UserFilter
 
   """Checks for all expressions in this list."""
-  and: [UserOrganizationFilter!]
+  and: [MemberFilter!]
 
   """Checks for any expressions in this list."""
-  or: [UserOrganizationFilter!]
+  or: [MemberFilter!]
 
   """Negates the expression."""
-  not: UserOrganizationFilter
+  not: MemberFilter
 }
 
 """
@@ -6219,11 +6217,11 @@ input OrganizationFilter {
   """Some related \`projects\` exist."""
   projectsExist: Boolean
 
-  """Filter by the object’s \`userOrganizations\` relation."""
-  userOrganizations: OrganizationToManyUserOrganizationFilter
+  """Filter by the object’s \`members\` relation."""
+  members: OrganizationToManyMemberFilter
 
-  """Some related \`userOrganizations\` exist."""
-  userOrganizationsExist: Boolean
+  """Some related \`members\` exist."""
+  membersExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [OrganizationFilter!]
@@ -6281,44 +6279,40 @@ input ProjectDistinctCountAggregateFilter {
 }
 
 """
-A filter to be used against many \`UserOrganization\` object types. All fields are combined with a logical ‘and.’
+A filter to be used against many \`Member\` object types. All fields are combined with a logical ‘and.’
 """
-input OrganizationToManyUserOrganizationFilter {
+input OrganizationToManyMemberFilter {
   """
-  Every related \`UserOrganization\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  Every related \`Member\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  every: UserOrganizationFilter
+  every: MemberFilter
 
   """
-  Some related \`UserOrganization\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  Some related \`Member\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  some: UserOrganizationFilter
+  some: MemberFilter
 
   """
-  No related \`UserOrganization\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  No related \`Member\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  none: UserOrganizationFilter
+  none: MemberFilter
 
-  """
-  Aggregates across related \`UserOrganization\` match the filter criteria.
-  """
-  aggregates: UserOrganizationAggregatesFilter
+  """Aggregates across related \`Member\` match the filter criteria."""
+  aggregates: MemberAggregatesFilter
 }
 
-"""
-A filter to be used against aggregates of \`UserOrganization\` object types.
-"""
-input UserOrganizationAggregatesFilter {
+"""A filter to be used against aggregates of \`Member\` object types."""
+input MemberAggregatesFilter {
   """
-  A filter that must pass for the relevant \`UserOrganization\` object to be included within the aggregate.
+  A filter that must pass for the relevant \`Member\` object to be included within the aggregate.
   """
-  filter: UserOrganizationFilter
+  filter: MemberFilter
 
-  """Distinct count aggregate over matching \`UserOrganization\` objects."""
-  distinctCount: UserOrganizationDistinctCountAggregateFilter
+  """Distinct count aggregate over matching \`Member\` objects."""
+  distinctCount: MemberDistinctCountAggregateFilter
 }
 
-input UserOrganizationDistinctCountAggregateFilter {
+input MemberDistinctCountAggregateFilter {
   userId: BigIntFilter
   organizationId: BigIntFilter
   createdAt: BigIntFilter
@@ -6530,56 +6524,50 @@ input PostToManyDownvoteFilter {
   aggregates: DownvoteAggregatesFilter
 }
 
-"""A connection to a list of \`UserOrganization\` values."""
-type UserOrganizationConnection {
-  """A list of \`UserOrganization\` objects."""
-  nodes: [UserOrganization]!
+"""A connection to a list of \`Member\` values."""
+type MemberConnection {
+  """A list of \`Member\` objects."""
+  nodes: [Member]!
 
   """
-  A list of edges which contains the \`UserOrganization\` and cursor to aid in pagination.
+  A list of edges which contains the \`Member\` and cursor to aid in pagination.
   """
-  edges: [UserOrganizationEdge]!
+  edges: [MemberEdge]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """
-  The count of *all* \`UserOrganization\` you could get from the connection.
-  """
+  """The count of *all* \`Member\` you could get from the connection."""
   totalCount: Int!
 
   """
   Aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  aggregates: UserOrganizationAggregates
+  aggregates: MemberAggregates
 
   """
   Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   groupedAggregates(
-    """
-    The method to use when grouping \`UserOrganization\` for these aggregates.
-    """
-    groupBy: [UserOrganizationGroupBy!]!
+    """The method to use when grouping \`Member\` for these aggregates."""
+    groupBy: [MemberGroupBy!]!
 
     """Conditions on the grouped aggregates."""
-    having: UserOrganizationHavingInput
-  ): [UserOrganizationAggregates!]
+    having: MemberHavingInput
+  ): [MemberAggregates!]
 }
 
-type UserOrganization {
+type Member {
   userId: UUID!
   organizationId: UUID!
   createdAt: Datetime
   role: Role!
   rowId: UUID!
 
-  """
-  Reads a single \`Organization\` that is related to this \`UserOrganization\`.
-  """
+  """Reads a single \`Organization\` that is related to this \`Member\`."""
   organization: Organization
 
-  """Reads a single \`User\` that is related to this \`UserOrganization\`."""
+  """Reads a single \`User\` that is related to this \`Member\`."""
   user: User
 }
 
@@ -6660,8 +6648,8 @@ type User {
     filter: UpvoteFilter
   ): UpvoteConnection!
 
-  """Reads and enables pagination through a set of \`UserOrganization\`."""
-  userOrganizations(
+  """Reads and enables pagination through a set of \`Member\`."""
+  members(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -6680,19 +6668,19 @@ type User {
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
+    """The method to use when ordering \`Member\`."""
+    orderBy: [MemberOrderBy!] = [PRIMARY_KEY_ASC]
 
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: UserOrganizationCondition
+    condition: MemberCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: UserOrganizationFilter
-  ): UserOrganizationConnection!
+    filter: MemberFilter
+  ): MemberConnection!
 
   """Reads and enables pagination through a set of \`Comment\`."""
   comments(
@@ -7187,8 +7175,8 @@ input UpvoteCondition {
   updatedAt: Datetime
 }
 
-"""Methods to use when ordering \`UserOrganization\`."""
-enum UserOrganizationOrderBy {
+"""Methods to use when ordering \`Member\`."""
+enum MemberOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -7205,10 +7193,9 @@ enum UserOrganizationOrderBy {
 }
 
 """
-A condition to be used against \`UserOrganization\` object types. All fields are
-tested for equality and combined with a logical ‘and.’
+A condition to be used against \`Member\` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
-input UserOrganizationCondition {
+input MemberCondition {
   """Checks for equality with the object’s \`userId\` field."""
   userId: UUID
 
@@ -7604,25 +7591,25 @@ input DownvoteCondition {
   updatedAt: Datetime
 }
 
-"""A \`UserOrganization\` edge in the connection."""
-type UserOrganizationEdge {
+"""A \`Member\` edge in the connection."""
+type MemberEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
-  """The \`UserOrganization\` at the end of the edge."""
-  node: UserOrganization
+  """The \`Member\` at the end of the edge."""
+  node: Member
 }
 
-type UserOrganizationAggregates {
+type MemberAggregates {
   keys: [String]
 
   """
   Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  distinctCount: UserOrganizationDistinctCountAggregates
+  distinctCount: MemberDistinctCountAggregates
 }
 
-type UserOrganizationDistinctCountAggregates {
+type MemberDistinctCountAggregates {
   """Distinct count of userId across the matching connection"""
   userId: BigInt
 
@@ -7639,8 +7626,8 @@ type UserOrganizationDistinctCountAggregates {
   rowId: BigInt
 }
 
-"""Grouping methods for \`UserOrganization\` for usage during aggregation."""
-enum UserOrganizationGroupBy {
+"""Grouping methods for \`Member\` for usage during aggregation."""
+enum MemberGroupBy {
   USER_ID
   ORGANIZATION_ID
   CREATED_AT
@@ -7649,54 +7636,54 @@ enum UserOrganizationGroupBy {
   ROLE
 }
 
-"""Conditions for \`UserOrganization\` aggregates."""
-input UserOrganizationHavingInput {
-  AND: [UserOrganizationHavingInput!]
-  OR: [UserOrganizationHavingInput!]
-  sum: UserOrganizationHavingSumInput
-  distinctCount: UserOrganizationHavingDistinctCountInput
-  min: UserOrganizationHavingMinInput
-  max: UserOrganizationHavingMaxInput
-  average: UserOrganizationHavingAverageInput
-  stddevSample: UserOrganizationHavingStddevSampleInput
-  stddevPopulation: UserOrganizationHavingStddevPopulationInput
-  varianceSample: UserOrganizationHavingVarianceSampleInput
-  variancePopulation: UserOrganizationHavingVariancePopulationInput
+"""Conditions for \`Member\` aggregates."""
+input MemberHavingInput {
+  AND: [MemberHavingInput!]
+  OR: [MemberHavingInput!]
+  sum: MemberHavingSumInput
+  distinctCount: MemberHavingDistinctCountInput
+  min: MemberHavingMinInput
+  max: MemberHavingMaxInput
+  average: MemberHavingAverageInput
+  stddevSample: MemberHavingStddevSampleInput
+  stddevPopulation: MemberHavingStddevPopulationInput
+  varianceSample: MemberHavingVarianceSampleInput
+  variancePopulation: MemberHavingVariancePopulationInput
 }
 
-input UserOrganizationHavingSumInput {
+input MemberHavingSumInput {
   createdAt: HavingDatetimeFilter
 }
 
-input UserOrganizationHavingDistinctCountInput {
+input MemberHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
 }
 
-input UserOrganizationHavingMinInput {
+input MemberHavingMinInput {
   createdAt: HavingDatetimeFilter
 }
 
-input UserOrganizationHavingMaxInput {
+input MemberHavingMaxInput {
   createdAt: HavingDatetimeFilter
 }
 
-input UserOrganizationHavingAverageInput {
+input MemberHavingAverageInput {
   createdAt: HavingDatetimeFilter
 }
 
-input UserOrganizationHavingStddevSampleInput {
+input MemberHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
 }
 
-input UserOrganizationHavingStddevPopulationInput {
+input MemberHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
 }
 
-input UserOrganizationHavingVarianceSampleInput {
+input MemberHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
 }
 
-input UserOrganizationHavingVariancePopulationInput {
+input MemberHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
 }
 
@@ -7871,18 +7858,18 @@ enum OrganizationOrderBy {
   PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC
   PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC
   PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC
-  USER_ORGANIZATIONS_COUNT_ASC
-  USER_ORGANIZATIONS_COUNT_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC
+  MEMBERS_COUNT_ASC
+  MEMBERS_COUNT_DESC
+  MEMBERS_DISTINCT_COUNT_USER_ID_ASC
+  MEMBERS_DISTINCT_COUNT_USER_ID_DESC
+  MEMBERS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  MEMBERS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  MEMBERS_DISTINCT_COUNT_CREATED_AT_ASC
+  MEMBERS_DISTINCT_COUNT_CREATED_AT_DESC
+  MEMBERS_DISTINCT_COUNT_ROLE_ASC
+  MEMBERS_DISTINCT_COUNT_ROLE_DESC
+  MEMBERS_DISTINCT_COUNT_ROW_ID_ASC
+  MEMBERS_DISTINCT_COUNT_ROW_ID_DESC
 }
 
 """
@@ -8099,18 +8086,18 @@ enum UserOrderBy {
   UPVOTES_DISTINCT_COUNT_CREATED_AT_DESC
   UPVOTES_DISTINCT_COUNT_UPDATED_AT_ASC
   UPVOTES_DISTINCT_COUNT_UPDATED_AT_DESC
-  USER_ORGANIZATIONS_COUNT_ASC
-  USER_ORGANIZATIONS_COUNT_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC
+  MEMBERS_COUNT_ASC
+  MEMBERS_COUNT_DESC
+  MEMBERS_DISTINCT_COUNT_USER_ID_ASC
+  MEMBERS_DISTINCT_COUNT_USER_ID_DESC
+  MEMBERS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  MEMBERS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  MEMBERS_DISTINCT_COUNT_CREATED_AT_ASC
+  MEMBERS_DISTINCT_COUNT_CREATED_AT_DESC
+  MEMBERS_DISTINCT_COUNT_ROLE_ASC
+  MEMBERS_DISTINCT_COUNT_ROLE_DESC
+  MEMBERS_DISTINCT_COUNT_ROW_ID_ASC
+  MEMBERS_DISTINCT_COUNT_ROW_ID_DESC
   COMMENTS_COUNT_ASC
   COMMENTS_COUNT_DESC
   COMMENTS_DISTINCT_COUNT_ROW_ID_ASC
@@ -8225,13 +8212,13 @@ type Mutation {
     input: CreateProjectInput!
   ): CreateProjectPayload
 
-  """Creates a single \`UserOrganization\`."""
-  createUserOrganization(
+  """Creates a single \`Member\`."""
+  createMember(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateUserOrganizationInput!
-  ): CreateUserOrganizationPayload
+    input: CreateMemberInput!
+  ): CreateMemberPayload
 
   """Updates a single \`Downvote\` using a unique key and a patch."""
   updateDownvote(
@@ -8289,13 +8276,13 @@ type Mutation {
     input: UpdateProjectInput!
   ): UpdateProjectPayload
 
-  """Updates a single \`UserOrganization\` using a unique key and a patch."""
-  updateUserOrganization(
+  """Updates a single \`Member\` using a unique key and a patch."""
+  updateMember(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateUserOrganizationInput!
-  ): UpdateUserOrganizationPayload
+    input: UpdateMemberInput!
+  ): UpdateMemberPayload
 
   """Deletes a single \`Downvote\` using a unique key."""
   deleteDownvote(
@@ -8353,13 +8340,13 @@ type Mutation {
     input: DeleteProjectInput!
   ): DeleteProjectPayload
 
-  """Deletes a single \`UserOrganization\` using a unique key."""
-  deleteUserOrganization(
+  """Deletes a single \`Member\` using a unique key."""
+  deleteMember(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteUserOrganizationInput!
-  ): DeleteUserOrganizationPayload
+    input: DeleteMemberInput!
+  ): DeleteMemberPayload
 }
 
 """The output of our create \`Downvote\` mutation."""
@@ -8678,43 +8665,43 @@ input ProjectInput {
   updatedAt: Datetime
 }
 
-"""The output of our create \`UserOrganization\` mutation."""
-type CreateUserOrganizationPayload {
+"""The output of our create \`Member\` mutation."""
+type CreateMemberPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`UserOrganization\` that was created by this mutation."""
-  userOrganization: UserOrganization
+  """The \`Member\` that was created by this mutation."""
+  member: Member
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
+  """An edge for our \`Member\`. May be used by Relay 1."""
+  memberEdge(
+    """The method to use when ordering \`Member\`."""
+    orderBy: [MemberOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): MemberEdge
 }
 
-"""All input for the create \`UserOrganization\` mutation."""
-input CreateUserOrganizationInput {
+"""All input for the create \`Member\` mutation."""
+input CreateMemberInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The \`UserOrganization\` to be created by this mutation."""
-  userOrganization: UserOrganizationInput!
+  """The \`Member\` to be created by this mutation."""
+  member: MemberInput!
 }
 
-"""An input for mutations affecting \`UserOrganization\`"""
-input UserOrganizationInput {
+"""An input for mutations affecting \`Member\`"""
+input MemberInput {
   userId: UUID!
   organizationId: UUID!
   createdAt: Datetime
@@ -9069,31 +9056,31 @@ input ProjectPatch {
   updatedAt: Datetime
 }
 
-"""The output of our update \`UserOrganization\` mutation."""
-type UpdateUserOrganizationPayload {
+"""The output of our update \`Member\` mutation."""
+type UpdateMemberPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`UserOrganization\` that was updated by this mutation."""
-  userOrganization: UserOrganization
+  """The \`Member\` that was updated by this mutation."""
+  member: Member
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
+  """An edge for our \`Member\`. May be used by Relay 1."""
+  memberEdge(
+    """The method to use when ordering \`Member\`."""
+    orderBy: [MemberOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): MemberEdge
 }
 
-"""All input for the \`updateUserOrganization\` mutation."""
-input UpdateUserOrganizationInput {
+"""All input for the \`updateMember\` mutation."""
+input UpdateMemberInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -9102,15 +9089,15 @@ input UpdateUserOrganizationInput {
   rowId: UUID!
 
   """
-  An object where the defined keys will be set on the \`UserOrganization\` being updated.
+  An object where the defined keys will be set on the \`Member\` being updated.
   """
-  patch: UserOrganizationPatch!
+  patch: MemberPatch!
 }
 
 """
-Represents an update to a \`UserOrganization\`. Fields that are set will be updated.
+Represents an update to a \`Member\`. Fields that are set will be updated.
 """
-input UserOrganizationPatch {
+input MemberPatch {
   userId: UUID
   organizationId: UUID
   createdAt: Datetime
@@ -9349,31 +9336,31 @@ input DeleteProjectInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`UserOrganization\` mutation."""
-type DeleteUserOrganizationPayload {
+"""The output of our delete \`Member\` mutation."""
+type DeleteMemberPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`UserOrganization\` that was deleted by this mutation."""
-  userOrganization: UserOrganization
+  """The \`Member\` that was deleted by this mutation."""
+  member: Member
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
+  """An edge for our \`Member\`. May be used by Relay 1."""
+  memberEdge(
+    """The method to use when ordering \`Member\`."""
+    orderBy: [MemberOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): MemberEdge
 }
 
-"""All input for the \`deleteUserOrganization\` mutation."""
-input DeleteUserOrganizationInput {
+"""All input for the \`deleteMember\` mutation."""
+input DeleteMemberInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -9557,9 +9544,9 @@ export const plans = {
         organizationId: undefined
       }
     },
-    userOrganization: {
+    member: {
       plan(_$root, args) {
-        return resource_user_organizationPgResource.get({
+        return resource_memberPgResource.get({
           id: args.get("rowId")
         });
       },
@@ -9567,9 +9554,9 @@ export const plans = {
         rowId: undefined
       }
     },
-    userOrganizationByUserIdAndOrganizationId: {
+    memberByUserIdAndOrganizationId: {
       plan(_$root, args) {
-        return resource_user_organizationPgResource.get({
+        return resource_memberPgResource.get({
           user_id: args.get("userId"),
           organization_id: args.get("organizationId")
         });
@@ -10020,9 +10007,9 @@ export const plans = {
         }
       }
     },
-    userOrganizations: {
+    members: {
       plan() {
-        return connection(resource_user_organizationPgResource.find());
+        return connection(resource_memberPgResource.find());
       },
       args: {
         first: {
@@ -10060,7 +10047,7 @@ export const plans = {
           applyPlan(_, $connection, val, info) {
             const $value = val.getRaw(),
               $select = $connection.getSubplan();
-            applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
+            applyOrderToPlan($select, $value, info.schema.getType("MemberOrderBy"));
             return null;
           }
         },
@@ -10543,9 +10530,9 @@ export const plans = {
         }
       }
     },
-    userOrganizations: {
+    members: {
       plan($record) {
-        const $records = resource_user_organizationPgResource.find({
+        const $records = resource_memberPgResource.find({
           organization_id: $record.get("id")
         });
         return connection($records);
@@ -10586,7 +10573,7 @@ export const plans = {
           applyPlan(_, $connection, val, info) {
             const $value = val.getRaw(),
               $select = $connection.getSubplan();
-            applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
+            applyOrderToPlan($select, $value, info.schema.getType("MemberOrderBy"));
             return null;
           }
         },
@@ -14138,29 +14125,29 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
-    userOrganizations: {
+    members: {
       applyPlan($where, fieldArgs) {
         assertAllowed25(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
-          tableExpression: userOrganizationIdentifier,
-          alias: resource_user_organizationPgResource.name,
-          localAttributes: registryConfig.pgRelations.user.userOrganizationsByTheirUserId.localAttributes,
-          remoteAttributes: registryConfig.pgRelations.user.userOrganizationsByTheirUserId.remoteAttributes
+          tableExpression: memberIdentifier,
+          alias: resource_memberPgResource.name,
+          localAttributes: registryConfig.pgRelations.user.membersByTheirUserId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.user.membersByTheirUserId.remoteAttributes
         };
         fieldArgs.apply($rel);
       }
     },
-    userOrganizationsExist: {
+    membersExist: {
       applyPlan($where, fieldArgs) {
         assertAllowed25(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
-          tableExpression: userOrganizationIdentifier,
-          alias: resource_user_organizationPgResource.name,
+          tableExpression: memberIdentifier,
+          alias: resource_memberPgResource.name,
           $equals: fieldArgs.get()
         });
-        registryConfig.pgRelations.user.userOrganizationsByTheirUserId.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = registryConfig.pgRelations.user.userOrganizationsByTheirUserId.remoteAttributes[i];
+        registryConfig.pgRelations.user.membersByTheirUserId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.user.membersByTheirUserId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       }
@@ -14862,7 +14849,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
-  UserToManyUserOrganizationFilter: {
+  UserToManyMemberFilter: {
     every: {
       applyPlan($where, fieldArgs) {
         assertAllowed29(fieldArgs, "object");
@@ -14948,7 +14935,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
-  UserOrganizationFilter: {
+  MemberFilter: {
     userId: {
       applyPlan($where, fieldArgs) {
         const $raw = fieldArgs.getRaw();
@@ -15011,8 +14998,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           tableExpression: organizationIdentifier,
           alias: resource_organizationPgResource.name
         });
-        registryConfig.pgRelations.userOrganization.organizationByMyOrganizationId.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = registryConfig.pgRelations.userOrganization.organizationByMyOrganizationId.remoteAttributes[i];
+        registryConfig.pgRelations.member.organizationByMyOrganizationId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.member.organizationByMyOrganizationId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
         fieldArgs.apply($subQuery);
@@ -15025,8 +15012,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           tableExpression: userIdentifier,
           alias: resource_userPgResource.name
         });
-        registryConfig.pgRelations.userOrganization.userByMyUserId.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = registryConfig.pgRelations.userOrganization.userByMyUserId.remoteAttributes[i];
+        registryConfig.pgRelations.member.userByMyUserId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.member.userByMyUserId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
         fieldArgs.apply($subQuery);
@@ -15436,29 +15423,29 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
-    userOrganizations: {
+    members: {
       applyPlan($where, fieldArgs) {
         assertAllowed32(fieldArgs, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
-          tableExpression: userOrganizationIdentifier,
-          alias: resource_user_organizationPgResource.name,
-          localAttributes: registryConfig.pgRelations.organization.userOrganizationsByTheirOrganizationId.localAttributes,
-          remoteAttributes: registryConfig.pgRelations.organization.userOrganizationsByTheirOrganizationId.remoteAttributes
+          tableExpression: memberIdentifier,
+          alias: resource_memberPgResource.name,
+          localAttributes: registryConfig.pgRelations.organization.membersByTheirOrganizationId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.organization.membersByTheirOrganizationId.remoteAttributes
         };
         fieldArgs.apply($rel);
       }
     },
-    userOrganizationsExist: {
+    membersExist: {
       applyPlan($where, fieldArgs) {
         assertAllowed32(fieldArgs, "scalar");
         const $subQuery = $where.existsPlan({
-          tableExpression: userOrganizationIdentifier,
-          alias: resource_user_organizationPgResource.name,
+          tableExpression: memberIdentifier,
+          alias: resource_memberPgResource.name,
           $equals: fieldArgs.get()
         });
-        registryConfig.pgRelations.organization.userOrganizationsByTheirOrganizationId.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = registryConfig.pgRelations.organization.userOrganizationsByTheirOrganizationId.remoteAttributes[i];
+        registryConfig.pgRelations.organization.membersByTheirOrganizationId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.organization.membersByTheirOrganizationId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       }
@@ -15666,7 +15653,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
-  OrganizationToManyUserOrganizationFilter: {
+  OrganizationToManyMemberFilter: {
     every: {
       applyPlan($where, fieldArgs) {
         assertAllowed35(fieldArgs, "object");
@@ -15752,7 +15739,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
-  UserOrganizationAggregatesFilter: {
+  MemberAggregatesFilter: {
     filter: {
       applyPlan($subquery, fieldArgs) {
         const $condition = new PgConditionStep($subquery, !1, "AND");
@@ -15765,13 +15752,13 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
-  UserOrganizationDistinctCountAggregateFilter: {
+  MemberDistinctCountAggregateFilter: {
     userId: {
       applyPlan($parent, fieldArgs) {
         const $col = new PgConditionStep($parent);
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
-          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("user_id")}`, spec_userOrganization.attributes.user_id.codec)
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("user_id")}`, spec_member.attributes.user_id.codec)
         };
         fieldArgs.apply($col);
       }
@@ -15781,7 +15768,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $col = new PgConditionStep($parent);
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
-          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("organization_id")}`, spec_userOrganization.attributes.organization_id.codec)
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("organization_id")}`, spec_member.attributes.organization_id.codec)
         };
         fieldArgs.apply($col);
       }
@@ -15791,7 +15778,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $col = new PgConditionStep($parent);
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
-          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_userOrganization.attributes.created_at.codec)
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_member.attributes.created_at.codec)
         };
         fieldArgs.apply($col);
       }
@@ -15801,7 +15788,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $col = new PgConditionStep($parent);
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
-          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("role")}`, spec_userOrganization.attributes.role.codec)
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("role")}`, spec_member.attributes.role.codec)
         };
         fieldArgs.apply($col);
       }
@@ -15811,7 +15798,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const $col = new PgConditionStep($parent);
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
-          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_userOrganization.attributes.id.codec)
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_member.attributes.id.codec)
         };
         fieldArgs.apply($col);
       }
@@ -16524,7 +16511,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
-  UserOrganizationConnection: {
+  MemberConnection: {
     __assertStep: ConnectionStep,
     nodes($connection) {
       return $connection.nodes();
@@ -16553,7 +16540,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
             const val = input.getRaw().eval();
             if (!Array.isArray(val)) throw new Error("Invalid!");
             for (const group of val) {
-              const config = getEnumValueConfig(UserOrganizationGroupBy, group),
+              const config = getEnumValueConfig(MemberGroupBy, group),
                 plan = (_b = (_a = config === null || config === void 0 ? void 0 : config.extensions) === null || _a === void 0 ? void 0 : _a.grafast) === null || _b === void 0 ? void 0 : _b.applyPlan;
               if (typeof plan === "function") plan($pgSelect);
             }
@@ -16569,7 +16556,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
-  UserOrganization: {
+  Member: {
     __assertStep: assertPgClassSingleStep,
     userId($record) {
       return $record.get("user_id");
@@ -16752,9 +16739,9 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    userOrganizations: {
+    members: {
       plan($record) {
-        const $records = resource_user_organizationPgResource.find({
+        const $records = resource_memberPgResource.find({
           user_id: $record.get("id")
         });
         return connection($records);
@@ -16795,7 +16782,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           applyPlan(_, $connection, val, info) {
             const $value = val.getRaw(),
               $select = $connection.getSubplan();
-            applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
+            applyOrderToPlan($select, $value, info.schema.getType("MemberOrderBy"));
             return null;
           }
         },
@@ -19079,14 +19066,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UserOrganizationOrderBy: {
+  MemberOrderBy: {
     NATURAL: {
       applyPlan() {}
     },
     PRIMARY_KEY_ASC: {
       applyPlan(step) {
-        user_organizationUniques[0].attributes.forEach(attributeName => {
-          const attribute = userOrganizationCodec.attributes[attributeName];
+        memberUniques[0].attributes.forEach(attributeName => {
+          const attribute = memberCodec.attributes[attributeName];
           step.orderBy({
             codec: attribute.codec,
             fragment: sql`${step}.${sql.identifier(attributeName)}`,
@@ -19101,8 +19088,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     PRIMARY_KEY_DESC: {
       applyPlan(step) {
-        user_organizationUniques[0].attributes.forEach(attributeName => {
-          const attribute = userOrganizationCodec.attributes[attributeName];
+        memberUniques[0].attributes.forEach(attributeName => {
+          const attribute = memberCodec.attributes[attributeName];
           step.orderBy({
             codec: attribute.codec,
             fragment: sql`${step}.${sql.identifier(attributeName)}`,
@@ -19246,7 +19233,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
-  UserOrganizationCondition: {
+  MemberCondition: {
     userId: {
       applyPlan($condition, val) {
         if (val.getRaw().evalIs(null)) $condition.where({
@@ -19259,7 +19246,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           type: "attribute",
           attribute: "user_id",
           callback(expression) {
-            return sql`${expression} = ${$condition.placeholder(val.get(), spec_userOrganization.attributes.user_id.codec)}`;
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_member.attributes.user_id.codec)}`;
           }
         });
       },
@@ -19278,7 +19265,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return sql`${expression} = ${$condition.placeholder(val.get(), spec_userOrganization.attributes.organization_id.codec)}`;
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_member.attributes.organization_id.codec)}`;
           }
         });
       },
@@ -19297,7 +19284,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           type: "attribute",
           attribute: "created_at",
           callback(expression) {
-            return sql`${expression} = ${$condition.placeholder(val.get(), spec_userOrganization.attributes.created_at.codec)}`;
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_member.attributes.created_at.codec)}`;
           }
         });
       },
@@ -19316,7 +19303,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           type: "attribute",
           attribute: "role",
           callback(expression) {
-            return sql`${expression} = ${$condition.placeholder(val.get(), spec_userOrganization.attributes.role.codec)}`;
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_member.attributes.role.codec)}`;
           }
         });
       },
@@ -19335,7 +19322,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           type: "attribute",
           attribute: "id",
           callback(expression) {
-            return sql`${expression} = ${$condition.placeholder(val.get(), spec_userOrganization.attributes.id.codec)}`;
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_member.attributes.id.codec)}`;
           }
         });
       },
@@ -20597,7 +20584,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UserOrganizationEdge: {
+  MemberEdge: {
     __assertStep: assertEdgeCapableStep,
     cursor($edge) {
       return $edge.cursor();
@@ -20606,7 +20593,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $edge.node();
     }
   },
-  UserOrganizationAggregates: {
+  MemberAggregates: {
     __assertStep: assertPgClassSingleStep,
     keys($pgSelectSingle) {
       const groups = $pgSelectSingle.getClassStep().getGroups();
@@ -20616,7 +20603,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $pgSelectSingle;
     }
   },
-  UserOrganizationDistinctCountAggregates: {
+  MemberDistinctCountAggregates: {
     userId($pgSelectSingle) {
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("user_id")}`,
         sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
@@ -20643,27 +20630,27 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
-  UserOrganizationGroupBy: {
+  MemberGroupBy: {
     USER_ID: {
-      applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan
+      applyPlan: MemberGroupBy_extensions_grafast_applyPlan
     },
     ORGANIZATION_ID: {
-      applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan2
+      applyPlan: MemberGroupBy_extensions_grafast_applyPlan2
     },
     CREATED_AT: {
-      applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan3
+      applyPlan: MemberGroupBy_extensions_grafast_applyPlan3
     },
     CREATED_AT_TRUNCATED_TO_HOUR: {
-      applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan4
+      applyPlan: MemberGroupBy_extensions_grafast_applyPlan4
     },
     CREATED_AT_TRUNCATED_TO_DAY: {
-      applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan5
+      applyPlan: MemberGroupBy_extensions_grafast_applyPlan5
     },
     ROLE: {
-      applyPlan: UserOrganizationGroupBy_extensions_grafast_applyPlan6
+      applyPlan: MemberGroupBy_extensions_grafast_applyPlan6
     }
   },
-  UserOrganizationHavingInput: {
+  MemberHavingInput: {
     AND: {
       applyPlan($where, input) {
         input.apply($where);
@@ -20723,83 +20710,83 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
-  UserOrganizationHavingSumInput: {
+  MemberHavingSumInput: {
     createdAt: {
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_userOrganization.attributes.created_at.codec);
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_member.attributes.created_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
   },
-  UserOrganizationHavingDistinctCountInput: {
+  MemberHavingDistinctCountInput: {
     createdAt: {
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_userOrganization.attributes.created_at.codec);
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_member.attributes.created_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
   },
-  UserOrganizationHavingMinInput: {
+  MemberHavingMinInput: {
     createdAt: {
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_userOrganization.attributes.created_at.codec);
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_member.attributes.created_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
   },
-  UserOrganizationHavingMaxInput: {
+  MemberHavingMaxInput: {
     createdAt: {
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_userOrganization.attributes.created_at.codec);
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_member.attributes.created_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
   },
-  UserOrganizationHavingAverageInput: {
+  MemberHavingAverageInput: {
     createdAt: {
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_userOrganization.attributes.created_at.codec);
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_member.attributes.created_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
   },
-  UserOrganizationHavingStddevSampleInput: {
+  MemberHavingStddevSampleInput: {
     createdAt: {
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_userOrganization.attributes.created_at.codec);
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_member.attributes.created_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
   },
-  UserOrganizationHavingStddevPopulationInput: {
+  MemberHavingStddevPopulationInput: {
     createdAt: {
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_userOrganization.attributes.created_at.codec);
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_member.attributes.created_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
   },
-  UserOrganizationHavingVarianceSampleInput: {
+  MemberHavingVarianceSampleInput: {
     createdAt: {
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_userOrganization.attributes.created_at.codec);
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_member.attributes.created_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
   },
-  UserOrganizationHavingVariancePopulationInput: {
+  MemberHavingVariancePopulationInput: {
     createdAt: {
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_userOrganization.attributes.created_at.codec);
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_member.attributes.created_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
@@ -21677,18 +21664,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
-    USER_ORGANIZATIONS_COUNT_ASC: {
+    MEMBERS_COUNT_ASC: {
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -21697,18 +21684,18 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         });
       }
     },
-    USER_ORGANIZATIONS_COUNT_DESC: {
+    MEMBERS_COUNT_DESC: {
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -21717,222 +21704,222 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_ASC: {
+    MEMBERS_DISTINCT_COUNT_USER_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_userOrganization.attributes.user_id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_member.attributes.user_id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.user_id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.user_id.codec,
           direction: "ASC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_DESC: {
+    MEMBERS_DISTINCT_COUNT_USER_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_userOrganization.attributes.user_id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_member.attributes.user_id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.user_id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.user_id.codec,
           direction: "DESC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC: {
+    MEMBERS_DISTINCT_COUNT_ORGANIZATION_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_userOrganization.attributes.organization_id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_member.attributes.organization_id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.organization_id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.organization_id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.organization_id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.organization_id.codec,
           direction: "ASC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC: {
+    MEMBERS_DISTINCT_COUNT_ORGANIZATION_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_userOrganization.attributes.organization_id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_member.attributes.organization_id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.organization_id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.organization_id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.organization_id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.organization_id.codec,
           direction: "DESC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_ASC: {
+    MEMBERS_DISTINCT_COUNT_CREATED_AT_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_userOrganization.attributes.created_at.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_member.attributes.created_at.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.created_at.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.created_at.codec,
           direction: "ASC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC: {
+    MEMBERS_DISTINCT_COUNT_CREATED_AT_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_userOrganization.attributes.created_at.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_member.attributes.created_at.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.created_at.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.created_at.codec,
           direction: "DESC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_ASC: {
+    MEMBERS_DISTINCT_COUNT_ROLE_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_userOrganization.attributes.role.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_member.attributes.role.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.role.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.role.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.role.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.role.codec,
           direction: "ASC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_DESC: {
+    MEMBERS_DISTINCT_COUNT_ROLE_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_userOrganization.attributes.role.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_member.attributes.role.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.role.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.role.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.role.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.role.codec,
           direction: "DESC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC: {
+    MEMBERS_DISTINCT_COUNT_ROW_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_userOrganization.attributes.id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_member.attributes.id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.id.codec,
           direction: "ASC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC: {
+    MEMBERS_DISTINCT_COUNT_ROW_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation6.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_userOrganization.attributes.id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_member.attributes.id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.id.codec,
           direction: "DESC"
         });
       }
@@ -23192,18 +23179,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
-    USER_ORGANIZATIONS_COUNT_ASC: {
+    MEMBERS_COUNT_ASC: {
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -23212,18 +23199,18 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         });
       }
     },
-    USER_ORGANIZATIONS_COUNT_DESC: {
+    MEMBERS_COUNT_DESC: {
       applyPlan($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`select count(*)
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         $select.orderBy({
           fragment,
@@ -23232,222 +23219,222 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_ASC: {
+    MEMBERS_DISTINCT_COUNT_USER_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_userOrganization.attributes.user_id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_member.attributes.user_id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.user_id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.user_id.codec,
           direction: "ASC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_DESC: {
+    MEMBERS_DISTINCT_COUNT_USER_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_userOrganization.attributes.user_id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_member.attributes.user_id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.user_id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.user_id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.user_id.codec,
           direction: "DESC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC: {
+    MEMBERS_DISTINCT_COUNT_ORGANIZATION_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_userOrganization.attributes.organization_id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_member.attributes.organization_id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.organization_id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.organization_id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.organization_id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.organization_id.codec,
           direction: "ASC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC: {
+    MEMBERS_DISTINCT_COUNT_ORGANIZATION_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_userOrganization.attributes.organization_id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_member.attributes.organization_id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.organization_id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.organization_id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.organization_id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.organization_id.codec,
           direction: "DESC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_ASC: {
+    MEMBERS_DISTINCT_COUNT_CREATED_AT_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_userOrganization.attributes.created_at.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_member.attributes.created_at.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.created_at.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.created_at.codec,
           direction: "ASC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC: {
+    MEMBERS_DISTINCT_COUNT_CREATED_AT_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_userOrganization.attributes.created_at.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_member.attributes.created_at.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.created_at.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.created_at.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.created_at.codec,
           direction: "DESC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_ASC: {
+    MEMBERS_DISTINCT_COUNT_ROLE_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_userOrganization.attributes.role.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_member.attributes.role.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.role.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.role.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.role.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.role.codec,
           direction: "ASC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_DESC: {
+    MEMBERS_DISTINCT_COUNT_ROLE_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_userOrganization.attributes.role.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_member.attributes.role.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.role.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.role.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.role.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.role.codec,
           direction: "DESC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC: {
+    MEMBERS_DISTINCT_COUNT_ROW_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_userOrganization.attributes.id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_member.attributes.id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.id.codec,
           direction: "ASC"
         });
       }
     },
-    USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC: {
+    MEMBERS_DISTINCT_COUNT_ROW_ID_DESC: {
       applyPlan($select) {
         var _a, _b;
         const foreignTableAlias = $select.alias,
           conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
+          tableAlias = sql.identifier(Symbol(resource_memberPgResource.name));
         relation9.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
-        if (typeof resource_user_organizationPgResource.from === "function") throw new Error("Function source unsupported");
+        if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
         const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_userOrganization.attributes.id.codec)}
-from ${resource_user_organizationPgResource.from} ${tableAlias}
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_member.attributes.id.codec)}
+from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_userOrganization.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_userOrganization.attributes.id.codec,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_member.attributes.id.codec)) !== null && _b !== void 0 ? _b : spec_member.attributes.id.codec,
           direction: "DESC"
         });
       }
@@ -24282,12 +24269,12 @@ ${String(oldPlan)}`);
         }
       }
     },
-    createUserOrganization: {
+    createMember: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan2(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"createUserOrganization"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"createMember"}, but that function did not return a step!
 ${String(oldPlan2)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -24483,12 +24470,12 @@ ${String(oldPlan9)}`);
         }
       }
     },
-    updateUserOrganization: {
+    updateMember: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan10(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUserOrganization"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateMember"}, but that function did not return a step!
 ${String(oldPlan10)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -24683,12 +24670,12 @@ ${String(oldPlan17)}`);
         }
       }
     },
-    deleteUserOrganization: {
+    deleteMember: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan18(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUserOrganization"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteMember"}, but that function did not return a step!
 ${String(oldPlan18)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -25388,32 +25375,32 @@ ${String(oldPlan18)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  CreateUserOrganizationPayload: {
+  CreateMemberPayload: {
     __assertStep: assertExecutableStep,
     clientMutationId($mutation) {
       return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
     },
-    userOrganization($object) {
+    member($object) {
       return $object.get("result");
     },
     query() {
       return rootValue();
     },
-    userOrganizationEdge: {
+    memberEdge: {
       plan($mutation, args, info) {
         const $result = $mutation.getStepForKey("result", !0);
         if (!$result) return constant(null);
         const $select = (() => {
             if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-              const spec = user_organizationUniques[0].attributes.reduce((memo, attributeName) => {
+              const spec = memberUniques[0].attributes.reduce((memo, attributeName) => {
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return resource_user_organizationPgResource.find(spec);
+              return resource_memberPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
-        applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
+        applyOrderToPlan($select, $value, info.schema.getType("MemberOrderBy"));
         const $connection = connection($select),
           $single = $select.row(first($select));
         return new EdgeStep($connection, $single);
@@ -25423,22 +25410,22 @@ ${String(oldPlan18)}`);
       }
     }
   },
-  CreateUserOrganizationInput: {
+  CreateMemberInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
       },
       autoApplyAfterParentApplyPlan: true
     },
-    userOrganization: {
+    member: {
       applyPlan($object) {
         return $object.getStepForKey("result").setPlan();
       },
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UserOrganizationInput: {
-    "__inputPlan": function UserOrganizationInput_inputPlan() {
+  MemberInput: {
+    "__inputPlan": function MemberInput_inputPlan() {
       return object(Object.create(null));
     },
     userId: {
@@ -26149,32 +26136,32 @@ ${String(oldPlan18)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateUserOrganizationPayload: {
+  UpdateMemberPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
       return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
     },
-    userOrganization($object) {
+    member($object) {
       return $object.get("result");
     },
     query() {
       return rootValue();
     },
-    userOrganizationEdge: {
+    memberEdge: {
       plan($mutation, args, info) {
         const $result = $mutation.getStepForKey("result", !0);
         if (!$result) return constant(null);
         const $select = (() => {
             if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-              const spec = user_organizationUniques[0].attributes.reduce((memo, attributeName) => {
+              const spec = memberUniques[0].attributes.reduce((memo, attributeName) => {
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return resource_user_organizationPgResource.find(spec);
+              return resource_memberPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
-        applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
+        applyOrderToPlan($select, $value, info.schema.getType("MemberOrderBy"));
         const $connection = connection($select),
           $single = $select.row(first($select));
         return new EdgeStep($connection, $single);
@@ -26184,7 +26171,7 @@ ${String(oldPlan18)}`);
       }
     }
   },
-  UpdateUserOrganizationInput: {
+  UpdateMemberInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());
@@ -26197,8 +26184,8 @@ ${String(oldPlan18)}`);
       }
     }
   },
-  UserOrganizationPatch: {
-    "__inputPlan": function UserOrganizationPatch_inputPlan() {
+  MemberPatch: {
+    "__inputPlan": function MemberPatch_inputPlan() {
       return object(Object.create(null));
     },
     userId: {
@@ -26538,32 +26525,32 @@ ${String(oldPlan18)}`);
     },
     rowId: undefined
   },
-  DeleteUserOrganizationPayload: {
+  DeleteMemberPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
       return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
     },
-    userOrganization($object) {
+    member($object) {
       return $object.get("result");
     },
     query() {
       return rootValue();
     },
-    userOrganizationEdge: {
+    memberEdge: {
       plan($mutation, args, info) {
         const $result = $mutation.getStepForKey("result", !0);
         if (!$result) return constant(null);
         const $select = (() => {
             if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-              const spec = user_organizationUniques[0].attributes.reduce((memo, attributeName) => {
+              const spec = memberUniques[0].attributes.reduce((memo, attributeName) => {
                 memo[attributeName] = $result.get(attributeName);
                 return memo;
               }, Object.create(null));
-              return resource_user_organizationPgResource.find(spec);
+              return resource_memberPgResource.find(spec);
             }
           })(),
           $value = args.getRaw("orderBy");
-        applyOrderToPlan($select, $value, info.schema.getType("UserOrganizationOrderBy"));
+        applyOrderToPlan($select, $value, info.schema.getType("MemberOrderBy"));
         const $connection = connection($select),
           $single = $select.row(first($select));
         return new EdgeStep($connection, $single);
@@ -26573,7 +26560,7 @@ ${String(oldPlan18)}`);
       }
     }
   },
-  DeleteUserOrganizationInput: {
+  DeleteMemberInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());

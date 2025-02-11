@@ -14,13 +14,13 @@ const validatePermissions = (propName: string) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $upvoteId = fieldArgs.getRaw(["input", propName]);
-        const $observer = context<GraphQLContext>().get("observer");
+        const $currentUser = context<GraphQLContext>().get("currentUser");
         const $db = context<GraphQLContext>().get("db");
 
         sideEffect(
-          [$upvoteId, $observer, $db],
-          async ([upvoteId, observer, db]) => {
-            if (!observer) {
+          [$upvoteId, $currentUser, $db],
+          async ([upvoteId, currentUser, db]) => {
+            if (!currentUser) {
               throw new Error("Unauthorized");
             }
 
@@ -32,7 +32,7 @@ const validatePermissions = (propName: string) =>
               .where(eq(upvotes.id, upvoteId as string));
 
             // Only allow the user who upvoted to update or delete their own upvote
-            if (observer.id !== upvote.userId) {
+            if (currentUser.id !== upvote.userId) {
               throw new Error("Insufficient permissions");
             }
           }

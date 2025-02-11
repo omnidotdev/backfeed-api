@@ -11,16 +11,16 @@ const validatePermissions = (propName: string) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $userId = fieldArgs.getRaw(["input", propName]);
-        const $observer = context<GraphQLContext>().get("observer");
+        const $currentUser = context<GraphQLContext>().get("currentUser");
 
-        sideEffect([$userId, $observer], async ([userId, observer]) => {
-          if (!observer) {
+        sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
+          if (!currentUser) {
             throw new Error("Unauthorized");
           }
 
           // Disallow updating or deleting a user record that is not your own
           // TODO: this is scoped to the `user` table, so it is beyond the scope of RBAC. Discuss how to handle API admin access
-          if (userId !== observer.id) {
+          if (userId !== currentUser.id) {
             throw new Error("Insufficient permissions");
           }
         });

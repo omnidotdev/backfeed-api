@@ -8,12 +8,12 @@ import { DATABASE_URL, isProdEnv } from "./src/lib/config/env";
 import {
   CommentRBACPlugin,
   DownvoteRBACPlugin,
+  MemberRBACPlugin,
   OrganizationRBACPlugin,
   PostRBACPlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectRBACPlugin,
   UpvoteRBACPlugin,
-  UserOrganizationsRBACPlugin,
   UserRBACPlugin,
 } from "./src/lib/plugins/postgraphile";
 
@@ -38,7 +38,7 @@ const preset: GraphileConfig.Preset = {
     PrimaryKeyMutationsOnlyPlugin,
     OrganizationRBACPlugin,
     UserRBACPlugin,
-    UserOrganizationsRBACPlugin,
+    MemberRBACPlugin,
     ProjectRBACPlugin,
     PostRBACPlugin,
     DownvoteRBACPlugin,
