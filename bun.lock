@@ -1,9 +1,10 @@
 {
-  "lockfileVersion": 0,
+  "lockfileVersion": 1,
   "workspaces": {
     "": {
       "dependencies": {
         "@envelop/generic-auth": "^8.0.1",
+        "@escape.tech/graphql-armor": "^3.1.2",
         "@graphile/pg-aggregates": "^0.2.0-beta.7",
         "@graphile/simplify-inflection": "^8.0.0-beta.5",
         "dayjs": "^1.11.13",
@@ -137,6 +138,22 @@
     "@esbuild/win32-ia32": ["@esbuild/win32-ia32@0.19.12", "", { "os": "win32", "cpu": "ia32" }, "sha512-+ZOE6pUkMOJfmxmBZElNOx72NKpIa/HFOMGzu8fqzQJ5kgf6aTGrcJaFsNiVMH4JKpMipyK+7k0n2UXN7a8YKQ=="],
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.19.12", "", { "os": "win32", "cpu": "x64" }, "sha512-T1QyPSDCyMXaO3pzBkF96E8xMkiRYbUEZADd29SyPGabqxMViNoii+NcK7eWJAEoU6RZyEm5lVSIjTmcdoB9HA=="],
+
+    "@escape.tech/graphql-armor": ["@escape.tech/graphql-armor@3.1.2", "", { "dependencies": { "@escape.tech/graphql-armor-block-field-suggestions": "3.0.0", "@escape.tech/graphql-armor-cost-limit": "2.4.0", "@escape.tech/graphql-armor-max-aliases": "2.6.0", "@escape.tech/graphql-armor-max-depth": "2.4.0", "@escape.tech/graphql-armor-max-directives": "2.3.0", "@escape.tech/graphql-armor-max-tokens": "2.5.0", "graphql": "^16.0.0" }, "peerDependencies": { "@apollo/server": "^4.0.0", "@envelop/core": "^5.0.0", "@escape.tech/graphql-armor-types": "0.7.0" }, "optionalPeers": ["@apollo/server", "@envelop/core", "@escape.tech/graphql-armor-types"] }, "sha512-nrCSdBTQU2f087xQXDqCI8dbyG+YG0Rj79vNonahea0qs12pKGTpKgOkbTnEeFqY/UIWxlkl9zipKWa5VoEPgg=="],
+
+    "@escape.tech/graphql-armor-block-field-suggestions": ["@escape.tech/graphql-armor-block-field-suggestions@3.0.0", "", { "dependencies": { "graphql": "^16.0.0" }, "optionalDependencies": { "@envelop/core": "^5.0.0" } }, "sha512-fx6o6uh9t9B96qFMdzp3TfBPW/wcGExa9F82PgHIekpKkg50K8848brv6y8Ue17VpVsleiYXHQeMtS4W4pY2AQ=="],
+
+    "@escape.tech/graphql-armor-cost-limit": ["@escape.tech/graphql-armor-cost-limit@2.4.0", "", { "dependencies": { "graphql": "^16.0.0" }, "optionalDependencies": { "@envelop/core": "^5.0.0", "@escape.tech/graphql-armor-types": "0.7.0" } }, "sha512-B1s95ZFG1Xv4RtkQxpSe/tkFP2b0Cprvt8ZDnY7NddjRoI5kHy5aQt6n3g0erB9eMKXm17e0h+TcurMhVSTaPw=="],
+
+    "@escape.tech/graphql-armor-max-aliases": ["@escape.tech/graphql-armor-max-aliases@2.6.0", "", { "dependencies": { "graphql": "^16.0.0" }, "optionalDependencies": { "@envelop/core": "^5.0.0", "@escape.tech/graphql-armor-types": "0.7.0" } }, "sha512-9dwRC5+dl986byBD9QRYRUrLALa7awpUe4aIM1j7StZHGJgmYRj3LZaWQM3JyI8j2FXg4rqBC4FJAiVYpRyWqw=="],
+
+    "@escape.tech/graphql-armor-max-depth": ["@escape.tech/graphql-armor-max-depth@2.4.0", "", { "dependencies": { "graphql": "^16.0.0" }, "optionalDependencies": { "@envelop/core": "^5.0.0", "@escape.tech/graphql-armor-types": "0.7.0" } }, "sha512-4sQkvPITjkSW4mReGyBT5A4qFkBTzyK9HGOLm8Rrte/JrulVAsokK8HWDr/2Yw0KqSFBMCAmy575YMaYoTHLvQ=="],
+
+    "@escape.tech/graphql-armor-max-directives": ["@escape.tech/graphql-armor-max-directives@2.3.0", "", { "dependencies": { "graphql": "^16.0.0" }, "optionalDependencies": { "@envelop/core": "^5.0.0", "@escape.tech/graphql-armor-types": "0.7.0" } }, "sha512-8tCJ5pymEOp6niKqqyWdiiuY2GDaei02FNj2Vx0dg/1uCnJbUcOZoL7YaAW6W7e3raY2kOWTK2wF4L/KY+fINw=="],
+
+    "@escape.tech/graphql-armor-max-tokens": ["@escape.tech/graphql-armor-max-tokens@2.5.0", "", { "dependencies": { "graphql": "^16.0.0" }, "optionalDependencies": { "@envelop/core": "^5.0.0", "@escape.tech/graphql-armor-types": "0.7.0" } }, "sha512-XypQs0NELYwmz/Mx9wVjw1riI3bvZyU2Ya4BnV0AIFLd9UYYl0BzuI4BSR46t5V2Sh73ePl6Ru1jj5rb4nfVOw=="],
+
+    "@escape.tech/graphql-armor-types": ["@escape.tech/graphql-armor-types@0.7.0", "", { "dependencies": { "graphql": "^16.0.0" } }, "sha512-RHxyyp6PDgS6NAPnnmB6JdmUJ6oqhpSHFbsglGWeCcnNzceA5AkQFpir7VIDbVyS8LNC1xhipOtk7f9ycrIemQ=="],
 
     "@faker-js/faker": ["@faker-js/faker@9.3.0", "", {}, "sha512-r0tJ3ZOkMd9xsu3VRfqlFR6cz0V/jFYRswAIpC+m/DIfAUXq7g8N7wTAlhSANySXYGKzGryfDXwtwsY8TxEIDw=="],
 

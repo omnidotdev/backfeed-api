@@ -1,4 +1,4 @@
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { projects } from "./project.table";
@@ -9,23 +9,31 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 /**
  * Post table. Posts reperesent feedback item posts.
  */
-export const posts = pgTable("post", {
-  id: defaultId(),
-  title: text(),
-  description: text(),
-  projectId: uuid()
-    .notNull()
-    .references(() => projects.id, {
-      onDelete: "cascade",
-    }),
-  userId: uuid()
-    .notNull()
-    .references(() => users.id, {
-      onDelete: "cascade",
-    }),
-  createdAt: defaultDate(),
-  updatedAt: defaultDate(),
-});
+export const posts = pgTable(
+  "post",
+  {
+    id: defaultId(),
+    title: text(),
+    description: text(),
+    projectId: uuid()
+      .notNull()
+      .references(() => projects.id, {
+        onDelete: "cascade",
+      }),
+    userId: uuid()
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+    createdAt: defaultDate(),
+    updatedAt: defaultDate(),
+  },
+  (table) => [
+    uniqueIndex().on(table.id),
+    index().on(table.projectId),
+    index().on(table.userId),
+  ]
+);
 
 /**
  * Type helpers related to the post table.

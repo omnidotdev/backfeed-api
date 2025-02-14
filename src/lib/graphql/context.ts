@@ -4,15 +4,26 @@ import { dbPool } from "lib/db/db";
 import { pgPool } from "lib/db/pool";
 
 import type { YogaInitialContext } from "graphql-yoga";
+import type { SelectUser } from "lib/drizzle/schema";
 import type { WithPgClient } from "postgraphile/@dataplan/pg";
-import type { NodePostgresPgClient } from "postgraphile/adaptors/pg";
+import type {
+  NodePostgresPgClient,
+  PgSubscriber,
+} from "postgraphile/adaptors/pg";
 
 const withPgClient = createWithPgClient({ pool: pgPool });
 
 export interface GraphQLContext {
+  // TODO: determine if we can customize this to be `observer` rather than `currentUser` during the context injection process
+  /** The current user making the request. Injected by the `useAuth` plugin. */
+  currentUser: SelectUser | null;
   db: typeof dbPool;
   request: Request;
   withPgClient: WithPgClient<NodePostgresPgClient>;
+  /** The Postgres settings for the current request. Injected by postgraphile.*/
+  pgSettings: Record<string, string | undefined> | null;
+  /** The Postgres subscription client for the current request. Injected by postgraphile. */
+  pgSubscriber: PgSubscriber | null;
 }
 
 /**
@@ -21,7 +32,9 @@ export interface GraphQLContext {
  */
 export const createGraphQLContext = async ({
   request,
-}: YogaInitialContext): Promise<GraphQLContext> => ({
+}: YogaInitialContext): Promise<
+  Omit<GraphQLContext, "currentUser" | "pgSettings" | "pgSubscriber">
+> => ({
   db: dbPool,
   request,
   withPgClient,
