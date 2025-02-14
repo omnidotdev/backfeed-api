@@ -4,7 +4,7 @@ import { DATABASE_URL } from "./src/lib/config/env";
 
 export default defineConfig({
   out: "./src/lib/drizzle/migrations",
-  schema: "./src/lib/drizzle/schema",
+  schema: "./src/lib/drizzle/schema/index.ts",
   dialect: "postgresql",
   casing: "snake_case",
   dbCredentials: {
