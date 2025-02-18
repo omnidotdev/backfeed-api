@@ -5,6 +5,17 @@ import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 
 import { DATABASE_URL, isProdEnv } from "./src/lib/config/env";
+import {
+  CommentRBACPlugin,
+  DownvoteRBACPlugin,
+  MemberRBACPlugin,
+  OrganizationRBACPlugin,
+  PostRBACPlugin,
+  PrimaryKeyMutationsOnlyPlugin,
+  ProjectRBACPlugin,
+  UpvoteRBACPlugin,
+  UserRBACPlugin,
+} from "./src/lib/plugins/postgraphile";
 
 import type { GraphileConfig } from "graphile-config";
 
@@ -20,8 +31,20 @@ const preset: GraphileConfig.Preset = {
     sortExport: true,
     pgForbidSetofFunctionsToReturnNull: false,
     jsonScalarAsString: false,
+    defaultBehavior: "-type:node -interface:node",
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
+  plugins: [
+    PrimaryKeyMutationsOnlyPlugin,
+    OrganizationRBACPlugin,
+    UserRBACPlugin,
+    MemberRBACPlugin,
+    ProjectRBACPlugin,
+    PostRBACPlugin,
+    DownvoteRBACPlugin,
+    UpvoteRBACPlugin,
+    CommentRBACPlugin,
+  ],
   grafserv: {
     graphiql: false,
   },

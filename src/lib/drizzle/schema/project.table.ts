@@ -1,4 +1,11 @@
-import { pgTable, text, unique, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgTable,
+  text,
+  unique,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { organizations } from "./organization.table";
@@ -24,7 +31,11 @@ export const projects = pgTable(
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
-  (table) => [unique().on(table.slug, table.organizationId)]
+  (table) => [
+    unique().on(table.slug, table.organizationId),
+    uniqueIndex().on(table.id),
+    index().on(table.organizationId),
+  ]
 );
 
 /**

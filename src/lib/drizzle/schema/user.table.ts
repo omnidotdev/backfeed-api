@@ -1,4 +1,4 @@
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 
@@ -7,18 +7,22 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 /**
  * User table.
  */
-export const users = pgTable("user", {
-  id: defaultId(),
-  // HIDRA ID mapped to `sub` claim
-  hidraId: uuid().notNull().unique(),
-  customerId: uuid().unique(),
-  productId: uuid(),
-  username: text().unique(),
-  firstName: text(),
-  lastName: text(),
-  createdAt: defaultDate(),
-  updatedAt: defaultDate(),
-});
+export const users = pgTable(
+  "user",
+  {
+    id: defaultId(),
+    // HIDRA ID mapped to `sub` claim
+    hidraId: uuid().notNull().unique(),
+    customerId: uuid().unique(),
+    productId: uuid(),
+    username: text().unique(),
+    firstName: text(),
+    lastName: text(),
+    createdAt: defaultDate(),
+    updatedAt: defaultDate(),
+  },
+  (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.hidraId)]
+);
 
 /**
  * Type helpers related to the user table.

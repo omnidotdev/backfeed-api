@@ -1,7 +1,12 @@
 import { existsSync, mkdirSync } from "node:fs";
+import { and, eq } from "drizzle-orm";
 import { exportSchema } from "graphile-export";
+import { EXPORTABLE } from "graphile-export/helpers";
 import { makeSchema } from "postgraphile";
+import { context, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
+
+import * as dbSchema from "lib/drizzle/schema";
 
 import preset from "../../graphile.config";
 
@@ -23,6 +28,12 @@ const generateGraphqlSchema = async () => {
 
   await exportSchema(schema, schemaFilePath, {
     mode: "typeDefs",
+    modules: {
+      "drizzle-orm": { and, eq },
+      "graphile-export/helpers": { EXPORTABLE },
+      "postgraphile/grafast": { context, sideEffect },
+      "lib/drizzle/schema": dbSchema,
+    },
   });
 
   await replaceInFile({

@@ -1,4 +1,4 @@
-import { pgTable, unique, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, unique, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { posts } from "./post.table";
@@ -26,7 +26,12 @@ export const upvotes = pgTable(
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
-  (table) => [unique().on(table.postId, table.userId)]
+  (table) => [
+    unique().on(table.postId, table.userId),
+    uniqueIndex().on(table.id),
+    index().on(table.postId),
+    index().on(table.userId),
+  ]
 );
 
 /**
