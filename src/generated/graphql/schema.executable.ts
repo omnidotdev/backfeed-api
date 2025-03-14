@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "172017",
+    oid: "172310",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "171930",
+    oid: "172223",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "171892",
+    oid: "172185",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +400,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "171997",
+    oid: "172290",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -504,7 +504,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "171940",
+    oid: "172233",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -620,7 +620,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "171916",
+    oid: "172209",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -639,7 +639,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "172036",
+    oid: "172329",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -715,7 +715,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-    oid: "171952",
+    oid: "172245",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -731,10 +731,10 @@ const postIdentifier = sql.identifier("public", "post");
 const statusCodec = enumCodec({
   name: "status",
   identifier: sql.identifier("public", "status"),
-  values: ["new", "closed", "planned", "in_progress", "completed"],
+  values: ["open", "planned", "in_progress", "closed", "resolved"],
   description: undefined,
   extensions: {
-    oid: "172090",
+    oid: "172382",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -858,7 +858,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "171906",
+    oid: "172199",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5268,11 +5268,11 @@ type Post {
 }
 
 enum Status {
-  new
-  closed
+  open
   planned
   in_progress
-  completed
+  closed
+  resolved
 }
 
 type Project {

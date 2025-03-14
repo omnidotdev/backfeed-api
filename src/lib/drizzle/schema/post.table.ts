@@ -17,11 +17,11 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
  * Statuses for posts.
  */
 export const status = pgEnum("status", [
-  "new",
-  "closed",
+  "open",
   "planned",
   "in_progress",
-  "completed",
+  "closed",
+  "resolved",
 ]);
 
 /**
@@ -33,7 +33,7 @@ export const posts = pgTable(
     id: defaultId(),
     title: text(),
     description: text(),
-    status: status().notNull().default("new"),
+    status: status().notNull().default("open"),
     projectId: uuid()
       .notNull()
       .references(() => projects.id, {

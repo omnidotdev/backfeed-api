@@ -1,5 +1,5 @@
 {
-  "id": "bcb1c25c-6928-4d25-9b9a-066195b273b5",
+  "id": "d9ce97f8-b248-4b11-aa08-11ab178a730b",
   "prevId": "b8061acf-15d9-40be-8187-92d061203b35",
   "version": "7",
   "dialect": "postgresql",
@@ -506,7 +506,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'new'"
+          "default": "'open'"
         },
         "project_id": {
           "name": "project_id",
@@ -995,11 +995,11 @@
       "name": "status",
       "schema": "public",
       "values": [
-        "new",
-        "closed",
+        "open",
         "planned",
         "in_progress",
-        "completed"
+        "closed",
+        "resolved"
       ]
     }
   },
