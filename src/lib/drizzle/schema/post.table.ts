@@ -1,10 +1,28 @@
-import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgEnum,
+  pgTable,
+  text,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { projects } from "./project.table";
 import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
+/**
+ * Statuses for posts.
+ */
+export const status = pgEnum("status", [
+  "new",
+  "closed",
+  "planned",
+  "in_progress",
+  "completed",
+]);
 
 /**
  * Post table. Posts reperesent feedback item posts.
@@ -15,6 +33,7 @@ export const posts = pgTable(
     id: defaultId(),
     title: text(),
     description: text(),
+    status: status().notNull().default("new"),
     projectId: uuid()
       .notNull()
       .references(() => projects.id, {
@@ -27,6 +46,7 @@ export const posts = pgTable(
       }),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
+    statusUpdatedAt: defaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),
