@@ -8,6 +8,7 @@ import * as dbSchema from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 
+// TODO: discuss permissions for column level updates (i.e. status)
 const validatePermissions = (propName: string) =>
   EXPORTABLE(
     (and, eq, dbSchema, context, sideEffect, propName) =>
