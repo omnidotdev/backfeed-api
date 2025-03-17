@@ -31,7 +31,7 @@ export const postStatuses = pgTable(
 );
 
 /**
- * Type helpers related to the post table.
+ * Type helpers related to the post status table.
  */
 export type InsertPostStatus = InferInsertModel<typeof postStatuses>;
 export type SelectPostStatus = InferSelectModel<typeof postStatuses>;
