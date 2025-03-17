@@ -3,6 +3,7 @@ export * from "./downvote.table";
 export * from "./member.table";
 export * from "./organization.table";
 export * from "./post.table";
+export * from "./postStatus.table";
 export * from "./project.table";
 export * from "./upvote.table";
 export * from "./user.table";

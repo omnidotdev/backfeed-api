@@ -1,5 +1,5 @@
 {
-  "id": "d9ce97f8-b248-4b11-aa08-11ab178a730b",
+  "id": "232a2580-1c7f-4f0f-bedc-a592dcc7dce3",
   "prevId": "b8061acf-15d9-40be-8187-92d061203b35",
   "version": "7",
   "dialect": "postgresql",
@@ -500,14 +500,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "status": {
-          "name": "status",
-          "type": "status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'open'"
-        },
         "project_id": {
           "name": "project_id",
           "type": "uuid",
@@ -516,6 +508,12 @@
         },
         "user_id": {
           "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status_id": {
+          "name": "status_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -529,13 +527,6 @@
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp(6) with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "status_updated_at": {
-          "name": "status_updated_at",
           "type": "timestamp(6) with time zone",
           "primaryKey": false,
           "notNull": false,
@@ -587,6 +578,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "post_status_id_index": {
+          "name": "post_status_id_index",
+          "columns": [
+            {
+              "expression": "status_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -609,6 +615,117 @@
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "post_status_id_post_status_id_fk": {
+          "name": "post_status_id_post_status_id_fk",
+          "tableFrom": "post",
+          "tableTo": "post_status",
+          "columnsFrom": [
+            "status_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.post_status": {
+      "name": "post_status",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'open'"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(6) with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(6) with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "post_status_unique_id_index": {
+          "name": "post_status_unique_id_index",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "post_status_project_id_index": {
+          "name": "post_status_project_id_index",
+          "columns": [
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "post_status_project_id_project_id_fk": {
+          "name": "post_status_project_id_project_id_fk",
+          "tableFrom": "post_status",
+          "tableTo": "project",
+          "columnsFrom": [
+            "project_id"
           ],
           "columnsTo": [
             "id"
@@ -989,17 +1106,6 @@
         "owner",
         "admin",
         "member"
-      ]
-    },
-    "public.status": {
-      "name": "status",
-      "schema": "public",
-      "values": [
-        "open",
-        "planned",
-        "in_progress",
-        "closed",
-        "resolved"
       ]
     }
   },
