@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "post_status_status_project_id_index" ON "post_status" USING btree ("status","project_id");

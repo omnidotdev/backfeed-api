@@ -38,6 +38,8 @@ const seedDatabase = async () => {
         }),
       },
       with: {
+        // TODO: figure out how to seed post statuses correctly
+        postStatuses: 5,
         posts: 20,
       },
     },

@@ -71,6 +71,13 @@
       "when": 1742232441910,
       "tag": "0009_amusing_zarda",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1742233371617,
+      "tag": "0010_brainy_yellow_claw",
+      "breakpoints": true
     }
   ]
 }

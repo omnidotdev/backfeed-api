@@ -26,6 +26,7 @@ export const postStatuses = pgTable(
   (table) => [
     // NB: indexes must be unique across all tables. The index for `statusId` in `posts` generates `post_status_id_index` which would cause a conflict with the below.
     uniqueIndex("post_status_unique_id_index").on(table.id),
+    uniqueIndex().on(table.status, table.projectId),
     index().on(table.projectId),
   ]
 );
