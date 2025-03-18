@@ -31,6 +31,7 @@ export const posts = pgTable(
       .references(() => postStatuses.id, {
         onDelete: "cascade",
       }),
+    statusUpdatedAt: defaultDate(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
