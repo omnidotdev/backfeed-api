@@ -22,6 +22,7 @@ export const postStatuses = pgTable(
     id: defaultId(),
     status: text().notNull().default("open"),
     description: text(),
+    color: text(),
     projectId: uuid()
       .notNull()
       .references(() => projects.id, {

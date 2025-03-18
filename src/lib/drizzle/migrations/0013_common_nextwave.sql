@@ -1,0 +1,1 @@
+ALTER TABLE "post_status" ADD COLUMN "color" text;
