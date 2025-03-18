@@ -412,98 +412,6 @@ const spec_comment = {
   executor: executor
 };
 const commentCodec = recordCodec(spec_comment);
-const postStatusIdentifier = sql.identifier("public", "post_status");
-const spec_postStatus = {
-  name: "postStatus",
-  identifier: postStatusIdentifier,
-  attributes: Object.assign(Object.create(null), {
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    status: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    project_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  }),
-  description: undefined,
-  extensions: {
-    oid: "174945",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "post_status"
-    },
-    tags: Object.create(null)
-  },
-  executor: executor
-};
-const postStatusCodec = recordCodec(spec_postStatus);
 const memberIdentifier = sql.identifier("public", "member");
 const roleCodec = enumCodec({
   name: "role",
@@ -715,6 +623,110 @@ const spec_post = {
   executor: executor
 };
 const postCodec = recordCodec(spec_post);
+const postStatusIdentifier = sql.identifier("public", "post_status");
+const spec_postStatus = {
+  name: "postStatus",
+  identifier: postStatusIdentifier,
+  attributes: Object.assign(Object.create(null), {
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: false,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: false,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    is_default: {
+      description: undefined,
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  }),
+  description: undefined,
+  extensions: {
+    oid: "174945",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "post_status"
+    },
+    tags: Object.create(null)
+  },
+  executor: executor
+};
+const postStatusCodec = recordCodec(spec_postStatus);
 const projectIdentifier = sql.identifier("public", "project");
 const spec_project = {
   name: "project",
@@ -1107,40 +1119,6 @@ const registryConfig_pgResources_comment_comment = {
     canDelete: true
   }
 };
-const post_statusUniques = [{
-  isPrimary: true,
-  attributes: ["id"],
-  description: undefined,
-  extensions: {
-    tags: Object.create(null)
-  }
-}];
-const registryConfig_pgResources_post_status_post_status = {
-  executor: executor,
-  name: "post_status",
-  identifier: "main.public.post_status",
-  from: postStatusIdentifier,
-  codec: postStatusCodec,
-  uniques: post_statusUniques,
-  isVirtual: false,
-  description: undefined,
-  extensions: {
-    description: undefined,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "post_status"
-    },
-    isInsertable: true,
-    isUpdatable: true,
-    isDeletable: true,
-    tags: {},
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  }
-};
 const userUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1322,6 +1300,40 @@ const registryConfig_pgResources_member_member = {
     canDelete: true
   }
 };
+const post_statusUniques = [{
+  isPrimary: true,
+  attributes: ["id"],
+  description: undefined,
+  extensions: {
+    tags: Object.create(null)
+  }
+}];
+const registryConfig_pgResources_post_status_post_status = {
+  executor: executor,
+  name: "post_status",
+  identifier: "main.public.post_status",
+  from: postStatusIdentifier,
+  codec: postStatusCodec,
+  uniques: post_statusUniques,
+  isVirtual: false,
+  description: undefined,
+  extensions: {
+    description: undefined,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "post_status"
+    },
+    isInsertable: true,
+    isUpdatable: true,
+    isDeletable: true,
+    tags: {},
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  }
+};
 const registryConfig = {
   pgExecutors: Object.assign(Object.create(null), {
     main: executor
@@ -1334,10 +1346,11 @@ const registryConfig = {
     organization: organizationCodec,
     text: TYPES.text,
     comment: commentCodec,
-    postStatus: postStatusCodec,
     member: memberCodec,
     role: roleCodec,
     post: postCodec,
+    postStatus: postStatusCodec,
+    bool: TYPES.boolean,
     project: projectCodec,
     user: userCodec
   }),
@@ -1346,11 +1359,11 @@ const registryConfig = {
     upvote: registryConfig_pgResources_upvote_upvote,
     organization: registryConfig_pgResources_organization_organization,
     comment: registryConfig_pgResources_comment_comment,
-    post_status: registryConfig_pgResources_post_status_post_status,
     user: registryConfig_pgResources_user_user,
     post: registryConfig_pgResources_post_post,
     project: registryConfig_pgResources_project_project,
-    member: registryConfig_pgResources_member_member
+    member: registryConfig_pgResources_member_member,
+    post_status: registryConfig_pgResources_post_status_post_status
   }),
   pgRelations: Object.assign(Object.create(null), {
     comment: Object.assign(Object.create(null), {
@@ -1768,11 +1781,11 @@ const resource_downvotePgResource = registry.pgResources["downvote"];
 const resource_upvotePgResource = registry.pgResources["upvote"];
 const resource_organizationPgResource = registry.pgResources["organization"];
 const resource_commentPgResource = registry.pgResources["comment"];
-const resource_post_statusPgResource = registry.pgResources["post_status"];
 const resource_userPgResource = registry.pgResources["user"];
 const resource_postPgResource = registry.pgResources["post"];
 const resource_projectPgResource = registry.pgResources["project"];
 const resource_memberPgResource = registry.pgResources["member"];
+const resource_post_statusPgResource = registry.pgResources["post_status"];
 const applyOrderToPlan = ($select, $value, TableOrderByType) => {
   if (!("evalLength" in $value)) return;
   const length = $value.evalLength();
@@ -3520,6 +3533,11 @@ const colSpec55 = {
   attributeName: "updated_at",
   attribute: spec_postStatus.attributes.updated_at
 };
+const colSpec56 = {
+  fieldName: "isDefault",
+  attributeName: "is_default",
+  attribute: spec_postStatus.attributes.is_default
+};
 function assertAllowed46(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -3556,6 +3574,56 @@ function assertAllowed48(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+const resolve72 = (i, _v, $input) => sql`${i} ${$input.eval() ? sql`IS NULL` : sql`IS NOT NULL`}`;
+const resolveInputCodec27 = () => TYPES.boolean;
+const resolveSqlValue16 = () => sql.null;
+const resolve73 = (i, v) => sql`${i} = ${v}`;
+const forceTextTypesSensitive6 = [TYPES.citext, TYPES.char, TYPES.bpchar];
+function resolveDomains6(c) {
+  let current = c;
+  while (current.domainOfCodec) current = current.domainOfCodec;
+  return current;
+}
+function resolveInputCodec28(c) {
+  if (c.arrayOfCodec) {
+    if (forceTextTypesSensitive6.includes(resolveDomains6(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
+      extensions: {
+        listItemNonNull: c.extensions?.listItemNonNull
+      }
+    });
+    return c;
+  } else {
+    if (forceTextTypesSensitive6.includes(resolveDomains6(c))) return TYPES.text;
+    return c;
+  }
+}
+function resolveSqlIdentifier17(identifier, c) {
+  if (c.arrayOfCodec && forceTextTypesSensitive6.includes(resolveDomains6(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: c.extensions?.listItemNonNull
+    }
+  })];else if (forceTextTypesSensitive6.includes(resolveDomains6(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
+}
+const resolve74 = (i, v) => sql`${i} <> ${v}`;
+const resolve75 = (i, v) => sql`${i} IS DISTINCT FROM ${v}`;
+const resolve76 = (i, v) => sql`${i} IS NOT DISTINCT FROM ${v}`;
+const resolve77 = (i, v) => sql`${i} = ANY(${v})`;
+function resolveInputCodec29(c) {
+  if (forceTextTypesSensitive6.includes(resolveDomains6(c))) return listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });else return listOfCodec(c, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });
+}
+const resolve78 = (i, v) => sql`${i} <> ALL(${v})`;
+const resolve79 = (i, v) => sql`${i} < ${v}`;
+const resolve80 = (i, v) => sql`${i} <= ${v}`;
+const resolve81 = (i, v) => sql`${i} > ${v}`;
+const resolve82 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed49(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -4264,6 +4332,11 @@ function PostStatusGroupBy_extensions_grafast_applyPlan9($pgSelect) {
     fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
   });
 }
+function PostStatusGroupBy_extensions_grafast_applyPlan10($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("is_default")}`
+  });
+}
 export const PostStatusGroupBy = new GraphQLEnumType({
   name: "PostStatusGroupBy",
   description: "Grouping methods for `PostStatus` for usage during aggregation.",
@@ -4337,6 +4410,14 @@ export const PostStatusGroupBy = new GraphQLEnumType({
       extensions: Object.assign(Object.create(null), {
         grafast: {
           applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan9
+        }
+      })
+    },
+    IS_DEFAULT: {
+      value: "IS_DEFAULT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan10
         }
       })
     }
@@ -5131,9 +5212,6 @@ type Query implements Node {
   """Get a single \`Comment\`."""
   comment(rowId: UUID!): Comment
 
-  """Get a single \`PostStatus\`."""
-  postStatus(rowId: UUID!): PostStatus
-
   """Get a single \`User\`."""
   user(rowId: UUID!): User
 
@@ -5160,6 +5238,9 @@ type Query implements Node {
 
   """Get a single \`Member\`."""
   memberByUserIdAndOrganizationId(userId: UUID!, organizationId: UUID!): Member
+
+  """Get a single \`PostStatus\`."""
+  postStatus(rowId: UUID!): PostStatus
 
   """Reads and enables pagination through a set of \`Downvote\`."""
   downvotes(
@@ -5297,40 +5378,6 @@ type Query implements Node {
     filter: CommentFilter
   ): CommentConnection
 
-  """Reads and enables pagination through a set of \`PostStatus\`."""
-  postStatuses(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering \`PostStatus\`."""
-    orderBy: [PostStatusOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostStatusCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: PostStatusFilter
-  ): PostStatusConnection
-
   """Reads and enables pagination through a set of \`User\`."""
   users(
     """Only read the first \`n\` values of the set."""
@@ -5466,6 +5513,40 @@ type Query implements Node {
     """
     filter: MemberFilter
   ): MemberConnection
+
+  """Reads and enables pagination through a set of \`PostStatus\`."""
+  postStatuses(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering \`PostStatus\`."""
+    orderBy: [PostStatusOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostStatusCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostStatusFilter
+  ): PostStatusConnection
 }
 
 """An object with a globally unique \`ID\`."""
@@ -6022,6 +6103,8 @@ enum ProjectOrderBy {
   POST_STATUSES_DISTINCT_COUNT_CREATED_AT_DESC
   POST_STATUSES_DISTINCT_COUNT_UPDATED_AT_ASC
   POST_STATUSES_DISTINCT_COUNT_UPDATED_AT_DESC
+  POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_ASC
+  POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_DESC
 }
 
 """
@@ -7122,6 +7205,9 @@ input PostStatusFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s \`isDefault\` field."""
+  isDefault: BooleanFilter
+
   """Filter by the object’s \`postsByStatusId\` relation."""
   postsByStatusId: PostStatusToManyPostFilter
 
@@ -7139,6 +7225,48 @@ input PostStatusFilter {
 
   """Negates the expression."""
   not: PostStatusFilter
+}
+
+"""
+A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
+"""
+input BooleanFilter {
+  """
+  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Boolean
+
+  """Not equal to the specified value."""
+  notEqualTo: Boolean
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Boolean
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Boolean
+
+  """Included in the specified list."""
+  in: [Boolean!]
+
+  """Not included in the specified list."""
+  notIn: [Boolean!]
+
+  """Less than the specified value."""
+  lessThan: Boolean
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Boolean
+
+  """Greater than the specified value."""
+  greaterThan: Boolean
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Boolean
 }
 
 """
@@ -7205,6 +7333,7 @@ input PostStatusDistinctCountAggregateFilter {
   projectId: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+  isDefault: BigIntFilter
 }
 
 """A connection to a list of \`Member\` values."""
@@ -8419,6 +8548,7 @@ type PostStatus {
   projectId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
+  isDefault: Boolean!
 
   """Reads a single \`Project\` that is related to this \`PostStatus\`."""
   project: Project
@@ -8494,6 +8624,9 @@ type PostStatusDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
+
+  """Distinct count of isDefault across the matching connection"""
+  isDefault: BigInt
 }
 
 """Grouping methods for \`PostStatus\` for usage during aggregation."""
@@ -8507,6 +8640,7 @@ enum PostStatusGroupBy {
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
+  IS_DEFAULT
 }
 
 """Conditions for \`PostStatus\` aggregates."""
@@ -8586,6 +8720,8 @@ enum PostStatusOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  IS_DEFAULT_ASC
+  IS_DEFAULT_DESC
   POSTS_BY_STATUS_ID_COUNT_ASC
   POSTS_BY_STATUS_ID_COUNT_DESC
   POSTS_BY_STATUS_ID_DISTINCT_COUNT_ROW_ID_ASC
@@ -8628,6 +8764,9 @@ input PostStatusCondition {
 
   """Checks for equality with the object’s \`updatedAt\` field."""
   updatedAt: Datetime
+
+  """Checks for equality with the object’s \`isDefault\` field."""
+  isDefault: Boolean
 }
 
 """A connection to a list of \`Organization\` values."""
@@ -9133,14 +9272,6 @@ type Mutation {
     input: CreateCommentInput!
   ): CreateCommentPayload
 
-  """Creates a single \`PostStatus\`."""
-  createPostStatus(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePostStatusInput!
-  ): CreatePostStatusPayload
-
   """Creates a single \`User\`."""
   createUser(
     """
@@ -9172,6 +9303,14 @@ type Mutation {
     """
     input: CreateMemberInput!
   ): CreateMemberPayload
+
+  """Creates a single \`PostStatus\`."""
+  createPostStatus(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePostStatusInput!
+  ): CreatePostStatusPayload
 
   """Updates a single \`Downvote\` using a unique key and a patch."""
   updateDownvote(
@@ -9205,14 +9344,6 @@ type Mutation {
     input: UpdateCommentInput!
   ): UpdateCommentPayload
 
-  """Updates a single \`PostStatus\` using a unique key and a patch."""
-  updatePostStatus(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePostStatusInput!
-  ): UpdatePostStatusPayload
-
   """Updates a single \`User\` using a unique key and a patch."""
   updateUser(
     """
@@ -9244,6 +9375,14 @@ type Mutation {
     """
     input: UpdateMemberInput!
   ): UpdateMemberPayload
+
+  """Updates a single \`PostStatus\` using a unique key and a patch."""
+  updatePostStatus(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostStatusInput!
+  ): UpdatePostStatusPayload
 
   """Deletes a single \`Downvote\` using a unique key."""
   deleteDownvote(
@@ -9277,14 +9416,6 @@ type Mutation {
     input: DeleteCommentInput!
   ): DeleteCommentPayload
 
-  """Deletes a single \`PostStatus\` using a unique key."""
-  deletePostStatus(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePostStatusInput!
-  ): DeletePostStatusPayload
-
   """Deletes a single \`User\` using a unique key."""
   deleteUser(
     """
@@ -9316,6 +9447,14 @@ type Mutation {
     """
     input: DeleteMemberInput!
   ): DeleteMemberPayload
+
+  """Deletes a single \`PostStatus\` using a unique key."""
+  deletePostStatus(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostStatusInput!
+  ): DeletePostStatusPayload
 }
 
 """The output of our create \`Downvote\` mutation."""
@@ -9491,51 +9630,6 @@ input CommentInput {
   message: String
   postId: UUID!
   userId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our create \`PostStatus\` mutation."""
-type CreatePostStatusPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`PostStatus\` that was created by this mutation."""
-  postStatus: PostStatus
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`PostStatus\`. May be used by Relay 1."""
-  postStatusEdge(
-    """The method to use when ordering \`PostStatus\`."""
-    orderBy: [PostStatusOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PostStatusEdge
-}
-
-"""All input for the create \`PostStatus\` mutation."""
-input CreatePostStatusInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`PostStatus\` to be created by this mutation."""
-  postStatus: PostStatusInput!
-}
-
-"""An input for mutations affecting \`PostStatus\`"""
-input PostStatusInput {
-  rowId: UUID
-  status: String
-  description: String
-  projectId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -9722,6 +9816,52 @@ input MemberInput {
   createdAt: Datetime
   role: Role!
   rowId: UUID
+}
+
+"""The output of our create \`PostStatus\` mutation."""
+type CreatePostStatusPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PostStatus\` that was created by this mutation."""
+  postStatus: PostStatus
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PostStatus\`. May be used by Relay 1."""
+  postStatusEdge(
+    """The method to use when ordering \`PostStatus\`."""
+    orderBy: [PostStatusOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostStatusEdge
+}
+
+"""All input for the create \`PostStatus\` mutation."""
+input CreatePostStatusInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`PostStatus\` to be created by this mutation."""
+  postStatus: PostStatusInput!
+}
+
+"""An input for mutations affecting \`PostStatus\`"""
+input PostStatusInput {
+  rowId: UUID
+  status: String
+  description: String
+  projectId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+  isDefault: Boolean
 }
 
 """The output of our update \`Downvote\` mutation."""
@@ -9917,56 +10057,6 @@ input CommentPatch {
   message: String
   postId: UUID
   userId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our update \`PostStatus\` mutation."""
-type UpdatePostStatusPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`PostStatus\` that was updated by this mutation."""
-  postStatus: PostStatus
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`PostStatus\`. May be used by Relay 1."""
-  postStatusEdge(
-    """The method to use when ordering \`PostStatus\`."""
-    orderBy: [PostStatusOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PostStatusEdge
-}
-
-"""All input for the \`updatePostStatus\` mutation."""
-input UpdatePostStatusInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`PostStatus\` being updated.
-  """
-  patch: PostStatusPatch!
-}
-
-"""
-Represents an update to a \`PostStatus\`. Fields that are set will be updated.
-"""
-input PostStatusPatch {
-  rowId: UUID
-  status: String
-  description: String
-  projectId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -10171,6 +10261,57 @@ input MemberPatch {
   rowId: UUID
 }
 
+"""The output of our update \`PostStatus\` mutation."""
+type UpdatePostStatusPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PostStatus\` that was updated by this mutation."""
+  postStatus: PostStatus
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PostStatus\`. May be used by Relay 1."""
+  postStatusEdge(
+    """The method to use when ordering \`PostStatus\`."""
+    orderBy: [PostStatusOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostStatusEdge
+}
+
+"""All input for the \`updatePostStatus\` mutation."""
+input UpdatePostStatusInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`PostStatus\` being updated.
+  """
+  patch: PostStatusPatch!
+}
+
+"""
+Represents an update to a \`PostStatus\`. Fields that are set will be updated.
+"""
+input PostStatusPatch {
+  rowId: UUID
+  status: String
+  description: String
+  projectId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  isDefault: Boolean
+}
+
 """The output of our delete \`Downvote\` mutation."""
 type DeleteDownvotePayload {
   """
@@ -10295,39 +10436,6 @@ type DeleteCommentPayload {
 
 """All input for the \`deleteComment\` mutation."""
 input DeleteCommentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete \`PostStatus\` mutation."""
-type DeletePostStatusPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`PostStatus\` that was deleted by this mutation."""
-  postStatus: PostStatus
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`PostStatus\`. May be used by Relay 1."""
-  postStatusEdge(
-    """The method to use when ordering \`PostStatus\`."""
-    orderBy: [PostStatusOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PostStatusEdge
-}
-
-"""All input for the \`deletePostStatus\` mutation."""
-input DeletePostStatusInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10466,6 +10574,39 @@ input DeleteMemberInput {
   """
   clientMutationId: String
   rowId: UUID!
+}
+
+"""The output of our delete \`PostStatus\` mutation."""
+type DeletePostStatusPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PostStatus\` that was deleted by this mutation."""
+  postStatus: PostStatus
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PostStatus\`. May be used by Relay 1."""
+  postStatusEdge(
+    """The method to use when ordering \`PostStatus\`."""
+    orderBy: [PostStatusOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostStatusEdge
+}
+
+"""All input for the \`deletePostStatus\` mutation."""
+input DeletePostStatusInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
 }`;
 export const plans = {
   Query: {
@@ -10571,16 +10712,6 @@ export const plans = {
         rowId: undefined
       }
     },
-    postStatus: {
-      plan(_$root, args) {
-        return resource_post_statusPgResource.get({
-          id: args.get("rowId")
-        });
-      },
-      args: {
-        rowId: undefined
-      }
-    },
     user: {
       plan(_$root, args) {
         return resource_userPgResource.get({
@@ -10673,6 +10804,16 @@ export const plans = {
       args: {
         userId: undefined,
         organizationId: undefined
+      }
+    },
+    postStatus: {
+      plan(_$root, args) {
+        return resource_post_statusPgResource.get({
+          id: args.get("rowId")
+        });
+      },
+      args: {
+        rowId: undefined
       }
     },
     downvotes: {
@@ -10927,69 +11068,6 @@ export const plans = {
         }
       }
     },
-    postStatuses: {
-      plan() {
-        return connection(resource_post_statusPgResource.find());
-      },
-      args: {
-        first: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, arg) {
-            $connection.setFirst(arg.getRaw());
-          }
-        },
-        last: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setLast(val.getRaw());
-          }
-        },
-        offset: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setOffset(val.getRaw());
-          }
-        },
-        before: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setBefore(val.getRaw());
-          }
-        },
-        after: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setAfter(val.getRaw());
-          }
-        },
-        orderBy: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val, info) {
-            const $value = val.getRaw(),
-              $select = $connection.getSubplan();
-            applyOrderToPlan($select, $value, info.schema.getType("PostStatusOrderBy"));
-            return null;
-          }
-        },
-        condition: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_condition, $connection) {
-            return $connection.getSubplan().wherePlan();
-          }
-        },
-        filter: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, fieldArgs) {
-            assertAllowed5(fieldArgs, "object");
-            const $where = $connection.getSubplan().wherePlan();
-            if (null) $where.extensions.pgFilterAttribute = {
-              codec: null
-            };
-            fieldArgs.apply($where);
-          }
-        }
-      }
-    },
     users: {
       plan() {
         return connection(resource_userPgResource.find());
@@ -11043,7 +11121,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed6(fieldArgs, "object");
+            assertAllowed5(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -11106,7 +11184,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed7(fieldArgs, "object");
+            assertAllowed6(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -11169,7 +11247,7 @@ export const plans = {
         filter: {
           autoApplyAfterParentPlan: true,
           applyPlan(_, $connection, fieldArgs) {
-            assertAllowed8(fieldArgs, "object");
+            assertAllowed7(fieldArgs, "object");
             const $where = $connection.getSubplan().wherePlan();
             if (null) $where.extensions.pgFilterAttribute = {
               codec: null
@@ -11220,6 +11298,69 @@ export const plans = {
             const $value = val.getRaw(),
               $select = $connection.getSubplan();
             applyOrderToPlan($select, $value, info.schema.getType("MemberOrderBy"));
+            return null;
+          }
+        },
+        condition: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_condition, $connection) {
+            return $connection.getSubplan().wherePlan();
+          }
+        },
+        filter: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, fieldArgs) {
+            assertAllowed8(fieldArgs, "object");
+            const $where = $connection.getSubplan().wherePlan();
+            if (null) $where.extensions.pgFilterAttribute = {
+              codec: null
+            };
+            fieldArgs.apply($where);
+          }
+        }
+      }
+    },
+    postStatuses: {
+      plan() {
+        return connection(resource_post_statusPgResource.find());
+      },
+      args: {
+        first: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          }
+        },
+        last: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          }
+        },
+        offset: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          }
+        },
+        before: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          }
+        },
+        after: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          }
+        },
+        orderBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val, info) {
+            const $value = val.getRaw(),
+              $select = $connection.getSubplan();
+            applyOrderToPlan($select, $value, info.schema.getType("PostStatusOrderBy"));
             return null;
           }
         },
@@ -13190,6 +13331,50 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.updated_at.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)}
+from ${resource_post_statusPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.is_default.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.is_default.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)}
+from ${resource_post_statusPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.is_default.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.is_default.codec,
           direction: "DESC"
         });
       }
@@ -18234,6 +18419,17 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         fieldArgs.apply($col);
       }
     },
+    isDefault: {
+      applyPlan($where, fieldArgs) {
+        const $raw = fieldArgs.getRaw();
+        if ($raw.evalIs(void 0)) return;
+        if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+        if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $col = new PgConditionStep($where);
+        $col.extensions.pgFilterAttribute = colSpec56;
+        fieldArgs.apply($col);
+      }
+    },
     postsByStatusId: {
       applyPlan($where, fieldArgs) {
         assertAllowed46(fieldArgs, "object");
@@ -18294,6 +18490,305 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         assertAllowed48(fieldArgs, "object");
         const $and = $where.notPlan().andPlan();
         fieldArgs.apply($and);
+      }
+    }
+  },
+  BooleanFilter: {
+    isNull: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = undefined ? undefined(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec27 ? resolveInputCodec27(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = resolveSqlValue16 ? resolveSqlValue16($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve72(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "isNull"
+          });
+        $where.where(fragment);
+      }
+    },
+    equalTo: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve73(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "equalTo"
+          });
+        $where.where(fragment);
+      }
+    },
+    notEqualTo: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve74(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notEqualTo"
+          });
+        $where.where(fragment);
+      }
+    },
+    distinctFrom: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve75(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "distinctFrom"
+          });
+        $where.where(fragment);
+      }
+    },
+    notDistinctFrom: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve76(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notDistinctFrom"
+          });
+        $where.where(fragment);
+      }
+    },
+    in: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec29 ? resolveInputCodec29(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve77(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "in"
+          });
+        $where.where(fragment);
+      }
+    },
+    notIn: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec29 ? resolveInputCodec29(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve78(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notIn"
+          });
+        $where.where(fragment);
+      }
+    },
+    lessThan: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve79(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThan"
+          });
+        $where.where(fragment);
+      }
+    },
+    lessThanOrEqualTo: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve80(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThanOrEqualTo"
+          });
+        $where.where(fragment);
+      }
+    },
+    greaterThan: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve81(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThan"
+          });
+        $where.where(fragment);
+      }
+    },
+    greaterThanOrEqualTo: {
+      applyPlan($where, fieldArgs) {
+        if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        const $input = fieldArgs.getRaw();
+        if ($input.evalIs(void 0)) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (false && $input.evalIs(null)) return;
+        if (!false && $input.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $resolvedInput = undefined ? lambda($input, undefined) : $input,
+          inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = undefined ? undefined($where, $input, inputCodec) : $where.placeholder($resolvedInput, inputCodec),
+          fragment = resolve82(sqlIdentifier, sqlValue, $input, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThanOrEqualTo"
+          });
+        $where.where(fragment);
       }
     }
   },
@@ -18539,6 +19034,16 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
           expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_postStatus.attributes.updated_at.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    isDefault: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)
         };
         fieldArgs.apply($col);
       }
@@ -22942,6 +23447,9 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     updatedAt($record) {
       return $record.get("updated_at");
     },
+    isDefault($record) {
+      return $record.get("is_default");
+    },
     project($record) {
       return resource_projectPgResource.get({
         id: $record.get("project_id")
@@ -23063,6 +23571,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("updated_at")}`,
         sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    isDefault($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("is_default")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.boolean);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
   PostStatusGroupBy: {
@@ -23092,6 +23605,9 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     UPDATED_AT_TRUNCATED_TO_DAY: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan9
+    },
+    IS_DEFAULT: {
+      applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan10
     }
   },
   PostStatusHavingInput: {
@@ -23482,6 +23998,32 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
           attribute: "updated_at",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    IS_DEFAULT_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "is_default",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    IS_DEFAULT_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "is_default",
           direction: "DESC",
           ...(undefined != null ? {
             nulls: undefined ? "LAST" : "FIRST"
@@ -23992,6 +24534,25 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           attribute: "updated_at",
           callback(expression) {
             return sql`${expression} = ${$condition.placeholder(val.get(), spec_postStatus.attributes.updated_at.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    isDefault: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "is_default",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "is_default",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_postStatus.attributes.is_default.codec)}`;
           }
         });
       },
@@ -27461,23 +28022,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    createPostStatus: {
-      plan(_, args) {
-        const plan = object({
-          result: pgInsertSingle(resource_post_statusPgResource, Object.create(null))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     createUser: {
       plan(_, args) {
         const plan = object({
@@ -27554,6 +28098,23 @@ ${String(oldPlan2)}`);
         if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
         if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
+      },
+      args: {
+        input: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    createPostStatus: {
+      plan(_, args) {
+        const plan = object({
+          result: pgInsertSingle(resource_post_statusPgResource, Object.create(null))
+        });
+        args.apply(plan);
+        return plan;
       },
       args: {
         input: {
@@ -27664,24 +28225,6 @@ ${String(oldPlan6)}`);
         }
       }
     },
-    updatePostStatus: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgUpdateSingle(resource_post_statusPgResource, {
-            id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     updateUser: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
@@ -27773,6 +28316,24 @@ ${String(oldPlan10)}`);
         if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
         if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    updatePostStatus: {
+      plan(_$root, args) {
+        const plan = object({
+          result: pgUpdateSingle(resource_post_statusPgResource, {
+            id: args.get(['input', "rowId"])
+          })
+        });
+        args.apply(plan);
+        return plan;
       },
       args: {
         input: {
@@ -27882,24 +28443,6 @@ ${String(oldPlan14)}`);
         }
       }
     },
-    deletePostStatus: {
-      plan(_$root, args) {
-        const plan = object({
-          result: pgDeleteSingle(resource_post_statusPgResource, {
-            id: args.get(['input', "rowId"])
-          })
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     deleteUser: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
@@ -27991,6 +28534,24 @@ ${String(oldPlan18)}`);
         if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
         if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
+      },
+      args: {
+        input: {
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    deletePostStatus: {
+      plan(_$root, args) {
+        const plan = object({
+          result: pgDeleteSingle(resource_post_statusPgResource, {
+            id: args.get(['input', "rowId"])
+          })
+        });
+        args.apply(plan);
+        return plan;
       },
       args: {
         input: {
@@ -28345,102 +28906,6 @@ ${String(oldPlan18)}`);
     userId: {
       applyPlan($insert, val) {
         $insert.set("user_id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    createdAt: {
-      applyPlan($insert, val) {
-        $insert.set("created_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    updatedAt: {
-      applyPlan($insert, val) {
-        $insert.set("updated_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    }
-  },
-  CreatePostStatusPayload: {
-    __assertStep: assertExecutableStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
-    },
-    postStatus($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    },
-    postStatusEdge: {
-      plan($mutation, args, info) {
-        const $result = $mutation.getStepForKey("result", !0);
-        if (!$result) return constant(null);
-        const $select = (() => {
-            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-              const spec = post_statusUniques[0].attributes.reduce((memo, attributeName) => {
-                memo[attributeName] = $result.get(attributeName);
-                return memo;
-              }, Object.create(null));
-              return resource_post_statusPgResource.find(spec);
-            }
-          })(),
-          $value = args.getRaw("orderBy");
-        applyOrderToPlan($select, $value, info.schema.getType("PostStatusOrderBy"));
-        const $connection = connection($select),
-          $single = $select.row(first($select));
-        return new EdgeStep($connection, $single);
-      },
-      args: {
-        orderBy: undefined
-      }
-    }
-  },
-  CreatePostStatusInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      },
-      autoApplyAfterParentApplyPlan: true
-    },
-    postStatus: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      },
-      autoApplyAfterParentApplyPlan: true
-    }
-  },
-  PostStatusInput: {
-    "__inputPlan": function PostStatusInput_inputPlan() {
-      return object(Object.create(null));
-    },
-    rowId: {
-      applyPlan($insert, val) {
-        $insert.set("id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    status: {
-      applyPlan($insert, val) {
-        $insert.set("status", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    description: {
-      applyPlan($insert, val) {
-        $insert.set("description", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    projectId: {
-      applyPlan($insert, val) {
-        $insert.set("project_id", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
@@ -28872,6 +29337,109 @@ ${String(oldPlan18)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
+  CreatePostStatusPayload: {
+    __assertStep: assertExecutableStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    postStatus($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    postStatusEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = post_statusUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return resource_post_statusPgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("PostStatusOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  CreatePostStatusInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      },
+      autoApplyAfterParentApplyPlan: true
+    },
+    postStatus: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      },
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
+  PostStatusInput: {
+    "__inputPlan": function PostStatusInput_inputPlan() {
+      return object(Object.create(null));
+    },
+    rowId: {
+      applyPlan($insert, val) {
+        $insert.set("id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    status: {
+      applyPlan($insert, val) {
+        $insert.set("status", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    description: {
+      applyPlan($insert, val) {
+        $insert.set("description", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    projectId: {
+      applyPlan($insert, val) {
+        $insert.set("project_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    createdAt: {
+      applyPlan($insert, val) {
+        $insert.set("created_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    updatedAt: {
+      applyPlan($insert, val) {
+        $insert.set("updated_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    isDefault: {
+      applyPlan($insert, val) {
+        $insert.set("is_default", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
   UpdateDownvotePayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -29212,101 +29780,6 @@ ${String(oldPlan18)}`);
     userId: {
       applyPlan($insert, val) {
         $insert.set("user_id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    createdAt: {
-      applyPlan($insert, val) {
-        $insert.set("created_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    updatedAt: {
-      applyPlan($insert, val) {
-        $insert.set("updated_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    }
-  },
-  UpdatePostStatusPayload: {
-    __assertStep: ObjectStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
-    },
-    postStatus($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    },
-    postStatusEdge: {
-      plan($mutation, args, info) {
-        const $result = $mutation.getStepForKey("result", !0);
-        if (!$result) return constant(null);
-        const $select = (() => {
-            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-              const spec = post_statusUniques[0].attributes.reduce((memo, attributeName) => {
-                memo[attributeName] = $result.get(attributeName);
-                return memo;
-              }, Object.create(null));
-              return resource_post_statusPgResource.find(spec);
-            }
-          })(),
-          $value = args.getRaw("orderBy");
-        applyOrderToPlan($select, $value, info.schema.getType("PostStatusOrderBy"));
-        const $connection = connection($select),
-          $single = $select.row(first($select));
-        return new EdgeStep($connection, $single);
-      },
-      args: {
-        orderBy: undefined
-      }
-    }
-  },
-  UpdatePostStatusInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
-  PostStatusPatch: {
-    "__inputPlan": function PostStatusPatch_inputPlan() {
-      return object(Object.create(null));
-    },
-    rowId: {
-      applyPlan($insert, val) {
-        $insert.set("id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    status: {
-      applyPlan($insert, val) {
-        $insert.set("status", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    description: {
-      applyPlan($insert, val) {
-        $insert.set("description", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    projectId: {
-      applyPlan($insert, val) {
-        $insert.set("project_id", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
@@ -29734,6 +30207,108 @@ ${String(oldPlan18)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
+  UpdatePostStatusPayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    postStatus($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    postStatusEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = post_statusUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return resource_post_statusPgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("PostStatusOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  UpdatePostStatusInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    rowId: undefined,
+    patch: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      }
+    }
+  },
+  PostStatusPatch: {
+    "__inputPlan": function PostStatusPatch_inputPlan() {
+      return object(Object.create(null));
+    },
+    rowId: {
+      applyPlan($insert, val) {
+        $insert.set("id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    status: {
+      applyPlan($insert, val) {
+        $insert.set("status", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    description: {
+      applyPlan($insert, val) {
+        $insert.set("description", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    projectId: {
+      applyPlan($insert, val) {
+        $insert.set("project_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    createdAt: {
+      applyPlan($insert, val) {
+        $insert.set("created_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    updatedAt: {
+      applyPlan($insert, val) {
+        $insert.set("updated_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    isDefault: {
+      applyPlan($insert, val) {
+        $insert.set("is_default", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
   DeleteDownvotePayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -29906,49 +30481,6 @@ ${String(oldPlan18)}`);
     },
     rowId: undefined
   },
-  DeletePostStatusPayload: {
-    __assertStep: ObjectStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
-    },
-    postStatus($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    },
-    postStatusEdge: {
-      plan($mutation, args, info) {
-        const $result = $mutation.getStepForKey("result", !0);
-        if (!$result) return constant(null);
-        const $select = (() => {
-            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-              const spec = post_statusUniques[0].attributes.reduce((memo, attributeName) => {
-                memo[attributeName] = $result.get(attributeName);
-                return memo;
-              }, Object.create(null));
-              return resource_post_statusPgResource.find(spec);
-            }
-          })(),
-          $value = args.getRaw("orderBy");
-        applyOrderToPlan($select, $value, info.schema.getType("PostStatusOrderBy"));
-        const $connection = connection($select),
-          $single = $select.row(first($select));
-        return new EdgeStep($connection, $single);
-      },
-      args: {
-        orderBy: undefined
-      }
-    }
-  },
-  DeletePostStatusInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined
-  },
   DeleteUserPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -30114,6 +30646,49 @@ ${String(oldPlan18)}`);
     }
   },
   DeleteMemberInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    rowId: undefined
+  },
+  DeletePostStatusPayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    postStatus($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    postStatusEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = post_statusUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return resource_post_statusPgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("PostStatusOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  DeletePostStatusInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());

@@ -1,4 +1,11 @@
-import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  index,
+  pgTable,
+  text,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 
@@ -20,6 +27,7 @@ export const postStatuses = pgTable(
       .references(() => projects.id, {
         onDelete: "cascade",
       }),
+    isDefault: boolean().notNull().default(false),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
