@@ -26,7 +26,7 @@ const armor = new EnvelopArmor({
   },
   costLimit: {
     enabled: true,
-    maxCost: 200,
+    maxCost: 250,
     objectCost: 2,
     scalarCost: 1,
     depthCostFactor: 1.5,

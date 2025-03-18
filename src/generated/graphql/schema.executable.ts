@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "173240",
+    oid: "174872",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "173153",
+    oid: "174785",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "173115",
+    oid: "174747",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +400,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "173220",
+    oid: "174852",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -492,7 +492,7 @@ const spec_postStatus = {
   }),
   description: undefined,
   extensions: {
-    oid: "173313",
+    oid: "174945",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -511,7 +511,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "173259",
+    oid: "174891",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -587,7 +587,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-    oid: "173175",
+    oid: "174807",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -703,7 +703,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "173129",
+    oid: "174761",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -819,7 +819,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "173139",
+    oid: "174771",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -923,7 +923,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "173163",
+    oid: "174795",
     isTableLike: true,
     pg: {
       serviceName: "main",
