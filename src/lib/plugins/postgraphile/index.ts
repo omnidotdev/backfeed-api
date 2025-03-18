@@ -3,6 +3,7 @@ export { default as DownvoteRBACPlugin } from "./DownvoteRBACPlugin";
 export { default as MemberRBACPlugin } from "./MemberRBACPlugin";
 export { default as OrganizationRBACPlugin } from "./OrganizationRBACPlugin";
 export { default as PostRBACPlugin } from "./PostRBACPlugin";
+export { default as PostStatusRBACPlugin } from "./PostStatusRBACPlugin";
 export { default as PrimaryKeyMutationsOnlyPlugin } from "./PrimaryKeyMutationsOnlyPlugin";
 export { default as ProjectRBACPlugin } from "./ProjectRBACPlugin";
 export { default as UpvoteRBACPlugin } from "./UpvoteRBACPlugin";
