@@ -3,6 +3,7 @@ import {
   index,
   pgTable,
   text,
+  timestamp,
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
@@ -31,6 +32,11 @@ export const postStatuses = pgTable(
     isDefault: boolean().notNull().default(false),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
+    deletedAt: timestamp({
+      precision: 6,
+      mode: "string",
+      withTimezone: true,
+    }),
   },
   (table) => [
     // NB: indexes must be unique across all tables. The index for `statusId` in `posts` generates `post_status_id_index` which would cause a conflict with the below.

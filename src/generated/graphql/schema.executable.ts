@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "174872",
+    oid: "176408",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "174785",
+    oid: "176321",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "174747",
+    oid: "176283",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +400,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "174852",
+    oid: "176388",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -504,7 +504,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "174795",
+    oid: "176331",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -516,6 +516,122 @@ const spec_user = {
   executor: executor
 };
 const userCodec = recordCodec(spec_user);
+const projectIdentifier = sql.identifier("public", "project");
+const spec_project = {
+  name: "project",
+  identifier: projectIdentifier,
+  attributes: Object.assign(Object.create(null), {
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    image: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    slug: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: false,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: false,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  }),
+  description: undefined,
+  extensions: {
+    oid: "176307",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project"
+    },
+    tags: Object.create(null)
+  },
+  executor: executor
+};
+const projectCodec = recordCodec(spec_project);
 const memberIdentifier = sql.identifier("public", "member");
 const roleCodec = enumCodec({
   name: "role",
@@ -523,7 +639,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "174891",
+    oid: "176427",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -599,7 +715,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-    oid: "174807",
+    oid: "176343",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -727,7 +843,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "174761",
+    oid: "176297",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -839,11 +955,23 @@ const spec_postStatus = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    deleted_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   }),
   description: undefined,
   extensions: {
-    oid: "174945",
+    oid: "176481",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -855,122 +983,6 @@ const spec_postStatus = {
   executor: executor
 };
 const postStatusCodec = recordCodec(spec_postStatus);
-const projectIdentifier = sql.identifier("public", "project");
-const spec_project = {
-  name: "project",
-  identifier: projectIdentifier,
-  attributes: Object.assign(Object.create(null), {
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    image: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    slug: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  }),
-  description: undefined,
-  extensions: {
-    oid: "174771",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "project"
-    },
-    tags: Object.create(null)
-  },
-  executor: executor
-};
-const projectCodec = recordCodec(spec_project);
 const downvoteUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1371,12 +1383,12 @@ const registryConfig = {
     text: TYPES.text,
     comment: commentCodec,
     user: userCodec,
+    project: projectCodec,
     member: memberCodec,
     role: roleCodec,
     post: postCodec,
     postStatus: postStatusCodec,
-    bool: TYPES.boolean,
-    project: projectCodec
+    bool: TYPES.boolean
   }),
   pgResources: Object.assign(Object.create(null), {
     downvote: registryConfig_pgResources_downvote_downvote,
@@ -3572,6 +3584,11 @@ const colSpec58 = {
   attributeName: "color",
   attribute: spec_postStatus.attributes.color
 };
+const colSpec59 = {
+  fieldName: "deletedAt",
+  attributeName: "deleted_at",
+  attribute: spec_postStatus.attributes.deleted_at
+};
 function assertAllowed46(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -4415,6 +4432,21 @@ function PostStatusGroupBy_extensions_grafast_applyPlan11($pgSelect) {
     fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("color")}`
   });
 }
+function PostStatusGroupBy_extensions_grafast_applyPlan12($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("deleted_at")}`
+  });
+}
+function PostStatusGroupBy_extensions_grafast_applyPlan13($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("deleted_at")}`)
+  });
+}
+function PostStatusGroupBy_extensions_grafast_applyPlan14($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("deleted_at")}`)
+  });
+}
 export const PostStatusGroupBy = new GraphQLEnumType({
   name: "PostStatusGroupBy",
   description: "Grouping methods for `PostStatus` for usage during aggregation.",
@@ -4504,6 +4536,30 @@ export const PostStatusGroupBy = new GraphQLEnumType({
       extensions: Object.assign(Object.create(null), {
         grafast: {
           applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan11
+        }
+      })
+    },
+    DELETED_AT: {
+      value: "DELETED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan12
+        }
+      })
+    },
+    DELETED_AT_TRUNCATED_TO_HOUR: {
+      value: "DELETED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan13
+        }
+      })
+    },
+    DELETED_AT_TRUNCATED_TO_DAY: {
+      value: "DELETED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan14
         }
       })
     }
@@ -6299,6 +6355,8 @@ enum ProjectOrderBy {
   POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_DESC
   POST_STATUSES_DISTINCT_COUNT_COLOR_ASC
   POST_STATUSES_DISTINCT_COUNT_COLOR_DESC
+  POST_STATUSES_DISTINCT_COUNT_DELETED_AT_ASC
+  POST_STATUSES_DISTINCT_COUNT_DELETED_AT_DESC
 }
 
 """
@@ -7409,6 +7467,9 @@ input PostStatusFilter {
   """Filter by the object’s \`color\` field."""
   color: StringFilter
 
+  """Filter by the object’s \`deletedAt\` field."""
+  deletedAt: DatetimeFilter
+
   """Filter by the object’s \`postsByStatusId\` relation."""
   postsByStatusId: PostStatusToManyPostFilter
 
@@ -7536,6 +7597,7 @@ input PostStatusDistinctCountAggregateFilter {
   updatedAt: BigIntFilter
   isDefault: BigIntFilter
   color: BigIntFilter
+  deletedAt: BigIntFilter
 }
 
 """A connection to a list of \`Member\` values."""
@@ -8772,6 +8834,7 @@ type PostStatus {
   updatedAt: Datetime
   isDefault: Boolean!
   color: String
+  deletedAt: Datetime
 
   """Reads a single \`Project\` that is related to this \`PostStatus\`."""
   project: Project
@@ -8853,6 +8916,9 @@ type PostStatusDistinctCountAggregates {
 
   """Distinct count of color across the matching connection"""
   color: BigInt
+
+  """Distinct count of deletedAt across the matching connection"""
+  deletedAt: BigInt
 }
 
 """Grouping methods for \`PostStatus\` for usage during aggregation."""
@@ -8868,6 +8934,9 @@ enum PostStatusGroupBy {
   UPDATED_AT_TRUNCATED_TO_DAY
   IS_DEFAULT
   COLOR
+  DELETED_AT
+  DELETED_AT_TRUNCATED_TO_HOUR
+  DELETED_AT_TRUNCATED_TO_DAY
 }
 
 """Conditions for \`PostStatus\` aggregates."""
@@ -8888,46 +8957,55 @@ input PostStatusHavingInput {
 input PostStatusHavingSumInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  deletedAt: HavingDatetimeFilter
 }
 
 input PostStatusHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  deletedAt: HavingDatetimeFilter
 }
 
 input PostStatusHavingMinInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  deletedAt: HavingDatetimeFilter
 }
 
 input PostStatusHavingMaxInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  deletedAt: HavingDatetimeFilter
 }
 
 input PostStatusHavingAverageInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  deletedAt: HavingDatetimeFilter
 }
 
 input PostStatusHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  deletedAt: HavingDatetimeFilter
 }
 
 input PostStatusHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  deletedAt: HavingDatetimeFilter
 }
 
 input PostStatusHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  deletedAt: HavingDatetimeFilter
 }
 
 input PostStatusHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  deletedAt: HavingDatetimeFilter
 }
 
 """Methods to use when ordering \`PostStatus\`."""
@@ -8951,6 +9029,8 @@ enum PostStatusOrderBy {
   IS_DEFAULT_DESC
   COLOR_ASC
   COLOR_DESC
+  DELETED_AT_ASC
+  DELETED_AT_DESC
   POSTS_BY_STATUS_ID_COUNT_ASC
   POSTS_BY_STATUS_ID_COUNT_DESC
   POSTS_BY_STATUS_ID_DISTINCT_COUNT_ROW_ID_ASC
@@ -9001,6 +9081,9 @@ input PostStatusCondition {
 
   """Checks for equality with the object’s \`color\` field."""
   color: String
+
+  """Checks for equality with the object’s \`deletedAt\` field."""
+  deletedAt: Datetime
 }
 
 """A connection to a list of \`Organization\` values."""
@@ -10100,6 +10183,7 @@ input PostStatusInput {
   updatedAt: Datetime
   isDefault: Boolean
   color: String
+  deletedAt: Datetime
 }
 
 """The output of our update \`Downvote\` mutation."""
@@ -10550,6 +10634,7 @@ input PostStatusPatch {
   updatedAt: Datetime
   isDefault: Boolean
   color: String
+  deletedAt: Datetime
 }
 
 """The output of our delete \`Downvote\` mutation."""
@@ -13706,6 +13791,50 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.color.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.color.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POST_STATUSES_DISTINCT_COUNT_DELETED_AT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("deleted_at")}`, spec_postStatus.attributes.deleted_at.codec)}
+from ${resource_post_statusPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.deleted_at.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.deleted_at.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POST_STATUSES_DISTINCT_COUNT_DELETED_AT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("deleted_at")}`, spec_postStatus.attributes.deleted_at.codec)}
+from ${resource_post_statusPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.deleted_at.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.deleted_at.codec,
           direction: "DESC"
         });
       }
@@ -18793,6 +18922,17 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         fieldArgs.apply($col);
       }
     },
+    deletedAt: {
+      applyPlan($where, fieldArgs) {
+        const $raw = fieldArgs.getRaw();
+        if ($raw.evalIs(void 0)) return;
+        if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+        if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $col = new PgConditionStep($where);
+        $col.extensions.pgFilterAttribute = colSpec59;
+        fieldArgs.apply($col);
+      }
+    },
     postsByStatusId: {
       applyPlan($where, fieldArgs) {
         assertAllowed46(fieldArgs, "object");
@@ -19417,6 +19557,16 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
           expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("color")}`, spec_postStatus.attributes.color.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    deletedAt: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("deleted_at")}`, spec_postStatus.attributes.deleted_at.codec)
         };
         fieldArgs.apply($col);
       }
@@ -23948,6 +24098,9 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     color($record) {
       return $record.get("color");
     },
+    deletedAt($record) {
+      return $record.get("deleted_at");
+    },
     project($record) {
       return resource_projectPgResource.get({
         id: $record.get("project_id")
@@ -24079,6 +24232,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("color")}`,
         sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    deletedAt($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("deleted_at")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
   PostStatusGroupBy: {
@@ -24114,6 +24272,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     COLOR: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan11
+    },
+    DELETED_AT: {
+      applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan12
+    },
+    DELETED_AT_TRUNCATED_TO_HOUR: {
+      applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan13
+    },
+    DELETED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan14
     }
   },
   PostStatusHavingInput: {
@@ -24190,6 +24357,13 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.updated_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
+    },
+    deletedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("deleted_at")}`,
+          aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.deleted_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
     }
   },
   PostStatusHavingDistinctCountInput: {
@@ -24204,6 +24378,13 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    deletedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("deleted_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.deleted_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
@@ -24222,6 +24403,13 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.updated_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
+    },
+    deletedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("deleted_at")}`,
+          aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.deleted_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
     }
   },
   PostStatusHavingMaxInput: {
@@ -24236,6 +24424,13 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    deletedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("deleted_at")}`,
+          aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.deleted_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
@@ -24254,6 +24449,13 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.updated_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
+    },
+    deletedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("deleted_at")}`,
+          aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.deleted_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
     }
   },
   PostStatusHavingStddevSampleInput: {
@@ -24268,6 +24470,13 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    deletedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("deleted_at")}`,
+          aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.deleted_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
@@ -24286,6 +24495,13 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.updated_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
+    },
+    deletedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("deleted_at")}`,
+          aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.deleted_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
     }
   },
   PostStatusHavingVarianceSampleInput: {
@@ -24302,6 +24518,13 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.updated_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
+    },
+    deletedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("deleted_at")}`,
+          aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.deleted_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
     }
   },
   PostStatusHavingVariancePopulationInput: {
@@ -24316,6 +24539,13 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       applyPlan($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.updated_at.codec);
+        return new PgBooleanFilterStep($having, aggregateExpression);
+      }
+    },
+    deletedAt: {
+      applyPlan($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("deleted_at")}`,
+          aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_postStatus.attributes.deleted_at.codec);
         return new PgBooleanFilterStep($having, aggregateExpression);
       }
     }
@@ -24556,6 +24786,32 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
           attribute: "color",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    DELETED_AT_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "deleted_at",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    DELETED_AT_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "deleted_at",
           direction: "DESC",
           ...(undefined != null ? {
             nulls: undefined ? "LAST" : "FIRST"
@@ -25148,6 +25404,25 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           attribute: "color",
           callback(expression) {
             return sql`${expression} = ${$condition.placeholder(val.get(), spec_postStatus.attributes.color.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    deletedAt: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "deleted_at",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "deleted_at",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_postStatus.attributes.deleted_at.codec)}`;
           }
         });
       },
@@ -30114,6 +30389,13 @@ ${String(oldPlan21)}`);
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
+    },
+    deletedAt: {
+      applyPlan($insert, val) {
+        $insert.set("deleted_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
     }
   },
   UpdateDownvotePayload: {
@@ -30994,6 +31276,13 @@ ${String(oldPlan21)}`);
     color: {
       applyPlan($insert, val) {
         $insert.set("color", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    deletedAt: {
+      applyPlan($insert, val) {
+        $insert.set("deleted_at", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
