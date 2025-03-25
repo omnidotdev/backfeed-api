@@ -1,1 +1,0 @@
-ALTER TABLE "post_status" ADD COLUMN "deleted_at" timestamp(6) with time zone;

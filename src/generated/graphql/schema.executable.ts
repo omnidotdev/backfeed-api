@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "176408",
+    oid: "177582",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "176321",
+    oid: "177495",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "176283",
+    oid: "177457",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +400,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "176388",
+    oid: "177562",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -504,7 +504,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "176331",
+    oid: "177505",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -523,7 +523,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "176427",
+    oid: "177601",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -599,7 +599,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-    oid: "176343",
+    oid: "177517",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -727,7 +727,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "176297",
+    oid: "177471",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -780,11 +780,35 @@ const spec_postStatus = {
         canUpdate: true
       }
     },
+    color: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
     project_id: {
       description: undefined,
       codec: TYPES.uuid,
       notNull: true,
       hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    is_default: {
+      description: undefined,
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
       extensions: {
         tags: {},
         canSelect: true,
@@ -815,35 +839,11 @@ const spec_postStatus = {
         canInsert: true,
         canUpdate: true
       }
-    },
-    is_default: {
-      description: undefined,
-      codec: TYPES.boolean,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    color: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
     }
   }),
   description: undefined,
   extensions: {
-    oid: "176481",
+    oid: "177655",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -959,7 +959,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "176307",
+    oid: "177481",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3548,29 +3548,29 @@ const colSpec53 = {
   attribute: spec_postStatus.attributes.description
 };
 const colSpec54 = {
+  fieldName: "color",
+  attributeName: "color",
+  attribute: spec_postStatus.attributes.color
+};
+const colSpec55 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_postStatus.attributes.project_id
 };
-const colSpec55 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_postStatus.attributes.created_at
-};
 const colSpec56 = {
-  fieldName: "updatedAt",
-  attributeName: "updated_at",
-  attribute: spec_postStatus.attributes.updated_at
-};
-const colSpec57 = {
   fieldName: "isDefault",
   attributeName: "is_default",
   attribute: spec_postStatus.attributes.is_default
 };
+const colSpec57 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_postStatus.attributes.created_at
+};
 const colSpec58 = {
-  fieldName: "color",
-  attributeName: "color",
-  attribute: spec_postStatus.attributes.color
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_postStatus.attributes.updated_at
 };
 function assertAllowed46(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
@@ -4372,47 +4372,47 @@ function PostStatusGroupBy_extensions_grafast_applyPlan2($pgSelect) {
 }
 function PostStatusGroupBy_extensions_grafast_applyPlan3($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("project_id")}`
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("color")}`
   });
 }
 function PostStatusGroupBy_extensions_grafast_applyPlan4($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("project_id")}`
   });
 }
 function PostStatusGroupBy_extensions_grafast_applyPlan5($pgSelect) {
   $pgSelect.groupBy({
-    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("is_default")}`
   });
 }
 function PostStatusGroupBy_extensions_grafast_applyPlan6($pgSelect) {
   $pgSelect.groupBy({
-    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
   });
 }
 function PostStatusGroupBy_extensions_grafast_applyPlan7($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
   });
 }
 function PostStatusGroupBy_extensions_grafast_applyPlan8($pgSelect) {
   $pgSelect.groupBy({
-    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
   });
 }
 function PostStatusGroupBy_extensions_grafast_applyPlan9($pgSelect) {
   $pgSelect.groupBy({
-    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
   });
 }
 function PostStatusGroupBy_extensions_grafast_applyPlan10($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("is_default")}`
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
   });
 }
 function PostStatusGroupBy_extensions_grafast_applyPlan11($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("color")}`
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
   });
 }
 export const PostStatusGroupBy = new GraphQLEnumType({
@@ -4435,59 +4435,19 @@ export const PostStatusGroupBy = new GraphQLEnumType({
         }
       })
     },
-    PROJECT_ID: {
-      value: "PROJECT_ID",
+    COLOR: {
+      value: "COLOR",
       extensions: Object.assign(Object.create(null), {
         grafast: {
           applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan3
         }
       })
     },
-    CREATED_AT: {
-      value: "CREATED_AT",
+    PROJECT_ID: {
+      value: "PROJECT_ID",
       extensions: Object.assign(Object.create(null), {
         grafast: {
           applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan4
-        }
-      })
-    },
-    CREATED_AT_TRUNCATED_TO_HOUR: {
-      value: "CREATED_AT_TRUNCATED_TO_HOUR",
-      extensions: Object.assign(Object.create(null), {
-        grafast: {
-          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan5
-        }
-      })
-    },
-    CREATED_AT_TRUNCATED_TO_DAY: {
-      value: "CREATED_AT_TRUNCATED_TO_DAY",
-      extensions: Object.assign(Object.create(null), {
-        grafast: {
-          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan6
-        }
-      })
-    },
-    UPDATED_AT: {
-      value: "UPDATED_AT",
-      extensions: Object.assign(Object.create(null), {
-        grafast: {
-          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan7
-        }
-      })
-    },
-    UPDATED_AT_TRUNCATED_TO_HOUR: {
-      value: "UPDATED_AT_TRUNCATED_TO_HOUR",
-      extensions: Object.assign(Object.create(null), {
-        grafast: {
-          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan8
-        }
-      })
-    },
-    UPDATED_AT_TRUNCATED_TO_DAY: {
-      value: "UPDATED_AT_TRUNCATED_TO_DAY",
-      extensions: Object.assign(Object.create(null), {
-        grafast: {
-          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan9
         }
       })
     },
@@ -4495,12 +4455,52 @@ export const PostStatusGroupBy = new GraphQLEnumType({
       value: "IS_DEFAULT",
       extensions: Object.assign(Object.create(null), {
         grafast: {
+          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan5
+        }
+      })
+    },
+    CREATED_AT: {
+      value: "CREATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan6
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR: {
+      value: "CREATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan7
+        }
+      })
+    },
+    CREATED_AT_TRUNCATED_TO_DAY: {
+      value: "CREATED_AT_TRUNCATED_TO_DAY",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan8
+        }
+      })
+    },
+    UPDATED_AT: {
+      value: "UPDATED_AT",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan9
+        }
+      })
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
+      value: "UPDATED_AT_TRUNCATED_TO_HOUR",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
           applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan10
         }
       })
     },
-    COLOR: {
-      value: "COLOR",
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      value: "UPDATED_AT_TRUNCATED_TO_DAY",
       extensions: Object.assign(Object.create(null), {
         grafast: {
           applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan11
@@ -6289,16 +6289,16 @@ enum ProjectOrderBy {
   POST_STATUSES_DISTINCT_COUNT_STATUS_DESC
   POST_STATUSES_DISTINCT_COUNT_DESCRIPTION_ASC
   POST_STATUSES_DISTINCT_COUNT_DESCRIPTION_DESC
+  POST_STATUSES_DISTINCT_COUNT_COLOR_ASC
+  POST_STATUSES_DISTINCT_COUNT_COLOR_DESC
   POST_STATUSES_DISTINCT_COUNT_PROJECT_ID_ASC
   POST_STATUSES_DISTINCT_COUNT_PROJECT_ID_DESC
+  POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_ASC
+  POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_DESC
   POST_STATUSES_DISTINCT_COUNT_CREATED_AT_ASC
   POST_STATUSES_DISTINCT_COUNT_CREATED_AT_DESC
   POST_STATUSES_DISTINCT_COUNT_UPDATED_AT_ASC
   POST_STATUSES_DISTINCT_COUNT_UPDATED_AT_DESC
-  POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_ASC
-  POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_DESC
-  POST_STATUSES_DISTINCT_COUNT_COLOR_ASC
-  POST_STATUSES_DISTINCT_COUNT_COLOR_DESC
 }
 
 """
@@ -7397,20 +7397,20 @@ input PostStatusFilter {
   """Filter by the object’s \`description\` field."""
   description: StringFilter
 
+  """Filter by the object’s \`color\` field."""
+  color: StringFilter
+
   """Filter by the object’s \`projectId\` field."""
   projectId: UUIDFilter
+
+  """Filter by the object’s \`isDefault\` field."""
+  isDefault: BooleanFilter
 
   """Filter by the object’s \`createdAt\` field."""
   createdAt: DatetimeFilter
 
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
-
-  """Filter by the object’s \`isDefault\` field."""
-  isDefault: BooleanFilter
-
-  """Filter by the object’s \`color\` field."""
-  color: StringFilter
 
   """Filter by the object’s \`postsByStatusId\` relation."""
   postsByStatusId: PostStatusToManyPostFilter
@@ -7534,11 +7534,11 @@ input PostStatusDistinctCountAggregateFilter {
   rowId: BigIntFilter
   status: BigIntFilter
   description: BigIntFilter
+  color: BigIntFilter
   projectId: BigIntFilter
+  isDefault: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
-  isDefault: BigIntFilter
-  color: BigIntFilter
 }
 
 """A connection to a list of \`Member\` values."""
@@ -8770,11 +8770,11 @@ type PostStatus {
   rowId: UUID!
   status: String!
   description: String
+  color: String
   projectId: UUID!
+  isDefault: Boolean!
   createdAt: Datetime
   updatedAt: Datetime
-  isDefault: Boolean!
-  color: String
 
   """Reads a single \`Project\` that is related to this \`PostStatus\`."""
   project: Project
@@ -8842,35 +8842,35 @@ type PostStatusDistinctCountAggregates {
   """Distinct count of description across the matching connection"""
   description: BigInt
 
+  """Distinct count of color across the matching connection"""
+  color: BigInt
+
   """Distinct count of projectId across the matching connection"""
   projectId: BigInt
+
+  """Distinct count of isDefault across the matching connection"""
+  isDefault: BigInt
 
   """Distinct count of createdAt across the matching connection"""
   createdAt: BigInt
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
-
-  """Distinct count of isDefault across the matching connection"""
-  isDefault: BigInt
-
-  """Distinct count of color across the matching connection"""
-  color: BigInt
 }
 
 """Grouping methods for \`PostStatus\` for usage during aggregation."""
 enum PostStatusGroupBy {
   STATUS
   DESCRIPTION
+  COLOR
   PROJECT_ID
+  IS_DEFAULT
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
-  IS_DEFAULT
-  COLOR
 }
 
 """Conditions for \`PostStatus\` aggregates."""
@@ -8944,16 +8944,16 @@ enum PostStatusOrderBy {
   STATUS_DESC
   DESCRIPTION_ASC
   DESCRIPTION_DESC
+  COLOR_ASC
+  COLOR_DESC
   PROJECT_ID_ASC
   PROJECT_ID_DESC
+  IS_DEFAULT_ASC
+  IS_DEFAULT_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  IS_DEFAULT_ASC
-  IS_DEFAULT_DESC
-  COLOR_ASC
-  COLOR_DESC
   POSTS_BY_STATUS_ID_COUNT_ASC
   POSTS_BY_STATUS_ID_COUNT_DESC
   POSTS_BY_STATUS_ID_DISTINCT_COUNT_ROW_ID_ASC
@@ -8990,20 +8990,20 @@ input PostStatusCondition {
   """Checks for equality with the object’s \`description\` field."""
   description: String
 
+  """Checks for equality with the object’s \`color\` field."""
+  color: String
+
   """Checks for equality with the object’s \`projectId\` field."""
   projectId: UUID
+
+  """Checks for equality with the object’s \`isDefault\` field."""
+  isDefault: Boolean
 
   """Checks for equality with the object’s \`createdAt\` field."""
   createdAt: Datetime
 
   """Checks for equality with the object’s \`updatedAt\` field."""
   updatedAt: Datetime
-
-  """Checks for equality with the object’s \`isDefault\` field."""
-  isDefault: Boolean
-
-  """Checks for equality with the object’s \`color\` field."""
-  color: String
 }
 
 """A connection to a list of \`Organization\` values."""
@@ -10098,11 +10098,11 @@ input PostStatusInput {
   rowId: UUID
   status: String!
   description: String
+  color: String
   projectId: UUID!
+  isDefault: Boolean
   createdAt: Datetime
   updatedAt: Datetime
-  isDefault: Boolean
-  color: String
 }
 
 """The output of our update \`Downvote\` mutation."""
@@ -10548,11 +10548,11 @@ input PostStatusPatch {
   rowId: UUID
   status: String
   description: String
+  color: String
   projectId: UUID
+  isDefault: Boolean
   createdAt: Datetime
   updatedAt: Datetime
-  isDefault: Boolean
-  color: String
 }
 
 """The output of our delete \`Downvote\` mutation."""
@@ -13493,6 +13493,50 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         });
       }
     },
+    POST_STATUSES_DISTINCT_COUNT_COLOR_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("color")}`, spec_postStatus.attributes.color.codec)}
+from ${resource_post_statusPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.color.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.color.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POST_STATUSES_DISTINCT_COUNT_COLOR_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("color")}`, spec_postStatus.attributes.color.codec)}
+from ${resource_post_statusPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.color.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.color.codec,
+          direction: "DESC"
+        });
+      }
+    },
     POST_STATUSES_DISTINCT_COUNT_PROJECT_ID_ASC: {
       applyPlan($select) {
         var _a, _b;
@@ -13533,6 +13577,50 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.project_id.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.project_id.codec,
+          direction: "DESC"
+        });
+      }
+    },
+    POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_ASC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)}
+from ${resource_post_statusPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.is_default.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.is_default.codec,
+          direction: "ASC"
+        });
+      }
+    },
+    POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_DESC: {
+      applyPlan($select) {
+        var _a, _b;
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)}
+from ${resource_post_statusPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.is_default.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.is_default.codec,
           direction: "DESC"
         });
       }
@@ -13621,94 +13709,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.updated_at.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.updated_at.codec,
-          direction: "DESC"
-        });
-      }
-    },
-    POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_ASC: {
-      applyPlan($select) {
-        var _a, _b;
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
-        relation2.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation2.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)}
-from ${resource_post_statusPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.is_default.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.is_default.codec,
-          direction: "ASC"
-        });
-      }
-    },
-    POST_STATUSES_DISTINCT_COUNT_IS_DEFAULT_DESC: {
-      applyPlan($select) {
-        var _a, _b;
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
-        relation2.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation2.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)}
-from ${resource_post_statusPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.is_default.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.is_default.codec,
-          direction: "DESC"
-        });
-      }
-    },
-    POST_STATUSES_DISTINCT_COUNT_COLOR_ASC: {
-      applyPlan($select) {
-        var _a, _b;
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
-        relation2.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation2.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("color")}`, spec_postStatus.attributes.color.codec)}
-from ${resource_post_statusPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.color.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.color.codec,
-          direction: "ASC"
-        });
-      }
-    },
-    POST_STATUSES_DISTINCT_COUNT_COLOR_DESC: {
-      applyPlan($select) {
-        var _a, _b;
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_post_statusPgResource.name));
-        relation2.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation2.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("color")}`, spec_postStatus.attributes.color.codec)}
-from ${resource_post_statusPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: (_b = (_a = spec.pgTypeCodecModifier) === null || _a === void 0 ? void 0 : _a.call(spec, spec_postStatus.attributes.color.codec)) !== null && _b !== void 0 ? _b : spec_postStatus.attributes.color.codec,
           direction: "DESC"
         });
       }
@@ -18755,7 +18755,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         fieldArgs.apply($col);
       }
     },
-    projectId: {
+    color: {
       applyPlan($where, fieldArgs) {
         const $raw = fieldArgs.getRaw();
         if ($raw.evalIs(void 0)) return;
@@ -18766,7 +18766,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         fieldArgs.apply($col);
       }
     },
-    createdAt: {
+    projectId: {
       applyPlan($where, fieldArgs) {
         const $raw = fieldArgs.getRaw();
         if ($raw.evalIs(void 0)) return;
@@ -18777,7 +18777,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         fieldArgs.apply($col);
       }
     },
-    updatedAt: {
+    isDefault: {
       applyPlan($where, fieldArgs) {
         const $raw = fieldArgs.getRaw();
         if ($raw.evalIs(void 0)) return;
@@ -18788,7 +18788,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         fieldArgs.apply($col);
       }
     },
-    isDefault: {
+    createdAt: {
       applyPlan($where, fieldArgs) {
         const $raw = fieldArgs.getRaw();
         if ($raw.evalIs(void 0)) return;
@@ -18799,7 +18799,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         fieldArgs.apply($col);
       }
     },
-    color: {
+    updatedAt: {
       applyPlan($where, fieldArgs) {
         const $raw = fieldArgs.getRaw();
         if ($raw.evalIs(void 0)) return;
@@ -19388,12 +19388,32 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         fieldArgs.apply($col);
       }
     },
+    color: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("color")}`, spec_postStatus.attributes.color.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
     projectId: {
       applyPlan($parent, fieldArgs) {
         const $col = new PgConditionStep($parent);
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
           expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("project_id")}`, spec_postStatus.attributes.project_id.codec)
+        };
+        fieldArgs.apply($col);
+      }
+    },
+    isDefault: {
+      applyPlan($parent, fieldArgs) {
+        const $col = new PgConditionStep($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)
         };
         fieldArgs.apply($col);
       }
@@ -19414,26 +19434,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
           expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_postStatus.attributes.updated_at.codec)
-        };
-        fieldArgs.apply($col);
-      }
-    },
-    isDefault: {
-      applyPlan($parent, fieldArgs) {
-        const $col = new PgConditionStep($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)
-        };
-        fieldArgs.apply($col);
-      }
-    },
-    color: {
-      applyPlan($parent, fieldArgs) {
-        const $col = new PgConditionStep($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("color")}`, spec_postStatus.attributes.color.codec)
         };
         fieldArgs.apply($col);
       }
@@ -23950,20 +23950,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     description($record) {
       return $record.get("description");
     },
+    color($record) {
+      return $record.get("color");
+    },
     projectId($record) {
       return $record.get("project_id");
+    },
+    isDefault($record) {
+      return $record.get("is_default");
     },
     createdAt($record) {
       return $record.get("created_at");
     },
     updatedAt($record) {
       return $record.get("updated_at");
-    },
-    isDefault($record) {
-      return $record.get("is_default");
-    },
-    color($record) {
-      return $record.get("color");
     },
     project($record) {
       return resource_projectPgResource.get({
@@ -24072,9 +24072,19 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     },
+    color($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("color")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
     projectId($pgSelectSingle) {
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("project_id")}`,
         sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    isDefault($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("is_default")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.boolean);
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     },
     createdAt($pgSelectSingle) {
@@ -24086,16 +24096,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("updated_at")}`,
         sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-    },
-    isDefault($pgSelectSingle) {
-      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("is_default")}`,
-        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.boolean);
-      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-    },
-    color($pgSelectSingle) {
-      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("color")}`,
-        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
-      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
   PostStatusGroupBy: {
@@ -24105,31 +24105,31 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     DESCRIPTION: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan2
     },
-    PROJECT_ID: {
+    COLOR: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan3
     },
-    CREATED_AT: {
+    PROJECT_ID: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan4
     },
-    CREATED_AT_TRUNCATED_TO_HOUR: {
+    IS_DEFAULT: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan5
     },
-    CREATED_AT_TRUNCATED_TO_DAY: {
+    CREATED_AT: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan6
     },
-    UPDATED_AT: {
+    CREATED_AT_TRUNCATED_TO_HOUR: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan7
     },
-    UPDATED_AT_TRUNCATED_TO_HOUR: {
+    CREATED_AT_TRUNCATED_TO_DAY: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan8
     },
-    UPDATED_AT_TRUNCATED_TO_DAY: {
+    UPDATED_AT: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan9
     },
-    IS_DEFAULT: {
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan10
     },
-    COLOR: {
+    UPDATED_AT_TRUNCATED_TO_DAY: {
       applyPlan: PostStatusGroupBy_extensions_grafast_applyPlan11
     }
   },
@@ -24451,6 +24451,32 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (false) plan.setOrderIsUnique();
       }
     },
+    COLOR_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "color",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    COLOR_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "color",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
     PROJECT_ID_ASC: {
       applyPlan(plan) {
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
@@ -24469,6 +24495,32 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
           attribute: "project_id",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    IS_DEFAULT_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "is_default",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (false) plan.setOrderIsUnique();
+      }
+    },
+    IS_DEFAULT_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "is_default",
           direction: "DESC",
           ...(undefined != null ? {
             nulls: undefined ? "LAST" : "FIRST"
@@ -24521,58 +24573,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
         plan.orderBy({
           attribute: "updated_at",
-          direction: "DESC",
-          ...(undefined != null ? {
-            nulls: undefined ? "LAST" : "FIRST"
-          } : null)
-        });
-        if (false) plan.setOrderIsUnique();
-      }
-    },
-    IS_DEFAULT_ASC: {
-      applyPlan(plan) {
-        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
-        plan.orderBy({
-          attribute: "is_default",
-          direction: "ASC",
-          ...(undefined != null ? {
-            nulls: undefined ? "LAST" : "FIRST"
-          } : null)
-        });
-        if (false) plan.setOrderIsUnique();
-      }
-    },
-    IS_DEFAULT_DESC: {
-      applyPlan(plan) {
-        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
-        plan.orderBy({
-          attribute: "is_default",
-          direction: "DESC",
-          ...(undefined != null ? {
-            nulls: undefined ? "LAST" : "FIRST"
-          } : null)
-        });
-        if (false) plan.setOrderIsUnique();
-      }
-    },
-    COLOR_ASC: {
-      applyPlan(plan) {
-        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
-        plan.orderBy({
-          attribute: "color",
-          direction: "ASC",
-          ...(undefined != null ? {
-            nulls: undefined ? "LAST" : "FIRST"
-          } : null)
-        });
-        if (false) plan.setOrderIsUnique();
-      }
-    },
-    COLOR_DESC: {
-      applyPlan(plan) {
-        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
-        plan.orderBy({
-          attribute: "color",
           direction: "DESC",
           ...(undefined != null ? {
             nulls: undefined ? "LAST" : "FIRST"
@@ -25076,6 +25076,25 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
     },
+    color: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "color",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "color",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_postStatus.attributes.color.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
     projectId: {
       applyPlan($condition, val) {
         if (val.getRaw().evalIs(null)) $condition.where({
@@ -25089,6 +25108,25 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           attribute: "project_id",
           callback(expression) {
             return sql`${expression} = ${$condition.placeholder(val.get(), spec_postStatus.attributes.project_id.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    isDefault: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "is_default",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "is_default",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_postStatus.attributes.is_default.codec)}`;
           }
         });
       },
@@ -25127,44 +25165,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           attribute: "updated_at",
           callback(expression) {
             return sql`${expression} = ${$condition.placeholder(val.get(), spec_postStatus.attributes.updated_at.codec)}`;
-          }
-        });
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    isDefault: {
-      applyPlan($condition, val) {
-        if (val.getRaw().evalIs(null)) $condition.where({
-          type: "attribute",
-          attribute: "is_default",
-          callback(expression) {
-            return sql`${expression} is null`;
-          }
-        });else $condition.where({
-          type: "attribute",
-          attribute: "is_default",
-          callback(expression) {
-            return sql`${expression} = ${$condition.placeholder(val.get(), spec_postStatus.attributes.is_default.codec)}`;
-          }
-        });
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    color: {
-      applyPlan($condition, val) {
-        if (val.getRaw().evalIs(null)) $condition.where({
-          type: "attribute",
-          attribute: "color",
-          callback(expression) {
-            return sql`${expression} is null`;
-          }
-        });else $condition.where({
-          type: "attribute",
-          attribute: "color",
-          callback(expression) {
-            return sql`${expression} = ${$condition.placeholder(val.get(), spec_postStatus.attributes.color.codec)}`;
           }
         });
       },
@@ -30097,9 +30097,23 @@ ${String(oldPlan21)}`);
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
     },
+    color: {
+      applyPlan($insert, val) {
+        $insert.set("color", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
     projectId: {
       applyPlan($insert, val) {
         $insert.set("project_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    isDefault: {
+      applyPlan($insert, val) {
+        $insert.set("is_default", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
@@ -30114,20 +30128,6 @@ ${String(oldPlan21)}`);
     updatedAt: {
       applyPlan($insert, val) {
         $insert.set("updated_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    isDefault: {
-      applyPlan($insert, val) {
-        $insert.set("is_default", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    color: {
-      applyPlan($insert, val) {
-        $insert.set("color", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
@@ -30980,9 +30980,23 @@ ${String(oldPlan21)}`);
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
     },
+    color: {
+      applyPlan($insert, val) {
+        $insert.set("color", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
     projectId: {
       applyPlan($insert, val) {
         $insert.set("project_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    isDefault: {
+      applyPlan($insert, val) {
+        $insert.set("is_default", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
@@ -30997,20 +31011,6 @@ ${String(oldPlan21)}`);
     updatedAt: {
       applyPlan($insert, val) {
         $insert.set("updated_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    isDefault: {
-      applyPlan($insert, val) {
-        $insert.set("is_default", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    color: {
-      applyPlan($insert, val) {
-        $insert.set("color", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
