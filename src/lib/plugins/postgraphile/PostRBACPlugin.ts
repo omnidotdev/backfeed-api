@@ -8,6 +8,8 @@ import * as dbSchema from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 
+// TODO: discuss handling field level permissions. For example, a user should not be able to update the `statusId` field for a post even if they are the author. That should be reserved for admins and owners.
+
 const validatePermissions = (propName: string) =>
   EXPORTABLE(
     (and, eq, dbSchema, context, sideEffect, propName) =>

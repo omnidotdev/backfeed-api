@@ -1,3 +1,5 @@
+import { useParserCache } from "@envelop/parser-cache";
+import { useValidationCache } from "@envelop/validation-cache";
 import { EnvelopArmor } from "@escape.tech/graphql-armor";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import { createYoga } from "graphql-yoga";
@@ -26,7 +28,7 @@ const armor = new EnvelopArmor({
   },
   costLimit: {
     enabled: true,
-    maxCost: 200,
+    maxCost: 250,
     objectCost: 2,
     scalarCost: 1,
     depthCostFactor: 1.5,
@@ -47,7 +49,15 @@ const yoga = createYoga({
   // NB: can also provide an object of GraphiQL options instead of a boolean
   graphiql: isDevEnv,
   landingPage: isDevEnv,
-  plugins: [useAuth(), useMoreDetailedErrors(), useGrafast(), ...armorPlugins],
+  plugins: [
+    useAuth(),
+    useMoreDetailedErrors(),
+    // NB: The below are used to handle caching and validation. Caching the parser results is critical for Grafast. See: https://grafast.org/grafast/servers#envelop
+    useParserCache(),
+    useValidationCache(),
+    useGrafast(),
+    ...armorPlugins,
+  ],
 });
 
 const app = new Hono();
