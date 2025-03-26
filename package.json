@@ -33,6 +33,8 @@
   },
   "dependencies": {
     "@envelop/generic-auth": "^8.0.1",
+    "@envelop/parser-cache": "^8.1.3",
+    "@envelop/validation-cache": "^8.1.3",
     "@escape.tech/graphql-armor": "^3.1.2",
     "@graphile/pg-aggregates": "^0.2.0-beta.7",
     "@graphile/simplify-inflection": "^8.0.0-beta.5",
