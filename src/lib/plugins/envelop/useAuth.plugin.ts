@@ -70,7 +70,6 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
   }
 };
 
-// TODO rename to useAuth.plugin.ts
 const useAuth = () =>
   useGenericAuth({
     resolveUserFn: resolveUser,
