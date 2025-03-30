@@ -19,7 +19,7 @@ export const users = pgTable(
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.hidraId)]
+  (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.hidraId)],
 );
 
 /**

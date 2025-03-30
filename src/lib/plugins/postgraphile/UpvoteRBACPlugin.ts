@@ -35,12 +35,12 @@ const validatePermissions = (propName: string) =>
             if (currentUser.id !== upvote.userId) {
               throw new Error("Insufficient permissions");
             }
-          }
+          },
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName]
+    [and, eq, dbSchema, context, sideEffect, propName],
   );
 
 /**

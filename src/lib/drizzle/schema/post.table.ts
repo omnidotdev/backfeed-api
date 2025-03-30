@@ -38,7 +38,7 @@ export const posts = pgTable(
     index().on(table.projectId),
     index().on(table.userId),
     index().on(table.statusId),
-  ]
+  ],
 );
 
 /**

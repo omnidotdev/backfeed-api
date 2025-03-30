@@ -55,20 +55,20 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               .where(
                 and(
                   eq(members.userId, currentUser.id),
-                  eq(members.organizationId, project.organizationId)
-                )
+                  eq(members.organizationId, project.organizationId),
+                ),
               );
 
             // Allow admins and owners to create, update and delete post statuses
             if (!userRole || userRole.role === "member") {
               throw new Error("Insufficient permissions");
             }
-          }
+          },
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName, scope]
+    [and, eq, dbSchema, context, sideEffect, propName, scope],
   );
 
 /**

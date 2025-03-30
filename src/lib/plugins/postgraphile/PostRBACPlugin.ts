@@ -44,8 +44,8 @@ const validatePermissions = (propName: string) =>
                 .where(
                   and(
                     eq(members.userId, currentUser.id),
-                    eq(members.organizationId, post.organizationId)
-                  )
+                    eq(members.organizationId, post.organizationId),
+                  ),
                 );
 
               // Allow admins and owners to update and delete posts
@@ -53,12 +53,12 @@ const validatePermissions = (propName: string) =>
                 throw new Error("Insufficient permissions");
               }
             }
-          }
+          },
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName]
+    [and, eq, dbSchema, context, sideEffect, propName],
   );
 
 /**
