@@ -8,10 +8,6 @@ import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { InsertUser, SelectUser } from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 
-// TODO remove, just for testing
-const SECRET = "yDspZ0tLGQZ1hpjJbCFKVmhrVq1DZUKO";
-const ALGORITHM = "HS256";
-
 /**
  * Validate user session and resolve user if successful.
  * @see https://the-guild.dev/graphql/envelop/plugins/use-generic-auth#getting-started
@@ -24,21 +20,11 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       .get("authorization")
       ?.split("Bearer ")[1];
 
-    console.log("SessionToken:", sessionToken);
-
     if (!sessionToken) throw new Error("Invalid or missing session token");
 
     const jwks = jose.createRemoteJWKSet(new URL(AUTH_JWKS_URL!));
 
-    // const { payload } = await jose.jwtVerify(sessionToken, jwks);
-    // TODO replace below with above once (LINK)
-    const { payload } = await jose.jwtVerify(
-      sessionToken,
-      new TextEncoder().encode(SECRET),
-      { algorithms: [ALGORITHM] },
-    );
-
-    console.log("Payload:", payload);
+    const { payload } = await jose.jwtVerify(sessionToken, jwks);
 
     if (!payload) throw new Error("Invalid or missing session token");
 
