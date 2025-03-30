@@ -1,5 +1,5 @@
 import { useGenericAuth } from "@envelop/generic-auth";
-import * as jose from "jose";
+import type * as jose from "jose";
 
 // import { AUTH_JWKS_URL } from "lib/config/env";
 import { users } from "lib/drizzle/schema";
