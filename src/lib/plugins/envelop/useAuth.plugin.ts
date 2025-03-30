@@ -1,7 +1,7 @@
 import { useGenericAuth } from "@envelop/generic-auth";
 import * as jose from "jose";
 
-import { AUTH_JWKS_URL } from "lib/config/env";
+// import { AUTH_JWKS_URL } from "lib/config/env";
 import { users } from "lib/drizzle/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
@@ -22,17 +22,29 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
     if (!sessionToken) throw new Error("Invalid or missing session token");
 
-    const jwks = jose.createRemoteJWKSet(new URL(AUTH_JWKS_URL!));
+    // TODO verify best practices for this
+    const userInfo = await fetch(
+      // TODO env var
+      "https://localhost:8000/api/auth/oauth2/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+        },
+      },
+    );
 
-    const { payload } = await jose.jwtVerify(sessionToken, jwks);
+    const idToken: jose.JWTPayload = await userInfo.json();
 
-    if (!payload) throw new Error("Invalid or missing session token");
+    // TODO validate token, currently major security flaw
+    // const jwks = jose.createRemoteJWKSet(new URL(AUTH_JWKS_URL!));
+    // const { payload } = await jose.jwtVerify(sessionToken, jwks);
+    // if (!payload) throw new Error("Invalid or missing session token");
 
     const insertedUser: InsertUser = {
-      hidraId: payload.sub!,
-      username: payload.preferred_username as string,
-      firstName: payload.given_name as string,
-      lastName: payload.family_name as string,
+      hidraId: idToken.sub!,
+      username: idToken.preferred_username as string,
+      firstName: idToken.given_name as string,
+      lastName: idToken.family_name as string,
     };
 
     const { hidraId, ...rest } = insertedUser;
