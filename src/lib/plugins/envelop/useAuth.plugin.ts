@@ -8,6 +8,7 @@ import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { InsertUser, SelectUser } from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 
+// TODO remove, just for testing
 const SECRET = "yDspZ0tLGQZ1hpjJbCFKVmhrVq1DZUKO";
 const ALGORITHM = "HS256";
 
