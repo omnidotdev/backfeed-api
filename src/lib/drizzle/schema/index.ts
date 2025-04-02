@@ -1,6 +1,6 @@
 export * from "./comment.table";
 export * from "./downvote.table";
-export * from "./invitation.table"
+export * from "./invitation.table";
 export * from "./member.table";
 export * from "./organization.table";
 export * from "./post.table";
