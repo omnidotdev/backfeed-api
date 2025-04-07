@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "121464",
+    oid: "123376",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "121377",
+    oid: "123289",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_invitation = {
   }),
   description: undefined,
   extensions: {
-    oid: "121563",
+    oid: "123475",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -388,7 +388,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "121339",
+    oid: "123251",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -480,7 +480,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "121444",
+    oid: "123356",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -492,110 +492,6 @@ const spec_comment = {
   executor: executor
 };
 const commentCodec = recordCodec(spec_comment);
-const userIdentifier = sql.identifier("public", "user");
-const spec_user = {
-  name: "user",
-  identifier: userIdentifier,
-  attributes: Object.assign(Object.create(null), {
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    hidra_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    username: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    first_name: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    last_name: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  }),
-  description: undefined,
-  extensions: {
-    oid: "121387",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "user"
-    },
-    tags: Object.create(null)
-  },
-  executor: executor
-};
-const userCodec = recordCodec(spec_user);
 const memberIdentifier = sql.identifier("public", "member");
 const roleCodec = enumCodec({
   name: "role",
@@ -603,7 +499,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "121483",
+    oid: "123395",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -679,7 +575,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-    oid: "121399",
+    oid: "123311",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -807,7 +703,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "121353",
+    oid: "123265",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -923,7 +819,7 @@ const spec_postStatus = {
   }),
   description: undefined,
   extensions: {
-    oid: "121537",
+    oid: "123449",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1039,7 +935,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "121363",
+    oid: "123275",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1051,6 +947,122 @@ const spec_project = {
   executor: executor
 };
 const projectCodec = recordCodec(spec_project);
+const userIdentifier = sql.identifier("public", "user");
+const spec_user = {
+  name: "user",
+  identifier: userIdentifier,
+  attributes: Object.assign(Object.create(null), {
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: false,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: false,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    hidra_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    username: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    first_name: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    last_name: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    email: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  }),
+  description: undefined,
+  extensions: {
+    oid: "123299",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "user"
+    },
+    tags: Object.create(null)
+  },
+  executor: executor
+};
+const userCodec = recordCodec(spec_user);
 const downvoteUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1257,58 +1269,6 @@ const registryConfig_pgResources_comment_comment = {
     canDelete: true
   }
 };
-const userUniques = [{
-  isPrimary: true,
-  attributes: ["id"],
-  description: undefined,
-  extensions: {
-    tags: Object.create(null)
-  }
-}, {
-  isPrimary: false,
-  attributes: ["hidra_id"],
-  description: undefined,
-  extensions: {
-    tags: Object.assign(Object.create(null), {
-      behavior: ["-update", "-delete"]
-    })
-  }
-}, {
-  isPrimary: false,
-  attributes: ["username"],
-  description: undefined,
-  extensions: {
-    tags: Object.assign(Object.create(null), {
-      behavior: ["-update", "-delete"]
-    })
-  }
-}];
-const registryConfig_pgResources_user_user = {
-  executor: executor,
-  name: "user",
-  identifier: "main.public.user",
-  from: userIdentifier,
-  codec: userCodec,
-  uniques: userUniques,
-  isVirtual: false,
-  description: undefined,
-  extensions: {
-    description: undefined,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "user"
-    },
-    isInsertable: true,
-    isUpdatable: true,
-    isDeletable: true,
-    tags: {},
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  }
-};
 const projectUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1350,6 +1310,67 @@ const registryConfig_pgResources_project_project = {
       serviceName: "main",
       schemaName: "public",
       name: "project"
+    },
+    isInsertable: true,
+    isUpdatable: true,
+    isDeletable: true,
+    tags: {},
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  }
+};
+const userUniques = [{
+  isPrimary: true,
+  attributes: ["id"],
+  description: undefined,
+  extensions: {
+    tags: Object.create(null)
+  }
+}, {
+  isPrimary: false,
+  attributes: ["email"],
+  description: undefined,
+  extensions: {
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
+  }
+}, {
+  isPrimary: false,
+  attributes: ["hidra_id"],
+  description: undefined,
+  extensions: {
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
+  }
+}, {
+  isPrimary: false,
+  attributes: ["username"],
+  description: undefined,
+  extensions: {
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
+  }
+}];
+const registryConfig_pgResources_user_user = {
+  executor: executor,
+  name: "user",
+  identifier: "main.public.user",
+  from: userIdentifier,
+  codec: userCodec,
+  uniques: userUniques,
+  isVirtual: false,
+  description: undefined,
+  extensions: {
+    description: undefined,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "user"
     },
     isInsertable: true,
     isUpdatable: true,
@@ -1485,13 +1506,13 @@ const registryConfig = {
     text: TYPES.text,
     organization: organizationCodec,
     comment: commentCodec,
-    user: userCodec,
     member: memberCodec,
     role: roleCodec,
     post: postCodec,
     postStatus: postStatusCodec,
     bool: TYPES.boolean,
-    project: projectCodec
+    project: projectCodec,
+    user: userCodec
   }),
   pgResources: Object.assign(Object.create(null), {
     downvote: registryConfig_pgResources_downvote_downvote,
@@ -1499,8 +1520,8 @@ const registryConfig = {
     invitation: registryConfig_pgResources_invitation_invitation,
     organization: registryConfig_pgResources_organization_organization,
     comment: registryConfig_pgResources_comment_comment,
-    user: registryConfig_pgResources_user_user,
     project: registryConfig_pgResources_project_project,
+    user: registryConfig_pgResources_user_user,
     member: registryConfig_pgResources_member_member,
     post: registryConfig_pgResources_post_post,
     post_status: registryConfig_pgResources_post_status_post_status
@@ -1954,8 +1975,8 @@ const resource_upvotePgResource = registry.pgResources["upvote"];
 const resource_invitationPgResource = registry.pgResources["invitation"];
 const resource_organizationPgResource = registry.pgResources["organization"];
 const resource_commentPgResource = registry.pgResources["comment"];
-const resource_userPgResource = registry.pgResources["user"];
 const resource_projectPgResource = registry.pgResources["project"];
+const resource_userPgResource = registry.pgResources["user"];
 const resource_memberPgResource = registry.pgResources["member"];
 const resource_postPgResource = registry.pgResources["post"];
 const resource_post_statusPgResource = registry.pgResources["post_status"];
@@ -3272,6 +3293,11 @@ const colSpec29 = {
   attributeName: "last_name",
   attribute: spec_user.attributes.last_name
 };
+const colSpec30 = {
+  fieldName: "email",
+  attributeName: "email",
+  attribute: spec_user.attributes.email
+};
 function assertAllowed29(fieldArgs, mode) {
   const $raw = fieldArgs.getRaw();
   if (mode === "object" && !false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -3382,27 +3408,27 @@ function assertAllowed33(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec30 = {
+const colSpec31 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_member.attributes.user_id
 };
-const colSpec31 = {
+const colSpec32 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_member.attributes.organization_id
 };
-const colSpec32 = {
+const colSpec33 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_member.attributes.created_at
 };
-const colSpec33 = {
+const colSpec34 = {
   fieldName: "role",
   attributeName: "role",
   attribute: spec_member.attributes.role
 };
-const colSpec34 = {
+const colSpec35 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_member.attributes.id
@@ -3481,27 +3507,27 @@ const resolve68 = (i, v) => sql`${i} < ${v}`;
 const resolve69 = (i, v) => sql`${i} <= ${v}`;
 const resolve70 = (i, v) => sql`${i} > ${v}`;
 const resolve71 = (i, v) => sql`${i} >= ${v}`;
-const colSpec35 = {
+const colSpec36 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_organization.attributes.id
 };
-const colSpec36 = {
+const colSpec37 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_organization.attributes.name
 };
-const colSpec37 = {
+const colSpec38 = {
   fieldName: "slug",
   attributeName: "slug",
   attribute: spec_organization.attributes.slug
 };
-const colSpec38 = {
+const colSpec39 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_organization.attributes.created_at
 };
-const colSpec39 = {
+const colSpec40 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_organization.attributes.updated_at
@@ -3566,27 +3592,27 @@ function assertAllowed40(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec40 = {
+const colSpec41 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_invitation.attributes.id
 };
-const colSpec41 = {
+const colSpec42 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_invitation.attributes.organization_id
 };
-const colSpec42 = {
+const colSpec43 = {
   fieldName: "email",
   attributeName: "email",
   attribute: spec_invitation.attributes.email
 };
-const colSpec43 = {
+const colSpec44 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_invitation.attributes.created_at
 };
-const colSpec44 = {
+const colSpec45 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_invitation.attributes.updated_at
@@ -3627,32 +3653,32 @@ function assertAllowed43(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec45 = {
+const colSpec46 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_comment.attributes.id
 };
-const colSpec46 = {
+const colSpec47 = {
   fieldName: "message",
   attributeName: "message",
   attribute: spec_comment.attributes.message
 };
-const colSpec47 = {
+const colSpec48 = {
   fieldName: "postId",
   attributeName: "post_id",
   attribute: spec_comment.attributes.post_id
 };
-const colSpec48 = {
+const colSpec49 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_comment.attributes.user_id
 };
-const colSpec49 = {
+const colSpec50 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_comment.attributes.created_at
 };
-const colSpec50 = {
+const colSpec51 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_comment.attributes.updated_at
@@ -3693,27 +3719,27 @@ function assertAllowed46(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec51 = {
+const colSpec52 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_downvote.attributes.id
 };
-const colSpec52 = {
+const colSpec53 = {
   fieldName: "postId",
   attributeName: "post_id",
   attribute: spec_downvote.attributes.post_id
 };
-const colSpec53 = {
+const colSpec54 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_downvote.attributes.user_id
 };
-const colSpec54 = {
+const colSpec55 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_downvote.attributes.created_at
 };
-const colSpec55 = {
+const colSpec56 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_downvote.attributes.updated_at
@@ -3766,42 +3792,42 @@ function assertAllowed50(fieldArgs, mode) {
   }
   if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec56 = {
+const colSpec57 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_postStatus.attributes.id
 };
-const colSpec57 = {
+const colSpec58 = {
   fieldName: "status",
   attributeName: "status",
   attribute: spec_postStatus.attributes.status
 };
-const colSpec58 = {
+const colSpec59 = {
   fieldName: "description",
   attributeName: "description",
   attribute: spec_postStatus.attributes.description
 };
-const colSpec59 = {
+const colSpec60 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_postStatus.attributes.color
 };
-const colSpec60 = {
+const colSpec61 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_postStatus.attributes.project_id
 };
-const colSpec61 = {
+const colSpec62 = {
   fieldName: "isDefault",
   attributeName: "is_default",
   attribute: spec_postStatus.attributes.is_default
 };
-const colSpec62 = {
+const colSpec63 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_postStatus.attributes.created_at
 };
-const colSpec63 = {
+const colSpec64 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_postStatus.attributes.updated_at
@@ -5279,24 +5305,6 @@ const planWrapper7 = (plan, _, fieldArgs) => {
 };
 const oldPlan8 = (_$root, args) => {
   const plan = object({
-    result: pgUpdateSingle(resource_userPgResource, {
-      id: args.get(['input', "rowId"])
-    })
-  });
-  args.apply(plan);
-  return plan;
-};
-const planWrapper8 = (plan, _, fieldArgs) => {
-  const $userId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser");
-  sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
-    if (!currentUser) throw new Error("Unauthorized");
-    if (userId !== currentUser.id) throw new Error("Insufficient permissions");
-  });
-  return plan();
-};
-const oldPlan9 = (_$root, args) => {
-  const plan = object({
     result: pgUpdateSingle(resource_projectPgResource, {
       id: args.get(['input', "rowId"])
     })
@@ -5304,7 +5312,7 @@ const oldPlan9 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper9 = (plan, _, fieldArgs) => {
+const planWrapper8 = (plan, _, fieldArgs) => {
   const $project = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -5323,6 +5331,24 @@ const planWrapper9 = (plan, _, fieldArgs) => {
       role: members.role
     }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+  });
+  return plan();
+};
+const oldPlan9 = (_$root, args) => {
+  const plan = object({
+    result: pgUpdateSingle(resource_userPgResource, {
+      id: args.get(['input', "rowId"])
+    })
+  });
+  args.apply(plan);
+  return plan;
+};
+const planWrapper9 = (plan, _, fieldArgs) => {
+  const $userId = fieldArgs.getRaw(["input", "rowId"]),
+    $currentUser = context().get("currentUser");
+  sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
+    if (!currentUser) throw new Error("Unauthorized");
+    if (userId !== currentUser.id) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5545,24 +5571,6 @@ const planWrapper16 = (plan, _, fieldArgs) => {
 };
 const oldPlan17 = (_$root, args) => {
   const plan = object({
-    result: pgDeleteSingle(resource_userPgResource, {
-      id: args.get(['input', "rowId"])
-    })
-  });
-  args.apply(plan);
-  return plan;
-};
-const planWrapper17 = (plan, _, fieldArgs) => {
-  const $userId = fieldArgs.getRaw(["input", "rowId"]),
-    $currentUser = context().get("currentUser");
-  sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
-    if (!currentUser) throw new Error("Unauthorized");
-    if (userId !== currentUser.id) throw new Error("Insufficient permissions");
-  });
-  return plan();
-};
-const oldPlan18 = (_$root, args) => {
-  const plan = object({
     result: pgDeleteSingle(resource_projectPgResource, {
       id: args.get(['input', "rowId"])
     })
@@ -5570,7 +5578,7 @@ const oldPlan18 = (_$root, args) => {
   args.apply(plan);
   return plan;
 };
-const planWrapper18 = (plan, _, fieldArgs) => {
+const planWrapper17 = (plan, _, fieldArgs) => {
   const $project = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
@@ -5589,6 +5597,24 @@ const planWrapper18 = (plan, _, fieldArgs) => {
       role: members.role
     }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+  });
+  return plan();
+};
+const oldPlan18 = (_$root, args) => {
+  const plan = object({
+    result: pgDeleteSingle(resource_userPgResource, {
+      id: args.get(['input', "rowId"])
+    })
+  });
+  args.apply(plan);
+  return plan;
+};
+const planWrapper18 = (plan, _, fieldArgs) => {
+  const $userId = fieldArgs.getRaw(["input", "rowId"]),
+    $currentUser = context().get("currentUser");
+  sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
+    if (!currentUser) throw new Error("Unauthorized");
+    if (userId !== currentUser.id) throw new Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5749,15 +5775,6 @@ type Query implements Node {
   """Get a single \`Comment\`."""
   comment(rowId: UUID!): Comment
 
-  """Get a single \`User\`."""
-  user(rowId: UUID!): User
-
-  """Get a single \`User\`."""
-  userByHidraId(hidraId: UUID!): User
-
-  """Get a single \`User\`."""
-  userByUsername(username: String!): User
-
   """Get a single \`Project\`."""
   project(rowId: UUID!): Project
 
@@ -5766,6 +5783,18 @@ type Query implements Node {
 
   """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
+
+  """Get a single \`User\`."""
+  user(rowId: UUID!): User
+
+  """Get a single \`User\`."""
+  userByEmail(email: String!): User
+
+  """Get a single \`User\`."""
+  userByHidraId(hidraId: UUID!): User
+
+  """Get a single \`User\`."""
+  userByUsername(username: String!): User
 
   """Get a single \`Member\`."""
   member(rowId: UUID!): Member
@@ -5949,40 +5978,6 @@ type Query implements Node {
     filter: CommentFilter
   ): CommentConnection
 
-  """Reads and enables pagination through a set of \`User\`."""
-  users(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering \`User\`."""
-    orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: UserFilter
-  ): UserConnection
-
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
     """Only read the first \`n\` values of the set."""
@@ -6016,6 +6011,40 @@ type Query implements Node {
     """
     filter: ProjectFilter
   ): ProjectConnection
+
+  """Reads and enables pagination through a set of \`User\`."""
+  users(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering \`User\`."""
+    orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: UserFilter
+  ): UserConnection
 
   """Reads and enables pagination through a set of \`Member\`."""
   members(
@@ -7192,6 +7221,9 @@ input UserFilter {
   """Filter by the object’s \`lastName\` field."""
   lastName: StringFilter
 
+  """Filter by the object’s \`email\` field."""
+  email: StringFilter
+
   """Filter by the object’s \`posts\` relation."""
   posts: UserToManyPostFilter
 
@@ -8092,6 +8124,7 @@ type User {
   username: String
   firstName: String
   lastName: String
+  email: String!
 
   """Reads and enables pagination through a set of \`Post\`."""
   posts(
@@ -9981,6 +10014,9 @@ type UserDistinctCountAggregates {
 
   """Distinct count of lastName across the matching connection"""
   lastName: BigInt
+
+  """Distinct count of email across the matching connection"""
+  email: BigInt
 }
 
 """Grouping methods for \`User\` for usage during aggregation."""
@@ -10074,6 +10110,8 @@ enum UserOrderBy {
   FIRST_NAME_DESC
   LAST_NAME_ASC
   LAST_NAME_DESC
+  EMAIL_ASC
+  EMAIL_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
   POSTS_DISTINCT_COUNT_ROW_ID_ASC
@@ -10170,6 +10208,9 @@ input UserCondition {
 
   """Checks for equality with the object’s \`lastName\` field."""
   lastName: String
+
+  """Checks for equality with the object’s \`email\` field."""
+  email: String
 }
 
 """
@@ -10216,14 +10257,6 @@ type Mutation {
     input: CreateCommentInput!
   ): CreateCommentPayload
 
-  """Creates a single \`User\`."""
-  createUser(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUserInput!
-  ): CreateUserPayload
-
   """Creates a single \`Project\`."""
   createProject(
     """
@@ -10231,6 +10264,14 @@ type Mutation {
     """
     input: CreateProjectInput!
   ): CreateProjectPayload
+
+  """Creates a single \`User\`."""
+  createUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserInput!
+  ): CreateUserPayload
 
   """Creates a single \`Member\`."""
   createMember(
@@ -10296,14 +10337,6 @@ type Mutation {
     input: UpdateCommentInput!
   ): UpdateCommentPayload
 
-  """Updates a single \`User\` using a unique key and a patch."""
-  updateUser(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserInput!
-  ): UpdateUserPayload
-
   """Updates a single \`Project\` using a unique key and a patch."""
   updateProject(
     """
@@ -10311,6 +10344,14 @@ type Mutation {
     """
     input: UpdateProjectInput!
   ): UpdateProjectPayload
+
+  """Updates a single \`User\` using a unique key and a patch."""
+  updateUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserInput!
+  ): UpdateUserPayload
 
   """Updates a single \`Member\` using a unique key and a patch."""
   updateMember(
@@ -10376,14 +10417,6 @@ type Mutation {
     input: DeleteCommentInput!
   ): DeleteCommentPayload
 
-  """Deletes a single \`User\` using a unique key."""
-  deleteUser(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserInput!
-  ): DeleteUserPayload
-
   """Deletes a single \`Project\` using a unique key."""
   deleteProject(
     """
@@ -10391,6 +10424,14 @@ type Mutation {
     """
     input: DeleteProjectInput!
   ): DeleteProjectPayload
+
+  """Deletes a single \`User\` using a unique key."""
+  deleteUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserInput!
+  ): DeleteUserPayload
 
   """Deletes a single \`Member\` using a unique key."""
   deleteMember(
@@ -10638,52 +10679,6 @@ input CommentInput {
   updatedAt: Datetime
 }
 
-"""The output of our create \`User\` mutation."""
-type CreateUserPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`User\` that was created by this mutation."""
-  user: User
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`User\`. May be used by Relay 1."""
-  userEdge(
-    """The method to use when ordering \`User\`."""
-    orderBy: [UserOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserEdge
-}
-
-"""All input for the create \`User\` mutation."""
-input CreateUserInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`User\` to be created by this mutation."""
-  user: UserInput!
-}
-
-"""An input for mutations affecting \`User\`"""
-input UserInput {
-  rowId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-  hidraId: UUID!
-  username: String
-  firstName: String
-  lastName: String
-}
-
 """The output of our create \`Project\` mutation."""
 type CreateProjectPayload {
   """
@@ -10729,6 +10724,53 @@ input ProjectInput {
   organizationId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`User\` mutation."""
+type CreateUserPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`User\` that was created by this mutation."""
+  user: User
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`User\`. May be used by Relay 1."""
+  userEdge(
+    """The method to use when ordering \`User\`."""
+    orderBy: [UserOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserEdge
+}
+
+"""All input for the create \`User\` mutation."""
+input CreateUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`User\` to be created by this mutation."""
+  user: UserInput!
+}
+
+"""An input for mutations affecting \`User\`"""
+input UserInput {
+  rowId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  hidraId: UUID!
+  username: String
+  firstName: String
+  lastName: String
+  email: String!
 }
 
 """The output of our create \`Member\` mutation."""
@@ -11116,55 +11158,6 @@ input CommentPatch {
   updatedAt: Datetime
 }
 
-"""The output of our update \`User\` mutation."""
-type UpdateUserPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`User\` that was updated by this mutation."""
-  user: User
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`User\`. May be used by Relay 1."""
-  userEdge(
-    """The method to use when ordering \`User\`."""
-    orderBy: [UserOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserEdge
-}
-
-"""All input for the \`updateUser\` mutation."""
-input UpdateUserInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`User\` being updated.
-  """
-  patch: UserPatch!
-}
-
-"""Represents an update to a \`User\`. Fields that are set will be updated."""
-input UserPatch {
-  rowId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-  hidraId: UUID
-  username: String
-  firstName: String
-  lastName: String
-}
-
 """The output of our update \`Project\` mutation."""
 type UpdateProjectPayload {
   """
@@ -11215,6 +11208,56 @@ input ProjectPatch {
   organizationId: UUID
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our update \`User\` mutation."""
+type UpdateUserPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`User\` that was updated by this mutation."""
+  user: User
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`User\`. May be used by Relay 1."""
+  userEdge(
+    """The method to use when ordering \`User\`."""
+    orderBy: [UserOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserEdge
+}
+
+"""All input for the \`updateUser\` mutation."""
+input UpdateUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`User\` being updated.
+  """
+  patch: UserPatch!
+}
+
+"""Represents an update to a \`User\`. Fields that are set will be updated."""
+input UserPatch {
+  rowId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  hidraId: UUID
+  username: String
+  firstName: String
+  lastName: String
+  email: String
 }
 
 """The output of our update \`Member\` mutation."""
@@ -11534,39 +11577,6 @@ input DeleteCommentInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`User\` mutation."""
-type DeleteUserPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`User\` that was deleted by this mutation."""
-  user: User
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`User\`. May be used by Relay 1."""
-  userEdge(
-    """The method to use when ordering \`User\`."""
-    orderBy: [UserOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserEdge
-}
-
-"""All input for the \`deleteUser\` mutation."""
-input DeleteUserInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`Project\` mutation."""
 type DeleteProjectPayload {
   """
@@ -11592,6 +11602,39 @@ type DeleteProjectPayload {
 
 """All input for the \`deleteProject\` mutation."""
 input DeleteProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`User\` mutation."""
+type DeleteUserPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`User\` that was deleted by this mutation."""
+  user: User
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`User\`. May be used by Relay 1."""
+  userEdge(
+    """The method to use when ordering \`User\`."""
+    orderBy: [UserOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserEdge
+}
+
+"""All input for the \`deleteUser\` mutation."""
+input DeleteUserInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -11812,36 +11855,6 @@ export const plans = {
         rowId: undefined
       }
     },
-    user: {
-      plan(_$root, args) {
-        return resource_userPgResource.get({
-          id: args.get("rowId")
-        });
-      },
-      args: {
-        rowId: undefined
-      }
-    },
-    userByHidraId: {
-      plan(_$root, args) {
-        return resource_userPgResource.get({
-          hidra_id: args.get("hidraId")
-        });
-      },
-      args: {
-        hidraId: undefined
-      }
-    },
-    userByUsername: {
-      plan(_$root, args) {
-        return resource_userPgResource.get({
-          username: args.get("username")
-        });
-      },
-      args: {
-        username: undefined
-      }
-    },
     project: {
       plan(_$root, args) {
         return resource_projectPgResource.get({
@@ -11872,6 +11885,46 @@ export const plans = {
       args: {
         slug: undefined,
         organizationId: undefined
+      }
+    },
+    user: {
+      plan(_$root, args) {
+        return resource_userPgResource.get({
+          id: args.get("rowId")
+        });
+      },
+      args: {
+        rowId: undefined
+      }
+    },
+    userByEmail: {
+      plan(_$root, args) {
+        return resource_userPgResource.get({
+          email: args.get("email")
+        });
+      },
+      args: {
+        email: undefined
+      }
+    },
+    userByHidraId: {
+      plan(_$root, args) {
+        return resource_userPgResource.get({
+          hidra_id: args.get("hidraId")
+        });
+      },
+      args: {
+        hidraId: undefined
+      }
+    },
+    userByUsername: {
+      plan(_$root, args) {
+        return resource_userPgResource.get({
+          username: args.get("username")
+        });
+      },
+      args: {
+        username: undefined
       }
     },
     member: {
@@ -12231,69 +12284,6 @@ export const plans = {
         }
       }
     },
-    users: {
-      plan() {
-        return connection(resource_userPgResource.find());
-      },
-      args: {
-        first: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, arg) {
-            $connection.setFirst(arg.getRaw());
-          }
-        },
-        last: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setLast(val.getRaw());
-          }
-        },
-        offset: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setOffset(val.getRaw());
-          }
-        },
-        before: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setBefore(val.getRaw());
-          }
-        },
-        after: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val) {
-            $connection.setAfter(val.getRaw());
-          }
-        },
-        orderBy: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, val, info) {
-            const $value = val.getRaw(),
-              $select = $connection.getSubplan();
-            applyOrderToPlan($select, $value, info.schema.getType("UserOrderBy"));
-            return null;
-          }
-        },
-        condition: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_condition, $connection) {
-            return $connection.getSubplan().wherePlan();
-          }
-        },
-        filter: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $connection, fieldArgs) {
-            assertAllowed6(fieldArgs, "object");
-            const $where = $connection.getSubplan().wherePlan();
-            if (null) $where.extensions.pgFilterAttribute = {
-              codec: null
-            };
-            fieldArgs.apply($where);
-          }
-        }
-      }
-    },
     projects: {
       plan() {
         return connection(resource_projectPgResource.find());
@@ -12335,6 +12325,69 @@ export const plans = {
             const $value = val.getRaw(),
               $select = $connection.getSubplan();
             applyOrderToPlan($select, $value, info.schema.getType("ProjectOrderBy"));
+            return null;
+          }
+        },
+        condition: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_condition, $connection) {
+            return $connection.getSubplan().wherePlan();
+          }
+        },
+        filter: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, fieldArgs) {
+            assertAllowed6(fieldArgs, "object");
+            const $where = $connection.getSubplan().wherePlan();
+            if (null) $where.extensions.pgFilterAttribute = {
+              codec: null
+            };
+            fieldArgs.apply($where);
+          }
+        }
+      }
+    },
+    users: {
+      plan() {
+        return connection(resource_userPgResource.find());
+      },
+      args: {
+        first: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          }
+        },
+        last: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          }
+        },
+        offset: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          }
+        },
+        before: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          }
+        },
+        after: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          }
+        },
+        orderBy: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $connection, val, info) {
+            const $value = val.getRaw(),
+              $select = $connection.getSubplan();
+            applyOrderToPlan($select, $value, info.schema.getType("UserOrderBy"));
             return null;
           }
         },
@@ -17247,6 +17300,17 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         fieldArgs.apply($col);
       }
     },
+    email: {
+      applyPlan($where, fieldArgs) {
+        const $raw = fieldArgs.getRaw();
+        if ($raw.evalIs(void 0)) return;
+        if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+        if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+        const $col = new PgConditionStep($where);
+        $col.extensions.pgFilterAttribute = colSpec30;
+        fieldArgs.apply($col);
+      }
+    },
     posts: {
       applyPlan($where, fieldArgs) {
         assertAllowed29(fieldArgs, "object");
@@ -18139,7 +18203,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec30;
+        $col.extensions.pgFilterAttribute = colSpec31;
         fieldArgs.apply($col);
       }
     },
@@ -18150,7 +18214,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec31;
+        $col.extensions.pgFilterAttribute = colSpec32;
         fieldArgs.apply($col);
       }
     },
@@ -18161,7 +18225,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec32;
+        $col.extensions.pgFilterAttribute = colSpec33;
         fieldArgs.apply($col);
       }
     },
@@ -18172,7 +18236,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec33;
+        $col.extensions.pgFilterAttribute = colSpec34;
         fieldArgs.apply($col);
       }
     },
@@ -18183,7 +18247,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec34;
+        $col.extensions.pgFilterAttribute = colSpec35;
         fieldArgs.apply($col);
       }
     },
@@ -18544,7 +18608,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec35;
+        $col.extensions.pgFilterAttribute = colSpec36;
         fieldArgs.apply($col);
       }
     },
@@ -18555,7 +18619,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec36;
+        $col.extensions.pgFilterAttribute = colSpec37;
         fieldArgs.apply($col);
       }
     },
@@ -18566,7 +18630,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec37;
+        $col.extensions.pgFilterAttribute = colSpec38;
         fieldArgs.apply($col);
       }
     },
@@ -18577,7 +18641,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec38;
+        $col.extensions.pgFilterAttribute = colSpec39;
         fieldArgs.apply($col);
       }
     },
@@ -18588,7 +18652,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec39;
+        $col.extensions.pgFilterAttribute = colSpec40;
         fieldArgs.apply($col);
       }
     },
@@ -19121,7 +19185,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec40;
+        $col.extensions.pgFilterAttribute = colSpec41;
         fieldArgs.apply($col);
       }
     },
@@ -19132,7 +19196,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec41;
+        $col.extensions.pgFilterAttribute = colSpec42;
         fieldArgs.apply($col);
       }
     },
@@ -19143,7 +19207,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec42;
+        $col.extensions.pgFilterAttribute = colSpec43;
         fieldArgs.apply($col);
       }
     },
@@ -19154,7 +19218,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec43;
+        $col.extensions.pgFilterAttribute = colSpec44;
         fieldArgs.apply($col);
       }
     },
@@ -19165,7 +19229,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec44;
+        $col.extensions.pgFilterAttribute = colSpec45;
         fieldArgs.apply($col);
       }
     },
@@ -19364,7 +19428,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec45;
+        $col.extensions.pgFilterAttribute = colSpec46;
         fieldArgs.apply($col);
       }
     },
@@ -19375,7 +19439,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec46;
+        $col.extensions.pgFilterAttribute = colSpec47;
         fieldArgs.apply($col);
       }
     },
@@ -19386,7 +19450,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec47;
+        $col.extensions.pgFilterAttribute = colSpec48;
         fieldArgs.apply($col);
       }
     },
@@ -19397,7 +19461,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec48;
+        $col.extensions.pgFilterAttribute = colSpec49;
         fieldArgs.apply($col);
       }
     },
@@ -19408,7 +19472,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec49;
+        $col.extensions.pgFilterAttribute = colSpec50;
         fieldArgs.apply($col);
       }
     },
@@ -19419,7 +19483,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec50;
+        $col.extensions.pgFilterAttribute = colSpec51;
         fieldArgs.apply($col);
       }
     },
@@ -19642,7 +19706,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec51;
+        $col.extensions.pgFilterAttribute = colSpec52;
         fieldArgs.apply($col);
       }
     },
@@ -19653,7 +19717,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec52;
+        $col.extensions.pgFilterAttribute = colSpec53;
         fieldArgs.apply($col);
       }
     },
@@ -19664,7 +19728,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec53;
+        $col.extensions.pgFilterAttribute = colSpec54;
         fieldArgs.apply($col);
       }
     },
@@ -19675,7 +19739,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec54;
+        $col.extensions.pgFilterAttribute = colSpec55;
         fieldArgs.apply($col);
       }
     },
@@ -19686,7 +19750,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec55;
+        $col.extensions.pgFilterAttribute = colSpec56;
         fieldArgs.apply($col);
       }
     },
@@ -19985,7 +20049,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec56;
+        $col.extensions.pgFilterAttribute = colSpec57;
         fieldArgs.apply($col);
       }
     },
@@ -19996,7 +20060,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec57;
+        $col.extensions.pgFilterAttribute = colSpec58;
         fieldArgs.apply($col);
       }
     },
@@ -20007,7 +20071,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec58;
+        $col.extensions.pgFilterAttribute = colSpec59;
         fieldArgs.apply($col);
       }
     },
@@ -20018,7 +20082,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec59;
+        $col.extensions.pgFilterAttribute = colSpec60;
         fieldArgs.apply($col);
       }
     },
@@ -20029,7 +20093,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec60;
+        $col.extensions.pgFilterAttribute = colSpec61;
         fieldArgs.apply($col);
       }
     },
@@ -20040,7 +20104,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec61;
+        $col.extensions.pgFilterAttribute = colSpec62;
         fieldArgs.apply($col);
       }
     },
@@ -20051,7 +20115,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec62;
+        $col.extensions.pgFilterAttribute = colSpec63;
         fieldArgs.apply($col);
       }
     },
@@ -20062,7 +20126,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         if (!false && "evalIsEmpty" in $raw && $raw.evalIsEmpty()) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
         if (!false && $raw.evalIs(null)) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
         const $col = new PgConditionStep($where);
-        $col.extensions.pgFilterAttribute = colSpec63;
+        $col.extensions.pgFilterAttribute = colSpec64;
         fieldArgs.apply($col);
       }
     },
@@ -20790,6 +20854,9 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     lastName($record) {
       return $record.get("last_name");
+    },
+    email($record) {
+      return $record.get("email");
     },
     posts: {
       plan($record) {
@@ -28626,6 +28693,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("last_name")}`,
         sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    email($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("email")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
   UserGroupBy: {
@@ -29074,6 +29146,32 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           } : null)
         });
         if (false) plan.setOrderIsUnique();
+      }
+    },
+    EMAIL_ASC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "email",
+          direction: "ASC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (true) plan.setOrderIsUnique();
+      }
+    },
+    EMAIL_DESC: {
+      applyPlan(plan) {
+        if (!(plan instanceof PgSelectStep) && !(plan instanceof PgUnionAllStep)) throw new Error("Expected a PgSelectStep or PgUnionAllStep when applying ordering value");
+        plan.orderBy({
+          attribute: "email",
+          direction: "DESC",
+          ...(undefined != null ? {
+            nulls: undefined ? "LAST" : "FIRST"
+          } : null)
+        });
+        if (true) plan.setOrderIsUnique();
       }
     },
     POSTS_COUNT_ASC: {
@@ -30730,6 +30828,25 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
+    },
+    email: {
+      applyPlan($condition, val) {
+        if (val.getRaw().evalIs(null)) $condition.where({
+          type: "attribute",
+          attribute: "email",
+          callback(expression) {
+            return sql`${expression} is null`;
+          }
+        });else $condition.where({
+          type: "attribute",
+          attribute: "email",
+          callback(expression) {
+            return sql`${expression} = ${$condition.placeholder(val.get(), spec_user.attributes.email.codec)}`;
+          }
+        });
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
     }
   },
   Mutation: {
@@ -30819,23 +30936,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    createUser: {
-      plan(_, args) {
-        const plan = object({
-          result: pgInsertSingle(resource_userPgResource, Object.create(null))
-        });
-        args.apply(plan);
-        return plan;
-      },
-      args: {
-        input: {
-          autoApplyAfterParentPlan: true,
-          applyPlan(_, $object) {
-            return $object;
-          }
-        }
-      }
-    },
     createProject: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
@@ -30852,6 +30952,23 @@ ${String(oldPlan)}`);
         if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
         if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
+      },
+      args: {
+        input: {
+          autoApplyAfterParentPlan: true,
+          applyPlan(_, $object) {
+            return $object;
+          }
+        }
+      }
+    },
+    createUser: {
+      plan(_, args) {
+        const plan = object({
+          result: pgInsertSingle(resource_userPgResource, Object.create(null))
+        });
+        args.apply(plan);
+        return plan;
       },
       args: {
         input: {
@@ -31049,12 +31166,12 @@ ${String(oldPlan7)}`);
         }
       }
     },
-    updateUser: {
+    updateProject: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan8(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUser"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProject"}, but that function did not return a step!
 ${String(oldPlan8)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -31074,12 +31191,12 @@ ${String(oldPlan8)}`);
         }
       }
     },
-    updateProject: {
+    updateUser: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan9(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProject"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUser"}, but that function did not return a step!
 ${String(oldPlan9)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -31292,12 +31409,12 @@ ${String(oldPlan16)}`);
         }
       }
     },
-    deleteUser: {
+    deleteProject: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan17(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUser"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
 ${String(oldPlan17)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -31317,12 +31434,12 @@ ${String(oldPlan17)}`);
         }
       }
     },
-    deleteProject: {
+    deleteUser: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan18(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUser"}, but that function did not return a step!
 ${String(oldPlan18)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -31870,109 +31987,6 @@ ${String(oldPlan21)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  CreateUserPayload: {
-    __assertStep: assertExecutableStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
-    },
-    user($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    },
-    userEdge: {
-      plan($mutation, args, info) {
-        const $result = $mutation.getStepForKey("result", !0);
-        if (!$result) return constant(null);
-        const $select = (() => {
-            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-              const spec = userUniques[0].attributes.reduce((memo, attributeName) => {
-                memo[attributeName] = $result.get(attributeName);
-                return memo;
-              }, Object.create(null));
-              return resource_userPgResource.find(spec);
-            }
-          })(),
-          $value = args.getRaw("orderBy");
-        applyOrderToPlan($select, $value, info.schema.getType("UserOrderBy"));
-        const $connection = connection($select),
-          $single = $select.row(first($select));
-        return new EdgeStep($connection, $single);
-      },
-      args: {
-        orderBy: undefined
-      }
-    }
-  },
-  CreateUserInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      },
-      autoApplyAfterParentApplyPlan: true
-    },
-    user: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      },
-      autoApplyAfterParentApplyPlan: true
-    }
-  },
-  UserInput: {
-    "__inputPlan": function UserInput_inputPlan() {
-      return object(Object.create(null));
-    },
-    rowId: {
-      applyPlan($insert, val) {
-        $insert.set("id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    createdAt: {
-      applyPlan($insert, val) {
-        $insert.set("created_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    updatedAt: {
-      applyPlan($insert, val) {
-        $insert.set("updated_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    hidraId: {
-      applyPlan($insert, val) {
-        $insert.set("hidra_id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    username: {
-      applyPlan($insert, val) {
-        $insert.set("username", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    firstName: {
-      applyPlan($insert, val) {
-        $insert.set("first_name", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    lastName: {
-      applyPlan($insert, val) {
-        $insert.set("last_name", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    }
-  },
   CreateProjectPayload: {
     __assertStep: assertExecutableStep,
     clientMutationId($mutation) {
@@ -32078,6 +32092,116 @@ ${String(oldPlan21)}`);
     updatedAt: {
       applyPlan($insert, val) {
         $insert.set("updated_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
+  CreateUserPayload: {
+    __assertStep: assertExecutableStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    user($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    userEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = userUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return resource_userPgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("UserOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  CreateUserInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      },
+      autoApplyAfterParentApplyPlan: true
+    },
+    user: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      },
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
+  UserInput: {
+    "__inputPlan": function UserInput_inputPlan() {
+      return object(Object.create(null));
+    },
+    rowId: {
+      applyPlan($insert, val) {
+        $insert.set("id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    createdAt: {
+      applyPlan($insert, val) {
+        $insert.set("created_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    updatedAt: {
+      applyPlan($insert, val) {
+        $insert.set("updated_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    hidraId: {
+      applyPlan($insert, val) {
+        $insert.set("hidra_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    username: {
+      applyPlan($insert, val) {
+        $insert.set("username", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    firstName: {
+      applyPlan($insert, val) {
+        $insert.set("first_name", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    lastName: {
+      applyPlan($insert, val) {
+        $insert.set("last_name", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    email: {
+      applyPlan($insert, val) {
+        $insert.set("email", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
@@ -32846,108 +32970,6 @@ ${String(oldPlan21)}`);
       autoApplyAfterParentApplyPlan: true
     }
   },
-  UpdateUserPayload: {
-    __assertStep: ObjectStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
-    },
-    user($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    },
-    userEdge: {
-      plan($mutation, args, info) {
-        const $result = $mutation.getStepForKey("result", !0);
-        if (!$result) return constant(null);
-        const $select = (() => {
-            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-              const spec = userUniques[0].attributes.reduce((memo, attributeName) => {
-                memo[attributeName] = $result.get(attributeName);
-                return memo;
-              }, Object.create(null));
-              return resource_userPgResource.find(spec);
-            }
-          })(),
-          $value = args.getRaw("orderBy");
-        applyOrderToPlan($select, $value, info.schema.getType("UserOrderBy"));
-        const $connection = connection($select),
-          $single = $select.row(first($select));
-        return new EdgeStep($connection, $single);
-      },
-      args: {
-        orderBy: undefined
-      }
-    }
-  },
-  UpdateUserInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined,
-    patch: {
-      applyPlan($object) {
-        return $object.getStepForKey("result").setPlan();
-      }
-    }
-  },
-  UserPatch: {
-    "__inputPlan": function UserPatch_inputPlan() {
-      return object(Object.create(null));
-    },
-    rowId: {
-      applyPlan($insert, val) {
-        $insert.set("id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    createdAt: {
-      applyPlan($insert, val) {
-        $insert.set("created_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    updatedAt: {
-      applyPlan($insert, val) {
-        $insert.set("updated_at", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    hidraId: {
-      applyPlan($insert, val) {
-        $insert.set("hidra_id", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    username: {
-      applyPlan($insert, val) {
-        $insert.set("username", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    firstName: {
-      applyPlan($insert, val) {
-        $insert.set("first_name", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    },
-    lastName: {
-      applyPlan($insert, val) {
-        $insert.set("last_name", val.get());
-      },
-      autoApplyAfterParentInputPlan: true,
-      autoApplyAfterParentApplyPlan: true
-    }
-  },
   UpdateProjectPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -33052,6 +33074,115 @@ ${String(oldPlan21)}`);
     updatedAt: {
       applyPlan($insert, val) {
         $insert.set("updated_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    }
+  },
+  UpdateUserPayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    user($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    userEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = userUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return resource_userPgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("UserOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  UpdateUserInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    rowId: undefined,
+    patch: {
+      applyPlan($object) {
+        return $object.getStepForKey("result").setPlan();
+      }
+    }
+  },
+  UserPatch: {
+    "__inputPlan": function UserPatch_inputPlan() {
+      return object(Object.create(null));
+    },
+    rowId: {
+      applyPlan($insert, val) {
+        $insert.set("id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    createdAt: {
+      applyPlan($insert, val) {
+        $insert.set("created_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    updatedAt: {
+      applyPlan($insert, val) {
+        $insert.set("updated_at", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    hidraId: {
+      applyPlan($insert, val) {
+        $insert.set("hidra_id", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    username: {
+      applyPlan($insert, val) {
+        $insert.set("username", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    firstName: {
+      applyPlan($insert, val) {
+        $insert.set("first_name", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    lastName: {
+      applyPlan($insert, val) {
+        $insert.set("last_name", val.get());
+      },
+      autoApplyAfterParentInputPlan: true,
+      autoApplyAfterParentApplyPlan: true
+    },
+    email: {
+      applyPlan($insert, val) {
+        $insert.set("email", val.get());
       },
       autoApplyAfterParentInputPlan: true,
       autoApplyAfterParentApplyPlan: true
@@ -33585,49 +33716,6 @@ ${String(oldPlan21)}`);
     },
     rowId: undefined
   },
-  DeleteUserPayload: {
-    __assertStep: ObjectStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
-    },
-    user($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    },
-    userEdge: {
-      plan($mutation, args, info) {
-        const $result = $mutation.getStepForKey("result", !0);
-        if (!$result) return constant(null);
-        const $select = (() => {
-            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-              const spec = userUniques[0].attributes.reduce((memo, attributeName) => {
-                memo[attributeName] = $result.get(attributeName);
-                return memo;
-              }, Object.create(null));
-              return resource_userPgResource.find(spec);
-            }
-          })(),
-          $value = args.getRaw("orderBy");
-        applyOrderToPlan($select, $value, info.schema.getType("UserOrderBy"));
-        const $connection = connection($select),
-          $single = $select.row(first($select));
-        return new EdgeStep($connection, $single);
-      },
-      args: {
-        orderBy: undefined
-      }
-    }
-  },
-  DeleteUserInput: {
-    clientMutationId: {
-      applyPlan($input, val) {
-        $input.set("clientMutationId", val.get());
-      }
-    },
-    rowId: undefined
-  },
   DeleteProjectPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -33664,6 +33752,49 @@ ${String(oldPlan21)}`);
     }
   },
   DeleteProjectInput: {
+    clientMutationId: {
+      applyPlan($input, val) {
+        $input.set("clientMutationId", val.get());
+      }
+    },
+    rowId: undefined
+  },
+  DeleteUserPayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("clientMutationId", !0) ?? constant(null);
+    },
+    user($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    userEdge: {
+      plan($mutation, args, info) {
+        const $result = $mutation.getStepForKey("result", !0);
+        if (!$result) return constant(null);
+        const $select = (() => {
+            if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+              const spec = userUniques[0].attributes.reduce((memo, attributeName) => {
+                memo[attributeName] = $result.get(attributeName);
+                return memo;
+              }, Object.create(null));
+              return resource_userPgResource.find(spec);
+            }
+          })(),
+          $value = args.getRaw("orderBy");
+        applyOrderToPlan($select, $value, info.schema.getType("UserOrderBy"));
+        const $connection = connection($select),
+          $single = $select.row(first($select));
+        return new EdgeStep($connection, $single);
+      },
+      args: {
+        orderBy: undefined
+      }
+    }
+  },
+  DeleteUserInput: {
     clientMutationId: {
       applyPlan($input, val) {
         $input.set("clientMutationId", val.get());

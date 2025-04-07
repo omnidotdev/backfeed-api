@@ -15,7 +15,7 @@ export const invitations = pgTable(
     organizationId: uuid()
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
-    email: text().notNull(),
+    email: text().notNull().unique(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
