@@ -10,7 +10,10 @@ import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 
 type MutationScope = "create" | "delete";
 
-const validateInvitationPermissions = (propName: string, scope: MutationScope) =>
+const validateInvitationPermissions = (
+  propName: string,
+  scope: MutationScope
+) =>
   EXPORTABLE(
     (and, eq, dbSchema, context, sideEffect, propName, scope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
