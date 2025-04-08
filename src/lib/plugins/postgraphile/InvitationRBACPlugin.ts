@@ -18,49 +18,44 @@ const validateInvitationPermissions = (
     (and, eq, dbSchema, context, sideEffect, propName, scope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
-        const $invitation = fieldArgs.getRaw(["input", propName]);
+        const $invitationId = fieldArgs.getRaw(["input", propName]);
         const $currentUser = context<GraphQLContext>().get("currentUser");
         const $db = context<GraphQLContext>().get("db");
 
         sideEffect(
-          [$invitation, $currentUser, $db],
-          async ([invitation, currentUser, db]) => {
+          [$invitationId, $currentUser, $db],
+          async ([invitationId, currentUser, db]) => {
             if (!currentUser) {
               throw new Error("Unauthorized");
             }
 
-            let organizationId: string;
-
             const { members, invitations } = dbSchema;
 
-            if (scope === "create") {
-              organizationId = invitation.organizationId;
-            } else {
-              const [existingInvitation] = await db
-                .select()
+            const [invitation] = await db
+                .select({
+                  organizationId: invitations.organizationId,
+                  email: invitations.email,
+                })
                 .from(invitations)
-                .where(eq(invitations.id, invitation as string));
+                .where(eq(invitations.id, invitationId));
 
-              if (!existingInvitation) {
-                throw new Error("Invitation not found");
-              }
+            if (currentUser.email !== invitation.email) {
 
-              organizationId = existingInvitation.organizationId;
-            }
-
-            const [userRole] = await db
+              const [userRole] = await db
               .select({ role: members.role })
               .from(members)
               .where(
                 and(
                   eq(members.userId, currentUser.id),
-                  eq(members.organizationId, organizationId)
+                  eq(members.organizationId, invitation.organizationId)
                 )
               );
 
             // Only allow owners and admins to create or delete invitations
             if (!userRole || userRole.role === "member") {
               throw new Error("Insufficient permissions to manage invitations");
+            }
+            
             }
           }
         );
