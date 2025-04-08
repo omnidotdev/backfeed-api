@@ -32,30 +32,30 @@ const validateInvitationPermissions = (
             const { members, invitations } = dbSchema;
 
             const [invitation] = await db
-                .select({
-                  organizationId: invitations.organizationId,
-                  email: invitations.email,
-                })
-                .from(invitations)
-                .where(eq(invitations.id, invitationId));
+              .select({
+                organizationId: invitations.organizationId,
+                email: invitations.email,
+              })
+              .from(invitations)
+              .where(eq(invitations.id, invitationId));
 
             if (currentUser.email !== invitation.email) {
-
               const [userRole] = await db
-              .select({ role: members.role })
-              .from(members)
-              .where(
-                and(
-                  eq(members.userId, currentUser.id),
-                  eq(members.organizationId, invitation.organizationId)
-                )
-              );
+                .select({ role: members.role })
+                .from(members)
+                .where(
+                  and(
+                    eq(members.userId, currentUser.id),
+                    eq(members.organizationId, invitation.organizationId)
+                  )
+                );
 
-            // Only allow owners and admins to create or delete invitations
-            if (!userRole || userRole.role === "member") {
-              throw new Error("Insufficient permissions to manage invitations");
-            }
-            
+              // Only allow owners and admins to create or delete invitations
+              if (!userRole || userRole.role === "member") {
+                throw new Error(
+                  "Insufficient permissions to manage invitations"
+                );
+              }
             }
           }
         );
