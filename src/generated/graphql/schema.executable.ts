@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "123376",
+    oid: "123754",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "123289",
+    oid: "123667",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_invitation = {
   }),
   description: undefined,
   extensions: {
-    oid: "123475",
+    oid: "123853",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -388,7 +388,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "123251",
+    oid: "123629",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -480,7 +480,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "123356",
+    oid: "123734",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -499,7 +499,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "123395",
+    oid: "123773",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -575,7 +575,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-    oid: "123311",
+    oid: "123689",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -703,7 +703,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "123265",
+    oid: "123643",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -819,7 +819,7 @@ const spec_postStatus = {
   }),
   description: undefined,
   extensions: {
-    oid: "123449",
+    oid: "123827",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -935,7 +935,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "123275",
+    oid: "123653",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1051,7 +1051,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "123299",
+    oid: "123677",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1155,6 +1155,15 @@ const invitationUniques = [{
   description: undefined,
   extensions: {
     tags: Object.create(null)
+  }
+}, {
+  isPrimary: false,
+  attributes: ["email"],
+  description: undefined,
+  extensions: {
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
   }
 }];
 const registryConfig_pgResources_invitation_invitation = {
@@ -4627,35 +4636,30 @@ function InvitationGroupBy_extensions_grafast_applyPlan($pgSelect) {
 }
 function InvitationGroupBy_extensions_grafast_applyPlan2($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("email")}`
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
   });
 }
 function InvitationGroupBy_extensions_grafast_applyPlan3($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
+    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
   });
 }
 function InvitationGroupBy_extensions_grafast_applyPlan4($pgSelect) {
   $pgSelect.groupBy({
-    fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
   });
 }
 function InvitationGroupBy_extensions_grafast_applyPlan5($pgSelect) {
   $pgSelect.groupBy({
-    fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
   });
 }
 function InvitationGroupBy_extensions_grafast_applyPlan6($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
-  });
-}
-function InvitationGroupBy_extensions_grafast_applyPlan7($pgSelect) {
-  $pgSelect.groupBy({
     fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
   });
 }
-function InvitationGroupBy_extensions_grafast_applyPlan8($pgSelect) {
+function InvitationGroupBy_extensions_grafast_applyPlan7($pgSelect) {
   $pgSelect.groupBy({
     fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
   });
@@ -4672,19 +4676,11 @@ export const InvitationGroupBy = new GraphQLEnumType({
         }
       })
     },
-    EMAIL: {
-      value: "EMAIL",
-      extensions: Object.assign(Object.create(null), {
-        grafast: {
-          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan2
-        }
-      })
-    },
     CREATED_AT: {
       value: "CREATED_AT",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan3
+          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan2
         }
       })
     },
@@ -4692,7 +4688,7 @@ export const InvitationGroupBy = new GraphQLEnumType({
       value: "CREATED_AT_TRUNCATED_TO_HOUR",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan4
+          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan3
         }
       })
     },
@@ -4700,7 +4696,7 @@ export const InvitationGroupBy = new GraphQLEnumType({
       value: "CREATED_AT_TRUNCATED_TO_DAY",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan5
+          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan4
         }
       })
     },
@@ -4708,7 +4704,7 @@ export const InvitationGroupBy = new GraphQLEnumType({
       value: "UPDATED_AT",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan6
+          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan5
         }
       })
     },
@@ -4716,7 +4712,7 @@ export const InvitationGroupBy = new GraphQLEnumType({
       value: "UPDATED_AT_TRUNCATED_TO_HOUR",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan7
+          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan6
         }
       })
     },
@@ -4724,7 +4720,7 @@ export const InvitationGroupBy = new GraphQLEnumType({
       value: "UPDATED_AT_TRUNCATED_TO_DAY",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan8
+          applyPlan: InvitationGroupBy_extensions_grafast_applyPlan7
         }
       })
     }
@@ -5762,6 +5758,9 @@ type Query implements Node {
 
   """Get a single \`Invitation\`."""
   invitation(rowId: UUID!): Invitation
+
+  """Get a single \`Invitation\`."""
+  invitationByEmail(email: String!): Invitation
 
   """Get a single \`Organization\`."""
   organization(rowId: UUID!): Organization
@@ -9344,7 +9343,6 @@ type InvitationDistinctCountAggregates {
 """Grouping methods for \`Invitation\` for usage during aggregation."""
 enum InvitationGroupBy {
   ORGANIZATION_ID
-  EMAIL
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
@@ -11813,6 +11811,16 @@ export const plans = {
       },
       args: {
         rowId: undefined
+      }
+    },
+    invitationByEmail: {
+      plan(_$root, args) {
+        return resource_invitationPgResource.get({
+          email: args.get("email")
+        });
+      },
+      args: {
+        email: undefined
       }
     },
     organization: {
@@ -25335,26 +25343,23 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     ORGANIZATION_ID: {
       applyPlan: InvitationGroupBy_extensions_grafast_applyPlan
     },
-    EMAIL: {
+    CREATED_AT: {
       applyPlan: InvitationGroupBy_extensions_grafast_applyPlan2
     },
-    CREATED_AT: {
+    CREATED_AT_TRUNCATED_TO_HOUR: {
       applyPlan: InvitationGroupBy_extensions_grafast_applyPlan3
     },
-    CREATED_AT_TRUNCATED_TO_HOUR: {
+    CREATED_AT_TRUNCATED_TO_DAY: {
       applyPlan: InvitationGroupBy_extensions_grafast_applyPlan4
     },
-    CREATED_AT_TRUNCATED_TO_DAY: {
+    UPDATED_AT: {
       applyPlan: InvitationGroupBy_extensions_grafast_applyPlan5
     },
-    UPDATED_AT: {
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
       applyPlan: InvitationGroupBy_extensions_grafast_applyPlan6
     },
-    UPDATED_AT_TRUNCATED_TO_HOUR: {
-      applyPlan: InvitationGroupBy_extensions_grafast_applyPlan7
-    },
     UPDATED_AT_TRUNCATED_TO_DAY: {
-      applyPlan: InvitationGroupBy_extensions_grafast_applyPlan8
+      applyPlan: InvitationGroupBy_extensions_grafast_applyPlan7
     }
   },
   InvitationHavingInput: {
@@ -25659,7 +25664,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
             nulls: undefined ? "LAST" : "FIRST"
           } : null)
         });
-        if (false) plan.setOrderIsUnique();
+        if (true) plan.setOrderIsUnique();
       }
     },
     EMAIL_DESC: {
@@ -25672,7 +25677,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
             nulls: undefined ? "LAST" : "FIRST"
           } : null)
         });
-        if (false) plan.setOrderIsUnique();
+        if (true) plan.setOrderIsUnique();
       }
     },
     CREATED_AT_ASC: {

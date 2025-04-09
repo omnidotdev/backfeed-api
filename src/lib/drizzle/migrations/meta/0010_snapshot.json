@@ -1,5 +1,5 @@
 {
-  "id": "5f593a84-2a92-48f0-ab0c-202f9a385a60",
+  "id": "2733111c-326e-450f-ac21-4dbc06d9313c",
   "prevId": "2350b041-332c-4e64-8280-0c4dbe13ac6d",
   "version": "7",
   "dialect": "postgresql",
@@ -268,12 +268,6 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "hidra_id": {
-          "name": "hidra_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
         "organization_id": {
           "name": "organization_id",
           "type": "uuid",
@@ -285,12 +279,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "resend_id": {
-          "name": "resend_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -322,21 +310,6 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "invitation_resend_id_index": {
-          "name": "invitation_resend_id_index",
-          "columns": [
-            {
-              "expression": "resend_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
       "foreignKeys": {
@@ -355,7 +328,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "invitation_email_unique": {
+          "name": "invitation_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1171,6 +1152,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp(6) with time zone",
@@ -1233,6 +1220,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "username"
+          ]
+        },
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
           ]
         }
       },

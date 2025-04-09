@@ -1,1 +1,0 @@
-CREATE UNIQUE INDEX "invitation_hidra_id_index" ON "invitation" USING btree ("hidra_id");
