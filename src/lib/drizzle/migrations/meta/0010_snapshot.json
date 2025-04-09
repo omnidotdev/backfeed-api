@@ -1,5 +1,5 @@
 {
-  "id": "2733111c-326e-450f-ac21-4dbc06d9313c",
+  "id": "f8b19800-fe13-4018-a48a-617978454e71",
   "prevId": "2350b041-332c-4e64-8280-0c4dbe13ac6d",
   "version": "7",
   "dialect": "postgresql",
@@ -307,6 +307,36 @@
             }
           ],
           "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invitation_email_index": {
+          "name": "invitation_email_index",
+          "columns": [
+            {
+              "expression": "email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invitation_organization_id_index": {
+          "name": "invitation_organization_id_index",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}

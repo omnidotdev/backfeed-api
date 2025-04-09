@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "123754",
+    oid: "124009",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "123667",
+    oid: "123922",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_invitation = {
   }),
   description: undefined,
   extensions: {
-    oid: "123853",
+    oid: "124109",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -388,7 +388,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "123629",
+    oid: "123884",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -480,7 +480,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "123734",
+    oid: "123989",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -499,7 +499,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "123773",
+    oid: "124028",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -575,7 +575,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-    oid: "123689",
+    oid: "123944",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -703,7 +703,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "123643",
+    oid: "123898",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -819,7 +819,7 @@ const spec_postStatus = {
   }),
   description: undefined,
   extensions: {
-    oid: "123827",
+    oid: "124083",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -935,7 +935,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "123653",
+    oid: "123908",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1051,7 +1051,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "123677",
+    oid: "123932",
     isTableLike: true,
     pg: {
       serviceName: "main",

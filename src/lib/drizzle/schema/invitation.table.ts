@@ -1,4 +1,4 @@
-import { pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { organizations } from "./organization.table";
@@ -19,7 +19,11 @@ export const invitations = pgTable(
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id)]
+  (table) => [
+    uniqueIndex().on(table.id),
+    uniqueIndex().on(table.email),
+    index().on(table.organizationId),
+  ]
 );
 
 /**
