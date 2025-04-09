@@ -29,7 +29,7 @@ const validateInvitationPermissions = (
               throw new Error("Unauthorized");
             }
 
-            const { members, invitations } = dbSchema;
+            const { users, members, invitations } = dbSchema;
 
             const [invitation] = await db
               .select({
@@ -39,24 +39,47 @@ const validateInvitationPermissions = (
               .from(invitations)
               .where(eq(invitations.id, invitationId));
 
-            if (currentUser.email !== invitation.email) {
-              const [userRole] = await db
-                .select({ role: members.role })
-                .from(members)
+              // Prevent inviting yourself to an organization you are the owner of.
+              if (currentUser.email === invitation.email && scope === "create") {
+                throw new Error("Self invites are not allowed")
+              }
+
+              const [existingInvitation] = await db
+                .select()
+                .from(invitations)
                 .where(
                   and(
-                    eq(members.userId, currentUser.id),
-                    eq(members.organizationId, invitation.organizationId)
+                    eq(invitations.email, invitation.email),
+                    eq(invitations.organizationId, invitation.organizationId)
                   )
                 );
 
-              // Only allow owners and admins to create or delete invitations
-              if (!userRole || userRole.role === "member") {
-                throw new Error(
-                  "Insufficient permissions to manage invitations"
-                );
+              if (existingInvitation) {
+                throw new Error("An invitation has already been sent to this email.");
               }
-            }
+
+              // Look up user by email
+              const [existingUser] = await db
+                .select({ id: users.id })
+                .from(users)
+                .where(eq(users.email, invitation.email));
+
+              if (existingUser) {
+                // Check if user is already a member of the organization
+                const [existingMember] = await db
+                  .select()
+                  .from(members)
+                  .where(
+                    and(
+                      eq(members.userId, existingUser.id),
+                      eq(members.organizationId, invitation.organizationId)
+                    )
+                  );
+
+                if (existingMember) {
+                  throw new Error("User is already a member of the organization.");
+                }
+              }
           }
         );
 
