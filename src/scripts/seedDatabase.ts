@@ -24,7 +24,7 @@ const seedDatabase = async () => {
     organizations: {
       count: 200,
       columns: {
-        name: f.companyName(),
+        name: f.companyName({ isUnique: true }),
       },
       with: {
         projects: 50,
@@ -33,7 +33,7 @@ const seedDatabase = async () => {
     projects: {
       columns: {
         description: f.loremIpsum(),
-        slug: f.string({
+        name: f.string({
           isUnique: true,
         }),
       },

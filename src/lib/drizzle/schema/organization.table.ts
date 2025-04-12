@@ -1,8 +1,9 @@
 import { pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
+import { generateSlug } from "./helpers";
 
-import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import type { InferInsertModel, InferSelectModel, SQL } from "drizzle-orm";
 
 /**
  * Organization table. Organizations are used to group projects together and contain a set of users.
@@ -11,8 +12,11 @@ export const organizations = pgTable(
   "organization",
   {
     id: defaultId(),
-    name: text().unique(),
-    slug: text().unique().notNull(),
+    name: text().unique().notNull(),
+    slug: text()
+      .generatedAlwaysAs((): SQL => generateSlug(organizations.name))
+      .unique()
+      .notNull(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
