@@ -44,46 +44,50 @@ const validateInvitationPermissions = (
             }
 
             const [userRole] = await db
-            .select({ role: members.role })
-            .from(members)
-            .where(
-              and(
-                eq(members.userId, currentUser.id),
-                eq(members.organizationId, invitation.organizationId)
-              )
-            );
+              .select({ role: members.role })
+              .from(members)
+              .where(
+                and(
+                  eq(members.userId, currentUser.id),
+                  eq(members.organizationId, invitation.organizationId)
+                )
+              );
 
             if (scope === "create") {
-               // Only organization owners can send invitations
-              if (!userRole || userRole.role !== "owner") {
-                throw new Error("Only organization owners can send invitations");
+              // Only organization owners can send invitations
+              if (!userRole || (userRole.role !== "owner" && userRole.role !== "admin")) {
+                throw new Error(
+                  "Only organization owners can send invitations"
+                );
               }
 
               // Prevent inviting yourself
               if (currentUser.email === invitation.email) {
                 throw new Error("Self invites are not allowed");
               }
-            
-               // Check for duplicate invite
+
+              // Check for duplicate invite
               const [existingInvitation] = await db
-              .select()
-              .from(invitations)
-              .where(
-                and(
-                  eq(invitations.email, invitation.email),
-                  eq(invitations.organizationId, invitation.organizationId)
-                )
-              );
+                .select()
+                .from(invitations)
+                .where(
+                  and(
+                    eq(invitations.email, invitation.email),
+                    eq(invitations.organizationId, invitation.organizationId)
+                  )
+                );
 
               if (existingInvitation) {
-                throw new Error("An invitation has already been sent to this email.");
+                throw new Error(
+                  "An invitation has already been sent to this email."
+                );
               }
 
               // If recipient is a user, make sure they're not already a member
               const [existingUser] = await db
-              .select({ id: users.id })
-              .from(users)
-              .where(eq(users.email, invitation.email));
+                .select({ id: users.id })
+                .from(users)
+                .where(eq(users.email, invitation.email));
 
               if (existingUser) {
                 const [existingMember] = await db
@@ -97,7 +101,9 @@ const validateInvitationPermissions = (
                   );
 
                 if (existingMember) {
-                  throw new Error("User is already a member of the organization.");
+                  throw new Error(
+                    "User is already a member of the organization."
+                  );
                 }
               }
             }
@@ -105,10 +111,12 @@ const validateInvitationPermissions = (
             if (scope === "delete") {
               const isOwner = userRole?.role === "owner";
               const isRecipient = currentUser.email === invitation.email;
-        
+
               // Only allow owner or recipient to delete
               if (!isOwner && !isRecipient) {
-                throw new Error("Only the recipient or owner can delete the invitation");
+                throw new Error(
+                  "Only the recipient or owner can delete the invitation"
+                );
               }
             }
           }
