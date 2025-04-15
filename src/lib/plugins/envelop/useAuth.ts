@@ -33,6 +33,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       username: payload.preferred_username as string,
       firstName: payload.given_name as string,
       lastName: payload.family_name as string,
+      email: payload.email as string,
     };
 
     const { hidraId, ...rest } = insertedUser;
