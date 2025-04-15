@@ -16,6 +16,7 @@ export const users = pgTable(
     username: text().unique(),
     firstName: text(),
     lastName: text(),
+    email: text().notNull().unique(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
