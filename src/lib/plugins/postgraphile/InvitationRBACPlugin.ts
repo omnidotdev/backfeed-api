@@ -66,7 +66,7 @@ const validateInvitationPermissions = (
 
               // Prevent inviting yourself
               if (currentUser.email === invitation.email) {
-                throw new Error("Self invites are not allowed");
+                throw new Error("Self-invites are not allowed");
               }
 
               // Check for duplicate invite
