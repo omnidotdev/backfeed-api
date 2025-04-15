@@ -45,6 +45,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       username: idToken.preferred_username as string,
       firstName: idToken.given_name as string,
       lastName: idToken.family_name as string,
+      email: idToken.email as string,
     };
 
     const { hidraId, ...rest } = insertedUser;
