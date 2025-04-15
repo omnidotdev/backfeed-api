@@ -11,7 +11,7 @@ import type { PgColumn } from "drizzle-orm/pg-core";
  */
 export const generateSlug = (column: PgColumn): SQL =>
   // From inner replace to outer:
-  // NB: f_unaccent is a custom fuction that was manually set in 0010_smart_rhino.sql, it allows for the extension unaccent (see: https://www.postgresql.org/docs/current/unaccent.html) to be treated as IMMUTABLE to allow for proper indexing on generated slugs
+  // NB: f_unaccent is a custom fuction that was manually set in 0011_chubby_winter_soldier.sql, it allows for the extension unaccent (see: https://www.postgresql.org/docs/current/unaccent.html) to be treated as IMMUTABLE to allow for proper indexing on generated slugs
   // replace(f_unaccent(${column}), ' ', '-') <-- unaccent characters and also replace all spaces with dashes
   // regexp_replace('VALUE', '-{2,}', '-', 'g') <-- replace all instances of multiple dashes with a single dash
   // regexp_replace('VALUE', '[^a-zA-Z0-9 -]+', '', 'g') <-- remove all characters that are neither alphanumeric nor dashes
