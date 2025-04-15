@@ -33,6 +33,9 @@ const preset: GraphileConfig.Preset = {
     pgForbidSetofFunctionsToReturnNull: false,
     jsonScalarAsString: false,
     defaultBehavior: "-type:node -interface:node",
+    // See https://github.com/graphile-contrib/postgraphile-plugin-connection-filter?tab=readme-ov-file#handling-null-and-empty-objects
+    connectionFilterAllowNullInput: true,
+    connectionFilterAllowEmptyObjectInput: true,
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   plugins: [
