@@ -23,7 +23,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         sideEffect(
           [$project, $currentUser, $db],
           async ([project, currentUser, db]) => {
-            if (!currentUser) {
+            // Do not allow users that are not subscribed to create, update, or delete projects
+            if (!currentUser?.tier) {
               throw new Error("Unauthorized");
             }
 
@@ -55,6 +56,19 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             // Only allow owners and admins to create, update, and delete projects
             if (!userRole || userRole.role === "member") {
               throw new Error("Insufficient permissions");
+            }
+
+            // If the current user has a basic subscription, validate the current number of projects for the organization
+            if (scope === "create" && currentUser.tier === "basic") {
+              const currentProjects = await db
+                .select()
+                .from(projects)
+                .where(eq(projects.organizationId, organizationId));
+
+              // Do not allow users to create a new project if the maximum number of allow projects has been met
+              if (currentProjects.length >= 3) {
+                throw new Error("Maximum number of projects reached.");
+              }
             }
           }
         );
