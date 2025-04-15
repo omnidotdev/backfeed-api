@@ -1,1 +1,5 @@
-export { createGraphQLContext, type GraphQLContext } from "./context";
+export {
+  createGraphQLContext,
+  SubscriptionTier,
+  type GraphQLContext,
+} from "./context";

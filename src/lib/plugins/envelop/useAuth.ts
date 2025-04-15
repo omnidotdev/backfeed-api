@@ -1,8 +1,11 @@
 import { useGenericAuth } from "@envelop/generic-auth";
 import * as jose from "jose";
+import { match } from "ts-pattern";
 
 import { AUTH_JWKS_URL } from "lib/config/env";
 import { users } from "lib/drizzle/schema";
+import { SubscriptionTier } from "lib/graphql";
+import { polar } from "lib/polar";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { InsertUser, SelectUser } from "lib/drizzle/schema";
@@ -15,6 +18,8 @@ import type { GraphQLContext } from "lib/graphql";
 const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
   context
 ) => {
+  let tier: SubscriptionTier | null = null;
+
   try {
     const sessionToken = context.request.headers
       .get("authorization")
@@ -50,7 +55,31 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       })
       .returning();
 
-    return user;
+    const [customerResponse] = await Promise.allSettled([
+      polar.customers.getStateExternal({
+        externalId: user.hidraId,
+      }),
+    ]);
+
+    if (customerResponse.status === "fulfilled") {
+      const customer = customerResponse.value;
+
+      if (customer.activeSubscriptions.length) {
+        const productId = customer.activeSubscriptions[0].productId;
+
+        const product = await polar.products.get({
+          id: productId,
+        });
+
+        tier = match(product.metadata?.title as SubscriptionTier)
+          .with(SubscriptionTier.BASIC, () => SubscriptionTier.BASIC)
+          .with(SubscriptionTier.TEAM, () => SubscriptionTier.TEAM)
+          .with(SubscriptionTier.ENTERPRISE, () => SubscriptionTier.ENTERPRISE)
+          .otherwise(() => null);
+      }
+    }
+
+    return { ...user, tier };
   } catch (err) {
     console.error(err);
 

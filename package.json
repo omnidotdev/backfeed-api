@@ -49,7 +49,8 @@
     "jose": "^5.9.6",
     "pg": "^8.13.1",
     "postgraphile": "5.0.0-beta.37",
-    "postgraphile-plugin-connection-filter": "3.0.0-beta.7"
+    "postgraphile-plugin-connection-filter": "3.0.0-beta.7",
+    "ts-pattern": "^5.7.0"
   },
   "trustedDependencies": ["@biomejs/biome", "esbuild"]
 }
