@@ -54,13 +54,13 @@ const validateInvitationPermissions = (
               );
 
             if (scope === "create") {
-              // Only organization owners can send invitations
+              // Only organization owners or admins can send invitations
               if (
                 !userRole ||
                 (userRole.role !== "owner" && userRole.role !== "admin")
               ) {
                 throw new Error(
-                  "Only organization owners can send invitations"
+                  "Only organization owners or admins can send invitations"
                 );
               }
 
