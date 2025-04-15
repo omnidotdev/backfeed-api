@@ -71,13 +71,6 @@
       "when": 1742909960322,
       "tag": "0009_nosy_skullbuster",
       "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1744427705464,
-      "tag": "0010_smart_rhino",
-      "breakpoints": true
     }
   ]
 }
