@@ -116,7 +116,7 @@ const validateInvitationPermissions = (
               const isRecipient = currentUser.email === invitation.email;
 
               // Only allow owner or recipient to delete
-              if (!isOwner && !isRecipient) {
+              if (!isOwner || !isRecipient) {
                 throw new Error(
                   "Only the recipient or owner can delete the invitation"
                 );
