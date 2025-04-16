@@ -4,7 +4,7 @@ import type * as jose from "jose";
 import {
   AUTH_BASE_URL,
   // AUTH_JWKS_URL
-} from "lib/config/env";
+} from "lib/config/env.config";
 import { users } from "lib/drizzle/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";

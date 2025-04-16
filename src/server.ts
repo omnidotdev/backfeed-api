@@ -7,8 +7,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 
 import { schema } from "generated/graphql/schema.executable";
-import { app as appConfig } from "lib/config/app";
-import { HOST, PORT, isDevEnv, isProdEnv } from "lib/config/env";
+import appConfig from "lib/config/app.config";
+import { HOST, PORT, isDevEnv, isProdEnv } from "lib/config/env.config";
 import { createGraphQLContext } from "lib/graphql/context";
 import { useAuth } from "lib/plugins/envelop";
 
