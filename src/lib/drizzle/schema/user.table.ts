@@ -1,8 +1,13 @@
-import { pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
+/**
+ * Subscription tiers defined for users.
+ */
+export const tier = pgEnum("tier", ["basic", "team", "enterprise"]);
 
 /**
  * User table.
@@ -14,6 +19,7 @@ export const users = pgTable(
     // HIDRA ID mapped to `sub` claim
     hidraId: uuid().notNull().unique(),
     username: text().unique(),
+    tier: tier(),
     firstName: text(),
     lastName: text(),
     email: text().notNull().unique(),

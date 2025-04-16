@@ -13,21 +13,10 @@ import type {
 
 const withPgClient = createWithPgClient({ pool: pgPool });
 
-export enum SubscriptionTier {
-  BASIC = "basic",
-  TEAM = "team",
-  ENTERPRISE = "enterprise",
-}
-
-interface CurrentUser extends SelectUser {
-  /** Current subscription tier for the user making the request. Injected by the `useAuth` plugin. */
-  tier: SubscriptionTier | null;
-}
-
 export interface GraphQLContext {
   // TODO: determine if we can customize this to be `observer` rather than `currentUser` during the context injection process
   /** The current user making the request. Injected by the `useAuth` plugin. */
-  currentUser: CurrentUser | null;
+  currentUser: SelectUser | null;
   db: typeof dbPool;
   request: Request;
   withPgClient: WithPgClient<NodePostgresPgClient>;
@@ -44,7 +33,7 @@ export interface GraphQLContext {
 export const createGraphQLContext = async ({
   request,
 }: YogaInitialContext): Promise<
-  Omit<GraphQLContext, "currentUser" | "tier" | "pgSettings" | "pgSubscriber">
+  Omit<GraphQLContext, "currentUser" | "pgSettings" | "pgSubscriber">
 > => ({
   db: dbPool,
   request,

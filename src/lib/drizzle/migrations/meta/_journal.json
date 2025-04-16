@@ -78,6 +78,13 @@
       "when": 1744218312155,
       "tag": "0010_plain_shatterstar",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1744759714187,
+      "tag": "0011_new_wilson_fisk",
+      "breakpoints": true
     }
   ]
 }
