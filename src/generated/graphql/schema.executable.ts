@@ -154,7 +154,7 @@ const spec_downvote = {
   },
   description: undefined,
   extensions: {
-    oid: "202649",
+    oid: "203007",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -237,7 +237,7 @@ const spec_upvote = {
   },
   description: undefined,
   extensions: {
-    oid: "202562",
+    oid: "202920",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -320,7 +320,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "202749",
+    oid: "203107",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -403,7 +403,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "202524",
+    oid: "202882",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -498,7 +498,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "202629",
+    oid: "202987",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -617,7 +617,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "202548",
+    oid: "202906",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -638,7 +638,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "202668",
+    oid: "203026",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -717,7 +717,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "202584",
+    oid: "202942",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -848,7 +848,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "202538",
+    oid: "202896",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -967,7 +967,7 @@ const spec_postStatus = {
   },
   description: undefined,
   extensions: {
-    oid: "202723",
+    oid: "203081",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -988,7 +988,7 @@ const tierCodec = enumCodec({
   values: ["basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "202770",
+    oid: "203219",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1115,7 +1115,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "202572",
+    oid: "202930",
     isTableLike: true,
     pg: {
       serviceName: "main",
