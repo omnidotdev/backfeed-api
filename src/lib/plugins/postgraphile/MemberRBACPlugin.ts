@@ -62,6 +62,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 .from(members)
                 .where(eq(members.id, input));
 
+              // TODO: add validation check for ownership transfers. Ownership can't be transferred to a user that has ownership of another org *if* they have a basic tier subscription
               if (currentUser.id !== member.userId) {
                 const [userRole] = await db
                   .select({ role: members.role })
