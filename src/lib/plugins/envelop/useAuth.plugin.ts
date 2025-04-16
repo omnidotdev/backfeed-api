@@ -1,7 +1,10 @@
 import { useGenericAuth } from "@envelop/generic-auth";
 import type * as jose from "jose";
 
-// import { AUTH_JWKS_URL } from "lib/config/env";
+import {
+  AUTH_BASE_URL,
+  // AUTH_JWKS_URL
+} from "lib/config/env";
 import { users } from "lib/drizzle/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
@@ -23,15 +26,11 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
     if (!sessionToken) throw new Error("Invalid or missing session token");
 
     // TODO verify best practices for this
-    const userInfo = await fetch(
-      // TODO env var
-      "https://localhost:8000/api/auth/oauth2/userinfo",
-      {
-        headers: {
-          Authorization: `Bearer ${sessionToken}`,
-        },
+    const userInfo = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
       },
-    );
+    });
 
     const idToken: jose.JWTPayload = await userInfo.json();
 
