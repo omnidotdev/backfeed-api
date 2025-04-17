@@ -62,7 +62,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 .from(members)
                 .where(eq(members.id, input));
 
-              // TODO: add validation check for ownership transfers. Ownership can't be transferred to a user that has ownership of another org *if* they have a basic tier subscription
               if (currentUser.id !== member.userId) {
                 const [userRole] = await db
                   .select({ role: members.role })
@@ -75,14 +74,18 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   );
 
                 // Only allow owners to update roles and/or kick other members from the organization
+                // TODO: determine how to restrict owners from granting other members the `owner` role
                 if (userRole.role !== "owner") {
                   throw new Error("Insufficient permissions");
                 }
               } else {
-                // Restrict current users from updating their own role unless they are an owner
-                if (scope === "update" && member.role !== "owner") {
-                  throw new Error("Insufficient permissions");
-                }
+                // Restrict current users from updating their own role
+                throw new Error("Insufficient permissions");
+
+                // TODO: replace above with below when ownership transfers are allowed
+                // if (scope === "update" && member.role !== "owner") {
+                //   throw new Error("Insufficient permissions");
+                // }
               }
             }
           }

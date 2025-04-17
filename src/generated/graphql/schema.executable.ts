@@ -4088,7 +4088,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
-      } else if ("create" === "update" && member.role !== "owner") throw new Error("Insufficient permissions");
+      } else throw new Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4310,7 +4310,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
-      } else if ("update" === "update" && member.role !== "owner") throw new Error("Insufficient permissions");
+      } else throw new Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4585,7 +4585,7 @@ const planWrapper19 = (plan, _, fieldArgs) => {
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
-      } else if ("delete" === "update" && member.role !== "owner") throw new Error("Insufficient permissions");
+      } else throw new Error("Insufficient permissions");
     }
   });
   return plan();
