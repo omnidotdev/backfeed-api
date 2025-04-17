@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { reset, seed } from "drizzle-seed";
 
-import { DATABASE_URL, isDevEnv } from "lib/config/env";
+import { DATABASE_URL, isDevEnv } from "lib/config/env.config";
 import * as schema from "lib/drizzle/schema";
 
 /**
