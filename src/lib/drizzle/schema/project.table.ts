@@ -14,7 +14,7 @@ import { organizations } from "./organization.table";
 import type { InferInsertModel, InferSelectModel, SQL } from "drizzle-orm";
 
 /**
- * Project table. Projects contain a collection of feedback items and are nested under organizations.
+ * Project table. Projects contain a collection of feedback and are nested under organizations.
  */
 export const projects = pgTable(
   "project",
