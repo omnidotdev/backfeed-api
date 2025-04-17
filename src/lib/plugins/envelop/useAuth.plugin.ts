@@ -1,10 +1,7 @@
 import { useGenericAuth } from "@envelop/generic-auth";
 import type * as jose from "jose";
 
-import {
-  AUTH_BASE_URL,
-  // AUTH_JWKS_URL
-} from "lib/config/env.config";
+import { AUTH_BASE_URL } from "lib/config/env.config";
 import { users } from "lib/drizzle/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
@@ -35,7 +32,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
     const idToken: jose.JWTPayload = await userInfo.json();
 
     // TODO validate token, currently major security flaw
-    // const jwks = jose.createRemoteJWKSet(new URL(AUTH_JWKS_URL!));
+    // const jwks = jose.createRemoteJWKSet(new URL(`${AUTH_BASE_URL}/jwks`));
     // const { payload } = await jose.jwtVerify(sessionToken, jwks);
     // if (!payload) throw new Error("Invalid or missing session token");
 
