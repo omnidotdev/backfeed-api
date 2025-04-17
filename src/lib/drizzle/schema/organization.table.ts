@@ -14,9 +14,9 @@ export const organizations = pgTable(
     id: defaultId(),
     name: text().unique().notNull(),
     slug: text()
-      .generatedAlwaysAs((): SQL => generateSlug(organizations.name))
       .unique()
-      .notNull(),
+      .notNull()
+      .generatedAlwaysAs((): SQL => generateSlug(organizations.name)),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
