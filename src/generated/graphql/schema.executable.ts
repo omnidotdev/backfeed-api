@@ -4061,9 +4061,10 @@ function oldPlan3(_, args) {
 }
 const planWrapper3 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "member"]),
+    $patch = "create" === "update" ? fieldArgs.getRaw(["input", "patch"]) : $input,
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
+  sideEffect([$input, $patch, $currentUser, $db], async ([input, patch, currentUser, db]) => {
     if (!currentUser) throw new Error("Unauthorized");
     const {
       members
@@ -4088,6 +4089,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
+        if (patch.role === "owner") throw new Error("Organizations can only have one owner");
       } else throw new Error("Insufficient permissions");
     }
   });
@@ -4283,9 +4285,10 @@ const oldPlan10 = (_$root, args) => {
 };
 const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $patch = "update" === "update" ? fieldArgs.getRaw(["input", "patch"]) : $input,
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
+  sideEffect([$input, $patch, $currentUser, $db], async ([input, patch, currentUser, db]) => {
     if (!currentUser) throw new Error("Unauthorized");
     const {
       members
@@ -4310,6 +4313,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
+        if (patch.role === "owner") throw new Error("Organizations can only have one owner");
       } else throw new Error("Insufficient permissions");
     }
   });
@@ -4558,9 +4562,10 @@ const oldPlan19 = (_$root, args) => {
 };
 const planWrapper19 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $patch = "delete" === "update" ? fieldArgs.getRaw(["input", "patch"]) : $input,
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
-  sideEffect([$input, $currentUser, $db], async ([input, currentUser, db]) => {
+  sideEffect([$input, $patch, $currentUser, $db], async ([input, patch, currentUser, db]) => {
     if (!currentUser) throw new Error("Unauthorized");
     const {
       members
@@ -4585,6 +4590,7 @@ const planWrapper19 = (plan, _, fieldArgs) => {
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
+        if (patch.role === "owner") throw new Error("Organizations can only have one owner");
       } else throw new Error("Insufficient permissions");
     }
   });
