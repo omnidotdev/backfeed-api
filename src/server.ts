@@ -8,7 +8,7 @@ import { cors } from "hono/cors";
 
 import { schema } from "generated/graphql/schema.executable";
 import { app as appConfig } from "lib/config/app";
-import { HOST, PORT, isDevEnv, isProdEnv } from "lib/config/env";
+import { HOST, PORT, SKIP_AUTH, isDevEnv, isProdEnv } from "lib/config/env";
 import { createGraphQLContext } from "lib/graphql/context";
 import { useAuth } from "lib/plugins/envelop";
 
@@ -50,7 +50,7 @@ const yoga = createYoga({
   graphiql: isDevEnv,
   landingPage: isDevEnv,
   plugins: [
-    useAuth(),
+    SKIP_AUTH !== "true" && useAuth(),
     useMoreDetailedErrors(),
     // NB: The below are used to handle caching and validation. Caching the parser results is critical for Grafast. See: https://grafast.org/grafast/servers#envelop
     useParserCache(),
@@ -68,7 +68,7 @@ app.use(
     origin: isProdEnv ? appConfig.url : "https://localhost:3000",
     credentials: true,
     allowMethods: ["GET", "POST"],
-  })
+  }),
 );
 
 // mount GraphQL API
@@ -77,7 +77,7 @@ app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));
 // GraphQL Yoga suppresses logging the startup message in production environments by default
 if (isProdEnv)
   console.log(
-    `🚀 ${appConfig.name} GraphQL API running at http://${HOST}:${PORT}`
+    `🚀 ${appConfig.name} GraphQL API running at http://${HOST}:${PORT}`,
   );
 
 export default {
