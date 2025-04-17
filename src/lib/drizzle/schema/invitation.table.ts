@@ -15,13 +15,16 @@ export const invitations = pgTable(
     organizationId: uuid()
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
-    email: text().notNull().unique(),
+    email: text().notNull(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),
-    uniqueIndex().on(table.email),
+    uniqueIndex().on(
+      table.organizationId,
+      table.email
+    ),
     index().on(table.organizationId),
   ]
 );
