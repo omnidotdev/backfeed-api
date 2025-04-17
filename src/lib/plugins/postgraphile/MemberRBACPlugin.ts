@@ -17,7 +17,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
-        // NB: this is a little hacky, but a "step" can not undefined, and since `patch` only exists on `update` mutations, we fallback to `input`
+        // NB: this is a little hacky, but a "step" can not be undefined, and since `patch` only exists on `update` mutations, we fallback to `input`
         const $patch =
           scope === "update" ? fieldArgs.getRaw(["input", "patch"]) : $input;
         const $currentUser = context<GraphQLContext>().get("currentUser");
