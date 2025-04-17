@@ -8,11 +8,11 @@
         "@envelop/validation-cache": "^8.1.3",
         "@escape.tech/graphql-armor": "^3.1.2",
         "@graphile/pg-aggregates": "0.2.0-beta.7",
-        "@graphile/simplify-inflection": "8.0.0-beta.5",
+        "@graphile/simplify-inflection": "8.0.0-beta.6",
         "dayjs": "^1.11.13",
         "drizzle-orm": "^0.41.0",
         "drizzle-seed": "^0.3.1",
-        "graphile-export": "0.0.2-beta.24",
+        "graphile-export": "0.0.2-beta.26",
         "graphql": "^16.10.0",
         "graphql-yoga": "^5.13.2",
         "hono": "^4.7.5",
@@ -169,7 +169,7 @@
 
     "@graphile/pg-aggregates": ["@graphile/pg-aggregates@0.2.0-beta.7", "", { "peerDependencies": { "graphile-build": "^5.0.0-beta.27", "graphile-build-pg": "^5.0.0-beta.31", "graphql": "^16.1.0-experimental-stream-defer.6" }, "optionalPeers": ["graphile-build", "graphile-build-pg", "graphql"] }, "sha512-XaVAzlB1S1UzAmet7dZcoW3AnDGT2qrQqXCRIGJKeu7i76D/SIR5hZs+mytYOjfwuJsHsBBDtmlRORMaUKkJxw=="],
 
-    "@graphile/simplify-inflection": ["@graphile/simplify-inflection@8.0.0-beta.5", "", {}, "sha512-1XaXGe5i5wRR/Uh2cvkt9KlFoXq/e7a3GYSdZtQnp68gIOdgcys2T24VNYsiekBhzcp5CCCcUJJdUvV2bvS21Q=="],
+    "@graphile/simplify-inflection": ["@graphile/simplify-inflection@8.0.0-beta.6", "", {}, "sha512-GFfQtUgX3yLj3XWY9vHrhOfkkCdoW2oqJgJdjQs3qYKqTHViKFch91NguUnw3z+4X1DgYb+qx10leTo+tZ+UeA=="],
 
     "@graphql-tools/executor": ["@graphql-tools/executor@1.3.11", "", { "dependencies": { "@graphql-tools/utils": "^10.7.1", "@graphql-typed-document-node/core": "^3.2.0", "@repeaterjs/repeater": "^3.0.4", "@whatwg-node/disposablestack": "^0.0.5", "tslib": "^2.4.0", "value-or-promise": "^1.0.12" }, "peerDependencies": { "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0" } }, "sha512-7Q1IwIuSgarDeaCOZ1VMZvGaWY7cD2jj+uTNn/PsenYYKqFWKH30UylEK67ZTpVMXqBJctFaxVnPP7KM0+LPWg=="],
 
@@ -313,7 +313,7 @@
 
     "graphile-config": ["graphile-config@0.0.1-beta.14", "", { "dependencies": { "@types/interpret": "^1.1.1", "@types/node": "^20.5.7", "@types/semver": "^7.5.1", "chalk": "^4.1.2", "debug": "^4.3.4", "interpret": "^3.1.1", "semver": "^7.5.4", "tslib": "^2.6.2", "yargs": "^17.7.2" } }, "sha512-3FlhyRKz4LvIbY4AXn4EI8DSTdSYsg0WRfX6U9QeytGta9aiefF1QqSiC1ocXUlNJUMBfm28dy0eL669ljYRwg=="],
 
-    "graphile-export": ["graphile-export@0.0.2-beta.24", "", { "dependencies": { "@babel/generator": "^7.25.6", "@babel/parser": "^7.25.6", "@babel/template": "^7.25.0", "@babel/traverse": "^7.25.6", "@babel/types": "^7.25.6", "@types/node": "^20.5.7", "prettier": "^3.0.3", "tslib": "^2.6.2" }, "peerDependencies": { "eslint": "^8.48.0", "grafast": "^0.1.1-beta.19", "pg-sql2": "^5.0.0-beta.7" }, "optionalPeers": ["eslint", "pg-sql2"] }, "sha512-nu24HgtCc2G5lfAK5EkzWcE6Vv9TTTJrzutTjnOVJ5Zbdp55XBPrk0y0TWJulGjcj3Do3y+gz0T9Ldzil89yxg=="],
+    "graphile-export": ["graphile-export@0.0.2-beta.26", "", { "dependencies": { "@babel/generator": "^7.25.6", "@babel/parser": "^7.25.6", "@babel/template": "^7.25.0", "@babel/traverse": "^7.25.6", "@babel/types": "^7.25.6", "@types/node": "^20.5.7", "prettier": "^3.0.3", "tslib": "^2.6.2" }, "peerDependencies": { "eslint": "^8.48.0", "grafast": "^0.1.1-beta.21", "pg-sql2": "^5.0.0-beta.8" }, "optionalPeers": ["eslint", "pg-sql2"] }, "sha512-F/VwojFj+UWKUcL5kiLeeYNLTKJzK19rC9rZO1Ga/4NVCAAx2azscocDKlpJE7W+LYcPwtZkYhESKwfLOts8zw=="],
 
     "graphile-utils": ["graphile-utils@5.0.0-beta.36", "", { "dependencies": { "debug": "^4.3.4", "json5": "^2.2.3", "tslib": "^2.6.2" }, "peerDependencies": { "@dataplan/pg": "^0.0.1-beta.30", "grafast": "^0.1.1-beta.19", "graphile-build": "^5.0.0-beta.31", "graphile-build-pg": "^5.0.0-beta.36", "graphile-config": "^0.0.1-beta.14", "graphql": "^16.1.0-experimental-stream-defer.6", "tamedevil": "^0.0.0-beta.7" }, "optionalPeers": ["@dataplan/pg", "graphile-build-pg"] }, "sha512-Bo3PEOzLhlcs/NtaTXb2XSVazQxkQzMLkaxY7f0GWMImMfPZJekJW5zcOKVYLeljjXnfCMGkYsYddvtcwbha5w=="],
 
