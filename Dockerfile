@@ -15,6 +15,8 @@ RUN bun install --ci
 
 COPY --link . .
 
+RUN bun run build
+
 FROM base
 
 COPY --from=build /app /app
