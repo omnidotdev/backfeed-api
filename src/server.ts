@@ -82,7 +82,7 @@ app.use(
     origin: isProdEnv ? appConfig.url : "https://localhost:3000",
     credentials: true,
     allowMethods: ["GET", "POST"],
-  }),
+  })
 );
 
 app.get(
@@ -91,7 +91,7 @@ app.get(
     accessToken: POLAR_ACCESS_TOKEN,
     successUrl: CHECKOUT_SUCCESS_URL,
     server: isDevEnv ? "sandbox" : "production",
-  }),
+  })
 );
 
 app.get(
@@ -105,7 +105,7 @@ app.get(
       return customerId;
     },
     server: isDevEnv ? "sandbox" : "production",
-  }),
+  })
 );
 
 // TODO: discuss / verify how to scope this to strictly be looking at `Backfeed` products if we are going to be offering subscriptions for other products within the same polar organization
@@ -121,7 +121,7 @@ app.post(
         await db.update(users).set({ tier }).where(eq(users.hidraId, hidraId));
 
         console.log(
-          `${tier.toUpperCase()} Subscription Tier set for User: ${hidraId}`,
+          `${tier.toUpperCase()} Subscription Tier set for User: ${hidraId}`
         );
       }
     },
@@ -138,7 +138,7 @@ app.post(
             .where(eq(users.hidraId, hidraId));
 
           console.log(
-            `${tier.toUpperCase()} Subscription Tier set for User: ${hidraId}`,
+            `${tier.toUpperCase()} Subscription Tier set for User: ${hidraId}`
           );
         }
       }
@@ -155,7 +155,7 @@ app.post(
         console.log(`Subscription Tier revoked for User: ${hidraId}`);
       }
     },
-  }),
+  })
 );
 
 // mount GraphQL API
@@ -164,7 +164,7 @@ app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));
 // GraphQL Yoga suppresses logging the startup message in production environments by default
 if (isProdEnv)
   console.log(
-    `🚀 ${appConfig.name} GraphQL API running at http://${HOST}:${PORT}`,
+    `🚀 ${appConfig.name} GraphQL API running at http://${HOST}:${PORT}`
   );
 
 export default {
