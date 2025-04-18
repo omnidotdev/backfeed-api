@@ -13,44 +13,44 @@ const validatePermissions = (propName: string) =>
     (and, eq, dbSchema, context, sideEffect, propName) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
-        const $downvoteId = fieldArgs.getRaw(["input", propName]);
+        const $upvoteId = fieldArgs.getRaw(["input", propName]);
         const $currentUser = context<GraphQLContext>().get("currentUser");
         const $db = context<GraphQLContext>().get("db");
 
         sideEffect(
-          [$downvoteId, $currentUser, $db],
-          async ([downvoteId, currentUser, db]) => {
+          [$upvoteId, $currentUser, $db],
+          async ([upvoteId, currentUser, db]) => {
             if (!currentUser) {
               throw new Error("Unauthorized");
             }
 
-            const { downvotes } = dbSchema;
+            const { upvotes } = dbSchema;
 
-            const [downvote] = await db
+            const [upvote] = await db
               .select()
-              .from(downvotes)
-              .where(eq(downvotes.id, downvoteId as string));
+              .from(upvotes)
+              .where(eq(upvotes.id, upvoteId as string));
 
-            // Only allow the user who downvoted to update or delete their own downvote
-            if (currentUser.id !== downvote.userId) {
+            // Only allow the user who upvoted to update or delete their own upvote
+            if (currentUser.id !== upvote.userId) {
               throw new Error("Insufficient permissions");
             }
-          }
+          },
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName]
+    [and, eq, dbSchema, context, sideEffect, propName],
   );
 
 /**
- * Plugin that handles API access for downvote table mutations.
+ * Plugin that handles API access for upvote table mutations.
  */
-const DownvoteRBACPlugin = makeWrapPlansPlugin({
+const UpvoteRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
-    updateDownvote: validatePermissions("rowId"),
-    deleteDownvote: validatePermissions("rowId"),
+    updateUpvote: validatePermissions("rowId"),
+    deleteUpvote: validatePermissions("rowId"),
   },
 });
 
-export default DownvoteRBACPlugin;
+export default UpvoteRBACPlugin;

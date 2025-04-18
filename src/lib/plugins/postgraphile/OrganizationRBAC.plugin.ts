@@ -34,8 +34,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               .where(
                 and(
                   eq(members.userId, currentUser.id),
-                  eq(members.organizationId, organizationId as string)
-                )
+                  eq(members.organizationId, organizationId as string),
+                ),
               );
 
             // Only allow owners to delete organizations
@@ -50,12 +50,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             ) {
               throw new Error("Insufficient permissions");
             }
-          }
+          },
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName, scope]
+    [and, eq, dbSchema, context, sideEffect, propName, scope],
   );
 
 /**

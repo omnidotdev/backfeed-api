@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "62509",
+    oid: "64252",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_invitation = {
   }),
   description: undefined,
   extensions: {
-    oid: "62609",
+    oid: "64351",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "62422",
+    oid: "64165",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +400,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "62489",
+    oid: "64232",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -469,7 +469,7 @@ const spec_organization = {
       description: undefined,
       codec: TYPES.text,
       notNull: true,
-      hasDefault: true,
+      hasDefault: false,
       extensions: {
         tags: {},
         canSelect: true,
@@ -480,7 +480,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "62384",
+    oid: "64127",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -596,7 +596,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "62408",
+    oid: "64151",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -724,7 +724,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "62398",
+    oid: "64141",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -742,7 +742,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "62528",
+    oid: "64271",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -819,7 +819,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-    oid: "62444",
+    oid: "64187",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -935,7 +935,7 @@ const spec_postStatus = {
   }),
   description: undefined,
   extensions: {
-    oid: "62583",
+    oid: "64325",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1051,7 +1051,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "62432",
+    oid: "64175",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -10739,7 +10739,7 @@ input OrganizationInput {
   name: String!
   createdAt: Datetime
   updatedAt: Datetime
-  slug: String
+  slug: String!
 }
 
 """The output of our create \`Project\` mutation."""

@@ -27,7 +27,7 @@ const validatePermissions = (propName: string) =>
 
         return plan();
       },
-    [context, sideEffect, propName]
+    [context, sideEffect, propName],
   );
 
 /**

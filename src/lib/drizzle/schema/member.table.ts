@@ -43,7 +43,7 @@ export const members = pgTable(
     uniqueIndex().on(table.id),
     index().on(table.userId),
     index().on(table.organizationId),
-  ]
+  ],
 );
 
 /**

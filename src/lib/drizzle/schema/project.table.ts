@@ -35,7 +35,7 @@ export const projects = pgTable(
     unique().on(table.slug, table.organizationId),
     uniqueIndex().on(table.id),
     index().on(table.organizationId),
-  ]
+  ],
 );
 
 /**

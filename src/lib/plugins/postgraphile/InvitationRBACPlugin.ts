@@ -12,7 +12,7 @@ type MutationScope = "create" | "delete";
 
 const validateInvitationPermissions = (
   propName: string,
-  scope: MutationScope
+  scope: MutationScope,
 ) =>
   EXPORTABLE(
     (and, eq, dbSchema, context, sideEffect, propName, scope) =>
@@ -49,8 +49,8 @@ const validateInvitationPermissions = (
               .where(
                 and(
                   eq(members.userId, currentUser.id),
-                  eq(members.organizationId, invitation.organizationId)
-                )
+                  eq(members.organizationId, invitation.organizationId),
+                ),
               );
 
             if (scope === "create") {
@@ -60,7 +60,7 @@ const validateInvitationPermissions = (
                 (userRole.role !== "owner" && userRole.role !== "admin")
               ) {
                 throw new Error(
-                  "Only organization owners or admins can send invitations"
+                  "Only organization owners or admins can send invitations",
                 );
               }
 
@@ -76,13 +76,13 @@ const validateInvitationPermissions = (
                 .where(
                   and(
                     eq(invitations.email, invitation.email),
-                    eq(invitations.organizationId, invitation.organizationId)
-                  )
+                    eq(invitations.organizationId, invitation.organizationId),
+                  ),
                 );
 
               if (existingInvitation) {
                 throw new Error(
-                  "An invitation has already been sent to this email."
+                  "An invitation has already been sent to this email.",
                 );
               }
 
@@ -99,13 +99,13 @@ const validateInvitationPermissions = (
                   .where(
                     and(
                       eq(members.userId, existingUser.id),
-                      eq(members.organizationId, invitation.organizationId)
-                    )
+                      eq(members.organizationId, invitation.organizationId),
+                    ),
                   );
 
                 if (existingMember) {
                   throw new Error(
-                    "User is already a member of the organization."
+                    "User is already a member of the organization.",
                   );
                 }
               }
@@ -118,16 +118,16 @@ const validateInvitationPermissions = (
               // Only allow owner or recipient to delete
               if (!isOwner || !isRecipient) {
                 throw new Error(
-                  "Only the recipient or owner can delete the invitation"
+                  "Only the recipient or owner can delete the invitation",
                 );
               }
             }
-          }
+          },
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName, scope]
+    [and, eq, dbSchema, context, sideEffect, propName, scope],
   );
 
 /**
