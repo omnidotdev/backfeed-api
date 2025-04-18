@@ -23,7 +23,7 @@ export const invitations = pgTable(
     uniqueIndex().on(table.id),
     uniqueIndex().on(table.email),
     index().on(table.organizationId),
-  ]
+  ],
 );
 
 /**

@@ -4,7 +4,7 @@ import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connecti
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 
-import { DATABASE_URL, isProdEnv } from "./src/lib/config/env";
+import { DATABASE_URL, isProdEnv } from "./src/lib/config/env.config";
 import {
   CommentRBACPlugin,
   DownvoteRBACPlugin,
