@@ -38,17 +38,19 @@
     "@escape.tech/graphql-armor": "^3.1.2",
     "@graphile/pg-aggregates": "0.2.0-beta.8",
     "@graphile/simplify-inflection": "8.0.0-beta.6",
+    "@polar-sh/hono": "^0.3.0",
     "dayjs": "^1.11.13",
     "drizzle-orm": "^0.42.0",
     "drizzle-seed": "^0.3.1",
     "graphile-export": "0.0.2-beta.26",
     "graphql": "^16.9.0",
     "graphql-yoga": "^5.8.0",
-    "hono": "^4.6.8",
+    "hono": "^4.7.7",
     "jose": "^6.0.10",
     "pg": "^8.13.1",
     "postgraphile": "5.0.0-beta.40",
-    "postgraphile-plugin-connection-filter": "3.0.0-beta.8"
+    "postgraphile-plugin-connection-filter": "3.0.0-beta.8",
+    "zod": "^3.24.3"
   },
   "trustedDependencies": ["@biomejs/biome", "esbuild"]
 }
