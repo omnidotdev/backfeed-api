@@ -44,7 +44,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
               if (organizationUsers.length) {
                 const userRole = organizationUsers.find(
-                  (user) => user.userId === currentUser.id
+                  (user) => user.userId === currentUser.id,
                 )?.role;
 
                 // Allow users to join an organization as a member
@@ -72,8 +72,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   .where(
                     and(
                       eq(members.userId, currentUser.id),
-                      eq(members.organizationId, member.organizationId)
-                    )
+                      eq(members.organizationId, member.organizationId),
+                    ),
                   );
 
                 // Only allow owners to update roles and/or kick other members from the organization
@@ -97,12 +97,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 // }
               }
             }
-          }
+          },
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName, scope]
+    [and, eq, dbSchema, context, sideEffect, propName, scope],
   );
 
 /**

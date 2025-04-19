@@ -37,7 +37,7 @@ export const postStatuses = pgTable(
     uniqueIndex("post_status_unique_id_index").on(table.id),
     uniqueIndex().on(table.status, table.projectId),
     index().on(table.projectId),
-  ]
+  ],
 );
 
 /**

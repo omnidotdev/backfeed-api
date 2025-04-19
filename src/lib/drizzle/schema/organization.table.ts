@@ -16,7 +16,7 @@ export const organizations = pgTable(
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.slug)]
+  (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.slug)],
 );
 
 /**

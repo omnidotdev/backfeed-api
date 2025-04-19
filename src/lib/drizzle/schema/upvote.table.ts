@@ -31,7 +31,7 @@ export const upvotes = pgTable(
     uniqueIndex().on(table.id),
     index().on(table.postId),
     index().on(table.userId),
-  ]
+  ],
 );
 
 /**

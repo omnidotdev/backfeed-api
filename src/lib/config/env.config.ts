@@ -7,10 +7,10 @@ export const {
   // https://stackoverflow.com/a/68578294
   HOST = "0.0.0.0",
   DATABASE_URL,
-  AUTH_JWKS_URL,
   POLAR_ACCESS_TOKEN,
   POLAR_WEBHOOK_SECRET,
   CHECKOUT_SUCCESS_URL,
+  AUTH_BASE_URL,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";

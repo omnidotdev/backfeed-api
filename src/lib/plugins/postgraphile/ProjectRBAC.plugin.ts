@@ -49,8 +49,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               .where(
                 and(
                   eq(members.userId, currentUser.id),
-                  eq(members.organizationId, organizationId)
-                )
+                  eq(members.organizationId, organizationId),
+                ),
               );
 
             // Only allow owners and admins to create, update, and delete projects
@@ -70,12 +70,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 throw new Error("Maximum number of projects reached.");
               }
             }
-          }
+          },
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName, scope]
+    [and, eq, dbSchema, context, sideEffect, propName, scope],
   );
 
 /**
