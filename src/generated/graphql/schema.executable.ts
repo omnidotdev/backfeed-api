@@ -148,11 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-<<<<<<< HEAD
     oid: "129821",
-=======
-    oid: "64252",
->>>>>>> master
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -164,89 +160,6 @@ const spec_downvote = {
   executor: executor
 };
 const downvoteCodec = recordCodec(spec_downvote);
-<<<<<<< HEAD
-=======
-const invitationIdentifier = sql.identifier("public", "invitation");
-const spec_invitation = {
-  name: "invitation",
-  identifier: invitationIdentifier,
-  attributes: Object.assign(Object.create(null), {
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    email: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  }),
-  description: undefined,
-  extensions: {
-    oid: "64351",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "invitation"
-    },
-    tags: Object.create(null)
-  },
-  executor: executor
-};
-const invitationCodec = recordCodec(spec_invitation);
->>>>>>> master
 const upvoteIdentifier = sql.identifier("public", "upvote");
 const spec_upvote = {
   name: "upvote",
@@ -315,11 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-<<<<<<< HEAD
     oid: "129734",
-=======
-    oid: "64165",
->>>>>>> master
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -571,11 +480,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-<<<<<<< HEAD
     oid: "129801",
-=======
-    oid: "64232",
->>>>>>> master
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -587,7 +492,6 @@ const spec_comment = {
   executor: executor
 };
 const commentCodec = recordCodec(spec_comment);
-<<<<<<< HEAD
 const memberIdentifier = sql.identifier("public", "member");
 const roleCodec = enumCodec({
   name: "role",
@@ -596,78 +500,6 @@ const roleCodec = enumCodec({
   description: undefined,
   extensions: {
     oid: "129840",
-=======
-const organizationIdentifier = sql.identifier("public", "organization");
-const spec_organization = {
-  name: "organization",
-  identifier: organizationIdentifier,
-  attributes: Object.assign(Object.create(null), {
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    slug: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  }),
-  description: undefined,
-  extensions: {
-    oid: "64127",
-    isTableLike: true,
->>>>>>> master
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -743,11 +575,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-<<<<<<< HEAD
     oid: "129756",
-=======
-    oid: "64151",
->>>>>>> master
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -875,11 +703,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-<<<<<<< HEAD
     oid: "129710",
-=======
-    oid: "64141",
->>>>>>> master
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -891,104 +715,6 @@ const spec_post = {
   executor: executor
 };
 const postCodec = recordCodec(spec_post);
-<<<<<<< HEAD
-=======
-const roleCodec = enumCodec({
-  name: "role",
-  identifier: sql.identifier("public", "role"),
-  values: ["owner", "admin", "member"],
-  description: undefined,
-  extensions: {
-    oid: "64271",
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "role"
-    },
-    tags: Object.create(null)
-  }
-});
-const memberIdentifier = sql.identifier("public", "member");
-const spec_member = {
-  name: "member",
-  identifier: memberIdentifier,
-  attributes: Object.assign(Object.create(null), {
-    user_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: false,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    role: {
-      description: undefined,
-      codec: roleCodec,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  }),
-  description: undefined,
-  extensions: {
-    oid: "64187",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "member"
-    },
-    tags: Object.create(null)
-  },
-  executor: executor
-};
-const memberCodec = recordCodec(spec_member);
->>>>>>> master
 const postStatusIdentifier = sql.identifier("public", "post_status");
 const spec_postStatus = {
   name: "postStatus",
@@ -1093,11 +819,7 @@ const spec_postStatus = {
   }),
   description: undefined,
   extensions: {
-<<<<<<< HEAD
     oid: "129895",
-=======
-    oid: "64325",
->>>>>>> master
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1329,11 +1051,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-<<<<<<< HEAD
     oid: "129744",
-=======
-    oid: "64175",
->>>>>>> master
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -10961,53 +10679,6 @@ input CommentInput {
   updatedAt: Datetime
 }
 
-<<<<<<< HEAD
-=======
-"""The output of our create \`Organization\` mutation."""
-type CreateOrganizationPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Organization\` that was created by this mutation."""
-  organization: Organization
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Organization\`. May be used by Relay 1."""
-  organizationEdge(
-    """The method to use when ordering \`Organization\`."""
-    orderBy: [OrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): OrganizationEdge
-}
-
-"""All input for the create \`Organization\` mutation."""
-input CreateOrganizationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Organization\` to be created by this mutation."""
-  organization: OrganizationInput!
-}
-
-"""An input for mutations affecting \`Organization\`"""
-input OrganizationInput {
-  rowId: UUID
-  name: String!
-  createdAt: Datetime
-  updatedAt: Datetime
-  slug: String!
-}
-
->>>>>>> master
 """The output of our create \`Project\` mutation."""
 type CreateProjectPayload {
   """
