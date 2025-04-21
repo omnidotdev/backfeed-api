@@ -1,5 +1,5 @@
 {
-  "id": "a1d07bae-d099-42af-b7b5-3fa6d8ad0c5f",
+  "id": "9c5032db-efb5-4a56-a6be-66b1c97cc488",
   "prevId": "f8b19800-fe13-4018-a48a-617978454e71",
   "version": "7",
   "dialect": "postgresql",
@@ -311,27 +311,6 @@
           "method": "btree",
           "with": {}
         },
-        "invitation_organization_id_email_index": {
-          "name": "invitation_organization_id_email_index",
-          "columns": [
-            {
-              "expression": "organization_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "email",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "invitation_organization_id_index": {
           "name": "invitation_organization_id_index",
           "columns": [
@@ -364,7 +343,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "invitation_organizationId_email_unique": {
+          "name": "invitation_organizationId_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "organization_id",
+            "email"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

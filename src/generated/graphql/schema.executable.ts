@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "130391",
+    oid: "130751",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "130304",
+    oid: "130664",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_invitation = {
   }),
   description: undefined,
   extensions: {
-    oid: "130491",
+    oid: "130851",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -388,7 +388,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "130266",
+    oid: "130626",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -480,7 +480,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "130371",
+    oid: "130731",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -499,7 +499,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "130410",
+    oid: "130770",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -575,7 +575,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-    oid: "130326",
+    oid: "130686",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -703,7 +703,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "130280",
+    oid: "130640",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -819,7 +819,7 @@ const spec_postStatus = {
   }),
   description: undefined,
   extensions: {
-    oid: "130465",
+    oid: "130825",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -935,7 +935,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "130290",
+    oid: "130650",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1051,7 +1051,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "130314",
+    oid: "130674",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1155,6 +1155,15 @@ const invitationUniques = [{
   description: undefined,
   extensions: {
     tags: Object.create(null)
+  }
+}, {
+  isPrimary: false,
+  attributes: ["organization_id", "email"],
+  description: undefined,
+  extensions: {
+    tags: Object.assign(Object.create(null), {
+      behavior: ["-update", "-delete"]
+    })
   }
 }];
 const registryConfig_pgResources_invitation_invitation = {
@@ -5762,6 +5771,9 @@ type Query implements Node {
 
   """Get a single \`Invitation\`."""
   invitation(rowId: UUID!): Invitation
+
+  """Get a single \`Invitation\`."""
+  invitationByOrganizationIdAndEmail(organizationId: UUID!, email: String!): Invitation
 
   """Get a single \`Organization\`."""
   organization(rowId: UUID!): Organization
@@ -11813,6 +11825,18 @@ export const plans = {
       },
       args: {
         rowId: undefined
+      }
+    },
+    invitationByOrganizationIdAndEmail: {
+      plan(_$root, args) {
+        return resource_invitationPgResource.get({
+          organization_id: args.get("organizationId"),
+          email: args.get("email")
+        });
+      },
+      args: {
+        organizationId: undefined,
+        email: undefined
       }
     },
     organization: {
@@ -25633,7 +25657,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
             nulls: undefined ? "LAST" : "FIRST"
           } : null)
         });
-        if (false) plan.setOrderIsUnique();
+        if (true) plan.setOrderIsUnique();
       }
     },
     ORGANIZATION_ID_DESC: {
@@ -25646,7 +25670,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
             nulls: undefined ? "LAST" : "FIRST"
           } : null)
         });
-        if (false) plan.setOrderIsUnique();
+        if (true) plan.setOrderIsUnique();
       }
     },
     EMAIL_ASC: {
