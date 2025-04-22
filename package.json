@@ -47,7 +47,7 @@
     "hono": "^4.7.5",
     "jose": "^6.0.10",
     "pg": "^8.14.1",
-    "postgraphile": "5.0.0-beta.37",
+    "postgraphile": "5.0.0-beta.40",
     "postgraphile-plugin-connection-filter": "3.0.0-beta.7"
   },
   "trustedDependencies": ["@biomejs/biome", "esbuild"]
