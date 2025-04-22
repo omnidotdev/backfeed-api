@@ -8,7 +8,7 @@ import { users } from "./user.table";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Post table. Posts represent feedback item posts.
+ * Post table. Posts represent feedback posts.
  */
 export const posts = pgTable(
   "post",

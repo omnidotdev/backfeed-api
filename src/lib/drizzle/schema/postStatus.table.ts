@@ -14,7 +14,7 @@ import { projects } from "./project.table";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Post status table. Statuses represent feedback item statuses.
+ * Post status table. Statuses represent feedback statuses.
  */
 export const postStatuses = pgTable(
   "post_status",
