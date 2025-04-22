@@ -18,8 +18,6 @@ const validatePermissions = (propName: string) =>
             throw new Error("Unauthorized");
           }
 
-          // TODO: restrict updating tier through API access. Handled through webhooks with a direct db connection
-
           // Disallow updating or deleting a user record that is not your own
           // TODO: this is scoped to the `user` table, so it is beyond the scope of RBAC. Discuss how to handle API admin access
           if (userId !== currentUser.id) {
