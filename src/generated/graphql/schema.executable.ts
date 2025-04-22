@@ -154,7 +154,7 @@ const spec_downvote = {
   },
   description: undefined,
   extensions: {
-    oid: "209487",
+    oid: "214774",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -237,7 +237,7 @@ const spec_upvote = {
   },
   description: undefined,
   extensions: {
-    oid: "209400",
+    oid: "214687",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -320,7 +320,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "209587",
+    oid: "214873",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -355,7 +355,7 @@ const spec_organization = {
     name: {
       description: undefined,
       codec: TYPES.text,
-      notNull: false,
+      notNull: true,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -403,7 +403,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "209362",
+    oid: "214649",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -498,7 +498,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "209467",
+    oid: "214754",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -533,7 +533,7 @@ const spec_project = {
     name: {
       description: undefined,
       codec: TYPES.text,
-      notNull: false,
+      notNull: true,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -617,7 +617,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "209386",
+    oid: "214673",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -638,7 +638,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "209506",
+    oid: "214793",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -717,7 +717,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "209422",
+    oid: "214709",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -848,7 +848,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "209376",
+    oid: "214663",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -967,7 +967,7 @@ const spec_postStatus = {
   },
   description: undefined,
   extensions: {
-    oid: "209561",
+    oid: "214847",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -988,7 +988,7 @@ const tierCodec = enumCodec({
   values: ["basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "209608",
+    oid: "215072",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1115,7 +1115,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "209410",
+    oid: "214697",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1232,7 +1232,7 @@ const invitationUniques = [{
   }
 }, {
   isPrimary: false,
-  attributes: ["email"],
+  attributes: ["organization_id", "email"],
   description: undefined,
   extensions: {
     tags: {
@@ -1366,16 +1366,6 @@ const projectUniques = [{
   extensions: {
     tags: {
       __proto__: null
-    }
-  }
-}, {
-  isPrimary: false,
-  attributes: ["name"],
-  description: undefined,
-  extensions: {
-    tags: {
-      __proto__: null,
-      behavior: ["-update", "-delete"]
     }
   }
 }, {
@@ -4717,7 +4707,7 @@ type Query implements Node {
   invitation(rowId: UUID!): Invitation
 
   """Get a single \`Invitation\`."""
-  invitationByEmail(email: String!): Invitation
+  invitationByOrganizationIdAndEmail(organizationId: UUID!, email: String!): Invitation
 
   """Get a single \`Organization\`."""
   organization(rowId: UUID!): Organization
@@ -4733,9 +4723,6 @@ type Query implements Node {
 
   """Get a single \`Project\`."""
   project(rowId: UUID!): Project
-
-  """Get a single \`Project\`."""
-  projectByName(name: String!): Project
 
   """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
@@ -5266,7 +5253,7 @@ type Post {
 
 type Project {
   rowId: UUID!
-  name: String
+  name: String!
   image: String
   slug: String!
   description: String
@@ -5348,7 +5335,7 @@ type Project {
 
 type Organization {
   rowId: UUID!
-  name: String
+  name: String!
   slug: String!
   createdAt: Datetime
   updatedAt: Datetime
@@ -5560,6 +5547,7 @@ scalar BigInt
 
 """Grouping methods for \`Project\` for usage during aggregation."""
 enum ProjectGroupBy {
+  NAME
   IMAGE
   SLUG
   DESCRIPTION
@@ -8352,6 +8340,7 @@ type InvitationDistinctCountAggregates {
 """Grouping methods for \`Invitation\` for usage during aggregation."""
 enum InvitationGroupBy {
   ORGANIZATION_ID
+  EMAIL
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
@@ -9644,7 +9633,7 @@ input CreateOrganizationInput {
 """An input for mutations affecting \`Organization\`"""
 input OrganizationInput {
   rowId: UUID
-  name: String
+  name: String!
   slug: String!
   createdAt: Datetime
   updatedAt: Datetime
@@ -9733,7 +9722,7 @@ input CreateProjectInput {
 """An input for mutations affecting \`Project\`"""
 input ProjectInput {
   rowId: UUID
-  name: String
+  name: String!
   image: String
   slug: String!
   description: String
@@ -10813,10 +10802,12 @@ export const plans = {
         id: $rowId
       });
     },
-    invitationByEmail(_$root, {
+    invitationByOrganizationIdAndEmail(_$root, {
+      $organizationId,
       $email
     }) {
       return resource_invitationPgResource.get({
+        organization_id: $organizationId,
         email: $email
       });
     },
@@ -10853,13 +10844,6 @@ export const plans = {
     }) {
       return resource_projectPgResource.get({
         id: $rowId
-      });
-    },
-    projectByName(_$root, {
-      $name
-    }) {
-      return resource_projectPgResource.get({
-        name: $name
       });
     },
     projectBySlugAndOrganizationId(_$root, {
@@ -11892,6 +11876,12 @@ export const plans = {
     }
   },
   ProjectGroupBy: {
+    NAME($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("name")}`,
+        codec: TYPES.text
+      });
+    },
     IMAGE($pgSelect) {
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("image")}`,
@@ -17654,14 +17644,12 @@ export const plans = {
         attribute: "name",
         direction: "ASC"
       });
-      queryBuilder.setOrderIsUnique();
     },
     NAME_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "name",
         direction: "DESC"
       });
-      queryBuilder.setOrderIsUnique();
     },
     IMAGE_ASC(queryBuilder) {
       queryBuilder.orderBy({
@@ -21719,6 +21707,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         codec: TYPES.uuid
       });
     },
+    EMAIL($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("email")}`,
+        codec: TYPES.text
+      });
+    },
     CREATED_AT($pgSelect) {
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
@@ -21984,26 +21978,26 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         attribute: "organization_id",
         direction: "ASC"
       });
+      queryBuilder.setOrderIsUnique();
     },
     ORGANIZATION_ID_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "organization_id",
         direction: "DESC"
       });
+      queryBuilder.setOrderIsUnique();
     },
     EMAIL_ASC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "email",
         direction: "ASC"
       });
-      queryBuilder.setOrderIsUnique();
     },
     EMAIL_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "email",
         direction: "DESC"
       });
-      queryBuilder.setOrderIsUnique();
     },
     CREATED_AT_ASC(queryBuilder) {
       queryBuilder.orderBy({

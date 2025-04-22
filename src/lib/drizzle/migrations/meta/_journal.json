@@ -79,5 +79,19 @@
       "tag": "0010_plain_shatterstar",
       "breakpoints": true
     },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1745270430064,
+      "tag": "0011_mute_roughhouse",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1745339286470,
+      "tag": "0012_cold_richard_fisk",
+      "breakpoints": true
+    }
   ]
 }

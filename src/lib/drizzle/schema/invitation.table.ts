@@ -1,4 +1,11 @@
-import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgTable,
+  text,
+  unique,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { organizations } from "./organization.table";
@@ -15,13 +22,13 @@ export const invitations = pgTable(
     organizationId: uuid()
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
-    email: text().notNull().unique(),
+    email: text().notNull(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),
-    uniqueIndex().on(table.email),
+    unique().on(table.organizationId, table.email),
     index().on(table.organizationId),
   ],
 );
