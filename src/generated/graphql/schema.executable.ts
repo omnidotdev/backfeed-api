@@ -1106,7 +1106,9 @@ const spec_user = {
       notNull: false,
       hasDefault: false,
       extensions: {
-        tags: {},
+        tags: {
+          behavior: "-insert -update"
+        },
         canSelect: true,
         canInsert: true,
         canUpdate: true
@@ -9915,7 +9917,6 @@ input UserInput {
   firstName: String
   lastName: String
   email: String!
-  tier: Tier
 }
 
 """The output of our update \`Downvote\` mutation."""
@@ -10416,7 +10417,6 @@ input UserPatch {
   firstName: String
   lastName: String
   email: String
-  tier: Tier
 }
 
 """The output of our delete \`Downvote\` mutation."""
@@ -27372,12 +27372,6 @@ ${String(oldPlan22)}`);
       schema
     }) {
       obj.set("email", bakedInputRuntime(schema, field.type, val));
-    },
-    tier(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("tier", bakedInputRuntime(schema, field.type, val));
     }
   },
   UpdateDownvotePayload: {
@@ -28162,12 +28156,6 @@ ${String(oldPlan22)}`);
       schema
     }) {
       obj.set("email", bakedInputRuntime(schema, field.type, val));
-    },
-    tier(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("tier", bakedInputRuntime(schema, field.type, val));
     }
   },
   DeleteDownvotePayload: {

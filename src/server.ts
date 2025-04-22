@@ -16,6 +16,7 @@ import {
   POLAR_ACCESS_TOKEN,
   POLAR_WEBHOOK_SECRET,
   PORT,
+  SKIP_AUTH,
   isDevEnv,
   isProdEnv,
 } from "lib/config/env.config";
@@ -64,7 +65,7 @@ const yoga = createYoga({
   graphiql: isDevEnv,
   landingPage: isDevEnv,
   plugins: [
-    useAuth(),
+    SKIP_AUTH !== "true" && useAuth(),
     useMoreDetailedErrors(),
     // NB: The below are used to handle caching and validation. Caching the parser results is critical for Grafast. See: https://grafast.org/grafast/servers#envelop
     useParserCache(),
