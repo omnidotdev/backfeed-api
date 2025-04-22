@@ -10,8 +10,15 @@ import type { PgColumn } from "drizzle-orm/pg-core";
  * Ouput: omni-llc
  */
 export const generateSlug = (column: PgColumn): SQL =>
+  // NB: f_unaccent is a custom fuction that needs to be manually set in the migrations (prior to generated columns being added to tables). it allows for the extension unaccent (see: https://www.postgresql.org/docs/current/unaccent.html) to be treated as IMMUTABLE to allow for proper indexing on generated slugs
+  //
+  // CREATE EXTENSION IF NOT EXISTS unaccent;--> statement breakpoint
+  // CREATE OR REPLACE FUNCTION f_unaccent(text) RETURNS text
+  // AS $$
+  //  SELECT public.unaccent('public.unaccent', $1);
+  // $$ LANGUAGE sql IMMUTABLE PARALLEL SAFE STRICT;--> statement breakpoint
+  //
   // From inner replace to outer:
-  // NB: f_unaccent is a custom fuction that was manually set in 0011_chubby_winter_soldier.sql, it allows for the extension unaccent (see: https://www.postgresql.org/docs/current/unaccent.html) to be treated as IMMUTABLE to allow for proper indexing on generated slugs
   // replace(f_unaccent(${column}), ' ', '-') <-- unaccent characters and also replace all spaces with dashes
   // regexp_replace('VALUE', '-{2,}', '-', 'g') <-- replace all instances of multiple dashes with a single dash
   // regexp_replace('VALUE', '[^a-zA-Z0-9 -]+', '', 'g') <-- remove all characters that are neither alphanumeric nor dashes
