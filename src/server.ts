@@ -7,8 +7,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 
 import { schema } from "generated/graphql/schema.executable";
-import { app as appConfig } from "lib/config/app";
-import { HOST, PORT, SKIP_AUTH, isDevEnv, isProdEnv } from "lib/config/env";
+import appConfig from "lib/config/app.config";
+import { HOST, PORT, SKIP_AUTH, isDevEnv, isProdEnv } from "lib/config/env.config";
 import { createGraphQLContext } from "lib/graphql/context";
 import { useAuth } from "lib/plugins/envelop";
 
@@ -68,7 +68,7 @@ app.use(
     origin: isProdEnv ? appConfig.url : "https://localhost:3000",
     credentials: true,
     allowMethods: ["GET", "POST"],
-  })
+  }),
 );
 
 // mount GraphQL API
@@ -77,7 +77,7 @@ app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));
 // GraphQL Yoga suppresses logging the startup message in production environments by default
 if (isProdEnv)
   console.log(
-    `🚀 ${appConfig.name} GraphQL API running at http://${HOST}:${PORT}`
+    `🚀 ${appConfig.name} GraphQL API running at http://${HOST}:${PORT}`,
   );
 
 export default {

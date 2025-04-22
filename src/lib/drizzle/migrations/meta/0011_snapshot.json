@@ -1,5 +1,5 @@
 {
-  "id": "e1ac4514-5f27-4def-984c-bbf873e6fd45",
+  "id": "49db9088-c73d-482c-8a55-f76a1a8c7836",
   "prevId": "f8b19800-fe13-4018-a48a-617978454e71",
   "version": "7",
   "dialect": "postgresql",
@@ -520,11 +520,7 @@
           "name": "slug",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "generated": {
-            "as": "lower(regexp_replace(regexp_replace(replace(f_unaccent(\"organization\".\"name\"), ' ', '-'), '-{2,}', '-', 'g'), '[^a-zA-Z0-9 -]+', '', 'g'))",
-            "type": "stored"
-          }
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -925,11 +921,7 @@
           "name": "slug",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "generated": {
-            "as": "lower(regexp_replace(regexp_replace(replace(f_unaccent(\"project\".\"name\"), ' ', '-'), '-{2,}', '-', 'g'), '[^a-zA-Z0-9 -]+', '', 'g'))",
-            "type": "stored"
-          }
+          "notNull": true
         },
         "description": {
           "name": "description",

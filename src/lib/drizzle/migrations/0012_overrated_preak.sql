@@ -1,1 +1,0 @@
-ALTER TABLE "organization" ALTER COLUMN "slug" DROP EXPRESSION;
