@@ -8,20 +8,24 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
+// import { generateSlug } from "./helpers";
 import { organizations } from "./organization.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Project table. Projects contain a collection of feedback items and are nested under organizations.
+ * Project table. Projects contain a collection of feedback and are nested under organizations.
  */
 export const projects = pgTable(
   "project",
   {
     id: defaultId(),
-    name: text().unique(),
+    name: text().notNull(),
     image: text(),
-    slug: text().notNull(),
+    slug: text()
+      // TODO https://linear.app/omnidev/issue/69c6f70e-0821-4a3a-a04a-971547f29690
+      // .generatedAlwaysAs((): SQL => generateSlug(organizations.name))
+      .notNull(),
     description: text(),
     organizationId: uuid()
       .notNull()

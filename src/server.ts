@@ -8,7 +8,13 @@ import { cors } from "hono/cors";
 
 import { schema } from "generated/graphql/schema.executable";
 import appConfig from "lib/config/app.config";
-import { HOST, PORT, isDevEnv, isProdEnv } from "lib/config/env.config";
+import {
+  HOST,
+  PORT,
+  SKIP_AUTH,
+  isDevEnv,
+  isProdEnv,
+} from "lib/config/env.config";
 import { createGraphQLContext } from "lib/graphql/context";
 import { useAuth } from "lib/plugins/envelop";
 
@@ -50,7 +56,7 @@ const yoga = createYoga({
   graphiql: isDevEnv,
   landingPage: isDevEnv,
   plugins: [
-    useAuth(),
+    SKIP_AUTH !== "true" && useAuth(),
     useMoreDetailedErrors(),
     // NB: The below are used to handle caching and validation. Caching the parser results is critical for Grafast. See: https://grafast.org/grafast/servers#envelop
     useParserCache(),
