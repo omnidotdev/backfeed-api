@@ -148,7 +148,7 @@ const spec_downvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "130751",
+    oid: "215477",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -228,7 +228,7 @@ const spec_upvote = {
   }),
   description: undefined,
   extensions: {
-    oid: "130664",
+    oid: "215390",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -308,7 +308,7 @@ const spec_invitation = {
   }),
   description: undefined,
   extensions: {
-    oid: "130851",
+    oid: "215577",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -340,7 +340,7 @@ const spec_organization = {
     name: {
       description: undefined,
       codec: TYPES.text,
-      notNull: false,
+      notNull: true,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -388,7 +388,7 @@ const spec_organization = {
   }),
   description: undefined,
   extensions: {
-    oid: "130626",
+    oid: "215352",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -480,7 +480,7 @@ const spec_comment = {
   }),
   description: undefined,
   extensions: {
-    oid: "130731",
+    oid: "215457",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -499,7 +499,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "130770",
+    oid: "215496",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -575,7 +575,7 @@ const spec_member = {
   }),
   description: undefined,
   extensions: {
-    oid: "130686",
+    oid: "215412",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -703,7 +703,7 @@ const spec_post = {
   }),
   description: undefined,
   extensions: {
-    oid: "130640",
+    oid: "215366",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -819,7 +819,7 @@ const spec_postStatus = {
   }),
   description: undefined,
   extensions: {
-    oid: "130825",
+    oid: "215551",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -851,7 +851,7 @@ const spec_project = {
     name: {
       description: undefined,
       codec: TYPES.text,
-      notNull: false,
+      notNull: true,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -935,7 +935,7 @@ const spec_project = {
   }),
   description: undefined,
   extensions: {
-    oid: "130650",
+    oid: "215376",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1051,7 +1051,7 @@ const spec_user = {
   }),
   description: undefined,
   extensions: {
-    oid: "130674",
+    oid: "215400",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1284,15 +1284,6 @@ const projectUniques = [{
   description: undefined,
   extensions: {
     tags: Object.create(null)
-  }
-}, {
-  isPrimary: false,
-  attributes: ["name"],
-  description: undefined,
-  extensions: {
-    tags: Object.assign(Object.create(null), {
-      behavior: ["-update", "-delete"]
-    })
   }
 }, {
   isPrimary: false,
@@ -2229,25 +2220,30 @@ function assertAllowed18(fieldArgs, mode) {
 }
 function ProjectGroupBy_extensions_grafast_applyPlan($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("image")}`
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("name")}`
   });
 }
 function ProjectGroupBy_extensions_grafast_applyPlan2($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("slug")}`
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("image")}`
   });
 }
 function ProjectGroupBy_extensions_grafast_applyPlan3($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("description")}`
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("slug")}`
   });
 }
 function ProjectGroupBy_extensions_grafast_applyPlan4($pgSelect) {
   $pgSelect.groupBy({
-    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("description")}`
   });
 }
 function ProjectGroupBy_extensions_grafast_applyPlan5($pgSelect) {
+  $pgSelect.groupBy({
+    fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`
+  });
+}
+function ProjectGroupBy_extensions_grafast_applyPlan6($pgSelect) {
   $pgSelect.groupBy({
     fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`
   });
@@ -2261,7 +2257,7 @@ const aggregateGroupBySpec = {
     return sql`date_trunc('hour', ${sqlFrag})`;
   }
 };
-function ProjectGroupBy_extensions_grafast_applyPlan6($pgSelect) {
+function ProjectGroupBy_extensions_grafast_applyPlan7($pgSelect) {
   $pgSelect.groupBy({
     fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
   });
@@ -2275,22 +2271,22 @@ const aggregateGroupBySpec2 = {
     return sql`date_trunc('day', ${sqlFrag})`;
   }
 };
-function ProjectGroupBy_extensions_grafast_applyPlan7($pgSelect) {
+function ProjectGroupBy_extensions_grafast_applyPlan8($pgSelect) {
   $pgSelect.groupBy({
     fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`)
   });
 }
-function ProjectGroupBy_extensions_grafast_applyPlan8($pgSelect) {
+function ProjectGroupBy_extensions_grafast_applyPlan9($pgSelect) {
   $pgSelect.groupBy({
     fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`
   });
 }
-function ProjectGroupBy_extensions_grafast_applyPlan9($pgSelect) {
+function ProjectGroupBy_extensions_grafast_applyPlan10($pgSelect) {
   $pgSelect.groupBy({
     fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
   });
 }
-function ProjectGroupBy_extensions_grafast_applyPlan10($pgSelect) {
+function ProjectGroupBy_extensions_grafast_applyPlan11($pgSelect) {
   $pgSelect.groupBy({
     fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`)
   });
@@ -2299,11 +2295,19 @@ export const ProjectGroupBy = new GraphQLEnumType({
   name: "ProjectGroupBy",
   description: "Grouping methods for `Project` for usage during aggregation.",
   values: Object.assign(Object.create(null), {
+    NAME: {
+      value: "NAME",
+      extensions: Object.assign(Object.create(null), {
+        grafast: {
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan
+        }
+      })
+    },
     IMAGE: {
       value: "IMAGE",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan2
         }
       })
     },
@@ -2311,7 +2315,7 @@ export const ProjectGroupBy = new GraphQLEnumType({
       value: "SLUG",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan2
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan3
         }
       })
     },
@@ -2319,7 +2323,7 @@ export const ProjectGroupBy = new GraphQLEnumType({
       value: "DESCRIPTION",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan3
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan4
         }
       })
     },
@@ -2327,7 +2331,7 @@ export const ProjectGroupBy = new GraphQLEnumType({
       value: "ORGANIZATION_ID",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan4
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan5
         }
       })
     },
@@ -2335,7 +2339,7 @@ export const ProjectGroupBy = new GraphQLEnumType({
       value: "CREATED_AT",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan5
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan6
         }
       })
     },
@@ -2343,7 +2347,7 @@ export const ProjectGroupBy = new GraphQLEnumType({
       value: "CREATED_AT_TRUNCATED_TO_HOUR",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan6
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan7
         }
       })
     },
@@ -2351,7 +2355,7 @@ export const ProjectGroupBy = new GraphQLEnumType({
       value: "CREATED_AT_TRUNCATED_TO_DAY",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan7
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan8
         }
       })
     },
@@ -2359,7 +2363,7 @@ export const ProjectGroupBy = new GraphQLEnumType({
       value: "UPDATED_AT",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan8
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan9
         }
       })
     },
@@ -2367,7 +2371,7 @@ export const ProjectGroupBy = new GraphQLEnumType({
       value: "UPDATED_AT_TRUNCATED_TO_HOUR",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan9
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan10
         }
       })
     },
@@ -2375,7 +2379,7 @@ export const ProjectGroupBy = new GraphQLEnumType({
       value: "UPDATED_AT_TRUNCATED_TO_DAY",
       extensions: Object.assign(Object.create(null), {
         grafast: {
-          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan10
+          applyPlan: ProjectGroupBy_extensions_grafast_applyPlan11
         }
       })
     }
@@ -5791,9 +5795,6 @@ type Query implements Node {
   project(rowId: UUID!): Project
 
   """Get a single \`Project\`."""
-  projectByName(name: String!): Project
-
-  """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
 
   """Get a single \`User\`."""
@@ -6322,7 +6323,7 @@ type Post {
 
 type Project {
   rowId: UUID!
-  name: String
+  name: String!
   image: String
   slug: String!
   description: String
@@ -6404,7 +6405,7 @@ type Project {
 
 type Organization {
   rowId: UUID!
-  name: String
+  name: String!
   slug: String!
   createdAt: Datetime
   updatedAt: Datetime
@@ -6616,6 +6617,7 @@ scalar BigInt
 
 """Grouping methods for \`Project\` for usage during aggregation."""
 enum ProjectGroupBy {
+  NAME
   IMAGE
   SLUG
   DESCRIPTION
@@ -10640,7 +10642,7 @@ input CreateOrganizationInput {
 """An input for mutations affecting \`Organization\`"""
 input OrganizationInput {
   rowId: UUID
-  name: String
+  name: String!
   slug: String!
   createdAt: Datetime
   updatedAt: Datetime
@@ -10729,7 +10731,7 @@ input CreateProjectInput {
 """An input for mutations affecting \`Project\`"""
 input ProjectInput {
   rowId: UUID
-  name: String
+  name: String!
   image: String
   slug: String!
   description: String
@@ -11887,16 +11889,6 @@ export const plans = {
       },
       args: {
         rowId: undefined
-      }
-    },
-    projectByName: {
-      plan(_$root, args) {
-        return resource_projectPgResource.get({
-          name: args.get("name")
-        });
-      },
-      args: {
-        name: undefined
       }
     },
     projectBySlugAndOrganizationId: {
@@ -13431,35 +13423,38 @@ export const plans = {
     }
   },
   ProjectGroupBy: {
-    IMAGE: {
+    NAME: {
       applyPlan: ProjectGroupBy_extensions_grafast_applyPlan
     },
-    SLUG: {
+    IMAGE: {
       applyPlan: ProjectGroupBy_extensions_grafast_applyPlan2
     },
-    DESCRIPTION: {
+    SLUG: {
       applyPlan: ProjectGroupBy_extensions_grafast_applyPlan3
     },
-    ORGANIZATION_ID: {
+    DESCRIPTION: {
       applyPlan: ProjectGroupBy_extensions_grafast_applyPlan4
     },
-    CREATED_AT: {
+    ORGANIZATION_ID: {
       applyPlan: ProjectGroupBy_extensions_grafast_applyPlan5
     },
-    CREATED_AT_TRUNCATED_TO_HOUR: {
+    CREATED_AT: {
       applyPlan: ProjectGroupBy_extensions_grafast_applyPlan6
     },
-    CREATED_AT_TRUNCATED_TO_DAY: {
+    CREATED_AT_TRUNCATED_TO_HOUR: {
       applyPlan: ProjectGroupBy_extensions_grafast_applyPlan7
     },
-    UPDATED_AT: {
+    CREATED_AT_TRUNCATED_TO_DAY: {
       applyPlan: ProjectGroupBy_extensions_grafast_applyPlan8
     },
-    UPDATED_AT_TRUNCATED_TO_HOUR: {
+    UPDATED_AT: {
       applyPlan: ProjectGroupBy_extensions_grafast_applyPlan9
     },
-    UPDATED_AT_TRUNCATED_TO_DAY: {
+    UPDATED_AT_TRUNCATED_TO_HOUR: {
       applyPlan: ProjectGroupBy_extensions_grafast_applyPlan10
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY: {
+      applyPlan: ProjectGroupBy_extensions_grafast_applyPlan11
     }
   },
   ProjectHavingInput: {
@@ -13776,7 +13771,7 @@ export const plans = {
             nulls: undefined ? "LAST" : "FIRST"
           } : null)
         });
-        if (true) plan.setOrderIsUnique();
+        if (false) plan.setOrderIsUnique();
       }
     },
     NAME_DESC: {
@@ -13789,7 +13784,7 @@ export const plans = {
             nulls: undefined ? "LAST" : "FIRST"
           } : null)
         });
-        if (true) plan.setOrderIsUnique();
+        if (false) plan.setOrderIsUnique();
       }
     },
     IMAGE_ASC: {
