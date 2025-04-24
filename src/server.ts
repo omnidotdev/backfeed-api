@@ -80,7 +80,9 @@ const app = new Hono();
 app.use(
   // enable CORS
   cors({
-    origin: isProdEnv ? appConfig.url : "https://localhost:3000",
+    origin: isProdEnv
+      ? [appConfig.url, "https://backfeed-app-prerelease.up.railway.app"]
+      : "https://localhost:3000",
     credentials: true,
     allowMethods: ["GET", "POST"],
   }),
