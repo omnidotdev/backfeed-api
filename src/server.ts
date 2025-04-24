@@ -109,12 +109,15 @@ app.get(
   }),
 );
 
-// TODO: discuss / verify how to scope this to strictly be looking at `Backfeed` products if we are going to be offering subscriptions for other products within the same polar organization
 app.post(
   "/polar/webhooks",
   Webhooks({
     webhookSecret: POLAR_WEBHOOK_SECRET!,
     onSubscriptionCreated: async (payload) => {
+      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
+
+      if (!isBackfeedProduct) return;
+
       const tier = payload.data.product.metadata.title as SelectUser["tier"];
       const hidraId = payload.data.customer.externalId;
 
@@ -127,6 +130,10 @@ app.post(
       }
     },
     onSubscriptionUpdated: async (payload) => {
+      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
+
+      if (!isBackfeedProduct) return;
+
       // NB: important to check that this is handled only on `active` status. When a sub is canceled this event is triggered, but we want to wait until it is revoked to handle the tier being set to NULL.
       if (payload.data.status === "active") {
         const tier = payload.data.product.metadata.title as SelectUser["tier"];
@@ -145,6 +152,10 @@ app.post(
       }
     },
     onSubscriptionRevoked: async (payload) => {
+      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
+
+      if (!isBackfeedProduct) return;
+
       const hidraId = payload.data.customer.externalId;
 
       if (hidraId) {
