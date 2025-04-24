@@ -77,7 +77,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   );
 
                 // Only allow owners to update roles and/or kick other members from the organization
-                // TODO: determine how to restrict owners from granting other members the `owner` role
                 if (userRole.role !== "owner") {
                   throw new Error("Insufficient permissions");
                 }
