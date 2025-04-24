@@ -17,12 +17,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
+        // NB: this is a little hacky, but a "step" can not be undefined, and since `patch` only exists on `update` mutations, we fallback to `input`
+        const $patch =
+          scope === "update" ? fieldArgs.getRaw(["input", "patch"]) : $input;
         const $currentUser = context<GraphQLContext>().get("currentUser");
         const $db = context<GraphQLContext>().get("db");
 
         sideEffect(
-          [$input, $currentUser, $db],
-          async ([input, currentUser, db]) => {
+          [$input, $patch, $currentUser, $db],
+          async ([input, patch, currentUser, db]) => {
             if (!currentUser) {
               throw new Error("Unauthorized");
             }
@@ -77,11 +80,20 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 if (userRole.role !== "owner") {
                   throw new Error("Insufficient permissions");
                 }
-              } else {
-                // Restrict current users from updating their own role unless they are an owner
-                if (scope === "update" && member.role !== "owner") {
-                  throw new Error("Insufficient permissions");
+
+                // Disallow updates that include adding an additional owner
+                // TODO: remove when add owner / transfer ownership is resolved
+                if (patch.role === "owner") {
+                  throw new Error("Organizations can only have one owner");
                 }
+              } else {
+                // Restrict current users from updating their own role
+                throw new Error("Insufficient permissions");
+
+                // TODO: replace above with below when ownership transfers are allowed
+                // if (scope === "update" && member.role !== "owner") {
+                //   throw new Error("Insufficient permissions");
+                // }
               }
             }
           },
