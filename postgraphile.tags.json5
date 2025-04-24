@@ -1,0 +1,16 @@
+{
+  version: 1,
+  config: {
+    class: {
+      user: {
+        attribute: {
+          tier: {
+            tags: {
+              behavior: "-insert -update",
+            },
+          },
+        },
+      },
+    },
+  },
+}

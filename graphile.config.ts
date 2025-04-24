@@ -3,6 +3,7 @@ import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
 import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
+import { TagsFilePlugin } from "postgraphile/utils";
 
 import { DATABASE_URL, isProdEnv } from "./src/lib/config/env.config";
 import {
@@ -33,6 +34,9 @@ const preset: GraphileConfig.Preset = {
     pgForbidSetofFunctionsToReturnNull: false,
     jsonScalarAsString: false,
     defaultBehavior: "-type:node -interface:node",
+    // See https://github.com/graphile-contrib/postgraphile-plugin-connection-filter?tab=readme-ov-file#handling-null-and-empty-objects
+    connectionFilterAllowNullInput: true,
+    connectionFilterAllowEmptyObjectInput: true,
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   plugins: [
@@ -46,6 +50,7 @@ const preset: GraphileConfig.Preset = {
     DownvoteRBACPlugin,
     UpvoteRBACPlugin,
     CommentRBACPlugin,
+    TagsFilePlugin,
   ],
   grafserv: {
     graphiql: false,

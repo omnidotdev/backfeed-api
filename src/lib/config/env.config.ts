@@ -8,6 +8,9 @@ export const {
   HOST = "0.0.0.0",
   DATABASE_URL,
   SKIP_AUTH,
+  POLAR_ACCESS_TOKEN,
+  POLAR_WEBHOOK_SECRET,
+  CHECKOUT_SUCCESS_URL,
   AUTH_BASE_URL,
 } = process.env;
 
