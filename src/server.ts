@@ -83,7 +83,7 @@ app.use(
   cors({
     origin: isProdEnv
       ? // TODO remove prerelease URL once ready
-        [appConfig.url, "https://backfeed-app-prerelease.up.railway.app"]
+        [appConfig.url, "https://backfeed-prerelease.omni.dev"]
       : "https://localhost:3000",
     credentials: true,
     allowMethods: ["GET", "POST"],
