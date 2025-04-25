@@ -17,9 +17,9 @@ import {
   POLAR_WEBHOOK_SECRET,
   PORT,
   SKIP_AUTH,
+  enablePolarSandbox,
   isDevEnv,
   isProdEnv,
-  enablePolarSandbox,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
 import { users } from "lib/drizzle/schema";
