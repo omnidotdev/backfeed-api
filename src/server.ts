@@ -19,7 +19,7 @@ import {
   SKIP_AUTH,
   isDevEnv,
   isProdEnv,
-  isSandbox,
+  enablePolarSandbox,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
 import { users } from "lib/drizzle/schema";
@@ -94,7 +94,7 @@ app.get(
   Checkout({
     accessToken: POLAR_ACCESS_TOKEN,
     successUrl: CHECKOUT_SUCCESS_URL,
-    server: isSandbox ? "sandbox" : "production",
+    server: enablePolarSandbox ? "sandbox" : "production",
   }),
 );
 
@@ -108,7 +108,7 @@ app.get(
 
       return customerId;
     },
-    server: isSandbox ? "sandbox" : "production",
+    server: enablePolarSandbox ? "sandbox" : "production",
   }),
 );
 
