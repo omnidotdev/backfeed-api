@@ -154,7 +154,7 @@ const spec_downvote = {
   },
   description: undefined,
   extensions: {
-    oid: "216526",
+    oid: "219066",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -237,7 +237,7 @@ const spec_upvote = {
   },
   description: undefined,
   extensions: {
-    oid: "216439",
+    oid: "218979",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -320,7 +320,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "216625",
+    oid: "219165",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -403,7 +403,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "216401",
+    oid: "218941",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -498,7 +498,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "216506",
+    oid: "219046",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -617,7 +617,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "216425",
+    oid: "218965",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -638,7 +638,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "216545",
+    oid: "219085",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -717,7 +717,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "216461",
+    oid: "219001",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -848,7 +848,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "216415",
+    oid: "218955",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -967,7 +967,7 @@ const spec_postStatus = {
   },
   description: undefined,
   extensions: {
-    oid: "216599",
+    oid: "219139",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -988,7 +988,7 @@ const tierCodec = enumCodec({
   values: ["basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "216648",
+    oid: "219188",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1117,7 +1117,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "216449",
+    oid: "218989",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4082,7 +4082,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
         if (patch.role === "owner") throw new Error("Organizations can only have one owner");
-      } else throw new Error("Insufficient permissions");
+      } else if ("create" === "update") throw new Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4306,7 +4306,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
         if (patch.role === "owner") throw new Error("Organizations can only have one owner");
-      } else throw new Error("Insufficient permissions");
+      } else if ("update" === "update") throw new Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4583,7 +4583,7 @@ const planWrapper19 = (plan, _, fieldArgs) => {
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
         if (userRole.role !== "owner") throw new Error("Insufficient permissions");
         if (patch.role === "owner") throw new Error("Organizations can only have one owner");
-      } else throw new Error("Insufficient permissions");
+      } else if ("delete" === "update") throw new Error("Insufficient permissions");
     }
   });
   return plan();
