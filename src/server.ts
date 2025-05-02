@@ -17,9 +17,9 @@ import {
   POLAR_WEBHOOK_SECRET,
   PORT,
   SKIP_AUTH,
+  enablePolarSandbox,
   isDevEnv,
   isProdEnv,
-  isSandbox,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
 import { users } from "lib/drizzle/schema";
@@ -82,7 +82,8 @@ app.use(
   // enable CORS
   cors({
     origin: isProdEnv
-      ? [appConfig.url, "https://backfeed-app-prerelease.up.railway.app"]
+      ? // TODO remove prerelease URL once ready
+        [appConfig.url, "https://backfeed-prerelease.omni.dev"]
       : "https://localhost:3000",
     credentials: true,
     allowMethods: ["GET", "POST"],
@@ -94,7 +95,7 @@ app.get(
   Checkout({
     accessToken: POLAR_ACCESS_TOKEN,
     successUrl: CHECKOUT_SUCCESS_URL,
-    server: isSandbox ? "sandbox" : "production",
+    server: enablePolarSandbox ? "sandbox" : "production",
   }),
 );
 
@@ -108,7 +109,7 @@ app.get(
 
       return customerId;
     },
-    server: isSandbox ? "sandbox" : "production",
+    server: enablePolarSandbox ? "sandbox" : "production",
   }),
 );
 
