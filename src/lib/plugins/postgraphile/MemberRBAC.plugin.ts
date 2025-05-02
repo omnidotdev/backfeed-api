@@ -87,13 +87,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   throw new Error("Organizations can only have one owner");
                 }
               } else {
-                // Restrict current users from updating their own role
-                throw new Error("Insufficient permissions");
+                if (scope === "update") {
+                  // Restrict current users from updating their own role
+                  throw new Error("Insufficient permissions");
 
-                // TODO: replace above with below when ownership transfers are allowed
-                // if (scope === "update" && member.role !== "owner") {
-                //   throw new Error("Insufficient permissions");
-                // }
+                  // TODO: replace above with below when ownership transfers are allowed
+                  // if (scope === "update" && member.role !== "owner") {
+                  //   throw new Error("Insufficient permissions");
+                  // }
+                }
               }
             }
           },

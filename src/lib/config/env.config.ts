@@ -12,9 +12,9 @@ export const {
   POLAR_WEBHOOK_SECRET,
   CHECKOUT_SUCCESS_URL,
   AUTH_BASE_URL,
-  SANDBOX,
+  ENABLE_POLAR_SANDBOX,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
-export const isSandbox = SANDBOX === "true";
+export const enablePolarSandbox = ENABLE_POLAR_SANDBOX === "true";
