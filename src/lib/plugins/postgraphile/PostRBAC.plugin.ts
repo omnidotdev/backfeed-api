@@ -8,11 +8,13 @@ import * as dbSchema from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 
+type MutationScope = "create" | "update" | "delete";
+
 // TODO: discuss handling field level permissions. For example, a user should not be able to update the `statusId` field for a post even if they are the author. That should be reserved for admins and owners.
 
-const validatePermissions = (propName: string) =>
+const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName) =>
+    (and, eq, dbSchema, context, sideEffect, propName, scope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $postId = fieldArgs.getRaw(["input", propName]);
@@ -26,31 +28,33 @@ const validatePermissions = (propName: string) =>
               throw new Error("Unauthorized");
             }
 
-            const { members, projects, posts } = dbSchema;
+            if (scope !== "create") {
+              const { members, projects, posts } = dbSchema;
 
-            const [post] = await db
-              .select({
-                organizationId: projects.organizationId,
-                userId: posts.userId,
-              })
-              .from(posts)
-              .innerJoin(projects, eq(posts.projectId, projects.id))
-              .where(eq(posts.id, postId));
+              const [post] = await db
+                .select({
+                  organizationId: projects.organizationId,
+                  userId: posts.userId,
+                })
+                .from(posts)
+                .innerJoin(projects, eq(posts.projectId, projects.id))
+                .where(eq(posts.id, postId));
 
-            if (currentUser.id !== post.userId) {
-              const [userRole] = await db
-                .select({ role: members.role })
-                .from(members)
-                .where(
-                  and(
-                    eq(members.userId, currentUser.id),
-                    eq(members.organizationId, post.organizationId),
-                  ),
-                );
+              if (currentUser.id !== post.userId) {
+                const [userRole] = await db
+                  .select({ role: members.role })
+                  .from(members)
+                  .where(
+                    and(
+                      eq(members.userId, currentUser.id),
+                      eq(members.organizationId, post.organizationId),
+                    ),
+                  );
 
-              // Allow admins and owners to update and delete posts
-              if (!userRole || userRole.role === "member") {
-                throw new Error("Insufficient permissions");
+                // Allow admins and owners to update and delete posts
+                if (!userRole || userRole.role === "member") {
+                  throw new Error("Insufficient permissions");
+                }
               }
             }
           },
@@ -58,7 +62,7 @@ const validatePermissions = (propName: string) =>
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName],
+    [and, eq, dbSchema, context, sideEffect, propName, scope],
   );
 
 /**
@@ -66,8 +70,9 @@ const validatePermissions = (propName: string) =>
  */
 const PostRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
-    updatePost: validatePermissions("rowId"),
-    deletePost: validatePermissions("rowId"),
+    createPost: validatePermissions("post", "create"),
+    updatePost: validatePermissions("rowId", "update"),
+    deletePost: validatePermissions("rowId", "update"),
   },
 });
 
