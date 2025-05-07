@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { makeWrapPlansPlugin } from "postgraphile/utils";
@@ -8,9 +8,11 @@ import * as dbSchema from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 
-const validatePermissions = (propName: string) =>
+type MutationScope = "create" | "update" | "delete";
+
+const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName) =>
+    (eq, dbSchema, context, sideEffect, propName, scope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $downvoteId = fieldArgs.getRaw(["input", propName]);
@@ -24,23 +26,25 @@ const validatePermissions = (propName: string) =>
               throw new Error("Unauthorized");
             }
 
-            const { downvotes } = dbSchema;
+            if (scope !== "create") {
+              const { downvotes } = dbSchema;
 
-            const [downvote] = await db
-              .select()
-              .from(downvotes)
-              .where(eq(downvotes.id, downvoteId as string));
+              const [downvote] = await db
+                .select()
+                .from(downvotes)
+                .where(eq(downvotes.id, downvoteId as string));
 
-            // Only allow the user who downvoted to update or delete their own downvote
-            if (currentUser.id !== downvote.userId) {
-              throw new Error("Insufficient permissions");
+              // Only allow the user who downvoted to update or delete their own downvote
+              if (currentUser.id !== downvote.userId) {
+                throw new Error("Insufficient permissions");
+              }
             }
           },
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName],
+    [eq, dbSchema, context, sideEffect, propName, scope],
   );
 
 /**
@@ -48,8 +52,9 @@ const validatePermissions = (propName: string) =>
  */
 const DownvoteRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
-    updateDownvote: validatePermissions("rowId"),
-    deleteDownvote: validatePermissions("rowId"),
+    createDownvote: validatePermissions("upvote", "create"),
+    updateDownvote: validatePermissions("rowId", "update"),
+    deleteDownvote: validatePermissions("rowId", "delete"),
   },
 });
 

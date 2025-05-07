@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { makeWrapPlansPlugin } from "postgraphile/utils";
@@ -8,9 +8,11 @@ import * as dbSchema from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 
-const validatePermissions = (propName: string) =>
+type MutationScope = "create" | "update" | "delete";
+
+const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName) =>
+    (eq, dbSchema, context, sideEffect, propName, scope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $upvoteId = fieldArgs.getRaw(["input", propName]);
@@ -24,23 +26,25 @@ const validatePermissions = (propName: string) =>
               throw new Error("Unauthorized");
             }
 
-            const { upvotes } = dbSchema;
+            if (scope !== "create") {
+              const { upvotes } = dbSchema;
 
-            const [upvote] = await db
-              .select()
-              .from(upvotes)
-              .where(eq(upvotes.id, upvoteId as string));
+              const [upvote] = await db
+                .select()
+                .from(upvotes)
+                .where(eq(upvotes.id, upvoteId as string));
 
-            // Only allow the user who upvoted to update or delete their own upvote
-            if (currentUser.id !== upvote.userId) {
-              throw new Error("Insufficient permissions");
+              // Only allow the user who upvoted to update or delete their own upvote
+              if (currentUser.id !== upvote.userId) {
+                throw new Error("Insufficient permissions");
+              }
             }
           },
         );
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName],
+    [eq, dbSchema, context, sideEffect, propName, scope],
   );
 
 /**
@@ -48,8 +52,9 @@ const validatePermissions = (propName: string) =>
  */
 const UpvoteRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
-    updateUpvote: validatePermissions("rowId"),
-    deleteUpvote: validatePermissions("rowId"),
+    createUpvote: validatePermissions("upvote", "create"),
+    updateUpvote: validatePermissions("rowId", "update"),
+    deleteUpvote: validatePermissions("rowId", "delete"),
   },
 });
 
