@@ -3,6 +3,9 @@
   config: {
     class: {
       user: {
+        tags: {
+            behavior: "-insert",
+        },
         attribute: {
           tier: {
             tags: {
