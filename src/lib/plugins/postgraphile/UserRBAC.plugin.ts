@@ -5,16 +5,19 @@ import { makeWrapPlansPlugin } from "postgraphile/utils";
 import type { GraphQLContext } from "lib/graphql";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 
-const validatePermissions = (propName: string) =>
+type MutationScope = "create" | "update" | "delete";
+
+const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName) =>
+    (context, sideEffect, propName, scope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $userId = fieldArgs.getRaw(["input", propName]);
         const $currentUser = context<GraphQLContext>().get("currentUser");
 
         sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
-          if (!currentUser) {
+          // NB: adding a record to the user table is done with direct access to db through `useAuth` plugin. From an API standpoint, we should never have to create a new user.
+          if (!currentUser || scope === "create") {
             throw new Error("Unauthorized");
           }
 
@@ -27,7 +30,7 @@ const validatePermissions = (propName: string) =>
 
         return plan();
       },
-    [context, sideEffect, propName],
+    [context, sideEffect, propName, scope],
   );
 
 /**
@@ -35,8 +38,9 @@ const validatePermissions = (propName: string) =>
  */
 const UserRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
-    updateUser: validatePermissions("rowId"),
-    deleteUser: validatePermissions("rowId"),
+    createUser: validatePermissions("user", "create"),
+    updateUser: validatePermissions("rowId", "update"),
+    deleteUser: validatePermissions("rowId", "delete"),
   },
 });
 
