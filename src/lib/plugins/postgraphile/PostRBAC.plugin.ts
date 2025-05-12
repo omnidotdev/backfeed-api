@@ -29,7 +29,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               throw new Error("Unauthorized");
             }
 
-            const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 3;
+            const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 15;
 
             const { users, members, projects, posts } = dbSchema;
 

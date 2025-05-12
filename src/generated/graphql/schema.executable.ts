@@ -4228,7 +4228,7 @@ const planWrapper5 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$post, $currentUser, $db], async ([post, currentUser, db]) => {
     if (!currentUser) throw new Error("Unauthorized");
-    const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 3,
+    const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 15,
       {
         users,
         members,
@@ -4520,7 +4520,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$post, $currentUser, $db], async ([post, currentUser, db]) => {
     if (!currentUser) throw new Error("Unauthorized");
-    const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 3,
+    const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 15,
       {
         users,
         members,
@@ -4832,7 +4832,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$post, $currentUser, $db], async ([post, currentUser, db]) => {
     if (!currentUser) throw new Error("Unauthorized");
-    const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 3,
+    const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 15,
       {
         users,
         members,
