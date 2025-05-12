@@ -1,0 +1,1 @@
+ALTER TYPE "public"."tier" ADD VALUE 'free' BEFORE 'basic';

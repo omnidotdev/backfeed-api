@@ -997,7 +997,7 @@ const userIdentifier = sql.identifier("public", "user");
 const tierCodec = enumCodec({
   name: "tier",
   identifier: sql.identifier("public", "tier"),
-  values: ["basic", "team", "enterprise"],
+  values: ["free", "basic", "team", "enterprise"],
   description: undefined,
   extensions: {
     oid: "229000",
@@ -6276,6 +6276,7 @@ input TierFilter {
 }
 
 enum Tier {
+  free
   basic
   team
   enterprise
