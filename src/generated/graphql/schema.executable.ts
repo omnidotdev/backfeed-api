@@ -154,7 +154,7 @@ const spec_downvote = {
   },
   description: undefined,
   extensions: {
-    oid: "229242",
+    oid: "230048",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -237,7 +237,7 @@ const spec_upvote = {
   },
   description: undefined,
   extensions: {
-    oid: "229155",
+    oid: "229961",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -320,7 +320,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "229341",
+    oid: "230147",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -403,7 +403,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "229117",
+    oid: "229923",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -510,7 +510,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "229222",
+    oid: "230028",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -629,7 +629,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "229141",
+    oid: "229947",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -650,7 +650,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "229261",
+    oid: "230067",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -729,7 +729,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "229177",
+    oid: "229983",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -860,7 +860,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "229131",
+    oid: "229937",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -979,7 +979,7 @@ const spec_postStatus = {
   },
   description: undefined,
   extensions: {
-    oid: "229315",
+    oid: "230121",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1000,7 +1000,7 @@ const tierCodec = enumCodec({
   values: ["free", "basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "229364",
+    oid: "230170",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1129,7 +1129,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "229165",
+    oid: "229971",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4080,7 +4080,7 @@ const planWrapper = (plan, _, fieldArgs) => {
       members
     } = lib_drizzle_schema;
     if ("create" === "create") {
-      if (currentUser.tier === "basic") {
+      if (currentUser.tier === "basic" || currentUser.tier === "free") {
         if ((await db.select().from(members).where(and(eq(members.userId, currentUser.id), eq(members.role, "owner")))).length > 0) throw new Error("Maximum number of organizations reached.");
       }
     } else {
@@ -4155,6 +4155,8 @@ const planWrapper3 = (plan, _, fieldArgs) => {
     if (!currentUser?.tier) throw new Error("Unauthorized");
     let organizationId;
     const {
+      organizations,
+      users,
       members,
       projects
     } = lib_drizzle_schema;
@@ -4166,8 +4168,14 @@ const planWrapper3 = (plan, _, fieldArgs) => {
       role: members.role
     }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
-    if ("create" === "create" && currentUser.tier === "basic") {
-      if ((await db.select().from(projects).where(eq(projects.organizationId, organizationId))).length >= 3) throw new Error("Maximum number of projects reached.");
+    if ("create" === "create") {
+      const [organizationOwner] = await db.select({
+          tier: users.tier
+        }).from(organizations).leftJoin(members, and(eq(members.organizationId, organizationId), eq(members.role, "owner"))).leftJoin(users, eq(members.userId, users.id)),
+        currentProjects = await db.select().from(projects).where(eq(projects.organizationId, organizationId));
+      if (!organizationOwner.tier) throw new Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "free" && !!currentProjects.length) throw new Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "basic" && currentProjects.length >= 3) throw new Error("Maximum number of projects reached.");
     }
   });
   return plan();
@@ -4364,7 +4372,7 @@ const planWrapper9 = (plan, _, fieldArgs) => {
       members
     } = lib_drizzle_schema;
     if ("update" === "create") {
-      if (currentUser.tier === "basic") {
+      if (currentUser.tier === "basic" || currentUser.tier === "free") {
         if ((await db.select().from(members).where(and(eq(members.userId, currentUser.id), eq(members.role, "owner")))).length > 0) throw new Error("Maximum number of organizations reached.");
       }
     } else {
@@ -4443,6 +4451,8 @@ const planWrapper11 = (plan, _, fieldArgs) => {
     if (!currentUser?.tier) throw new Error("Unauthorized");
     let organizationId;
     const {
+      organizations,
+      users,
       members,
       projects
     } = lib_drizzle_schema;
@@ -4454,8 +4464,14 @@ const planWrapper11 = (plan, _, fieldArgs) => {
       role: members.role
     }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
-    if ("update" === "create" && currentUser.tier === "basic") {
-      if ((await db.select().from(projects).where(eq(projects.organizationId, organizationId))).length >= 3) throw new Error("Maximum number of projects reached.");
+    if ("update" === "create") {
+      const [organizationOwner] = await db.select({
+          tier: users.tier
+        }).from(organizations).leftJoin(members, and(eq(members.organizationId, organizationId), eq(members.role, "owner"))).leftJoin(users, eq(members.userId, users.id)),
+        currentProjects = await db.select().from(projects).where(eq(projects.organizationId, organizationId));
+      if (!organizationOwner.tier) throw new Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "free" && !!currentProjects.length) throw new Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "basic" && currentProjects.length >= 3) throw new Error("Maximum number of projects reached.");
     }
   });
   return plan();
@@ -4676,7 +4692,7 @@ const planWrapper18 = (plan, _, fieldArgs) => {
       members
     } = lib_drizzle_schema;
     if ("delete" === "create") {
-      if (currentUser.tier === "basic") {
+      if (currentUser.tier === "basic" || currentUser.tier === "free") {
         if ((await db.select().from(members).where(and(eq(members.userId, currentUser.id), eq(members.role, "owner")))).length > 0) throw new Error("Maximum number of organizations reached.");
       }
     } else {
@@ -4755,6 +4771,8 @@ const planWrapper20 = (plan, _, fieldArgs) => {
     if (!currentUser?.tier) throw new Error("Unauthorized");
     let organizationId;
     const {
+      organizations,
+      users,
       members,
       projects
     } = lib_drizzle_schema;
@@ -4766,8 +4784,14 @@ const planWrapper20 = (plan, _, fieldArgs) => {
       role: members.role
     }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
     if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
-    if ("delete" === "create" && currentUser.tier === "basic") {
-      if ((await db.select().from(projects).where(eq(projects.organizationId, organizationId))).length >= 3) throw new Error("Maximum number of projects reached.");
+    if ("delete" === "create") {
+      const [organizationOwner] = await db.select({
+          tier: users.tier
+        }).from(organizations).leftJoin(members, and(eq(members.organizationId, organizationId), eq(members.role, "owner"))).leftJoin(users, eq(members.userId, users.id)),
+        currentProjects = await db.select().from(projects).where(eq(projects.organizationId, organizationId));
+      if (!organizationOwner.tier) throw new Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "free" && !!currentProjects.length) throw new Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "basic" && currentProjects.length >= 3) throw new Error("Maximum number of projects reached.");
     }
   });
   return plan();
