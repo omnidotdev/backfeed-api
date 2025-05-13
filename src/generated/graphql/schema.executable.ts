@@ -154,7 +154,7 @@ const spec_downvote = {
   },
   description: undefined,
   extensions: {
-    oid: "228878",
+    oid: "229242",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -237,7 +237,7 @@ const spec_upvote = {
   },
   description: undefined,
   extensions: {
-    oid: "228791",
+    oid: "229155",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -320,7 +320,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "228977",
+    oid: "229341",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -403,7 +403,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "228753",
+    oid: "229117",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -510,7 +510,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "228858",
+    oid: "229222",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -629,7 +629,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "228777",
+    oid: "229141",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -650,7 +650,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "228897",
+    oid: "229261",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -729,7 +729,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "228813",
+    oid: "229177",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -860,7 +860,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "228767",
+    oid: "229131",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -979,7 +979,7 @@ const spec_postStatus = {
   },
   description: undefined,
   extensions: {
-    oid: "228951",
+    oid: "229315",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1000,7 +1000,7 @@ const tierCodec = enumCodec({
   values: ["free", "basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "229000",
+    oid: "229364",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1129,7 +1129,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "228801",
+    oid: "229165",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4248,7 +4248,7 @@ const planWrapper5 = (plan, _, fieldArgs) => {
           const [userFeedback] = await db.select({
             totalCount: count()
           }).from(posts).where(and(eq(posts.projectId, projectId), eq(posts.userId, currentUser.id)));
-          if (!userFeedback.totalCount) throw new Error("Maximum number of unique users for feedback has been reached");
+          if (!userFeedback.totalCount) throw new Error("Maximum number of unique users providing feedback has been reached");
         }
       }
     } else {
@@ -4540,7 +4540,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           const [userFeedback] = await db.select({
             totalCount: count()
           }).from(posts).where(and(eq(posts.projectId, projectId), eq(posts.userId, currentUser.id)));
-          if (!userFeedback.totalCount) throw new Error("Maximum number of unique users for feedback has been reached");
+          if (!userFeedback.totalCount) throw new Error("Maximum number of unique users providing feedback has been reached");
         }
       }
     } else {
@@ -4852,7 +4852,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
           const [userFeedback] = await db.select({
             totalCount: count()
           }).from(posts).where(and(eq(posts.projectId, projectId), eq(posts.userId, currentUser.id)));
-          if (!userFeedback.totalCount) throw new Error("Maximum number of unique users for feedback has been reached");
+          if (!userFeedback.totalCount) throw new Error("Maximum number of unique users providing feedback has been reached");
         }
       }
     } else {

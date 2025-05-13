@@ -80,7 +80,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
                   if (!userFeedback.totalCount) {
                     throw new Error(
-                      "Maximum number of unique users for feedback has been reached",
+                      "Maximum number of unique users providing feedback has been reached",
                     );
                   }
                 }
