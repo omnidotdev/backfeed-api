@@ -30,7 +30,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             let organizationId: string;
 
-            const { members, projects } = dbSchema;
+            const { organizations, users, members, projects } = dbSchema;
 
             if (scope === "create") {
               organizationId = (project as InsertProject).organizationId;
@@ -59,14 +59,41 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             }
 
             // If the current user has a basic subscription, validate the current number of projects for the organization
-            if (scope === "create" && currentUser.tier === "basic") {
+            if (scope === "create") {
+              const [organizationOwner] = await db
+                .select({
+                  tier: users.tier,
+                })
+                .from(organizations)
+                .leftJoin(
+                  members,
+                  and(
+                    eq(members.organizationId, organizationId),
+                    eq(members.role, "owner"),
+                  ),
+                )
+                .leftJoin(users, eq(members.userId, users.id));
+
               const currentProjects = await db
                 .select()
                 .from(projects)
                 .where(eq(projects.organizationId, organizationId));
 
-              // Do not allow users to create a new project if the maximum number of allow projects has been met
-              if (currentProjects.length >= 3) {
+              // NB: The following checks make sure that we do not allow users to create a new project if the maximum number of allow projects has been met
+              if (!organizationOwner.tier)
+                throw new Error("Maximum number of projects reached.");
+
+              if (
+                organizationOwner.tier === "free" &&
+                !!currentProjects.length
+              ) {
+                throw new Error("Maximum number of projects reached.");
+              }
+
+              if (
+                organizationOwner.tier === "basic" &&
+                currentProjects.length >= 3
+              ) {
                 throw new Error("Maximum number of projects reached.");
               }
             }

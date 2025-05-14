@@ -7,7 +7,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 /**
  * Subscription tiers defined for users.
  */
-export const tier = pgEnum("tier", ["basic", "team", "enterprise"]);
+export const tier = pgEnum("tier", ["free", "basic", "team", "enterprise"]);
 
 /**
  * User table.

@@ -30,7 +30,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             const { members } = dbSchema;
 
             if (scope === "create") {
-              if (currentUser.tier === "basic") {
+              if (currentUser.tier === "basic" || currentUser.tier === "free") {
                 // TODO: discuss validation. This checks how many organizations the user is *an owner* of, not strictly *a member* of.
                 const userMemberships = await db
                   .select()
