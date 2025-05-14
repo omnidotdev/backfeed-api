@@ -5,6 +5,7 @@ import { posts } from "./post.table";
 import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
 
 /**
  * Comment table. Comments serve as units of feedback discourse.
@@ -24,6 +25,9 @@ export const comments = pgTable(
       .references(() => users.id, {
         onDelete: "cascade",
       }),
+    parentId: uuid().references((): AnyPgColumn => comments.id, {
+      onDelete: "cascade",
+    }),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
