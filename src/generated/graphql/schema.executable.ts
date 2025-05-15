@@ -4074,7 +4074,7 @@ function oldPlan(_, args) {
   });
 }
 const planWrapper = (plan, _, fieldArgs) => {
-  const $downvoteId = fieldArgs.getRaw(["input", "upvote"]),
+  const $downvoteId = fieldArgs.getRaw(["input", "downvote"]),
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$downvoteId, $currentUser, $db], async ([downvoteId, currentUser, db]) => {
