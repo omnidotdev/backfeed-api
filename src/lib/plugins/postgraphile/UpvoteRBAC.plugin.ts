@@ -33,10 +33,6 @@ const validatePermissions = (propName: string) =>
 
             // Only allow the user who upvoted to update or delete their own upvote
             if (currentUser.id !== upvote.userId) {
-              console.error("Current User ID", currentUser.id);
-              console.error("Upvote User ID", upvote.userId);
-              console.error("Upvote Row ID", upvote.id);
-
               throw new Error("Insufficient permissions");
             }
           },
