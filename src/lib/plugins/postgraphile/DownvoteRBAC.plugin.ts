@@ -52,7 +52,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
  */
 const DownvoteRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
-    createDownvote: validatePermissions("upvote", "create"),
+    createDownvote: validatePermissions("downvote", "create"),
     updateDownvote: validatePermissions("rowId", "update"),
     deleteDownvote: validatePermissions("rowId", "delete"),
   },
