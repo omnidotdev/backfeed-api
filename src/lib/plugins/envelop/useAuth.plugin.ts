@@ -33,7 +33,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       },
     });
 
-    if (!userInfo.ok) throw new Error("Invalid access token or request failed");
+    if (!userInfo.ok) return null;
 
     const idToken: jose.JWTPayload = await userInfo.json();
 
