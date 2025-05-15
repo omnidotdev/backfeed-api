@@ -33,10 +33,6 @@ const validatePermissions = (propName: string) =>
 
             // Only allow the user who downvoted to update or delete their own downvote
             if (currentUser.id !== downvote.userId) {
-              console.error("Current User ID", currentUser.id);
-              console.error("Downvote User ID", downvote.userId);
-              console.error("Downvote Row ID", downvote.id);
-
               throw new Error("Insufficient permissions");
             }
           },
