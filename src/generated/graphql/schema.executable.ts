@@ -154,7 +154,7 @@ const spec_downvote = {
   },
   description: undefined,
   extensions: {
-    oid: "230048",
+    oid: "230322",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -237,7 +237,7 @@ const spec_upvote = {
   },
   description: undefined,
   extensions: {
-    oid: "229961",
+    oid: "230235",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -320,7 +320,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "230147",
+    oid: "230421",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -403,7 +403,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "229923",
+    oid: "230197",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -510,7 +510,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "230028",
+    oid: "230302",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -629,7 +629,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "229947",
+    oid: "230221",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -650,7 +650,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "230067",
+    oid: "230341",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -729,7 +729,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "229983",
+    oid: "230257",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -860,7 +860,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "229937",
+    oid: "230211",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -979,7 +979,7 @@ const spec_postStatus = {
   },
   description: undefined,
   extensions: {
-    oid: "230121",
+    oid: "230395",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1000,7 +1000,7 @@ const tierCodec = enumCodec({
   values: ["free", "basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "230170",
+    oid: "230444",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1129,7 +1129,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "229971",
+    oid: "230245",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4128,7 +4128,7 @@ const planWrapper2 = (plan, _, fieldArgs) => {
     } else {
       const [currentComment] = await db.select({
         organizationId: projects.organizationId,
-        userId: posts.userId
+        userId: comments.userId
       }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(comments.id, comment));
       if (currentUser.id !== currentComment.userId) {
         const [userRole] = await db.select({
@@ -4422,7 +4422,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
     } else {
       const [currentComment] = await db.select({
         organizationId: projects.organizationId,
-        userId: posts.userId
+        userId: comments.userId
       }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(comments.id, comment));
       if (currentUser.id !== currentComment.userId) {
         const [userRole] = await db.select({
@@ -4742,7 +4742,7 @@ const planWrapper19 = (plan, _, fieldArgs) => {
     } else {
       const [currentComment] = await db.select({
         organizationId: projects.organizationId,
-        userId: posts.userId
+        userId: comments.userId
       }).from(comments).innerJoin(posts, eq(comments.postId, posts.id)).innerJoin(projects, eq(posts.projectId, projects.id)).where(eq(comments.id, comment));
       if (currentUser.id !== currentComment.userId) {
         const [userRole] = await db.select({

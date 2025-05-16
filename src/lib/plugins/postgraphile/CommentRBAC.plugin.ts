@@ -71,7 +71,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               const [currentComment] = await db
                 .select({
                   organizationId: projects.organizationId,
-                  userId: posts.userId,
+                  userId: comments.userId,
                 })
                 .from(comments)
                 .innerJoin(posts, eq(comments.postId, posts.id))
