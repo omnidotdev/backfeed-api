@@ -4,7 +4,7 @@ import type { SQL } from "drizzle-orm";
 import type { PgColumn } from "drizzle-orm/pg-core";
 
 /**
- * Helper function to generate a slug from a column value
+ * Generate a slug from a column value.
  * @example
  * Input: Omni LLC
  * Ouput: omni-llc
