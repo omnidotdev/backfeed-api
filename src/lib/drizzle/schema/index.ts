@@ -6,5 +6,6 @@ export * from "./organization.table";
 export * from "./post.table";
 export * from "./postStatus.table";
 export * from "./project.table";
+export * from "./projectSocial.table";
 export * from "./upvote.table";
 export * from "./user.table";
