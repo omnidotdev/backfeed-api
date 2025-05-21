@@ -154,7 +154,7 @@ const spec_downvote = {
   },
   description: undefined,
   extensions: {
-    oid: "230652",
+    oid: "232099",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -237,7 +237,7 @@ const spec_upvote = {
   },
   description: undefined,
   extensions: {
-    oid: "230565",
+    oid: "232012",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -320,7 +320,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "230751",
+    oid: "232199",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -403,7 +403,7 @@ const spec_projectSocial = {
   },
   description: undefined,
   extensions: {
-    oid: "230790",
+    oid: "232238",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -486,7 +486,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "230527",
+    oid: "231974",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -593,7 +593,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "230632",
+    oid: "232079",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -614,7 +614,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "230671",
+    oid: "232118",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -693,7 +693,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "230587",
+    oid: "232034",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -824,7 +824,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "230541",
+    oid: "231988",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -955,7 +955,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "230551",
+    oid: "231998",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1074,7 +1074,7 @@ const spec_postStatus = {
   },
   description: undefined,
   extensions: {
-    oid: "230725",
+    oid: "232173",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1095,7 +1095,7 @@ const tierCodec = enumCodec({
   values: ["free", "basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "230774",
+    oid: "232222",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1224,7 +1224,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "230575",
+    oid: "232022",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1383,6 +1383,16 @@ const project_socialUniques = [{
   extensions: {
     tags: {
       __proto__: null
+    }
+  }
+}, {
+  isPrimary: false,
+  attributes: ["url", "project_id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
     }
   }
 }];
@@ -1639,6 +1649,16 @@ const post_statusUniques = [{
   extensions: {
     tags: {
       __proto__: null
+    }
+  }
+}, {
+  isPrimary: false,
+  attributes: ["status", "project_id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
     }
   }
 }];
@@ -4337,8 +4357,6 @@ const planWrapper = (plan, _, fieldArgs) => {
     } = lib_drizzle_schema;
     if ("create" === "create") projectId = projectSocial.projectId;else {
       const [currentProjectSocial] = await db.select().from(projectSocials).where(eq(projectSocials.id, projectSocial));
-      console.log(projectSocial);
-      console.log(currentProjectSocial);
       projectId = currentProjectSocial.projectId;
     }
     const [project] = await db.select({
@@ -4664,8 +4682,6 @@ const planWrapper10 = (plan, _, fieldArgs) => {
     } = lib_drizzle_schema;
     if ("update" === "create") projectId = projectSocial.projectId;else {
       const [currentProjectSocial] = await db.select().from(projectSocials).where(eq(projectSocials.id, projectSocial));
-      console.log(projectSocial);
-      console.log(currentProjectSocial);
       projectId = currentProjectSocial.projectId;
     }
     const [project] = await db.select({
@@ -5021,8 +5037,6 @@ const planWrapper20 = (plan, _, fieldArgs) => {
     } = lib_drizzle_schema;
     if ("delete" === "create") projectId = projectSocial.projectId;else {
       const [currentProjectSocial] = await db.select().from(projectSocials).where(eq(projectSocials.id, projectSocial));
-      console.log(projectSocial);
-      console.log(currentProjectSocial);
       projectId = currentProjectSocial.projectId;
     }
     const [project] = await db.select({
@@ -5349,6 +5363,9 @@ type Query implements Node {
   """Get a single \`ProjectSocial\`."""
   projectSocial(rowId: UUID!): ProjectSocial
 
+  """Get a single \`ProjectSocial\`."""
+  projectSocialByUrlAndProjectId(url: String!, projectId: UUID!): ProjectSocial
+
   """Get a single \`Organization\`."""
   organization(rowId: UUID!): Organization
 
@@ -5378,6 +5395,9 @@ type Query implements Node {
 
   """Get a single \`PostStatus\`."""
   postStatus(rowId: UUID!): PostStatus
+
+  """Get a single \`PostStatus\`."""
+  postStatusByStatusAndProjectId(status: String!, projectId: UUID!): PostStatus
 
   """Get a single \`User\`."""
   user(rowId: UUID!): User
@@ -12084,6 +12104,15 @@ export const plans = {
         id: $rowId
       });
     },
+    projectSocialByUrlAndProjectId(_$root, {
+      $url,
+      $projectId
+    }) {
+      return resource_project_socialPgResource.get({
+        url: $url,
+        project_id: $projectId
+      });
+    },
     organization(_$root, {
       $rowId
     }) {
@@ -12156,6 +12185,15 @@ export const plans = {
     }) {
       return resource_post_statusPgResource.get({
         id: $rowId
+      });
+    },
+    postStatusByStatusAndProjectId(_$root, {
+      $status,
+      $projectId
+    }) {
+      return resource_post_statusPgResource.get({
+        status: $status,
+        project_id: $projectId
       });
     },
     user(_$root, {
@@ -24933,12 +24971,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         attribute: "status",
         direction: "ASC"
       });
+      queryBuilder.setOrderIsUnique();
     },
     STATUS_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "status",
         direction: "DESC"
       });
+      queryBuilder.setOrderIsUnique();
     },
     DESCRIPTION_ASC(queryBuilder) {
       queryBuilder.orderBy({
@@ -25773,12 +25813,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         attribute: "url",
         direction: "ASC"
       });
+      queryBuilder.setOrderIsUnique();
     },
     URL_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "url",
         direction: "DESC"
       });
+      queryBuilder.setOrderIsUnique();
     },
     CREATED_AT_ASC(queryBuilder) {
       queryBuilder.orderBy({
