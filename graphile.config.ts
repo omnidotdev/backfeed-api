@@ -15,6 +15,7 @@ import {
   PostStatusRBACPlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectRBACPlugin,
+  ProjectSocialRBACPlugin,
   UpvoteRBACPlugin,
   UserRBACPlugin,
 } from "./src/lib/plugins/postgraphile";
@@ -45,6 +46,7 @@ const preset: GraphileConfig.Preset = {
     UserRBACPlugin,
     MemberRBACPlugin,
     ProjectRBACPlugin,
+    ProjectSocialRBACPlugin,
     PostRBACPlugin,
     PostStatusRBACPlugin,
     DownvoteRBACPlugin,
