@@ -27,6 +27,7 @@ export const projects = pgTable(
       // .generatedAlwaysAs((): SQL => generateSlug(organizations.name))
       .notNull(),
     description: text(),
+    website: text(),
     organizationId: uuid()
       .notNull()
       .references(() => organizations.id, {

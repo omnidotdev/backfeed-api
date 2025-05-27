@@ -6,5 +6,6 @@ export { default as PostRBACPlugin } from "./PostRBAC.plugin";
 export { default as PostStatusRBACPlugin } from "./PostStatusRBAC.plugin";
 export { default as PrimaryKeyMutationsOnlyPlugin } from "./PrimaryKeyMutationsOnly.plugin";
 export { default as ProjectRBACPlugin } from "./ProjectRBAC.plugin";
+export { default as ProjectSocialRBACPlugin } from "./ProjectSocialRBAC.plugin";
 export { default as UpvoteRBACPlugin } from "./UpvoteRBAC.plugin";
 export { default as UserRBACPlugin } from "./UserRBAC.plugin";
