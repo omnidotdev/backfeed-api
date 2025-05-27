@@ -8,12 +8,9 @@ import * as dbSchema from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 
-type MutationScope = "create" | "delete";
+type MutationScope = "create" | "update" | "delete";
 
-const validateInvitationPermissions = (
-  propName: string,
-  scope: MutationScope,
-) =>
+const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (and, eq, dbSchema, context, sideEffect, propName, scope) =>
       // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
@@ -25,7 +22,8 @@ const validateInvitationPermissions = (
         sideEffect(
           [$invitationId, $currentUser, $db],
           async ([invitationId, currentUser, db]) => {
-            if (!currentUser) {
+            // TODO: discuss this. Should we simply prevent invitations to be updated at all?
+            if (!currentUser || scope === "update") {
               throw new Error("Unauthorized");
             }
 
@@ -135,8 +133,9 @@ const validateInvitationPermissions = (
  */
 const InvitationRBACPlugin = makeWrapPlansPlugin({
   Mutation: {
-    createInvitation: validateInvitationPermissions("invitation", "create"),
-    deleteInvitation: validateInvitationPermissions("rowId", "delete"),
+    createInvitation: validatePermissions("invitation", "create"),
+    updateInvitation: validatePermissions("rowId", "update"),
+    deleteInvitation: validatePermissions("rowId", "delete"),
   },
 });
 
