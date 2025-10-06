@@ -154,7 +154,7 @@ const spec_downvote = {
   },
   description: undefined,
   extensions: {
-    oid: "232099",
+    oid: "34322",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -237,7 +237,7 @@ const spec_upvote = {
   },
   description: undefined,
   extensions: {
-    oid: "232012",
+    oid: "34235",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -320,7 +320,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "232199",
+    oid: "34421",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -403,7 +403,7 @@ const spec_projectSocial = {
   },
   description: undefined,
   extensions: {
-    oid: "232238",
+    oid: "34460",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -486,7 +486,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "231974",
+    oid: "34197",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -593,7 +593,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "232079",
+    oid: "34302",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -614,7 +614,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "232118",
+    oid: "34341",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -693,7 +693,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "232034",
+    oid: "34257",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -824,7 +824,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "231988",
+    oid: "34211",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -955,7 +955,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "231998",
+    oid: "34221",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1074,7 +1074,7 @@ const spec_postStatus = {
   },
   description: undefined,
   extensions: {
-    oid: "232173",
+    oid: "34395",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1095,7 +1095,7 @@ const tierCodec = enumCodec({
   values: ["free", "basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "232222",
+    oid: "34444",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1224,7 +1224,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "232022",
+    oid: "34245",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1383,16 +1383,6 @@ const project_socialUniques = [{
   extensions: {
     tags: {
       __proto__: null
-    }
-  }
-}, {
-  isPrimary: false,
-  attributes: ["url", "project_id"],
-  description: undefined,
-  extensions: {
-    tags: {
-      __proto__: null,
-      behavior: ["-update", "-delete"]
     }
   }
 }];
@@ -1649,16 +1639,6 @@ const post_statusUniques = [{
   extensions: {
     tags: {
       __proto__: null
-    }
-  }
-}, {
-  isPrimary: false,
-  attributes: ["status", "project_id"],
-  description: undefined,
-  extensions: {
-    tags: {
-      __proto__: null,
-      behavior: ["-update", "-delete"]
     }
   }
 }];
@@ -2329,125 +2309,125 @@ function isEmpty(o) {
   return typeof o === "object" && o !== null && Object.keys(o).length === 0;
 }
 function assertAllowed(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed2(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed3(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed4(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed5(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed6(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed7(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed8(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed9(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed10(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed11(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function UUIDSerialize(value) {
   return "" + value;
@@ -2457,103 +2437,103 @@ const coerce = string => {
   return string;
 };
 function assertAllowed12(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed13(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed14(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed15(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed16(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed17(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed18(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed19(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed20(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const dataTypeToAggregateTypeMap = {};
 const spec = {
@@ -2781,37 +2761,37 @@ const colSpec9 = {
   attribute: spec_project.attributes.website
 };
 function assertAllowed21(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed22(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed23(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const resolve = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
 const resolveInputCodec = () => TYPES.boolean;
@@ -2915,7 +2895,7 @@ const resolve21 = (i, v) => sql`${i} > ${v}`;
 const resolve22 = (i, v) => sql`${i} >= ${v}`;
 const resolve23 = (i, v) => sql`${i} LIKE ${v}`;
 function escapeLikeWildcards(input) {
-  if (typeof input !== "string") throw new Error("Non-string input was provided to escapeLikeWildcards");else return input.split("%").join("\\%").split("_").join("\\_");
+  if (typeof input !== "string") throw Error("Non-string input was provided to escapeLikeWildcards");else return input.split("%").join("\\%").split("_").join("\\_");
 }
 const resolveInput = input => `%${escapeLikeWildcards(input)}%`;
 const resolve24 = (i, v) => sql`${i} NOT LIKE ${v}`;
@@ -3236,15 +3216,15 @@ const resolve47 = (i, v) => sql`${i} <= ${v}`;
 const resolve48 = (i, v) => sql`${i} > ${v}`;
 const resolve49 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed24(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const PgAggregateConditionExpression = class PgAggregateConditionExpression extends Modifier {
   spec;
@@ -3356,48 +3336,48 @@ const colSpec18 = {
   attribute: spec_post.attributes.status_updated_at
 };
 function assertAllowed25(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed26(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed27(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed28(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec19 = {
   fieldName: "rowId",
@@ -3425,26 +3405,26 @@ const colSpec23 = {
   attribute: spec_upvote.attributes.updated_at
 };
 function assertAllowed29(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed30(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec24 = {
   fieldName: "rowId",
@@ -3492,26 +3472,26 @@ const colSpec32 = {
   attribute: spec_user.attributes.tier
 };
 function assertAllowed31(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed32(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const resolve50 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
 const resolveInputCodec21 = () => TYPES.boolean;
@@ -3564,15 +3544,15 @@ const resolve58 = (i, v) => sql`${i} <= ${v}`;
 const resolve59 = (i, v) => sql`${i} > ${v}`;
 const resolve60 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed33(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const resolve61 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
 const resolveInputCodec24 = () => TYPES.boolean;
@@ -3625,26 +3605,26 @@ const resolve69 = (i, v) => sql`${i} <= ${v}`;
 const resolve70 = (i, v) => sql`${i} > ${v}`;
 const resolve71 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed34(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed35(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec33 = {
   fieldName: "userId",
@@ -3672,26 +3652,26 @@ const colSpec37 = {
   attribute: spec_member.attributes.id
 };
 function assertAllowed36(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed37(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const resolve72 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
 const resolveInputCodec27 = () => TYPES.boolean;
@@ -3769,59 +3749,59 @@ const colSpec42 = {
   attribute: spec_organization.attributes.updated_at
 };
 function assertAllowed38(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed39(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed40(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed41(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed42(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec43 = {
   fieldName: "rowId",
@@ -3849,37 +3829,37 @@ const colSpec47 = {
   attribute: spec_invitation.attributes.updated_at
 };
 function assertAllowed43(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed44(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed45(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec48 = {
   fieldName: "rowId",
@@ -3917,59 +3897,59 @@ const colSpec54 = {
   attribute: spec_comment.attributes.parent_id
 };
 function assertAllowed46(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed47(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed48(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed49(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed50(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec55 = {
   fieldName: "rowId",
@@ -3997,48 +3977,48 @@ const colSpec59 = {
   attribute: spec_downvote.attributes.updated_at
 };
 function assertAllowed51(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed52(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed53(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed54(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec60 = {
   fieldName: "rowId",
@@ -4081,37 +4061,37 @@ const colSpec67 = {
   attribute: spec_postStatus.attributes.updated_at
 };
 function assertAllowed55(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed56(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed57(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const resolve83 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
 const resolveInputCodec30 = () => TYPES.boolean;
@@ -4164,37 +4144,37 @@ const resolve91 = (i, v) => sql`${i} <= ${v}`;
 const resolve92 = (i, v) => sql`${i} > ${v}`;
 const resolve93 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed58(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed59(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed60(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec68 = {
   fieldName: "rowId",
@@ -4222,110 +4202,110 @@ const colSpec72 = {
   attribute: spec_projectSocial.attributes.updated_at
 };
 function assertAllowed61(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed62(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const relation = registry.pgRelations["project"]["postsByTheirProjectId"];
 const relation2 = registry.pgRelations["project"]["postStatusesByTheirProjectId"];
 const relation3 = registry.pgRelations["project"]["projectSocialsByTheirProjectId"];
 function assertAllowed63(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed64(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed65(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed66(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed67(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const relation4 = registry.pgRelations["post"]["upvotesByTheirPostId"];
 const relation5 = registry.pgRelations["post"]["commentsByTheirPostId"];
 const relation6 = registry.pgRelations["post"]["downvotesByTheirPostId"];
 function assertAllowed68(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const relation7 = registry.pgRelations["comment"]["commentsByTheirParentId"];
 function assertAllowed69(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
     if (arr) {
       const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
     }
   }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const relation8 = registry.pgRelations["postStatus"]["postsByTheirStatusId"];
 const relation9 = registry.pgRelations["organization"]["projectsByTheirOrganizationId"];
@@ -4348,7 +4328,7 @@ const planWrapper = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$projectSocial, $currentUser, $db], async ([projectSocial, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     let projectId;
     const {
       members,
@@ -4365,7 +4345,7 @@ const planWrapper = (plan, _, fieldArgs) => {
       [userRole] = await db.select({
         role: members.role
       }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, project.organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+    if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4381,20 +4361,20 @@ const planWrapper2 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$organization, $currentUser, $db], async ([organization, currentUser, db]) => {
-    if (!currentUser?.tier) throw new Error("Unauthorized");
+    if (!currentUser?.tier) throw Error("Unauthorized");
     const {
       members
     } = lib_drizzle_schema;
     if ("create" === "create") {
       if (currentUser.tier === "basic" || currentUser.tier === "free") {
-        if ((await db.select().from(members).where(and(eq(members.userId, currentUser.id), eq(members.role, "owner")))).length > 0) throw new Error("Maximum number of organizations reached.");
+        if ((await db.select().from(members).where(and(eq(members.userId, currentUser.id), eq(members.role, "owner")))).length > 0) throw Error("Maximum number of organizations reached.");
       }
     } else {
       const [userRole] = await db.select({
         role: members.role
       }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organization)));
-      if ("create" === "delete" && userRole.role !== "owner") throw new Error("Insufficient permissions");
-      if ("create" === "update" && (!userRole || userRole.role === "member")) throw new Error("Insufficient permissions");
+      if ("create" === "delete" && userRole.role !== "owner") throw Error("Insufficient permissions");
+      if ("create" === "update" && (!userRole || userRole.role === "member")) throw Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4411,7 +4391,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$comment, $currentUser, $db], async ([comment, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const MAX_FREE_TIER_COMMENTS = 100,
       {
         users,
@@ -4429,7 +4409,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
         const [postComments] = await db.select({
           totalCount: count()
         }).from(comments).where(eq(comments.postId, postId));
-        if (postComments.totalCount >= MAX_FREE_TIER_COMMENTS) throw new Error("Maximum number of comments has been reached");
+        if (postComments.totalCount >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
       }
     } else {
       const [currentComment] = await db.select({
@@ -4440,7 +4420,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
         const [userRole] = await db.select({
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, currentComment.organizationId)));
-        if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+        if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
       }
     }
   });
@@ -4459,7 +4439,7 @@ const planWrapper4 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$input, $patch, $currentUser, $db], async ([input, patch, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const {
       members
     } = lib_drizzle_schema;
@@ -4473,8 +4453,8 @@ const planWrapper4 = (plan, _, fieldArgs) => {
       if (organizationUsers.length) {
         const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
         if (!userRole) {
-          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
-        } else if (userRole !== "owner") throw new Error("Insufficient permissions");
+          if (userId !== currentUser.id || role !== "member") throw Error("Insufficient permissions");
+        } else if (userRole !== "owner") throw Error("Insufficient permissions");
       }
     } else {
       const [member] = await db.select().from(members).where(eq(members.id, input));
@@ -4482,9 +4462,9 @@ const planWrapper4 = (plan, _, fieldArgs) => {
         const [userRole] = await db.select({
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
-        if (userRole.role !== "owner") throw new Error("Insufficient permissions");
-        if (patch.role === "owner") throw new Error("Organizations can only have one owner");
-      } else if ("create" === "update") throw new Error("Insufficient permissions");
+        if (userRole.role !== "owner") throw Error("Insufficient permissions");
+        if (patch.role === "owner") throw Error("Organizations can only have one owner");
+      } else if ("create" === "update") throw Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4501,7 +4481,7 @@ const planWrapper5 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$post, $currentUser, $db], async ([post, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 15,
       {
         users,
@@ -4522,7 +4502,7 @@ const planWrapper5 = (plan, _, fieldArgs) => {
           const [userFeedback] = await db.select({
             totalCount: count()
           }).from(posts).where(and(eq(posts.projectId, projectId), eq(posts.userId, currentUser.id)));
-          if (!userFeedback.totalCount) throw new Error("Maximum number of unique users providing feedback has been reached");
+          if (!userFeedback.totalCount) throw Error("Maximum number of unique users providing feedback has been reached");
         }
       }
     } else {
@@ -4534,7 +4514,7 @@ const planWrapper5 = (plan, _, fieldArgs) => {
         const [userRole] = await db.select({
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, currenPost.organizationId)));
-        if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+        if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
       }
     }
   });
@@ -4552,7 +4532,7 @@ const planWrapper6 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
-    if (!currentUser?.tier) throw new Error("Unauthorized");
+    if (!currentUser?.tier) throw Error("Unauthorized");
     let organizationId;
     const {
       organizations,
@@ -4567,15 +4547,15 @@ const planWrapper6 = (plan, _, fieldArgs) => {
     const [userRole] = await db.select({
       role: members.role
     }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+    if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
     if ("create" === "create") {
       const [organizationOwner] = await db.select({
           tier: users.tier
         }).from(organizations).leftJoin(members, and(eq(members.organizationId, organizationId), eq(members.role, "owner"))).leftJoin(users, eq(members.userId, users.id)),
         currentProjects = await db.select().from(projects).where(eq(projects.organizationId, organizationId));
-      if (!organizationOwner.tier) throw new Error("Maximum number of projects reached.");
-      if (organizationOwner.tier === "free" && !!currentProjects.length) throw new Error("Maximum number of projects reached.");
-      if (organizationOwner.tier === "basic" && currentProjects.length >= 3) throw new Error("Maximum number of projects reached.");
+      if (!organizationOwner.tier) throw Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "free" && !!currentProjects.length) throw Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "basic" && currentProjects.length >= 3) throw Error("Maximum number of projects reached.");
     }
   });
   return plan();
@@ -4592,7 +4572,7 @@ const planWrapper7 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$postStatus, $currentUser, $db], async ([postStatus, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const {
       members,
       projects,
@@ -4609,7 +4589,7 @@ const planWrapper7 = (plan, _, fieldArgs) => {
       [userRole] = await db.select({
         role: members.role
       }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, project.organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+    if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4627,12 +4607,12 @@ const planWrapper8 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$downvoteId, $currentUser, $db], async ([downvoteId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const {
         downvotes
       } = lib_drizzle_schema,
       [downvote] = await db.select().from(downvotes).where(eq(downvotes.id, downvoteId));
-    if (currentUser.id !== downvote.userId) throw new Error("Insufficient permissions");
+    if (currentUser.id !== downvote.userId) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4650,12 +4630,12 @@ const planWrapper9 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$upvoteId, $currentUser, $db], async ([upvoteId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const {
         upvotes
       } = lib_drizzle_schema,
       [upvote] = await db.select().from(upvotes).where(eq(upvotes.id, upvoteId));
-    if (currentUser.id !== upvote.userId) throw new Error("Insufficient permissions");
+    if (currentUser.id !== upvote.userId) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4673,7 +4653,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$projectSocial, $currentUser, $db], async ([projectSocial, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     let projectId;
     const {
       members,
@@ -4690,7 +4670,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
       [userRole] = await db.select({
         role: members.role
       }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, project.organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+    if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4708,20 +4688,20 @@ const planWrapper11 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$organization, $currentUser, $db], async ([organization, currentUser, db]) => {
-    if (!currentUser?.tier) throw new Error("Unauthorized");
+    if (!currentUser?.tier) throw Error("Unauthorized");
     const {
       members
     } = lib_drizzle_schema;
     if ("update" === "create") {
       if (currentUser.tier === "basic" || currentUser.tier === "free") {
-        if ((await db.select().from(members).where(and(eq(members.userId, currentUser.id), eq(members.role, "owner")))).length > 0) throw new Error("Maximum number of organizations reached.");
+        if ((await db.select().from(members).where(and(eq(members.userId, currentUser.id), eq(members.role, "owner")))).length > 0) throw Error("Maximum number of organizations reached.");
       }
     } else {
       const [userRole] = await db.select({
         role: members.role
       }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organization)));
-      if ("update" === "delete" && userRole.role !== "owner") throw new Error("Insufficient permissions");
-      if ("update" === "update" && (!userRole || userRole.role === "member")) throw new Error("Insufficient permissions");
+      if ("update" === "delete" && userRole.role !== "owner") throw Error("Insufficient permissions");
+      if ("update" === "update" && (!userRole || userRole.role === "member")) throw Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4740,7 +4720,7 @@ const planWrapper12 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$comment, $currentUser, $db], async ([comment, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const MAX_FREE_TIER_COMMENTS = 100,
       {
         users,
@@ -4758,7 +4738,7 @@ const planWrapper12 = (plan, _, fieldArgs) => {
         const [postComments] = await db.select({
           totalCount: count()
         }).from(comments).where(eq(comments.postId, postId));
-        if (postComments.totalCount >= MAX_FREE_TIER_COMMENTS) throw new Error("Maximum number of comments has been reached");
+        if (postComments.totalCount >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
       }
     } else {
       const [currentComment] = await db.select({
@@ -4769,7 +4749,7 @@ const planWrapper12 = (plan, _, fieldArgs) => {
         const [userRole] = await db.select({
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, currentComment.organizationId)));
-        if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+        if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
       }
     }
   });
@@ -4790,7 +4770,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$input, $patch, $currentUser, $db], async ([input, patch, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const {
       members
     } = lib_drizzle_schema;
@@ -4804,8 +4784,8 @@ const planWrapper13 = (plan, _, fieldArgs) => {
       if (organizationUsers.length) {
         const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
         if (!userRole) {
-          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
-        } else if (userRole !== "owner") throw new Error("Insufficient permissions");
+          if (userId !== currentUser.id || role !== "member") throw Error("Insufficient permissions");
+        } else if (userRole !== "owner") throw Error("Insufficient permissions");
       }
     } else {
       const [member] = await db.select().from(members).where(eq(members.id, input));
@@ -4813,9 +4793,9 @@ const planWrapper13 = (plan, _, fieldArgs) => {
         const [userRole] = await db.select({
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
-        if (userRole.role !== "owner") throw new Error("Insufficient permissions");
-        if (patch.role === "owner") throw new Error("Organizations can only have one owner");
-      } else if ("update" === "update") throw new Error("Insufficient permissions");
+        if (userRole.role !== "owner") throw Error("Insufficient permissions");
+        if (patch.role === "owner") throw Error("Organizations can only have one owner");
+      } else if ("update" === "update") throw Error("Insufficient permissions");
     }
   });
   return plan();
@@ -4834,7 +4814,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$post, $currentUser, $db], async ([post, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 15,
       {
         users,
@@ -4855,7 +4835,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
           const [userFeedback] = await db.select({
             totalCount: count()
           }).from(posts).where(and(eq(posts.projectId, projectId), eq(posts.userId, currentUser.id)));
-          if (!userFeedback.totalCount) throw new Error("Maximum number of unique users providing feedback has been reached");
+          if (!userFeedback.totalCount) throw Error("Maximum number of unique users providing feedback has been reached");
         }
       }
     } else {
@@ -4867,7 +4847,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
         const [userRole] = await db.select({
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, currenPost.organizationId)));
-        if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+        if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
       }
     }
   });
@@ -4887,7 +4867,7 @@ const planWrapper15 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
-    if (!currentUser?.tier) throw new Error("Unauthorized");
+    if (!currentUser?.tier) throw Error("Unauthorized");
     let organizationId;
     const {
       organizations,
@@ -4902,15 +4882,15 @@ const planWrapper15 = (plan, _, fieldArgs) => {
     const [userRole] = await db.select({
       role: members.role
     }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+    if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
     if ("update" === "create") {
       const [organizationOwner] = await db.select({
           tier: users.tier
         }).from(organizations).leftJoin(members, and(eq(members.organizationId, organizationId), eq(members.role, "owner"))).leftJoin(users, eq(members.userId, users.id)),
         currentProjects = await db.select().from(projects).where(eq(projects.organizationId, organizationId));
-      if (!organizationOwner.tier) throw new Error("Maximum number of projects reached.");
-      if (organizationOwner.tier === "free" && !!currentProjects.length) throw new Error("Maximum number of projects reached.");
-      if (organizationOwner.tier === "basic" && currentProjects.length >= 3) throw new Error("Maximum number of projects reached.");
+      if (!organizationOwner.tier) throw Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "free" && !!currentProjects.length) throw Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "basic" && currentProjects.length >= 3) throw Error("Maximum number of projects reached.");
     }
   });
   return plan();
@@ -4929,7 +4909,7 @@ const planWrapper16 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$postStatus, $currentUser, $db], async ([postStatus, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const {
       members,
       projects,
@@ -4946,7 +4926,7 @@ const planWrapper16 = (plan, _, fieldArgs) => {
       [userRole] = await db.select({
         role: members.role
       }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, project.organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+    if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4963,8 +4943,8 @@ const planWrapper17 = (plan, _, fieldArgs) => {
   const $userId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser");
   sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
-    if (!currentUser) throw new Error("Unauthorized");
-    if (userId !== currentUser.id) throw new Error("Insufficient permissions");
+    if (!currentUser) throw Error("Unauthorized");
+    if (userId !== currentUser.id) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4982,12 +4962,12 @@ const planWrapper18 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$downvoteId, $currentUser, $db], async ([downvoteId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const {
         downvotes
       } = lib_drizzle_schema,
       [downvote] = await db.select().from(downvotes).where(eq(downvotes.id, downvoteId));
-    if (currentUser.id !== downvote.userId) throw new Error("Insufficient permissions");
+    if (currentUser.id !== downvote.userId) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5005,12 +4985,12 @@ const planWrapper19 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$upvoteId, $currentUser, $db], async ([upvoteId, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const {
         upvotes
       } = lib_drizzle_schema,
       [upvote] = await db.select().from(upvotes).where(eq(upvotes.id, upvoteId));
-    if (currentUser.id !== upvote.userId) throw new Error("Insufficient permissions");
+    if (currentUser.id !== upvote.userId) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5028,7 +5008,7 @@ const planWrapper20 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$projectSocial, $currentUser, $db], async ([projectSocial, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     let projectId;
     const {
       members,
@@ -5045,7 +5025,7 @@ const planWrapper20 = (plan, _, fieldArgs) => {
       [userRole] = await db.select({
         role: members.role
       }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, project.organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+    if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5063,20 +5043,20 @@ const planWrapper21 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$organization, $currentUser, $db], async ([organization, currentUser, db]) => {
-    if (!currentUser?.tier) throw new Error("Unauthorized");
+    if (!currentUser?.tier) throw Error("Unauthorized");
     const {
       members
     } = lib_drizzle_schema;
     if ("delete" === "create") {
       if (currentUser.tier === "basic" || currentUser.tier === "free") {
-        if ((await db.select().from(members).where(and(eq(members.userId, currentUser.id), eq(members.role, "owner")))).length > 0) throw new Error("Maximum number of organizations reached.");
+        if ((await db.select().from(members).where(and(eq(members.userId, currentUser.id), eq(members.role, "owner")))).length > 0) throw Error("Maximum number of organizations reached.");
       }
     } else {
       const [userRole] = await db.select({
         role: members.role
       }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organization)));
-      if ("delete" === "delete" && userRole.role !== "owner") throw new Error("Insufficient permissions");
-      if ("delete" === "update" && (!userRole || userRole.role === "member")) throw new Error("Insufficient permissions");
+      if ("delete" === "delete" && userRole.role !== "owner") throw Error("Insufficient permissions");
+      if ("delete" === "update" && (!userRole || userRole.role === "member")) throw Error("Insufficient permissions");
     }
   });
   return plan();
@@ -5095,7 +5075,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$comment, $currentUser, $db], async ([comment, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const MAX_FREE_TIER_COMMENTS = 100,
       {
         users,
@@ -5113,7 +5093,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
         const [postComments] = await db.select({
           totalCount: count()
         }).from(comments).where(eq(comments.postId, postId));
-        if (postComments.totalCount >= MAX_FREE_TIER_COMMENTS) throw new Error("Maximum number of comments has been reached");
+        if (postComments.totalCount >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
       }
     } else {
       const [currentComment] = await db.select({
@@ -5124,7 +5104,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
         const [userRole] = await db.select({
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, currentComment.organizationId)));
-        if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+        if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
       }
     }
   });
@@ -5145,7 +5125,7 @@ const planWrapper23 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$input, $patch, $currentUser, $db], async ([input, patch, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const {
       members
     } = lib_drizzle_schema;
@@ -5159,8 +5139,8 @@ const planWrapper23 = (plan, _, fieldArgs) => {
       if (organizationUsers.length) {
         const userRole = organizationUsers.find(user => user.userId === currentUser.id)?.role;
         if (!userRole) {
-          if (userId !== currentUser.id || role !== "member") throw new Error("Insufficient permissions");
-        } else if (userRole !== "owner") throw new Error("Insufficient permissions");
+          if (userId !== currentUser.id || role !== "member") throw Error("Insufficient permissions");
+        } else if (userRole !== "owner") throw Error("Insufficient permissions");
       }
     } else {
       const [member] = await db.select().from(members).where(eq(members.id, input));
@@ -5168,9 +5148,9 @@ const planWrapper23 = (plan, _, fieldArgs) => {
         const [userRole] = await db.select({
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, member.organizationId)));
-        if (userRole.role !== "owner") throw new Error("Insufficient permissions");
-        if (patch.role === "owner") throw new Error("Organizations can only have one owner");
-      } else if ("delete" === "update") throw new Error("Insufficient permissions");
+        if (userRole.role !== "owner") throw Error("Insufficient permissions");
+        if (patch.role === "owner") throw Error("Organizations can only have one owner");
+      } else if ("delete" === "update") throw Error("Insufficient permissions");
     }
   });
   return plan();
@@ -5189,7 +5169,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$post, $currentUser, $db], async ([post, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 15,
       {
         users,
@@ -5210,7 +5190,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
           const [userFeedback] = await db.select({
             totalCount: count()
           }).from(posts).where(and(eq(posts.projectId, projectId), eq(posts.userId, currentUser.id)));
-          if (!userFeedback.totalCount) throw new Error("Maximum number of unique users providing feedback has been reached");
+          if (!userFeedback.totalCount) throw Error("Maximum number of unique users providing feedback has been reached");
         }
       }
     } else {
@@ -5222,7 +5202,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
         const [userRole] = await db.select({
           role: members.role
         }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, currenPost.organizationId)));
-        if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+        if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
       }
     }
   });
@@ -5242,7 +5222,7 @@ const planWrapper25 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$project, $currentUser, $db], async ([project, currentUser, db]) => {
-    if (!currentUser?.tier) throw new Error("Unauthorized");
+    if (!currentUser?.tier) throw Error("Unauthorized");
     let organizationId;
     const {
       organizations,
@@ -5257,15 +5237,15 @@ const planWrapper25 = (plan, _, fieldArgs) => {
     const [userRole] = await db.select({
       role: members.role
     }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+    if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
     if ("delete" === "create") {
       const [organizationOwner] = await db.select({
           tier: users.tier
         }).from(organizations).leftJoin(members, and(eq(members.organizationId, organizationId), eq(members.role, "owner"))).leftJoin(users, eq(members.userId, users.id)),
         currentProjects = await db.select().from(projects).where(eq(projects.organizationId, organizationId));
-      if (!organizationOwner.tier) throw new Error("Maximum number of projects reached.");
-      if (organizationOwner.tier === "free" && !!currentProjects.length) throw new Error("Maximum number of projects reached.");
-      if (organizationOwner.tier === "basic" && currentProjects.length >= 3) throw new Error("Maximum number of projects reached.");
+      if (!organizationOwner.tier) throw Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "free" && !!currentProjects.length) throw Error("Maximum number of projects reached.");
+      if (organizationOwner.tier === "basic" && currentProjects.length >= 3) throw Error("Maximum number of projects reached.");
     }
   });
   return plan();
@@ -5284,7 +5264,7 @@ const planWrapper26 = (plan, _, fieldArgs) => {
     $currentUser = context().get("currentUser"),
     $db = context().get("db");
   sideEffect([$postStatus, $currentUser, $db], async ([postStatus, currentUser, db]) => {
-    if (!currentUser) throw new Error("Unauthorized");
+    if (!currentUser) throw Error("Unauthorized");
     const {
       members,
       projects,
@@ -5301,7 +5281,7 @@ const planWrapper26 = (plan, _, fieldArgs) => {
       [userRole] = await db.select({
         role: members.role
       }).from(members).where(and(eq(members.userId, currentUser.id), eq(members.organizationId, project.organizationId)));
-    if (!userRole || userRole.role === "member") throw new Error("Insufficient permissions");
+    if (!userRole || userRole.role === "member") throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5318,8 +5298,8 @@ const planWrapper27 = (plan, _, fieldArgs) => {
   const $userId = fieldArgs.getRaw(["input", "rowId"]),
     $currentUser = context().get("currentUser");
   sideEffect([$userId, $currentUser], async ([userId, currentUser]) => {
-    if (!currentUser) throw new Error("Unauthorized");
-    if (userId !== currentUser.id) throw new Error("Insufficient permissions");
+    if (!currentUser) throw Error("Unauthorized");
+    if (userId !== currentUser.id) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5363,9 +5343,6 @@ type Query implements Node {
   """Get a single \`ProjectSocial\`."""
   projectSocial(rowId: UUID!): ProjectSocial
 
-  """Get a single \`ProjectSocial\`."""
-  projectSocialByUrlAndProjectId(url: String!, projectId: UUID!): ProjectSocial
-
   """Get a single \`Organization\`."""
   organization(rowId: UUID!): Organization
 
@@ -5395,9 +5372,6 @@ type Query implements Node {
 
   """Get a single \`PostStatus\`."""
   postStatus(rowId: UUID!): PostStatus
-
-  """Get a single \`PostStatus\`."""
-  postStatusByStatusAndProjectId(status: String!, projectId: UUID!): PostStatus
 
   """Get a single \`User\`."""
   user(rowId: UUID!): User
@@ -12104,15 +12078,6 @@ export const plans = {
         id: $rowId
       });
     },
-    projectSocialByUrlAndProjectId(_$root, {
-      $url,
-      $projectId
-    }) {
-      return resource_project_socialPgResource.get({
-        url: $url,
-        project_id: $projectId
-      });
-    },
     organization(_$root, {
       $rowId
     }) {
@@ -12185,15 +12150,6 @@ export const plans = {
     }) {
       return resource_post_statusPgResource.get({
         id: $rowId
-      });
-    },
-    postStatusByStatusAndProjectId(_$root, {
-      $status,
-      $projectId
-    }) {
-      return resource_post_statusPgResource.get({
-        status: $status,
-        project_id: $projectId
       });
     },
     user(_$root, {
@@ -13601,72 +13557,72 @@ export const plans = {
   ProjectFilter: {
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec;
       return condition;
     },
     name(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec2;
       return condition;
     },
     image(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec3;
       return condition;
     },
     slug(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec4;
       return condition;
     },
     description(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec5;
       return condition;
     },
     organizationId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec6;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec7;
       return condition;
     },
     updatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec8;
       return condition;
     },
     website(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec9;
       return condition;
@@ -13775,7 +13731,7 @@ export const plans = {
   },
   UUIDFilter: {
     isNull($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -13788,7 +13744,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec ? resolveInputCodec(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue ? resolveSqlValue($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -13799,7 +13755,7 @@ export const plans = {
       $where.where(fragment);
     },
     equalTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -13812,7 +13768,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier ? resolveSqlIdentifier(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -13823,7 +13779,7 @@ export const plans = {
       $where.where(fragment);
     },
     notEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -13836,7 +13792,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier ? resolveSqlIdentifier(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -13847,7 +13803,7 @@ export const plans = {
       $where.where(fragment);
     },
     distinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -13860,7 +13816,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier ? resolveSqlIdentifier(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -13871,7 +13827,7 @@ export const plans = {
       $where.where(fragment);
     },
     notDistinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -13884,7 +13840,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier ? resolveSqlIdentifier(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -13895,7 +13851,7 @@ export const plans = {
       $where.where(fragment);
     },
     in($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -13908,7 +13864,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier ? resolveSqlIdentifier(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec3 ? resolveInputCodec3(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -13919,7 +13875,7 @@ export const plans = {
       $where.where(fragment);
     },
     notIn($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -13932,7 +13888,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier ? resolveSqlIdentifier(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec3 ? resolveInputCodec3(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -13943,7 +13899,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -13956,7 +13912,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier ? resolveSqlIdentifier(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -13967,7 +13923,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -13980,7 +13936,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier ? resolveSqlIdentifier(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -13991,7 +13947,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14004,7 +13960,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier ? resolveSqlIdentifier(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14015,7 +13971,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14028,7 +13984,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier ? resolveSqlIdentifier(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec2 ? resolveInputCodec2(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14041,7 +13997,7 @@ export const plans = {
   },
   StringFilter: {
     isNull($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14054,7 +14010,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec4 ? resolveInputCodec4(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue2 ? resolveSqlValue2($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14065,7 +14021,7 @@ export const plans = {
       $where.where(fragment);
     },
     equalTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14078,7 +14034,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14089,7 +14045,7 @@ export const plans = {
       $where.where(fragment);
     },
     notEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14102,7 +14058,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14113,7 +14069,7 @@ export const plans = {
       $where.where(fragment);
     },
     distinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14126,7 +14082,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14137,7 +14093,7 @@ export const plans = {
       $where.where(fragment);
     },
     notDistinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14150,7 +14106,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14161,7 +14117,7 @@ export const plans = {
       $where.where(fragment);
     },
     in($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14174,7 +14130,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec6 ? resolveInputCodec6(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14185,7 +14141,7 @@ export const plans = {
       $where.where(fragment);
     },
     notIn($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14198,7 +14154,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec6 ? resolveInputCodec6(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14209,7 +14165,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14222,7 +14178,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14233,7 +14189,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14246,7 +14202,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14257,7 +14213,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14270,7 +14226,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14281,7 +14237,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14294,7 +14250,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14305,7 +14261,7 @@ export const plans = {
       $where.where(fragment);
     },
     includes($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14318,7 +14274,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput ? resolveInput(value) : value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14329,7 +14285,7 @@ export const plans = {
       $where.where(fragment);
     },
     notIncludes($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14342,7 +14298,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput2 ? resolveInput2(value) : value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14353,7 +14309,7 @@ export const plans = {
       $where.where(fragment);
     },
     includesInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14366,7 +14322,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput3 ? resolveInput3(value) : value,
         inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14377,7 +14333,7 @@ export const plans = {
       $where.where(fragment);
     },
     notIncludesInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14390,7 +14346,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput4 ? resolveInput4(value) : value,
         inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14401,7 +14357,7 @@ export const plans = {
       $where.where(fragment);
     },
     startsWith($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14414,7 +14370,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput5 ? resolveInput5(value) : value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14425,7 +14381,7 @@ export const plans = {
       $where.where(fragment);
     },
     notStartsWith($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14438,7 +14394,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput6 ? resolveInput6(value) : value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14449,7 +14405,7 @@ export const plans = {
       $where.where(fragment);
     },
     startsWithInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14462,7 +14418,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput7 ? resolveInput7(value) : value,
         inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14473,7 +14429,7 @@ export const plans = {
       $where.where(fragment);
     },
     notStartsWithInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14486,7 +14442,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput8 ? resolveInput8(value) : value,
         inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14497,7 +14453,7 @@ export const plans = {
       $where.where(fragment);
     },
     endsWith($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14510,7 +14466,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput9 ? resolveInput9(value) : value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14521,7 +14477,7 @@ export const plans = {
       $where.where(fragment);
     },
     notEndsWith($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14534,7 +14490,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput10 ? resolveInput10(value) : value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14545,7 +14501,7 @@ export const plans = {
       $where.where(fragment);
     },
     endsWithInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14558,7 +14514,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput11 ? resolveInput11(value) : value,
         inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14569,7 +14525,7 @@ export const plans = {
       $where.where(fragment);
     },
     notEndsWithInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14582,7 +14538,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = resolveInput12 ? resolveInput12(value) : value,
         inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14593,7 +14549,7 @@ export const plans = {
       $where.where(fragment);
     },
     like($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14606,7 +14562,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14617,7 +14573,7 @@ export const plans = {
       $where.where(fragment);
     },
     notLike($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14630,7 +14586,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14641,7 +14597,7 @@ export const plans = {
       $where.where(fragment);
     },
     likeInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14654,7 +14610,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14665,7 +14621,7 @@ export const plans = {
       $where.where(fragment);
     },
     notLikeInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14678,7 +14634,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14689,7 +14645,7 @@ export const plans = {
       $where.where(fragment);
     },
     equalToInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14702,7 +14658,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier4 ? resolveSqlIdentifier4(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec8 ? resolveInputCodec8(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue3 ? resolveSqlValue3($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14713,7 +14669,7 @@ export const plans = {
       $where.where(fragment);
     },
     notEqualToInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14726,7 +14682,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier5 ? resolveSqlIdentifier5(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec9 ? resolveInputCodec9(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue4 ? resolveSqlValue4($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14737,7 +14693,7 @@ export const plans = {
       $where.where(fragment);
     },
     distinctFromInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14750,7 +14706,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier6 ? resolveSqlIdentifier6(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec10 ? resolveInputCodec10(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue5 ? resolveSqlValue5($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14761,7 +14717,7 @@ export const plans = {
       $where.where(fragment);
     },
     notDistinctFromInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14774,7 +14730,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier7 ? resolveSqlIdentifier7(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec11 ? resolveInputCodec11(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue6 ? resolveSqlValue6($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14785,7 +14741,7 @@ export const plans = {
       $where.where(fragment);
     },
     inInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14798,7 +14754,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier8 ? resolveSqlIdentifier8(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec12 ? resolveInputCodec12(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue7 ? resolveSqlValue7($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14809,7 +14765,7 @@ export const plans = {
       $where.where(fragment);
     },
     notInInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14822,7 +14778,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier9 ? resolveSqlIdentifier9(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec13 ? resolveInputCodec13(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue8 ? resolveSqlValue8($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14833,7 +14789,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThanInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14846,7 +14802,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier10 ? resolveSqlIdentifier10(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec14 ? resolveInputCodec14(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue9 ? resolveSqlValue9($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14857,7 +14813,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThanOrEqualToInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14870,7 +14826,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier11 ? resolveSqlIdentifier11(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec15 ? resolveInputCodec15(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue10 ? resolveSqlValue10($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14881,7 +14837,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThanInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14894,7 +14850,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier12 ? resolveSqlIdentifier12(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec16 ? resolveInputCodec16(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue11 ? resolveSqlValue11($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14905,7 +14861,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThanOrEqualToInsensitive($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14918,7 +14874,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier13 ? resolveSqlIdentifier13(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec17 ? resolveInputCodec17(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue12 ? resolveSqlValue12($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14931,7 +14887,7 @@ export const plans = {
   },
   DatetimeFilter: {
     isNull($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14944,7 +14900,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec18 ? resolveInputCodec18(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue13 ? resolveSqlValue13($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14955,7 +14911,7 @@ export const plans = {
       $where.where(fragment);
     },
     equalTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14968,7 +14924,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -14979,7 +14935,7 @@ export const plans = {
       $where.where(fragment);
     },
     notEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -14992,7 +14948,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15003,7 +14959,7 @@ export const plans = {
       $where.where(fragment);
     },
     distinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15016,7 +14972,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15027,7 +14983,7 @@ export const plans = {
       $where.where(fragment);
     },
     notDistinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15040,7 +14996,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15051,7 +15007,7 @@ export const plans = {
       $where.where(fragment);
     },
     in($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15064,7 +15020,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec20 ? resolveInputCodec20(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15075,7 +15031,7 @@ export const plans = {
       $where.where(fragment);
     },
     notIn($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15088,7 +15044,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec20 ? resolveInputCodec20(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15099,7 +15055,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15112,7 +15068,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15123,7 +15079,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15136,7 +15092,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15147,7 +15103,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15160,7 +15116,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15171,7 +15127,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15184,7 +15140,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15199,7 +15155,7 @@ export const plans = {
     every($where, value) {
       assertAllowed24(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -15219,7 +15175,7 @@ export const plans = {
     some($where, value) {
       assertAllowed24(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -15239,7 +15195,7 @@ export const plans = {
     none($where, value) {
       assertAllowed24(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -15258,7 +15214,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -15280,72 +15236,72 @@ export const plans = {
   PostFilter: {
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec10;
       return condition;
     },
     title(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec11;
       return condition;
     },
     description(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec12;
       return condition;
     },
     projectId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec13;
       return condition;
     },
     userId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec14;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec15;
       return condition;
     },
     updatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec16;
       return condition;
     },
     statusId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec17;
       return condition;
     },
     statusUpdatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec18;
       return condition;
@@ -15495,7 +15451,7 @@ export const plans = {
     every($where, value) {
       assertAllowed28(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -15515,7 +15471,7 @@ export const plans = {
     some($where, value) {
       assertAllowed28(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -15535,7 +15491,7 @@ export const plans = {
     none($where, value) {
       assertAllowed28(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -15554,7 +15510,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -15576,40 +15532,40 @@ export const plans = {
   UpvoteFilter: {
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec19;
       return condition;
     },
     postId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec20;
       return condition;
     },
     userId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec21;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec22;
       return condition;
     },
     updatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec23;
       return condition;
@@ -15660,72 +15616,72 @@ export const plans = {
   UserFilter: {
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec24;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec25;
       return condition;
     },
     updatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec26;
       return condition;
     },
     hidraId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec27;
       return condition;
     },
     username(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec28;
       return condition;
     },
     firstName(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec29;
       return condition;
     },
     lastName(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec30;
       return condition;
     },
     email(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec31;
       return condition;
     },
     tier(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec32;
       return condition;
@@ -15869,7 +15825,7 @@ export const plans = {
   },
   TierFilter: {
     isNull($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15882,7 +15838,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec21 ? resolveInputCodec21(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue14 ? resolveSqlValue14($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15893,7 +15849,7 @@ export const plans = {
       $where.where(fragment);
     },
     equalTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15906,7 +15862,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15917,7 +15873,7 @@ export const plans = {
       $where.where(fragment);
     },
     notEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15930,7 +15886,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15941,7 +15897,7 @@ export const plans = {
       $where.where(fragment);
     },
     distinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15954,7 +15910,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15965,7 +15921,7 @@ export const plans = {
       $where.where(fragment);
     },
     notDistinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -15978,7 +15934,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -15989,7 +15945,7 @@ export const plans = {
       $where.where(fragment);
     },
     in($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16002,7 +15958,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec23 ? resolveInputCodec23(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16013,7 +15969,7 @@ export const plans = {
       $where.where(fragment);
     },
     notIn($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16026,7 +15982,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec23 ? resolveInputCodec23(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16037,7 +15993,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16050,7 +16006,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16061,7 +16017,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16074,7 +16030,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16085,7 +16041,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16098,7 +16054,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16109,7 +16065,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16122,7 +16078,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16137,7 +16093,7 @@ export const plans = {
     every($where, value) {
       assertAllowed33(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16157,7 +16113,7 @@ export const plans = {
     some($where, value) {
       assertAllowed33(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16177,7 +16133,7 @@ export const plans = {
     none($where, value) {
       assertAllowed33(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16196,7 +16152,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16310,7 +16266,7 @@ export const plans = {
   },
   BigIntFilter: {
     isNull($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16323,7 +16279,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec24 ? resolveInputCodec24(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue15 ? resolveSqlValue15($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16334,7 +16290,7 @@ export const plans = {
       $where.where(fragment);
     },
     equalTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16347,7 +16303,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec25 ? resolveInputCodec25(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16358,7 +16314,7 @@ export const plans = {
       $where.where(fragment);
     },
     notEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16371,7 +16327,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec25 ? resolveInputCodec25(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16382,7 +16338,7 @@ export const plans = {
       $where.where(fragment);
     },
     distinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16395,7 +16351,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec25 ? resolveInputCodec25(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16406,7 +16362,7 @@ export const plans = {
       $where.where(fragment);
     },
     notDistinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16419,7 +16375,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec25 ? resolveInputCodec25(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16430,7 +16386,7 @@ export const plans = {
       $where.where(fragment);
     },
     in($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16443,7 +16399,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec26 ? resolveInputCodec26(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16454,7 +16410,7 @@ export const plans = {
       $where.where(fragment);
     },
     notIn($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16467,7 +16423,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec26 ? resolveInputCodec26(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16478,7 +16434,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16491,7 +16447,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec25 ? resolveInputCodec25(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16502,7 +16458,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16515,7 +16471,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec25 ? resolveInputCodec25(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16526,7 +16482,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16539,7 +16495,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec25 ? resolveInputCodec25(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16550,7 +16506,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16563,7 +16519,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec25 ? resolveInputCodec25(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16578,7 +16534,7 @@ export const plans = {
     every($where, value) {
       assertAllowed34(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16598,7 +16554,7 @@ export const plans = {
     some($where, value) {
       assertAllowed34(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16618,7 +16574,7 @@ export const plans = {
     none($where, value) {
       assertAllowed34(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16637,7 +16593,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16717,7 +16673,7 @@ export const plans = {
     every($where, value) {
       assertAllowed35(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16737,7 +16693,7 @@ export const plans = {
     some($where, value) {
       assertAllowed35(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16757,7 +16713,7 @@ export const plans = {
     none($where, value) {
       assertAllowed35(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16776,7 +16732,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -16798,40 +16754,40 @@ export const plans = {
   MemberFilter: {
     userId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec33;
       return condition;
     },
     organizationId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec34;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec35;
       return condition;
     },
     role(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec36;
       return condition;
     },
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec37;
       return condition;
@@ -16881,7 +16837,7 @@ export const plans = {
   },
   RoleFilter: {
     isNull($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16894,7 +16850,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec27 ? resolveInputCodec27(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue16 ? resolveSqlValue16($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16905,7 +16861,7 @@ export const plans = {
       $where.where(fragment);
     },
     equalTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16918,7 +16874,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16929,7 +16885,7 @@ export const plans = {
       $where.where(fragment);
     },
     notEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16942,7 +16898,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16953,7 +16909,7 @@ export const plans = {
       $where.where(fragment);
     },
     distinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16966,7 +16922,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -16977,7 +16933,7 @@ export const plans = {
       $where.where(fragment);
     },
     notDistinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -16990,7 +16946,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -17001,7 +16957,7 @@ export const plans = {
       $where.where(fragment);
     },
     in($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -17014,7 +16970,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec29 ? resolveInputCodec29(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -17025,7 +16981,7 @@ export const plans = {
       $where.where(fragment);
     },
     notIn($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -17038,7 +16994,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec29 ? resolveInputCodec29(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -17049,7 +17005,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -17062,7 +17018,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -17073,7 +17029,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -17086,7 +17042,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -17097,7 +17053,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -17110,7 +17066,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -17121,7 +17077,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -17134,7 +17090,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -17148,40 +17104,40 @@ export const plans = {
   OrganizationFilter: {
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec38;
       return condition;
     },
     name(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec39;
       return condition;
     },
     slug(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec40;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec41;
       return condition;
     },
     updatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec42;
       return condition;
@@ -17279,7 +17235,7 @@ export const plans = {
     every($where, value) {
       assertAllowed40(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17299,7 +17255,7 @@ export const plans = {
     some($where, value) {
       assertAllowed40(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17319,7 +17275,7 @@ export const plans = {
     none($where, value) {
       assertAllowed40(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17338,7 +17294,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17454,7 +17410,7 @@ export const plans = {
     every($where, value) {
       assertAllowed41(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17474,7 +17430,7 @@ export const plans = {
     some($where, value) {
       assertAllowed41(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17494,7 +17450,7 @@ export const plans = {
     none($where, value) {
       assertAllowed41(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17513,7 +17469,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17593,7 +17549,7 @@ export const plans = {
     every($where, value) {
       assertAllowed42(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17613,7 +17569,7 @@ export const plans = {
     some($where, value) {
       assertAllowed42(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17633,7 +17589,7 @@ export const plans = {
     none($where, value) {
       assertAllowed42(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17652,7 +17608,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17674,40 +17630,40 @@ export const plans = {
   InvitationFilter: {
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec43;
       return condition;
     },
     organizationId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec44;
       return condition;
     },
     email(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec45;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec46;
       return condition;
     },
     updatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec47;
       return condition;
@@ -17803,7 +17759,7 @@ export const plans = {
     every($where, value) {
       assertAllowed45(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17823,7 +17779,7 @@ export const plans = {
     some($where, value) {
       assertAllowed45(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17843,7 +17799,7 @@ export const plans = {
     none($where, value) {
       assertAllowed45(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17862,7 +17818,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -17884,56 +17840,56 @@ export const plans = {
   CommentFilter: {
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec48;
       return condition;
     },
     message(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec49;
       return condition;
     },
     postId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec50;
       return condition;
     },
     userId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec51;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec52;
       return condition;
     },
     updatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec53;
       return condition;
     },
     parentId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec54;
       return condition;
@@ -18035,7 +17991,7 @@ export const plans = {
     every($where, value) {
       assertAllowed49(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18055,7 +18011,7 @@ export const plans = {
     some($where, value) {
       assertAllowed49(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18075,7 +18031,7 @@ export const plans = {
     none($where, value) {
       assertAllowed49(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18094,7 +18050,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18192,7 +18148,7 @@ export const plans = {
     every($where, value) {
       assertAllowed50(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18212,7 +18168,7 @@ export const plans = {
     some($where, value) {
       assertAllowed50(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18232,7 +18188,7 @@ export const plans = {
     none($where, value) {
       assertAllowed50(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18251,7 +18207,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18273,40 +18229,40 @@ export const plans = {
   DownvoteFilter: {
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec55;
       return condition;
     },
     postId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec56;
       return condition;
     },
     userId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec57;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec58;
       return condition;
     },
     updatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec59;
       return condition;
@@ -18415,7 +18371,7 @@ export const plans = {
     every($where, value) {
       assertAllowed53(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18435,7 +18391,7 @@ export const plans = {
     some($where, value) {
       assertAllowed53(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18455,7 +18411,7 @@ export const plans = {
     none($where, value) {
       assertAllowed53(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18474,7 +18430,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18497,7 +18453,7 @@ export const plans = {
     every($where, value) {
       assertAllowed54(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18517,7 +18473,7 @@ export const plans = {
     some($where, value) {
       assertAllowed54(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18537,7 +18493,7 @@ export const plans = {
     none($where, value) {
       assertAllowed54(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18556,7 +18512,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18578,64 +18534,64 @@ export const plans = {
   PostStatusFilter: {
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec60;
       return condition;
     },
     status(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec61;
       return condition;
     },
     description(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec62;
       return condition;
     },
     color(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec63;
       return condition;
     },
     projectId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec64;
       return condition;
     },
     isDefault(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec65;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec66;
       return condition;
     },
     updatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec67;
       return condition;
@@ -18696,7 +18652,7 @@ export const plans = {
   },
   BooleanFilter: {
     isNull($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18709,7 +18665,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec30 ? resolveInputCodec30(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = resolveSqlValue17 ? resolveSqlValue17($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18720,7 +18676,7 @@ export const plans = {
       $where.where(fragment);
     },
     equalTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18733,7 +18689,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec31 ? resolveInputCodec31(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18744,7 +18700,7 @@ export const plans = {
       $where.where(fragment);
     },
     notEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18757,7 +18713,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec31 ? resolveInputCodec31(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18768,7 +18724,7 @@ export const plans = {
       $where.where(fragment);
     },
     distinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18781,7 +18737,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec31 ? resolveInputCodec31(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18792,7 +18748,7 @@ export const plans = {
       $where.where(fragment);
     },
     notDistinctFrom($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18805,7 +18761,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec31 ? resolveInputCodec31(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18816,7 +18772,7 @@ export const plans = {
       $where.where(fragment);
     },
     in($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18829,7 +18785,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec32 ? resolveInputCodec32(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18840,7 +18796,7 @@ export const plans = {
       $where.where(fragment);
     },
     notIn($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18853,7 +18809,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec32 ? resolveInputCodec32(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18864,7 +18820,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18877,7 +18833,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec31 ? resolveInputCodec31(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18888,7 +18844,7 @@ export const plans = {
       $where.where(fragment);
     },
     lessThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18901,7 +18857,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec31 ? resolveInputCodec31(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18912,7 +18868,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThan($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18925,7 +18881,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec31 ? resolveInputCodec31(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18936,7 +18892,7 @@ export const plans = {
       $where.where(fragment);
     },
     greaterThanOrEqualTo($where, value) {
-      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
       const {
           fieldName: parentFieldName,
@@ -18949,7 +18905,7 @@ export const plans = {
         sourceCodec = codec ?? attribute.codec,
         [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
       if (true && value === null) return;
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const resolvedInput = value,
         inputCodec = resolveInputCodec31 ? resolveInputCodec31(codec ?? attribute.codec) : codec ?? attribute.codec,
         sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
@@ -18964,7 +18920,7 @@ export const plans = {
     every($where, value) {
       assertAllowed58(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -18984,7 +18940,7 @@ export const plans = {
     some($where, value) {
       assertAllowed58(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19004,7 +18960,7 @@ export const plans = {
     none($where, value) {
       assertAllowed58(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19023,7 +18979,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19046,7 +19002,7 @@ export const plans = {
     every($where, value) {
       assertAllowed59(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19066,7 +19022,7 @@ export const plans = {
     some($where, value) {
       assertAllowed59(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19086,7 +19042,7 @@ export const plans = {
     none($where, value) {
       assertAllowed59(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19105,7 +19061,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19212,7 +19168,7 @@ export const plans = {
     every($where, value) {
       assertAllowed60(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19232,7 +19188,7 @@ export const plans = {
     some($where, value) {
       assertAllowed60(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19252,7 +19208,7 @@ export const plans = {
     none($where, value) {
       assertAllowed60(value, "object");
       if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19271,7 +19227,7 @@ export const plans = {
     },
     aggregates($where, input) {
       if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
           localAttributes,
           remoteAttributes,
@@ -19293,40 +19249,40 @@ export const plans = {
   ProjectSocialFilter: {
     rowId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec68;
       return condition;
     },
     projectId(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec69;
       return condition;
     },
     url(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec70;
       return condition;
     },
     createdAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec71;
       return condition;
     },
     updatedAt(queryBuilder, value) {
       if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec72;
       return condition;
@@ -19557,7 +19513,7 @@ export const plans = {
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -19575,7 +19531,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -19593,7 +19549,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19612,7 +19568,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19631,7 +19587,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19650,7 +19606,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19669,7 +19625,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19688,7 +19644,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19707,7 +19663,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19726,7 +19682,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19745,7 +19701,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19764,7 +19720,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19783,7 +19739,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19802,7 +19758,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19821,7 +19777,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19840,7 +19796,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19859,7 +19815,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_id")}`, spec_post.attributes.status_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19878,7 +19834,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_id")}`, spec_post.attributes.status_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19897,7 +19853,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_updated_at")}`, spec_post.attributes.status_updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19916,7 +19872,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_updated_at")}`, spec_post.attributes.status_updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -19935,7 +19891,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_post_statusPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -19953,7 +19909,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_post_statusPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -19971,7 +19927,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_postStatus.attributes.id.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -19990,7 +19946,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_postStatus.attributes.id.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20009,7 +19965,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status")}`, spec_postStatus.attributes.status.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20028,7 +19984,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status")}`, spec_postStatus.attributes.status.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20047,7 +20003,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_postStatus.attributes.description.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20066,7 +20022,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_postStatus.attributes.description.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20085,7 +20041,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("color")}`, spec_postStatus.attributes.color.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20104,7 +20060,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("color")}`, spec_postStatus.attributes.color.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20123,7 +20079,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_postStatus.attributes.project_id.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20142,7 +20098,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_postStatus.attributes.project_id.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20161,7 +20117,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20180,7 +20136,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("is_default")}`, spec_postStatus.attributes.is_default.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20199,7 +20155,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_postStatus.attributes.created_at.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20218,7 +20174,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_postStatus.attributes.created_at.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20237,7 +20193,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_postStatus.attributes.updated_at.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20256,7 +20212,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation2.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_post_statusPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_post_statusPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_postStatus.attributes.updated_at.codec)}
 from ${resource_post_statusPgResource.from} ${tableAlias}
@@ -20275,7 +20231,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_project_socialPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -20293,7 +20249,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_project_socialPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -20311,7 +20267,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_projectSocial.attributes.id.codec)}
 from ${resource_project_socialPgResource.from} ${tableAlias}
@@ -20330,7 +20286,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_projectSocial.attributes.id.codec)}
 from ${resource_project_socialPgResource.from} ${tableAlias}
@@ -20349,7 +20305,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_projectSocial.attributes.project_id.codec)}
 from ${resource_project_socialPgResource.from} ${tableAlias}
@@ -20368,7 +20324,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_projectSocial.attributes.project_id.codec)}
 from ${resource_project_socialPgResource.from} ${tableAlias}
@@ -20387,7 +20343,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("url")}`, spec_projectSocial.attributes.url.codec)}
 from ${resource_project_socialPgResource.from} ${tableAlias}
@@ -20406,7 +20362,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("url")}`, spec_projectSocial.attributes.url.codec)}
 from ${resource_project_socialPgResource.from} ${tableAlias}
@@ -20425,7 +20381,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_projectSocial.attributes.created_at.codec)}
 from ${resource_project_socialPgResource.from} ${tableAlias}
@@ -20444,7 +20400,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_projectSocial.attributes.created_at.codec)}
 from ${resource_project_socialPgResource.from} ${tableAlias}
@@ -20463,7 +20419,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_projectSocial.attributes.updated_at.codec)}
 from ${resource_project_socialPgResource.from} ${tableAlias}
@@ -20482,7 +20438,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation3.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_project_socialPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_project_socialPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_projectSocial.attributes.updated_at.codec)}
 from ${resource_project_socialPgResource.from} ${tableAlias}
@@ -21358,7 +21314,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -21376,7 +21332,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -21394,7 +21350,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -21413,7 +21369,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -21432,7 +21388,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -21451,7 +21407,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -21470,7 +21426,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -21489,7 +21445,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -21508,7 +21464,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -21527,7 +21483,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -21546,7 +21502,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -21565,7 +21521,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation4.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -21584,7 +21540,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -21602,7 +21558,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -21620,7 +21576,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_comment.attributes.id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21639,7 +21595,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_comment.attributes.id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21658,7 +21614,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("message")}`, spec_comment.attributes.message.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21677,7 +21633,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("message")}`, spec_comment.attributes.message.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21696,7 +21652,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_comment.attributes.post_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21715,7 +21671,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_comment.attributes.post_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21734,7 +21690,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_comment.attributes.user_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21753,7 +21709,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_comment.attributes.user_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21772,7 +21728,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_comment.attributes.created_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21791,7 +21747,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_comment.attributes.created_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21810,7 +21766,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_comment.attributes.updated_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21829,7 +21785,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_comment.attributes.updated_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21848,7 +21804,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("parent_id")}`, spec_comment.attributes.parent_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21867,7 +21823,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation5.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("parent_id")}`, spec_comment.attributes.parent_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -21886,7 +21842,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -21904,7 +21860,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -21922,7 +21878,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -21941,7 +21897,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -21960,7 +21916,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -21979,7 +21935,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -21998,7 +21954,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -22017,7 +21973,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -22036,7 +21992,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -22055,7 +22011,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -22074,7 +22030,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -22093,7 +22049,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation6.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -22938,7 +22894,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -22956,7 +22912,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -22974,7 +22930,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_comment.attributes.id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -22993,7 +22949,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_comment.attributes.id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23012,7 +22968,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("message")}`, spec_comment.attributes.message.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23031,7 +22987,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("message")}`, spec_comment.attributes.message.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23050,7 +23006,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_comment.attributes.post_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23069,7 +23025,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_comment.attributes.post_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23088,7 +23044,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_comment.attributes.user_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23107,7 +23063,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_comment.attributes.user_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23126,7 +23082,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_comment.attributes.created_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23145,7 +23101,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_comment.attributes.created_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23164,7 +23120,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_comment.attributes.updated_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23183,7 +23139,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_comment.attributes.updated_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23202,7 +23158,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("parent_id")}`, spec_comment.attributes.parent_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -23221,7 +23177,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation7.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("parent_id")}`, spec_comment.attributes.parent_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -24971,14 +24927,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         attribute: "status",
         direction: "ASC"
       });
-      queryBuilder.setOrderIsUnique();
     },
     STATUS_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "status",
         direction: "DESC"
       });
-      queryBuilder.setOrderIsUnique();
     },
     DESCRIPTION_ASC(queryBuilder) {
       queryBuilder.orderBy({
@@ -25060,7 +25014,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -25078,7 +25032,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -25096,7 +25050,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25115,7 +25069,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25134,7 +25088,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25153,7 +25107,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25172,7 +25126,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25191,7 +25145,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25210,7 +25164,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25229,7 +25183,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25248,7 +25202,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25267,7 +25221,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25286,7 +25240,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25305,7 +25259,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25324,7 +25278,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25343,7 +25297,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25362,7 +25316,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_id")}`, spec_post.attributes.status_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25381,7 +25335,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_id")}`, spec_post.attributes.status_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25400,7 +25354,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_updated_at")}`, spec_post.attributes.status_updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25419,7 +25373,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation8.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_updated_at")}`, spec_post.attributes.status_updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -25813,14 +25767,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         attribute: "url",
         direction: "ASC"
       });
-      queryBuilder.setOrderIsUnique();
     },
     URL_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "url",
         direction: "DESC"
       });
-      queryBuilder.setOrderIsUnique();
     },
     CREATED_AT_ASC(queryBuilder) {
       queryBuilder.orderBy({
@@ -26240,7 +26192,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -26258,7 +26210,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_projectPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -26276,7 +26228,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_project.attributes.id.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26295,7 +26247,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_project.attributes.id.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26314,7 +26266,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26333,7 +26285,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26352,7 +26304,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("image")}`, spec_project.attributes.image.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26371,7 +26323,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("image")}`, spec_project.attributes.image.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26390,7 +26342,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("slug")}`, spec_project.attributes.slug.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26409,7 +26361,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("slug")}`, spec_project.attributes.slug.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26428,7 +26380,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_project.attributes.description.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26447,7 +26399,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_project.attributes.description.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26466,7 +26418,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_project.attributes.organization_id.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26485,7 +26437,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_project.attributes.organization_id.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26504,7 +26456,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_project.attributes.created_at.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26523,7 +26475,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_project.attributes.created_at.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26542,7 +26494,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_project.attributes.updated_at.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26561,7 +26513,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_project.attributes.updated_at.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26580,7 +26532,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("website")}`, spec_project.attributes.website.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26599,7 +26551,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation9.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("website")}`, spec_project.attributes.website.codec)}
 from ${resource_projectPgResource.from} ${tableAlias}
@@ -26618,7 +26570,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -26636,7 +26588,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -26654,7 +26606,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_member.attributes.user_id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -26673,7 +26625,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_member.attributes.user_id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -26692,7 +26644,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_member.attributes.organization_id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -26711,7 +26663,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_member.attributes.organization_id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -26730,7 +26682,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_member.attributes.created_at.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -26749,7 +26701,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_member.attributes.created_at.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -26768,7 +26720,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_member.attributes.role.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -26787,7 +26739,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_member.attributes.role.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -26806,7 +26758,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_member.attributes.id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -26825,7 +26777,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_member.attributes.id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -26844,7 +26796,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_invitationPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -26862,7 +26814,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_invitationPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -26880,7 +26832,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_invitation.attributes.id.codec)}
 from ${resource_invitationPgResource.from} ${tableAlias}
@@ -26899,7 +26851,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_invitation.attributes.id.codec)}
 from ${resource_invitationPgResource.from} ${tableAlias}
@@ -26918,7 +26870,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_invitation.attributes.organization_id.codec)}
 from ${resource_invitationPgResource.from} ${tableAlias}
@@ -26937,7 +26889,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_invitation.attributes.organization_id.codec)}
 from ${resource_invitationPgResource.from} ${tableAlias}
@@ -26956,7 +26908,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("email")}`, spec_invitation.attributes.email.codec)}
 from ${resource_invitationPgResource.from} ${tableAlias}
@@ -26975,7 +26927,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("email")}`, spec_invitation.attributes.email.codec)}
 from ${resource_invitationPgResource.from} ${tableAlias}
@@ -26994,7 +26946,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_invitation.attributes.created_at.codec)}
 from ${resource_invitationPgResource.from} ${tableAlias}
@@ -27013,7 +26965,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_invitation.attributes.created_at.codec)}
 from ${resource_invitationPgResource.from} ${tableAlias}
@@ -27032,7 +26984,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_invitation.attributes.updated_at.codec)}
 from ${resource_invitationPgResource.from} ${tableAlias}
@@ -27051,7 +27003,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation11.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_invitationPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_invitation.attributes.updated_at.codec)}
 from ${resource_invitationPgResource.from} ${tableAlias}
@@ -27580,7 +27532,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -27598,7 +27550,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_postPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -27616,7 +27568,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27635,7 +27587,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_post.attributes.id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27654,7 +27606,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27673,7 +27625,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27692,7 +27644,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27711,7 +27663,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27730,7 +27682,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27749,7 +27701,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_post.attributes.project_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27768,7 +27720,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27787,7 +27739,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_post.attributes.user_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27806,7 +27758,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27825,7 +27777,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27844,7 +27796,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27863,7 +27815,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27882,7 +27834,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_id")}`, spec_post.attributes.status_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27901,7 +27853,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_id")}`, spec_post.attributes.status_id.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27920,7 +27872,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_updated_at")}`, spec_post.attributes.status_updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27939,7 +27891,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation12.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status_updated_at")}`, spec_post.attributes.status_updated_at.codec)}
 from ${resource_postPgResource.from} ${tableAlias}
@@ -27958,7 +27910,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -27976,7 +27928,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_upvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -27994,7 +27946,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -28013,7 +27965,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_upvote.attributes.id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -28032,7 +27984,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -28051,7 +28003,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_upvote.attributes.post_id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -28070,7 +28022,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -28089,7 +28041,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_upvote.attributes.user_id.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -28108,7 +28060,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -28127,7 +28079,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_upvote.attributes.created_at.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -28146,7 +28098,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -28165,7 +28117,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation13.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_upvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_upvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_upvote.attributes.updated_at.codec)}
 from ${resource_upvotePgResource.from} ${tableAlias}
@@ -28184,7 +28136,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -28202,7 +28154,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_memberPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -28220,7 +28172,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_member.attributes.user_id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -28239,7 +28191,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_member.attributes.user_id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -28258,7 +28210,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_member.attributes.organization_id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -28277,7 +28229,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_member.attributes.organization_id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -28296,7 +28248,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_member.attributes.created_at.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -28315,7 +28267,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_member.attributes.created_at.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -28334,7 +28286,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_member.attributes.role.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -28353,7 +28305,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_member.attributes.role.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -28372,7 +28324,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_member.attributes.id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -28391,7 +28343,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation14.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_memberPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_memberPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_member.attributes.id.codec)}
 from ${resource_memberPgResource.from} ${tableAlias}
@@ -28410,7 +28362,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -28428,7 +28380,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_commentPgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -28446,7 +28398,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_comment.attributes.id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28465,7 +28417,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_comment.attributes.id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28484,7 +28436,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("message")}`, spec_comment.attributes.message.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28503,7 +28455,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("message")}`, spec_comment.attributes.message.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28522,7 +28474,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_comment.attributes.post_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28541,7 +28493,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_comment.attributes.post_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28560,7 +28512,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_comment.attributes.user_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28579,7 +28531,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_comment.attributes.user_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28598,7 +28550,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_comment.attributes.created_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28617,7 +28569,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_comment.attributes.created_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28636,7 +28588,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_comment.attributes.updated_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28655,7 +28607,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_comment.attributes.updated_at.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28674,7 +28626,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("parent_id")}`, spec_comment.attributes.parent_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28693,7 +28645,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation15.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_commentPgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_commentPgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("parent_id")}`, spec_comment.attributes.parent_id.codec)}
 from ${resource_commentPgResource.from} ${tableAlias}
@@ -28712,7 +28664,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -28730,7 +28682,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`select count(*)
 from ${resource_downvotePgResource.from} ${tableAlias}
 where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
@@ -28748,7 +28700,7 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -28767,7 +28719,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_downvote.attributes.id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -28786,7 +28738,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -28805,7 +28757,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("post_id")}`, spec_downvote.attributes.post_id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -28824,7 +28776,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -28843,7 +28795,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("user_id")}`, spec_downvote.attributes.user_id.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -28862,7 +28814,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -28881,7 +28833,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_downvote.attributes.created_at.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -28900,7 +28852,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -28919,7 +28871,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const remoteAttribute = relation16.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
-      if (typeof resource_downvotePgResource.from === "function") throw new Error("Function source unsupported");
+      if (typeof resource_downvotePgResource.from === "function") throw Error("Function source unsupported");
       const fragment = sql`(${sql.indent`
 select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_downvote.attributes.updated_at.codec)}
 from ${resource_downvotePgResource.from} ${tableAlias}
@@ -28982,14 +28934,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"createProjectSocial"}, but that function did not return a step!
 ${String(oldPlan)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29005,14 +28957,14 @@ ${String(oldPlan)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"createOrganization"}, but that function did not return a step!
 ${String(oldPlan2)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper2(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29028,14 +28980,14 @@ ${String(oldPlan2)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"createComment"}, but that function did not return a step!
 ${String(oldPlan3)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper3(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29051,14 +29003,14 @@ ${String(oldPlan3)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"createMember"}, but that function did not return a step!
 ${String(oldPlan4)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper4(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29074,14 +29026,14 @@ ${String(oldPlan4)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"createPost"}, but that function did not return a step!
 ${String(oldPlan5)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper5(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29097,14 +29049,14 @@ ${String(oldPlan5)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"createProject"}, but that function did not return a step!
 ${String(oldPlan6)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29120,14 +29072,14 @@ ${String(oldPlan6)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"createPostStatus"}, but that function did not return a step!
 ${String(oldPlan7)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29157,14 +29109,14 @@ ${String(oldPlan7)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updateDownvote"}, but that function did not return a step!
 ${String(oldPlan8)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper8(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29180,14 +29132,14 @@ ${String(oldPlan8)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUpvote"}, but that function did not return a step!
 ${String(oldPlan9)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29219,14 +29171,14 @@ ${String(oldPlan9)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProjectSocial"}, but that function did not return a step!
 ${String(oldPlan10)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29242,14 +29194,14 @@ ${String(oldPlan10)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updateOrganization"}, but that function did not return a step!
 ${String(oldPlan11)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29265,14 +29217,14 @@ ${String(oldPlan11)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updateComment"}, but that function did not return a step!
 ${String(oldPlan12)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29288,14 +29240,14 @@ ${String(oldPlan12)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updateMember"}, but that function did not return a step!
 ${String(oldPlan13)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29311,14 +29263,14 @@ ${String(oldPlan13)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updatePost"}, but that function did not return a step!
 ${String(oldPlan14)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29334,14 +29286,14 @@ ${String(oldPlan14)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProject"}, but that function did not return a step!
 ${String(oldPlan15)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29357,14 +29309,14 @@ ${String(oldPlan15)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updatePostStatus"}, but that function did not return a step!
 ${String(oldPlan16)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29380,14 +29332,14 @@ ${String(oldPlan16)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUser"}, but that function did not return a step!
 ${String(oldPlan17)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29403,14 +29355,14 @@ ${String(oldPlan17)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteDownvote"}, but that function did not return a step!
 ${String(oldPlan18)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29426,14 +29378,14 @@ ${String(oldPlan18)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUpvote"}, but that function did not return a step!
 ${String(oldPlan19)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29465,14 +29417,14 @@ ${String(oldPlan19)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProjectSocial"}, but that function did not return a step!
 ${String(oldPlan20)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29488,14 +29440,14 @@ ${String(oldPlan20)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteOrganization"}, but that function did not return a step!
 ${String(oldPlan21)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29511,14 +29463,14 @@ ${String(oldPlan21)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteComment"}, but that function did not return a step!
 ${String(oldPlan22)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper22(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29534,14 +29486,14 @@ ${String(oldPlan22)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteMember"}, but that function did not return a step!
 ${String(oldPlan23)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29557,14 +29509,14 @@ ${String(oldPlan23)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deletePost"}, but that function did not return a step!
 ${String(oldPlan24)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29580,14 +29532,14 @@ ${String(oldPlan24)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
 ${String(oldPlan25)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29603,14 +29555,14 @@ ${String(oldPlan25)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deletePostStatus"}, but that function did not return a step!
 ${String(oldPlan26)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper26(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
@@ -29626,14 +29578,14 @@ ${String(oldPlan26)}`);
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUser"}, but that function did not return a step!
 ${String(oldPlan27)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
+              throw Error("Wrapped a plan function, but that function did not return a step!");
             }
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
           $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
       },
       args: {
