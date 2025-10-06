@@ -4,7 +4,7 @@ Backfeed is an open-source feedback reporting platform.
 
 ## Local Development
 
-First, create a Postgres database called `backfeed`. Then, `cp .env.local.template .env.local` and fill in the values.
+First, `cp .env.local.template .env.local` and fill in the values.
 
 ### Building and Running
 
@@ -12,6 +12,12 @@ Install dependencies:
 
 ```sh
 bun install
+```
+
+Setup the database (only required once, to create the database):
+
+```sh
+bun db:setup
 ```
 
 Run database migrations:
