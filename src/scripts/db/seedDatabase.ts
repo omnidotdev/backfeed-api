@@ -6,7 +6,7 @@ import { DATABASE_URL, isDevEnv } from "lib/config/env.config";
 import * as schema from "lib/drizzle/schema";
 
 /**
- * Seed a database entity with sample data.
+ * Seed database with sample data.
  */
 const seedDatabase = async () => {
   // ! NB: only run this script in development
