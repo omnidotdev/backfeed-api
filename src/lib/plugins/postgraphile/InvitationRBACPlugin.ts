@@ -1,12 +1,10 @@
 import { and, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import { context, sideEffect } from "postgraphile/grafast";
-import { makeWrapPlansPlugin } from "postgraphile/utils";
-
 import * as dbSchema from "lib/drizzle/schema";
+import { context, sideEffect } from "postgraphile/grafast";
+import { wrapPlans } from "postgraphile/utils";
 
-import type { GraphQLContext } from "lib/graphql";
-import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
+import type { PlanWrapperFn } from "postgraphile/utils";
 
 type MutationScope = "create" | "delete";
 
@@ -15,12 +13,11 @@ const validateInvitationPermissions = (
   scope: MutationScope,
 ) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName, scope) =>
-      // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
-      (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
+    (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
         const $invitationId = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context<GraphQLContext>().get("currentUser");
-        const $db = context<GraphQLContext>().get("db");
+        const $currentUser = context().get("observer");
+        const $db = context().get("db");
 
         sideEffect(
           [$invitationId, $currentUser, $db],
@@ -133,7 +130,7 @@ const validateInvitationPermissions = (
 /**
  * Plugin that handles API access for invitation-related mutations.
  */
-const InvitationRBACPlugin = makeWrapPlansPlugin({
+const InvitationRBACPlugin = wrapPlans({
   Mutation: {
     createInvitation: validateInvitationPermissions("invitation", "create"),
     deleteInvitation: validateInvitationPermissions("rowId", "delete"),

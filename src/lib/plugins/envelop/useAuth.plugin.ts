@@ -1,10 +1,9 @@
 import { useGenericAuth } from "@envelop/generic-auth";
-import type * as jose from "jose";
-
-import { AUTH_BASE_URL } from "lib/config/env.config";
+import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
 import { users } from "lib/drizzle/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
+import type * as jose from "jose";
 import type { InsertUser, SelectUser } from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql";
 
@@ -22,7 +21,11 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       .get("authorization")
       ?.split("Bearer ")[1];
 
-    if (!accessToken) throw new Error("Invalid or missing access token");
+    if (!accessToken) {
+      if (!protectRoutes) return null;
+
+      throw new Error("Invalid or missing access token");
+    }
 
     // TODO validate access token (introspection endpoint?) here?
 
@@ -33,7 +36,11 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       },
     });
 
-    if (!userInfo.ok) throw new Error("Invalid access token or request failed");
+    if (!userInfo.ok) {
+      if (!protectRoutes) return null;
+
+      throw new Error("Invalid access token or request failed");
+    }
 
     const idToken: jose.JWTPayload = await userInfo.json();
 
@@ -41,6 +48,12 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
     // const jwks = jose.createRemoteJWKSet(new URL(`${AUTH_BASE_URL}/jwks`));
     // const { payload } = await jose.jwtVerify(JSON.stringify(idToken), jwks);
     // if (!payload) throw new Error("Failed to verify token");
+
+    if (!idToken) {
+      if (!protectRoutes) return null;
+
+      throw new Error("Invalid access token or request failed");
+    }
 
     const insertedUser: InsertUser = {
       hidraId: idToken.sub!,
@@ -74,8 +87,9 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
 const useAuth = () =>
   useGenericAuth({
+    contextFieldName: "observer",
     resolveUserFn: resolveUser,
-    mode: "protect-all",
+    mode: protectRoutes ? "protect-all" : "resolve-only",
   });
 
 export default useAuth;
