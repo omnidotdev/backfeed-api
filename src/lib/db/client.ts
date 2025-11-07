@@ -1,6 +1,5 @@
-import { Client } from "pg";
-
 import { DATABASE_URL } from "lib/config/env.config";
+import { Client } from "pg";
 
 /**
  * Postgres database client.

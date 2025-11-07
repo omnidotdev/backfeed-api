@@ -1,26 +1,23 @@
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import { context, sideEffect } from "postgraphile/grafast";
-import { makeWrapPlansPlugin } from "postgraphile/utils";
-
 import * as dbSchema from "lib/drizzle/schema";
+import { context, sideEffect } from "postgraphile/grafast";
+import { wrapPlans } from "postgraphile/utils";
 
-import type { GraphQLContext } from "lib/graphql";
-import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
+import type { PlanWrapperFn } from "postgraphile/utils";
 
 const validatePermissions = (propName: string) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName) =>
-      // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
-      (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
+    (eq, dbSchema, context, sideEffect, propName): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
         const $downvoteId = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context<GraphQLContext>().get("currentUser");
-        const $db = context<GraphQLContext>().get("db");
+        const $observer = context().get("observer");
+        const $db = context().get("db");
 
         sideEffect(
-          [$downvoteId, $currentUser, $db],
-          async ([downvoteId, currentUser, db]) => {
-            if (!currentUser) {
+          [$downvoteId, $observer, $db],
+          async ([downvoteId, observer, db]) => {
+            if (!observer) {
               throw new Error("Unauthorized");
             }
 
@@ -32,7 +29,7 @@ const validatePermissions = (propName: string) =>
               .where(eq(downvotes.id, downvoteId as string));
 
             // Only allow the user who downvoted to update or delete their own downvote
-            if (currentUser.id !== downvote.userId) {
+            if (observer.id !== downvote.userId) {
               throw new Error("Insufficient permissions");
             }
           },
@@ -40,13 +37,13 @@ const validatePermissions = (propName: string) =>
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName],
+    [eq, dbSchema, context, sideEffect, propName],
   );
 
 /**
  * Plugin that handles API access for downvote table mutations.
  */
-const DownvoteRBACPlugin = makeWrapPlansPlugin({
+const DownvoteRBACPlugin = wrapPlans({
   Mutation: {
     updateDownvote: validatePermissions("rowId"),
     deleteDownvote: validatePermissions("rowId"),

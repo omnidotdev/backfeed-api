@@ -1,6 +1,5 @@
-import { Pool } from "pg";
-
 import { DATABASE_URL } from "lib/config/env.config";
+import { Pool } from "pg";
 
 /**
  * Postgres database pool.

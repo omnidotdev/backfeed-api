@@ -2,24 +2,22 @@ import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { EnvelopArmor } from "@escape.tech/graphql-armor";
 import { Checkout, CustomerPortal, Webhooks } from "@polar-sh/hono";
+import { eq } from "drizzle-orm";
+import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import { createYoga } from "graphql-yoga";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-
-import { eq } from "drizzle-orm";
-import { schema } from "generated/graphql/schema.executable";
 import appConfig from "lib/config/app.config";
 import {
   CHECKOUT_SUCCESS_URL,
+  enablePolarSandbox,
   HOST,
+  isDevEnv,
+  isProdEnv,
   POLAR_ACCESS_TOKEN,
   POLAR_WEBHOOK_SECRET,
   PORT,
-  SKIP_AUTH,
-  enablePolarSandbox,
-  isDevEnv,
-  isProdEnv,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
 import { users } from "lib/drizzle/schema";
@@ -66,13 +64,13 @@ const yoga = createYoga({
   graphiql: isDevEnv,
   landingPage: isDevEnv,
   plugins: [
-    SKIP_AUTH !== "true" && useAuth(),
+    ...armorPlugins,
+    useAuth(),
     useMoreDetailedErrors(),
     // NB: The below are used to handle caching and validation. Caching the parser results is critical for Grafast. See: https://grafast.org/grafast/servers#envelop
     useParserCache(),
     useValidationCache(),
     useGrafast(),
-    ...armorPlugins,
   ],
 });
 
