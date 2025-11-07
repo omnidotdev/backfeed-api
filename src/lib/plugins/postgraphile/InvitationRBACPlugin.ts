@@ -16,13 +16,13 @@ const validateInvitationPermissions = (
     (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $invitationId = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context().get("observer");
+        const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect(
-          [$invitationId, $currentUser, $db],
-          async ([invitationId, currentUser, db]) => {
-            if (!currentUser) {
+          [$invitationId, $observer, $db],
+          async ([invitationId, observer, db]) => {
+            if (!observer) {
               throw new Error("Unauthorized");
             }
 
@@ -45,7 +45,7 @@ const validateInvitationPermissions = (
               .from(members)
               .where(
                 and(
-                  eq(members.userId, currentUser.id),
+                  eq(members.userId, observer.id),
                   eq(members.organizationId, invitation.organizationId),
                 ),
               );
@@ -62,7 +62,7 @@ const validateInvitationPermissions = (
               }
 
               // Prevent inviting yourself
-              if (currentUser.email === invitation.email) {
+              if (observer.email === invitation.email) {
                 throw new Error("Self-invites are not allowed");
               }
 
@@ -110,7 +110,7 @@ const validateInvitationPermissions = (
 
             if (scope === "delete") {
               const isOwner = userRole?.role === "owner";
-              const isRecipient = currentUser.email === invitation.email;
+              const isRecipient = observer.email === invitation.email;
 
               // Only allow owner or recipient to delete
               if (!isOwner || !isRecipient) {

@@ -23,13 +23,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $comment = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context().get("observer");
+        const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect(
-          [$comment, $currentUser, $db],
-          async ([comment, currentUser, db]) => {
-            if (!currentUser) {
+          [$comment, $observer, $db],
+          async ([comment, observer, db]) => {
+            if (!observer) {
               throw new Error("Unauthorized");
             }
 
@@ -84,13 +84,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 .innerJoin(projects, eq(posts.projectId, projects.id))
                 .where(eq(comments.id, comment));
 
-              if (currentUser.id !== currentComment.userId) {
+              if (observer.id !== currentComment.userId) {
                 const [userRole] = await db
                   .select({ role: members.role })
                   .from(members)
                   .where(
                     and(
-                      eq(members.userId, currentUser.id),
+                      eq(members.userId, observer.id),
                       eq(members.organizationId, currentComment.organizationId),
                     ),
                   );

@@ -17,13 +17,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         // NB: this is a little hacky, but a "step" can not be undefined, and since `patch` only exists on `update` mutations, we fallback to `input`
         const $patch =
           scope === "update" ? fieldArgs.getRaw(["input", "patch"]) : $input;
-        const $currentUser = context().get("observer");
+        const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect(
-          [$input, $patch, $currentUser, $db],
-          async ([input, patch, currentUser, db]) => {
-            if (!currentUser) {
+          [$input, $patch, $observer, $db],
+          async ([input, patch, observer, db]) => {
+            if (!observer) {
               throw new Error("Unauthorized");
             }
 
@@ -41,12 +41,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
               if (organizationUsers.length) {
                 const userRole = organizationUsers.find(
-                  (user) => user.userId === currentUser.id,
+                  (user) => user.userId === observer.id,
                 )?.role;
 
                 // Allow users to join an organization as a member
                 if (!userRole) {
-                  if (userId !== currentUser.id || role !== "member") {
+                  if (userId !== observer.id || role !== "member") {
                     throw new Error("Insufficient permissions");
                   }
                 } else {
@@ -62,13 +62,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 .from(members)
                 .where(eq(members.id, input));
 
-              if (currentUser.id !== member.userId) {
+              if (observer.id !== member.userId) {
                 const [userRole] = await db
                   .select({ role: members.role })
                   .from(members)
                   .where(
                     and(
-                      eq(members.userId, currentUser.id),
+                      eq(members.userId, observer.id),
                       eq(members.organizationId, member.organizationId),
                     ),
                   );

@@ -14,14 +14,14 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $project = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context().get("observer");
+        const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect(
-          [$project, $currentUser, $db],
-          async ([project, currentUser, db]) => {
+          [$project, $observer, $db],
+          async ([project, observer, db]) => {
             // Do not allow users that are not subscribed to create, update, or delete projects
-            if (!currentUser?.tier) {
+            if (!observer?.tier) {
               throw new Error("Unauthorized");
             }
 
@@ -45,7 +45,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               .from(members)
               .where(
                 and(
-                  eq(members.userId, currentUser.id),
+                  eq(members.userId, observer.id),
                   eq(members.organizationId, organizationId),
                 ),
               );

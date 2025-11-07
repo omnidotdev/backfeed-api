@@ -13,28 +13,28 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $organization = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context().get("observer");
+        const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect(
-          [$organization, $currentUser, $db],
-          async ([organization, currentUser, db]) => {
+          [$organization, $observer, $db],
+          async ([organization, observer, db]) => {
             // Do not allow users that are not subscribed to create, update, or delete organizations
-            if (!currentUser?.tier) {
+            if (!observer?.tier) {
               throw new Error("Unauthorized");
             }
 
             const { members } = dbSchema;
 
             if (scope === "create") {
-              if (currentUser.tier === "basic" || currentUser.tier === "free") {
+              if (observer.tier === "basic" || observer.tier === "free") {
                 // TODO: discuss validation. This checks how many organizations the user is *an owner* of, not strictly *a member* of.
                 const userMemberships = await db
                   .select()
                   .from(members)
                   .where(
                     and(
-                      eq(members.userId, currentUser.id),
+                      eq(members.userId, observer.id),
                       eq(members.role, "owner"),
                     ),
                   );
@@ -50,7 +50,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 .from(members)
                 .where(
                   and(
-                    eq(members.userId, currentUser.id),
+                    eq(members.userId, observer.id),
                     eq(members.organizationId, organization as string),
                   ),
                 );

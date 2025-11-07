@@ -11,13 +11,13 @@ const validatePermissions = (propName: string) =>
     (eq, dbSchema, context, sideEffect, propName): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $downvoteId = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context().get("observer");
+        const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect(
-          [$downvoteId, $currentUser, $db],
-          async ([downvoteId, currentUser, db]) => {
-            if (!currentUser) {
+          [$downvoteId, $observer, $db],
+          async ([downvoteId, observer, db]) => {
+            if (!observer) {
               throw new Error("Unauthorized");
             }
 
@@ -29,7 +29,7 @@ const validatePermissions = (propName: string) =>
               .where(eq(downvotes.id, downvoteId as string));
 
             // Only allow the user who downvoted to update or delete their own downvote
-            if (currentUser.id !== downvote.userId) {
+            if (observer.id !== downvote.userId) {
               throw new Error("Insufficient permissions");
             }
           },

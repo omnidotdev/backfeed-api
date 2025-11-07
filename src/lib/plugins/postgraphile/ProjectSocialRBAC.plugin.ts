@@ -14,13 +14,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $projectSocial = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context().get("observer");
+        const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect(
-          [$projectSocial, $currentUser, $db],
-          async ([projectSocial, currentUser, db]) => {
-            if (!currentUser) {
+          [$projectSocial, $observer, $db],
+          async ([projectSocial, observer, db]) => {
+            if (!observer) {
               throw new Error("Unauthorized");
             }
 
@@ -51,7 +51,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               .from(members)
               .where(
                 and(
-                  eq(members.userId, currentUser.id),
+                  eq(members.userId, observer.id),
                   eq(members.organizationId, project.organizationId),
                 ),
               );
