@@ -14,6 +14,7 @@ export const {
   CHECKOUT_SUCCESS_URL,
   AUTH_BASE_URL,
   ENABLE_POLAR_SANDBOX,
+  GRAPHQL_COMPLEXITY_MAX_COST,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
