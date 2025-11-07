@@ -1,9 +1,9 @@
 import { PgAggregatesPreset } from "@graphile/pg-aggregates";
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
-import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 import { TagsFilePlugin } from "postgraphile/utils";
+import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
 
 import { DATABASE_URL, isProdEnv } from "./src/lib/config/env.config";
 import {

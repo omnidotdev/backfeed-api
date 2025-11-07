@@ -1,29 +1,35 @@
 import { and, count, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import { context, sideEffect } from "postgraphile/grafast";
-import { makeWrapPlansPlugin } from "postgraphile/utils";
-
 import * as dbSchema from "lib/drizzle/schema";
+import { context, sideEffect } from "postgraphile/grafast";
+import { wrapPlans } from "postgraphile/utils";
 
 import type { InsertComment } from "lib/drizzle/schema";
-import type { GraphQLContext } from "lib/graphql";
-import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
+import type { PlanWrapperFn } from "postgraphile/utils";
 
 type MutationScope = "create" | "update" | "delete";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, count, eq, dbSchema, context, sideEffect, propName, scope) =>
-      // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
-      (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
+    (
+      and,
+      count,
+      eq,
+      dbSchema,
+      context,
+      sideEffect,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
         const $comment = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context<GraphQLContext>().get("currentUser");
-        const $db = context<GraphQLContext>().get("db");
+        const $observer = context().get("observer");
+        const $db = context().get("db");
 
         sideEffect(
-          [$comment, $currentUser, $db],
-          async ([comment, currentUser, db]) => {
-            if (!currentUser) {
+          [$comment, $observer, $db],
+          async ([comment, observer, db]) => {
+            if (!observer) {
               throw new Error("Unauthorized");
             }
 
@@ -78,13 +84,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 .innerJoin(projects, eq(posts.projectId, projects.id))
                 .where(eq(comments.id, comment));
 
-              if (currentUser.id !== currentComment.userId) {
+              if (observer.id !== currentComment.userId) {
                 const [userRole] = await db
                   .select({ role: members.role })
                   .from(members)
                   .where(
                     and(
-                      eq(members.userId, currentUser.id),
+                      eq(members.userId, observer.id),
                       eq(members.organizationId, currentComment.organizationId),
                     ),
                   );
@@ -106,7 +112,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 /**
  * Plugin that handles API access for comment table mutations.
  */
-const CommentRBACPlugin = makeWrapPlansPlugin({
+const CommentRBACPlugin = wrapPlans({
   Mutation: {
     createComment: validatePermissions("comment", "create"),
     updateComment: validatePermissions("rowId", "update"),

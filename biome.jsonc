@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -7,26 +7,58 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["src/generated/**", "src/lib/drizzle/migrations/**"]
+    "includes": [
+      "**",
+      "!!src/generated",
+      "!!src/lib/drizzle/migrations",
+      "!!node_modules"
+    ]
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              { "type": false, "source": [":BUN:", ":NODE:"] },
+              ":BLANK_LINE:",
+              {
+                "type": false,
+                "source": [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"]
+              },
+              ":BLANK_LINE:",
+              // TODO look into this for TS `baseUrl` (https://github.com/omnidotdev/golden/pull/1#discussion_r2487186008)
+              { "type": false, "source": ["**"] },
+              ":BLANK_LINE:",
+              { "type": true }
+            ]
+          }
+        }
+      }
+    }
   },
   "formatter": {
-    "enabled": true,
     "indentStyle": "space",
     "lineWidth": 80,
     "indentWidth": 2
   },
-  "organizeImports": {
-    "enabled": true
-  },
   "linter": {
-    "enabled": true,
     "rules": {
-      "recommended": true,
       "correctness": {
-        "noUnusedImports": "error"
+        "noUnusedImports": { "fix": "safe", "level": "error" },
+        "noUnusedVariables": {
+          "options": {
+            "ignoreRestSiblings": true
+          }
+        }
       },
       "style": {
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "off",
+        "useImportType": {
+          "level": "error",
+          "options": { "style": "separatedType" }
+        }
       }
     }
   }

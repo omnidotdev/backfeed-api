@@ -8,7 +8,7 @@ export const {
   HOST = "0.0.0.0",
   DATABASE_NAME,
   DATABASE_URL,
-  SKIP_AUTH,
+  PROTECT_ROUTES,
   POLAR_ACCESS_TOKEN,
   POLAR_WEBHOOK_SECRET,
   CHECKOUT_SUCCESS_URL,
@@ -19,3 +19,4 @@ export const {
 export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
 export const enablePolarSandbox = ENABLE_POLAR_SANDBOX === "true";
+export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";

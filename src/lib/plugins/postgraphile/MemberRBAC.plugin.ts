@@ -1,32 +1,29 @@
 import { and, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import { context, sideEffect } from "postgraphile/grafast";
-import { makeWrapPlansPlugin } from "postgraphile/utils";
-
 import * as dbSchema from "lib/drizzle/schema";
+import { context, sideEffect } from "postgraphile/grafast";
+import { wrapPlans } from "postgraphile/utils";
 
 import type { InsertMember } from "lib/drizzle/schema";
-import type { GraphQLContext } from "lib/graphql";
-import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
+import type { PlanWrapperFn } from "postgraphile/utils";
 
 type MutationScope = "create" | "update" | "delete";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName, scope) =>
-      // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
-      (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
+    (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         // NB: this is a little hacky, but a "step" can not be undefined, and since `patch` only exists on `update` mutations, we fallback to `input`
         const $patch =
           scope === "update" ? fieldArgs.getRaw(["input", "patch"]) : $input;
-        const $currentUser = context<GraphQLContext>().get("currentUser");
-        const $db = context<GraphQLContext>().get("db");
+        const $observer = context().get("observer");
+        const $db = context().get("db");
 
         sideEffect(
-          [$input, $patch, $currentUser, $db],
-          async ([input, patch, currentUser, db]) => {
-            if (!currentUser) {
+          [$input, $patch, $observer, $db],
+          async ([input, patch, observer, db]) => {
+            if (!observer) {
               throw new Error("Unauthorized");
             }
 
@@ -44,12 +41,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
               if (organizationUsers.length) {
                 const userRole = organizationUsers.find(
-                  (user) => user.userId === currentUser.id,
+                  (user) => user.userId === observer.id,
                 )?.role;
 
                 // Allow users to join an organization as a member
                 if (!userRole) {
-                  if (userId !== currentUser.id || role !== "member") {
+                  if (userId !== observer.id || role !== "member") {
                     throw new Error("Insufficient permissions");
                   }
                 } else {
@@ -65,13 +62,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 .from(members)
                 .where(eq(members.id, input));
 
-              if (currentUser.id !== member.userId) {
+              if (observer.id !== member.userId) {
                 const [userRole] = await db
                   .select({ role: members.role })
                   .from(members)
                   .where(
                     and(
-                      eq(members.userId, currentUser.id),
+                      eq(members.userId, observer.id),
                       eq(members.organizationId, member.organizationId),
                     ),
                   );
@@ -109,7 +106,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 /**
  * Plugin that handles API access for member table mutations.
  */
-const membersRBACPlugin = makeWrapPlansPlugin({
+const membersRBACPlugin = wrapPlans({
   Mutation: {
     createMember: validatePermissions("member", "create"),
     updateMember: validatePermissions("rowId", "update"),

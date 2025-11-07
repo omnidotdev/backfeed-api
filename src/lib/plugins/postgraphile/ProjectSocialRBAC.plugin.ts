@@ -1,29 +1,26 @@
 import { and, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import { context, sideEffect } from "postgraphile/grafast";
-import { makeWrapPlansPlugin } from "postgraphile/utils";
-
 import * as dbSchema from "lib/drizzle/schema";
+import { context, sideEffect } from "postgraphile/grafast";
+import { wrapPlans } from "postgraphile/utils";
 
 import type { InsertProjectSocial } from "lib/drizzle/schema";
-import type { GraphQLContext } from "lib/graphql";
-import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
+import type { PlanWrapperFn } from "postgraphile/utils";
 
 type MutationScope = "create" | "update" | "delete";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName, scope) =>
-      // biome-ignore lint/suspicious/noExplicitAny: SmartFieldPlanResolver is not an exported type
-      (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
+    (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
         const $projectSocial = fieldArgs.getRaw(["input", propName]);
-        const $currentUser = context<GraphQLContext>().get("currentUser");
-        const $db = context<GraphQLContext>().get("db");
+        const $observer = context().get("observer");
+        const $db = context().get("db");
 
         sideEffect(
-          [$projectSocial, $currentUser, $db],
-          async ([projectSocial, currentUser, db]) => {
-            if (!currentUser) {
+          [$projectSocial, $observer, $db],
+          async ([projectSocial, observer, db]) => {
+            if (!observer) {
               throw new Error("Unauthorized");
             }
 
@@ -54,7 +51,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               .from(members)
               .where(
                 and(
-                  eq(members.userId, currentUser.id),
+                  eq(members.userId, observer.id),
                   eq(members.organizationId, project.organizationId),
                 ),
               );
@@ -74,7 +71,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 /**
  * Plugin that handles API access for project social table mutations.
  */
-const ProjectSocialRBACPlugin = makeWrapPlansPlugin({
+const ProjectSocialRBACPlugin = wrapPlans({
   Mutation: {
     createProjectSocial: validatePermissions("projectSocial", "create"),
     updateProjectSocial: validatePermissions("rowId", "update"),

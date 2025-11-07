@@ -1,12 +1,12 @@
 import { existsSync, mkdirSync } from "node:fs";
+
 import { and, count, eq } from "drizzle-orm";
 import { exportSchema } from "graphile-export";
 import { EXPORTABLE } from "graphile-export/helpers";
+import * as dbSchema from "lib/drizzle/schema";
 import { makeSchema } from "postgraphile";
 import { context, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
-
-import * as dbSchema from "lib/drizzle/schema";
 
 import preset from "../../graphile.config";
 

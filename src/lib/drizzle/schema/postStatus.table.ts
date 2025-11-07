@@ -8,7 +8,6 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-
 import { projects } from "./project.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
