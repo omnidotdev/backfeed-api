@@ -39,7 +39,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
     if (!userInfo.ok) {
       if (!protectRoutes) return null;
 
-      throw new Error("Invalid access token or request failed");
+      throw new Error("Invalid `userinfo` claims payload or request failed");
     }
 
     const idToken: jose.JWTPayload = await userInfo.json();
