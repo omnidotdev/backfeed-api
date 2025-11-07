@@ -25,7 +25,7 @@
     "@biomejs/biome": "^1.9.4",
     "@faker-js/faker": "^9.6.0",
     "@types/bun": "^1.2.8",
-    "@types/node": "^22.13.14",
+    "@types/node": "^24.0.0",
     "@types/pg": "^8.11.11",
     "drizzle-kit": "^0.31.0",
     "husky": "^9.1.7",
