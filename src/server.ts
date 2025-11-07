@@ -12,6 +12,7 @@ import appConfig from "lib/config/app.config";
 import {
   CHECKOUT_SUCCESS_URL,
   enablePolarSandbox,
+  GRAPHQL_COMPLEXITY_MAX_COST,
   HOST,
   isDevEnv,
   isProdEnv,
@@ -42,7 +43,7 @@ const armor = new EnvelopArmor({
   },
   costLimit: {
     enabled: true,
-    maxCost: 400,
+    maxCost: +GRAPHQL_COMPLEXITY_MAX_COST!,
     objectCost: 2,
     scalarCost: 1,
     depthCostFactor: 1.5,
