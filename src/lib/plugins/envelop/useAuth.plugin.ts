@@ -52,7 +52,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
     if (!idToken) {
       if (!protectRoutes) return null;
 
-      throw new Error("Invalid access token or request failed");
+      throw new Error("Invalid ID token or request failed");
     }
 
     const insertedUser: InsertUser = {
