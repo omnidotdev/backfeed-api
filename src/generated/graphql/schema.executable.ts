@@ -667,7 +667,9 @@ const spec_member = {
       notNull: true,
       hasDefault: false,
       extensions: {
-        tags: {},
+        tags: {
+          behavior: "+orderBy"
+        },
         canSelect: true,
         canInsert: true,
         canUpdate: true
@@ -8656,6 +8658,8 @@ enum MemberOrderBy {
   ORGANIZATION_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+  ROLE_ASC
+  ROLE_DESC
   ROW_ID_ASC
   ROW_ID_DESC
 }
@@ -26412,6 +26416,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           });
         });
         queryBuilder.setOrderIsUnique();
+      },
+      ROLE_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "role",
+          direction: "ASC"
+        });
+      },
+      ROLE_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "role",
+          direction: "DESC"
+        });
       },
       ROW_ID_ASC(queryBuilder) {
         queryBuilder.orderBy({
