@@ -120,6 +120,20 @@
       "when": 1747447043685,
       "tag": "0016_jazzy_red_hulk",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1762725702463,
+      "tag": "0017_first_sway",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1762726670798,
+      "tag": "0018_mature_hex",
+      "breakpoints": true
     }
   ]
 }

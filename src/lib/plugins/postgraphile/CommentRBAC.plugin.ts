@@ -1,112 +1,93 @@
-import { and, count, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import * as dbSchema from "lib/drizzle/schema";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import type { InsertComment } from "lib/drizzle/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
-
-type MutationScope = "create" | "update" | "delete";
+import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (
-      and,
-      count,
-      eq,
-      dbSchema,
-      context,
-      sideEffect,
-      propName,
-      scope,
-    ): PlanWrapperFn =>
+    (context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
-        const $comment = fieldArgs.getRaw(["input", propName]);
+        const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect(
-          [$comment, $observer, $db],
-          async ([comment, observer, db]) => {
-            if (!observer) {
+        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+          if (!observer) {
+            throw new Error("Unauthorized");
+          }
+
+          const MAX_FREE_TIER_COMMENTS = 100;
+
+          if (scope === "create") {
+            const postId = (input as InsertComment).postId;
+
+            const post = await db.query.posts.findFirst({
+              where: (table, { eq }) => eq(table.id, postId),
+              with: {
+                comments: {
+                  columns: {
+                    id: true,
+                  },
+                  limit: MAX_FREE_TIER_COMMENTS,
+                },
+                project: {
+                  with: {
+                    organization: true,
+                  },
+                },
+              },
+            });
+
+            if (!post) throw new Error("Post does not exist");
+
+            const organizationTier = post.project.organization.tier;
+
+            if (
+              organizationTier === "free" &&
+              post.comments.length >= MAX_FREE_TIER_COMMENTS
+            )
+              throw new Error("Maximum number of comments has been reached");
+          } else {
+            const comment = await db.query.comments.findFirst({
+              where: (table, { eq }) => eq(table.id, input),
+              with: {
+                post: {
+                  with: {
+                    project: {
+                      with: {
+                        organization: {
+                          with: {
+                            members: {
+                              where: (table, { eq }) =>
+                                eq(table.userId, observer.id),
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            });
+
+            if (!comment?.post.project.organization.members.length)
               throw new Error("Unauthorized");
-            }
 
-            const MAX_FREE_TIER_COMMENTS = 100;
-
-            const { users, members, projects, posts, comments } = dbSchema;
-
-            if (scope === "create") {
-              const postId = (comment as InsertComment).postId;
-
-              const [organizationOwner] = await db
-                .select({
-                  tier: users.tier,
-                })
-                .from(posts)
-                .innerJoin(projects, eq(posts.projectId, projects.id))
-                .leftJoin(
-                  members,
-                  and(
-                    eq(members.organizationId, projects.organizationId),
-                    eq(members.role, "owner"),
-                  ),
-                )
-                .leftJoin(users, eq(members.userId, users.id))
-                .where(eq(posts.id, postId));
-
+            if (comment.userId !== observer.id) {
               if (
-                !organizationOwner.tier ||
-                organizationOwner.tier === "free"
-              ) {
-                const [postComments] = await db
-                  .select({
-                    totalCount: count(),
-                  })
-                  .from(comments)
-                  .where(eq(comments.postId, postId));
-
-                if (postComments.totalCount >= MAX_FREE_TIER_COMMENTS) {
-                  throw new Error(
-                    "Maximum number of comments has been reached",
-                  );
-                }
-              }
-            } else {
-              const [currentComment] = await db
-                .select({
-                  organizationId: projects.organizationId,
-                  userId: comments.userId,
-                })
-                .from(comments)
-                .innerJoin(posts, eq(comments.postId, posts.id))
-                .innerJoin(projects, eq(posts.projectId, projects.id))
-                .where(eq(comments.id, comment));
-
-              if (observer.id !== currentComment.userId) {
-                const [userRole] = await db
-                  .select({ role: members.role })
-                  .from(members)
-                  .where(
-                    and(
-                      eq(members.userId, observer.id),
-                      eq(members.organizationId, currentComment.organizationId),
-                    ),
-                  );
-
-                // Allow admins and owners to edit and delete comments
-                if (!userRole || userRole.role === "member") {
-                  throw new Error("Insufficient permissions");
-                }
-              }
+                comment.post.project.organization.members[0].role === "member"
+              )
+                throw new Error("Unauthorized");
             }
-          },
-        );
+          }
+        });
 
         return plan();
       },
-    [and, count, eq, dbSchema, context, sideEffect, propName, scope],
+    [context, sideEffect, propName, scope],
   );
 
 /**

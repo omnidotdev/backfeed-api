@@ -38,6 +38,7 @@ const preset: GraphileConfig.Preset = {
     // See https://github.com/graphile-contrib/postgraphile-plugin-connection-filter?tab=readme-ov-file#handling-null-and-empty-objects
     connectionFilterAllowNullInput: true,
     connectionFilterAllowEmptyObjectInput: true,
+    connectionFilterComputedColumns: true,
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   plugins: [

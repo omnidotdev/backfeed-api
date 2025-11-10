@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { index, pgTable, unique, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
@@ -33,6 +34,20 @@ export const upvotes = pgTable(
     index().on(table.userId),
   ],
 );
+
+/**
+ * Upvote relations.
+ */
+export const upvoteRelations = relations(upvotes, ({ one }) => ({
+  post: one(posts, {
+    fields: [upvotes.postId],
+    references: [posts.id],
+  }),
+  user: one(users, {
+    fields: [upvotes.userId],
+    references: [users.id],
+  }),
+}));
 
 /**
  * Type helpers related to the upvote table.

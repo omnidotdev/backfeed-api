@@ -4,7 +4,7 @@ export default jsonPgSmartTags({
   version: 1,
   config: {
     class: {
-      user: {
+      organization: {
         attribute: {
           tier: {
             tags: {
