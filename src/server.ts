@@ -21,11 +21,11 @@ import {
   PORT,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
-import { users } from "lib/drizzle/schema";
+import { organizations } from "lib/drizzle/schema";
 import { createGraphQLContext } from "lib/graphql/context";
 import { useAuth } from "lib/plugins/envelop";
 
-import type { SelectUser } from "lib/drizzle/schema";
+import type { SelectOrganization } from "lib/drizzle/schema";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
@@ -90,8 +90,8 @@ app.get(
   "/checkout",
   Checkout({
     accessToken: POLAR_ACCESS_TOKEN,
-    successUrl: CHECKOUT_SUCCESS_URL,
     server: enablePolarSandbox ? "sandbox" : "production",
+    successUrl: CHECKOUT_SUCCESS_URL,
   }),
 );
 
@@ -99,13 +99,11 @@ app.get(
   "/portal",
   CustomerPortal({
     accessToken: POLAR_ACCESS_TOKEN,
+    server: enablePolarSandbox ? "sandbox" : "production",
     getCustomerId: async ({ req }) => {
       const { searchParams } = new URL(req.url);
-      const customerId = searchParams.get("customerId")!;
-
-      return customerId;
+      return searchParams.get("customerId")!;
     },
-    server: enablePolarSandbox ? "sandbox" : "production",
   }),
 );
 
@@ -114,59 +112,33 @@ app.post(
   Webhooks({
     webhookSecret: POLAR_WEBHOOK_SECRET!,
     onSubscriptionCreated: async (payload) => {
-      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
+      const organizationId = payload.data.metadata.organizationId;
 
-      if (!isBackfeedProduct) return;
+      if (!organizationId) return;
 
-      const tier = payload.data.product.metadata.title as SelectUser["tier"];
-      const hidraId = payload.data.customer.externalId;
-
-      if (hidraId && tier) {
-        await db.update(users).set({ tier }).where(eq(users.hidraId, hidraId));
-
-        console.log(
-          `${tier.toUpperCase()} Subscription Tier set for User: ${hidraId}`,
-        );
-      }
+      await db
+        .update(organizations)
+        .set({ subscriptionId: payload.data.id })
+        .where(eq(organizations.id, organizationId as string));
     },
     onSubscriptionUpdated: async (payload) => {
-      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
+      const organizationId = payload.data.metadata.organizationId;
 
-      if (!isBackfeedProduct) return;
+      if (!organizationId) return;
 
-      // NB: important to check that this is handled only on `active` status. When a sub is canceled this event is triggered, but we want to wait until it is revoked to handle the tier being set to NULL.
       if (payload.data.status === "active") {
-        const tier = payload.data.product.metadata.title as SelectUser["tier"];
-        const hidraId = payload.data.customer.externalId;
+        const tier = payload.data.product.metadata
+          .title as SelectOrganization["tier"];
 
-        if (hidraId && tier) {
-          await db
-            .update(users)
-            .set({ tier })
-            .where(eq(users.hidraId, hidraId));
-
-          console.log(
-            `${tier.toUpperCase()} Subscription Tier set for User: ${hidraId}`,
-          );
-        }
-      }
-    },
-    onSubscriptionRevoked: async (payload) => {
-      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
-
-      if (!isBackfeedProduct) return;
-
-      const hidraId = payload.data.customer.externalId;
-
-      if (hidraId) {
         await db
-          .update(users)
-          .set({ tier: null })
-          .where(eq(users.hidraId, hidraId));
-
-        console.log(`Subscription Tier revoked for User: ${hidraId}`);
+          .update(organizations)
+          .set({ tier })
+          .where(eq(organizations.id, organizationId as string));
       }
     },
+    // TODO: handle revoke subscriptions properly. Should set tier on organization back to `free`
+    // onSubscriptionRevoked: async (payload) => {
+    // },
   }),
 );
 
