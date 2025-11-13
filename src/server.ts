@@ -107,6 +107,9 @@ app.get(
       const { searchParams } = new URL(req.url);
       return searchParams.get("customerId")!;
     },
+    // NB: needs to be static similar to `successUrl` above. Although the `CHECKOUT_SUCCESS_URL` naming convention is misleading now, same process should occur. Redirect back to confirmation route, which redirects to the user's profile.
+    // If desired, we could rename this env + rename the route in `backfeed-app` for more clarity on the widened scope / use case for said route
+    returnUrl: CHECKOUT_SUCCESS_URL,
   }),
 );
 
