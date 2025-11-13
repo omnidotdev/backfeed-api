@@ -75,6 +75,43 @@ const yoga = createYoga({
   ],
 });
 
+const webhooks = new Hono();
+
+webhooks.post(
+  "/polar",
+  Webhooks({
+    webhookSecret: POLAR_WEBHOOK_SECRET!,
+    onSubscriptionCreated: async (payload) => {
+      const organizationId = payload.data.metadata.organizationId;
+
+      if (!organizationId) return;
+
+      await db
+        .update(organizations)
+        .set({ subscriptionId: payload.data.id })
+        .where(eq(organizations.id, organizationId as string));
+    },
+    onSubscriptionUpdated: async (payload) => {
+      const organizationId = payload.data.metadata.organizationId;
+
+      if (!organizationId) return;
+
+      if (payload.data.status === "active") {
+        const tier = payload.data.product.metadata
+          .title as SelectOrganization["tier"];
+
+        await db
+          .update(organizations)
+          .set({ tier })
+          .where(eq(organizations.id, organizationId as string));
+      }
+    },
+    // TODO: handle revoke subscriptions properly. Should set tier on organization back to `free`
+    // onSubscriptionRevoked: async (payload) => {
+    // },
+  }),
+);
+
 const app = new Hono();
 
 app.use(
@@ -113,40 +150,7 @@ app.get(
   }),
 );
 
-app.post(
-  "/polar/webhooks",
-  Webhooks({
-    webhookSecret: POLAR_WEBHOOK_SECRET!,
-    onSubscriptionCreated: async (payload) => {
-      const organizationId = payload.data.metadata.organizationId;
-
-      if (!organizationId) return;
-
-      await db
-        .update(organizations)
-        .set({ subscriptionId: payload.data.id })
-        .where(eq(organizations.id, organizationId as string));
-    },
-    onSubscriptionUpdated: async (payload) => {
-      const organizationId = payload.data.metadata.organizationId;
-
-      if (!organizationId) return;
-
-      if (payload.data.status === "active") {
-        const tier = payload.data.product.metadata
-          .title as SelectOrganization["tier"];
-
-        await db
-          .update(organizations)
-          .set({ tier })
-          .where(eq(organizations.id, organizationId as string));
-      }
-    },
-    // TODO: handle revoke subscriptions properly. Should set tier on organization back to `free`
-    // onSubscriptionRevoked: async (payload) => {
-    // },
-  }),
-);
+app.route("/webhooks", webhooks);
 
 // mount GraphQL API
 app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));
