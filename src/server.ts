@@ -24,6 +24,7 @@ import { dbPool as db } from "lib/db/db";
 import { organizations } from "lib/drizzle/schema";
 import { createGraphQLContext } from "lib/graphql/context";
 import { useAuth } from "lib/plugins/envelop";
+import polar from "lib/polar/client";
 
 import type { SelectOrganization } from "lib/drizzle/schema";
 
@@ -90,6 +91,28 @@ webhooks.post(
         .update(organizations)
         .set({ subscriptionId: payload.data.id })
         .where(eq(organizations.id, organizationId as string));
+
+      const activeSubscriptions = await polar.subscriptions.list({
+        externalCustomerId: payload.data.customer.externalId,
+        metadata: { organizationId },
+        active: true,
+      });
+
+      const filteredSubscriptions = activeSubscriptions.result.items.filter(
+        (sub) => sub.id !== payload.data.id,
+      );
+
+      // NB: There are edge cases where subscription flows will duplicate subs for the same organization due to limitations with polar's sdk.
+      // Example:
+      // User creates free tier sub and has no payment method on file.
+      // When the user goes to update this subscription they *must* go through the checkout flow, which does *not* update current subscription
+      // This results in both a `Free` tier sub and the paid tier sub being attached to the same organizationId.
+      // In these cases, we revoke each of the previous subscriptions right away
+      await Promise.all(
+        filteredSubscriptions.map(
+          async (sub) => await polar.subscriptions.revoke({ id: sub.id }),
+        ),
+      );
     },
     onSubscriptionUpdated: async (payload) => {
       const organizationId = payload.data.metadata.organizationId;
@@ -107,8 +130,25 @@ webhooks.post(
       }
     },
     // TODO: handle revoke subscriptions properly. Should set tier on organization back to `free`
-    // onSubscriptionRevoked: async (payload) => {
-    // },
+    onSubscriptionRevoked: async (payload) => {
+      const organizationId = payload.data.metadata.organizationId;
+
+      if (!organizationId) return;
+
+      const organization = await db.query.organizations.findFirst({
+        where: (table, { eq }) => eq(table.id, organizationId as string),
+      });
+
+      if (!organization) return;
+
+      // NB: with the `onSubscriptionCreated` handler, there are cases where we revoke stale subscriptions which will trigger this callback. We only want to update the database tier if the subscription revoked matches the subscriptionId in the database.
+      if (organization.subscriptionId === payload.data.id) {
+        await db
+          .update(organizations)
+          .set({ tier: "free" })
+          .where(eq(organizations.id, organizationId as string));
+      }
+    },
   }),
 );
 

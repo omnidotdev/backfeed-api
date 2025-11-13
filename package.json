@@ -40,6 +40,7 @@
     "@graphile/pg-aggregates": "^0.2.0-rc.1",
     "@graphile/simplify-inflection": "^8.0.0-rc.1",
     "@polar-sh/hono": "^0.4.0",
+    "@polar-sh/sdk": "^0.41.3",
     "dayjs": "^1.11.19",
     "drizzle-orm": "^0.44.7",
     "drizzle-seed": "^0.3.1",
