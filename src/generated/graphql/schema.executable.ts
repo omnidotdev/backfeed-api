@@ -1103,7 +1103,9 @@ const spec_organization = {
       notNull: false,
       hasDefault: false,
       extensions: {
-        tags: {},
+        tags: {
+          behavior: "-insert -update"
+        },
         canSelect: true,
         canInsert: true,
         canUpdate: true
@@ -11518,7 +11520,6 @@ input OrganizationInput {
   slug: String!
   createdAt: Datetime
   updatedAt: Datetime
-  subscriptionId: UUID
 }
 
 """The output of our update \`Downvote\` mutation."""
@@ -12070,7 +12071,6 @@ input OrganizationPatch {
   slug: String
   createdAt: Datetime
   updatedAt: Datetime
-  subscriptionId: UUID
 }
 
 """The output of our delete \`Downvote\` mutation."""
@@ -19560,12 +19560,6 @@ export const inputObjects = {
       }) {
         obj.set("slug", bakedInputRuntime(schema, field.type, val));
       },
-      subscriptionId(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("subscription_id", bakedInputRuntime(schema, field.type, val));
-      },
       updatedAt(obj, val, {
         field,
         schema
@@ -19600,12 +19594,6 @@ export const inputObjects = {
         schema
       }) {
         obj.set("slug", bakedInputRuntime(schema, field.type, val));
-      },
-      subscriptionId(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("subscription_id", bakedInputRuntime(schema, field.type, val));
       },
       updatedAt(obj, val, {
         field,

@@ -8,6 +8,13 @@ export default jsonPgSmartTags({
         attribute: {
           tier: {
             tags: {
+              // TODO: test if `-delete` would be best managed here as well for public facing API
+              behavior: "-insert -update",
+            },
+          },
+          subscription_id: {
+            tags: {
+              // TODO: test if `-delete` would be best managed here as well for public facing API
               behavior: "-insert -update",
             },
           },
