@@ -17,3 +17,9 @@ local_resource(
     serve_cmd="bun dev",
     labels=[project_name],
 )
+
+local_resource(
+    "studio-%s" % project_name,
+    serve_cmd="bun db:studio",
+    labels=[project_name],
+)
