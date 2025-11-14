@@ -1,6 +1,4 @@
-import { eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import * as dbSchema from "lib/drizzle/schema";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -8,36 +6,28 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 
 const validatePermissions = (propName: string) =>
   EXPORTABLE(
-    (eq, dbSchema, context, sideEffect, propName): PlanWrapperFn =>
+    (context, sideEffect, propName): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
-        const $upvoteId = fieldArgs.getRaw(["input", propName]);
+        const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect(
-          [$upvoteId, $observer, $db],
-          async ([upvoteId, observer, db]) => {
-            if (!observer) {
-              throw new Error("Unauthorized");
-            }
+        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+          if (!observer) throw new Error("Unauthorized");
 
-            const { upvotes } = dbSchema;
+          const upvote = await db.query.upvotes.findFirst({
+            where: (table, { eq }) => eq(table.id, input),
+          });
 
-            const [upvote] = await db
-              .select()
-              .from(upvotes)
-              .where(eq(upvotes.id, upvoteId as string));
-
-            // Only allow the user who upvoted to update or delete their own upvote
-            if (observer.id !== upvote.userId) {
-              throw new Error("Insufficient permissions");
-            }
-          },
-        );
+          // Only allow the user who upvoted to update or delete their own downvote
+          if (observer.id !== upvote?.userId) {
+            throw new Error("Unauthorized");
+          }
+        });
 
         return plan();
       },
-    [eq, dbSchema, context, sideEffect, propName],
+    [context, sideEffect, propName],
   );
 
 /**

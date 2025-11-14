@@ -21,11 +21,11 @@ import {
   PORT,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
-import { users } from "lib/drizzle/schema";
+import { organizations } from "lib/drizzle/schema";
 import { createGraphQLContext } from "lib/graphql/context";
 import { useAuth } from "lib/plugins/envelop";
 
-import type { SelectUser } from "lib/drizzle/schema";
+import type { SelectOrganization } from "lib/drizzle/schema";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
@@ -75,6 +75,59 @@ const yoga = createYoga({
   ],
 });
 
+const webhooks = new Hono();
+
+webhooks.post(
+  "/polar",
+  Webhooks({
+    webhookSecret: POLAR_WEBHOOK_SECRET!,
+    onSubscriptionCreated: async (payload) => {
+      const organizationId = payload.data.metadata.backfeedOrganizationId;
+
+      if (!organizationId) return;
+
+      await db
+        .update(organizations)
+        .set({ subscriptionId: payload.data.id })
+        .where(eq(organizations.id, organizationId as string));
+    },
+    onSubscriptionUpdated: async (payload) => {
+      const organizationId = payload.data.metadata.backfeedOrganizationId;
+
+      if (!organizationId) return;
+
+      if (payload.data.status === "active") {
+        const tier = payload.data.product.metadata
+          .title as SelectOrganization["tier"];
+
+        await db
+          .update(organizations)
+          .set({ tier })
+          .where(eq(organizations.id, organizationId as string));
+      }
+    },
+    onSubscriptionRevoked: async (payload) => {
+      const organizationId = payload.data.metadata.backfeedOrganizationId;
+
+      if (!organizationId) return;
+
+      const organization = await db.query.organizations.findFirst({
+        where: (table, { eq }) => eq(table.id, organizationId as string),
+      });
+
+      if (!organization) return;
+
+      // NB: with the `onSubscriptionCreated` handler, there are cases where we revoke stale subscriptions which will trigger this callback. We only want to update the database tier if the subscription revoked matches the subscriptionId in the database.
+      if (organization.subscriptionId === payload.data.id) {
+        await db
+          .update(organizations)
+          .set({ tier: "free" })
+          .where(eq(organizations.id, organizationId as string));
+      }
+    },
+  }),
+);
+
 const app = new Hono();
 
 app.use(
@@ -90,8 +143,11 @@ app.get(
   "/checkout",
   Checkout({
     accessToken: POLAR_ACCESS_TOKEN,
-    successUrl: CHECKOUT_SUCCESS_URL,
     server: enablePolarSandbox ? "sandbox" : "production",
+    successUrl: CHECKOUT_SUCCESS_URL,
+    // NB: needs to be static similar to `successUrl` above. Although the `CHECKOUT_SUCCESS_URL` naming convention is misleading now, same process should occur. Redirect back to confirmation route, which redirects to the user's profile.
+    // If desired, we could rename this env + rename the route in `backfeed-app` for more clarity on the widened scope / use case for said route
+    returnUrl: CHECKOUT_SUCCESS_URL,
   }),
 );
 
@@ -99,76 +155,18 @@ app.get(
   "/portal",
   CustomerPortal({
     accessToken: POLAR_ACCESS_TOKEN,
+    server: enablePolarSandbox ? "sandbox" : "production",
     getCustomerId: async ({ req }) => {
       const { searchParams } = new URL(req.url);
-      const customerId = searchParams.get("customerId")!;
-
-      return customerId;
+      return searchParams.get("customerId")!;
     },
-    server: enablePolarSandbox ? "sandbox" : "production",
+    // NB: needs to be static similar to `successUrl` above. Although the `CHECKOUT_SUCCESS_URL` naming convention is misleading now, same process should occur. Redirect back to confirmation route, which redirects to the user's profile.
+    // If desired, we could rename this env + rename the route in `backfeed-app` for more clarity on the widened scope / use case for said route
+    returnUrl: CHECKOUT_SUCCESS_URL,
   }),
 );
 
-app.post(
-  "/polar/webhooks",
-  Webhooks({
-    webhookSecret: POLAR_WEBHOOK_SECRET!,
-    onSubscriptionCreated: async (payload) => {
-      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
-
-      if (!isBackfeedProduct) return;
-
-      const tier = payload.data.product.metadata.title as SelectUser["tier"];
-      const hidraId = payload.data.customer.externalId;
-
-      if (hidraId && tier) {
-        await db.update(users).set({ tier }).where(eq(users.hidraId, hidraId));
-
-        console.log(
-          `${tier.toUpperCase()} Subscription Tier set for User: ${hidraId}`,
-        );
-      }
-    },
-    onSubscriptionUpdated: async (payload) => {
-      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
-
-      if (!isBackfeedProduct) return;
-
-      // NB: important to check that this is handled only on `active` status. When a sub is canceled this event is triggered, but we want to wait until it is revoked to handle the tier being set to NULL.
-      if (payload.data.status === "active") {
-        const tier = payload.data.product.metadata.title as SelectUser["tier"];
-        const hidraId = payload.data.customer.externalId;
-
-        if (hidraId && tier) {
-          await db
-            .update(users)
-            .set({ tier })
-            .where(eq(users.hidraId, hidraId));
-
-          console.log(
-            `${tier.toUpperCase()} Subscription Tier set for User: ${hidraId}`,
-          );
-        }
-      }
-    },
-    onSubscriptionRevoked: async (payload) => {
-      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
-
-      if (!isBackfeedProduct) return;
-
-      const hidraId = payload.data.customer.externalId;
-
-      if (hidraId) {
-        await db
-          .update(users)
-          .set({ tier: null })
-          .where(eq(users.hidraId, hidraId));
-
-        console.log(`Subscription Tier revoked for User: ${hidraId}`);
-      }
-    },
-  }),
-);
+app.route("/webhooks", webhooks);
 
 // mount GraphQL API
 app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));

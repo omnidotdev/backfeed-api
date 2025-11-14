@@ -1,10 +1,17 @@
-import { pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import { pgEnum, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-
-// import { generateSlug } from "./helpers";
+import { invitations } from "./invitation.table";
+import { members } from "./member.table";
+import { projects } from "./project.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
+/**
+ * Subscription tiers defined for organizations.
+ */
+export const tier = pgEnum("tier", ["free", "basic", "team", "enterprise"]);
 
 /**
  * Organization table. Organizations are used to group projects together and contain a set of users.
@@ -19,11 +26,22 @@ export const organizations = pgTable(
       // .generatedAlwaysAs((): SQL => generateSlug(organizations.name))
       .unique()
       .notNull(),
+    tier: tier().notNull().default("free"),
+    subscriptionId: uuid(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
   (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.slug)],
 );
+
+/**
+ * Organization relations.
+ */
+export const organizationRelations = relations(organizations, ({ many }) => ({
+  members: many(members),
+  projects: many(projects),
+  invitations: many(invitations),
+}));
 
 /**
  * Type helpers related to the organization table.

@@ -1,85 +1,52 @@
-import { and, count, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import * as dbSchema from "lib/drizzle/schema";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import type { InsertPost } from "lib/drizzle/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
-
-type MutationScope = "create" | "update" | "delete";
+import type { MutationScope } from "./types";
 
 // TODO: discuss handling field level permissions. For example, a user should not be able to update the `statusId` field for a post even if they are the author. That should be reserved for admins and owners.
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (
-      and,
-      count,
-      eq,
-      dbSchema,
-      context,
-      sideEffect,
-      propName,
-      scope,
-    ): PlanWrapperFn =>
+    (context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
-        const $post = fieldArgs.getRaw(["input", propName]);
+        const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect([$post, $observer, $db], async ([post, observer, db]) => {
+        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) {
             throw new Error("Unauthorized");
           }
 
           const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 15;
 
-          const { users, members, projects, posts } = dbSchema;
-
           if (scope === "create") {
-            const projectId = (post as InsertPost).projectId;
+            const post = input as InsertPost;
 
-            const [organizationOwner] = await db
-              .select({
-                tier: users.tier,
-              })
-              .from(projects)
-              .leftJoin(
-                members,
-                and(
-                  eq(members.organizationId, projects.organizationId),
-                  eq(members.role, "owner"),
-                ),
-              )
-              .leftJoin(users, eq(members.userId, users.id))
-              .where(eq(projects.id, projectId));
+            const project = await db.query.projects.findFirst({
+              where: (table, { eq }) => eq(table.id, post.projectId),
+              with: {
+                organization: true,
+                posts: {
+                  columns: {
+                    userId: true,
+                  },
+                },
+              },
+            });
 
-            if (!organizationOwner.tier || organizationOwner.tier === "free") {
-              const [projectFeedback] = await db
-                .select({
-                  totalUserCount: count(posts.userId),
-                })
-                .from(posts)
-                .where(eq(posts.projectId, projectId));
+            if (!project) throw new Error("Project not found");
 
-              if (
-                projectFeedback.totalUserCount >=
-                MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS
-              ) {
-                const [userFeedback] = await db
-                  .select({
-                    totalCount: count(),
-                  })
-                  .from(posts)
-                  .where(
-                    and(
-                      eq(posts.projectId, projectId),
-                      eq(posts.userId, observer.id),
-                    ),
-                  );
+            if (project.organization.tier === "free") {
+              const uniqueUsers = [
+                ...new Set(project.posts.map((p) => p.userId)),
+              ];
 
-                if (!userFeedback.totalCount) {
+              if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS) {
+                if (!uniqueUsers.includes(observer.id)) {
                   throw new Error(
                     "Maximum number of unique users providing feedback has been reached",
                   );
@@ -87,28 +54,30 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               }
             }
           } else {
-            const [currenPost] = await db
-              .select({
-                organizationId: projects.organizationId,
-                userId: posts.userId,
-              })
-              .from(posts)
-              .innerJoin(projects, eq(posts.projectId, projects.id))
-              .where(eq(posts.id, post));
+            const post = await db.query.posts.findFirst({
+              where: (table, { eq }) => eq(table.id, input),
+              with: {
+                project: {
+                  with: {
+                    organization: {
+                      with: {
+                        members: {
+                          where: (table, { eq }) =>
+                            eq(table.userId, observer.id),
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            });
 
-            if (observer.id !== currenPost.userId) {
-              const [userRole] = await db
-                .select({ role: members.role })
-                .from(members)
-                .where(
-                  and(
-                    eq(members.userId, observer.id),
-                    eq(members.organizationId, currenPost.organizationId),
-                  ),
-                );
-
+            if (observer.id !== post?.userId) {
               // Allow admins and owners to update and delete posts
-              if (!userRole || userRole.role === "member") {
+              if (
+                !post?.project.organization.members.length ||
+                post.project.organization.members[0].role === "member"
+              ) {
                 throw new Error("Insufficient permissions");
               }
             }
@@ -117,7 +86,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         return plan();
       },
-    [and, count, eq, dbSchema, context, sideEffect, propName, scope],
+    [context, sideEffect, propName, scope],
   );
 
 /**

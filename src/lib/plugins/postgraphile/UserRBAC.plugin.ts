@@ -3,29 +3,27 @@ import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import type { PlanWrapperFn } from "postgraphile/utils";
+import type { MutationScope } from "./types";
 
-const validatePermissions = (propName: string) =>
+const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName): PlanWrapperFn =>
+    (context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $userId = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
 
         sideEffect([$userId, $observer], async ([userId, observer]) => {
-          if (!observer) {
-            throw new Error("Unauthorized");
-          }
+          if (!observer) throw new Error("Unauthorized");
 
           // Disallow updating or deleting a user record that is not your own
-          // TODO: this is scoped to the `user` table, so it is beyond the scope of RBAC. Discuss how to handle API admin access
-          if (userId !== observer.id) {
+          if (scope !== "create" && userId !== observer.id) {
             throw new Error("Insufficient permissions");
           }
         });
 
         return plan();
       },
-    [context, sideEffect, propName],
+    [context, sideEffect, propName, scope],
   );
 
 /**
@@ -33,8 +31,9 @@ const validatePermissions = (propName: string) =>
  */
 const UserRBACPlugin = wrapPlans({
   Mutation: {
-    updateUser: validatePermissions("rowId"),
-    deleteUser: validatePermissions("rowId"),
+    createUser: validatePermissions("user", "create"),
+    updateUser: validatePermissions("rowId", "update"),
+    deleteUser: validatePermissions("rowId", "delete"),
   },
 });
 
