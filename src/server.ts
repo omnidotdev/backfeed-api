@@ -129,7 +129,6 @@ webhooks.post(
           .where(eq(organizations.id, organizationId as string));
       }
     },
-    // TODO: handle revoke subscriptions properly. Should set tier on organization back to `free`
     onSubscriptionRevoked: async (payload) => {
       const organizationId = payload.data.metadata.organizationId;
 

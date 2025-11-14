@@ -15,7 +15,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $db = context().get("db");
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          // Do not allow users that are not subscribed to create, update, or delete projects
           if (!observer) throw new Error("Unauthorized");
 
           let organizationId: string;
@@ -55,7 +54,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           }
 
           if (scope === "create") {
-            // NB: The following checks make sure that we do not allow users to create a new project if the maximum number of allow projects has been met
+            // NB: The following checks make sure that we do not allow users to create a new project if the maximum number of allowed projects has been met
             if (
               organization.tier === "free" &&
               !!organization.projects.length
