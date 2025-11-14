@@ -83,7 +83,7 @@ webhooks.post(
   Webhooks({
     webhookSecret: POLAR_WEBHOOK_SECRET!,
     onSubscriptionCreated: async (payload) => {
-      const organizationId = payload.data.metadata.organizationId;
+      const organizationId = payload.data.metadata.backfeedOrganizationId;
 
       if (!organizationId) return;
 
@@ -115,7 +115,7 @@ webhooks.post(
       );
     },
     onSubscriptionUpdated: async (payload) => {
-      const organizationId = payload.data.metadata.organizationId;
+      const organizationId = payload.data.metadata.backfeedOrganizationId;
 
       if (!organizationId) return;
 
@@ -130,7 +130,7 @@ webhooks.post(
       }
     },
     onSubscriptionRevoked: async (payload) => {
-      const organizationId = payload.data.metadata.organizationId;
+      const organizationId = payload.data.metadata.backfeedOrganizationId;
 
       if (!organizationId) return;
 
