@@ -94,7 +94,7 @@ webhooks.post(
 
       const activeSubscriptions = await polar.subscriptions.list({
         externalCustomerId: payload.data.customer.externalId,
-        metadata: { organizationId },
+        metadata: { backfeedOrganizationId: organizationId },
         active: true,
       });
 
