@@ -1,5 +1,5 @@
 import { useGenericAuth } from "@envelop/generic-auth";
-import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
+import { AUTH_BASE_URL } from "lib/config/env.config";
 import { users } from "lib/drizzle/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
@@ -21,11 +21,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       .get("authorization")
       ?.split("Bearer ")[1];
 
-    if (!accessToken) {
-      if (!protectRoutes) return null;
-
-      throw new Error("Invalid or missing access token");
-    }
+    if (!accessToken) return null;
 
     // TODO validate access token (introspection endpoint?) here?
 
@@ -36,11 +32,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       },
     });
 
-    if (!userInfo.ok) {
-      if (!protectRoutes) return null;
-
-      throw new Error("Invalid `userinfo` claims payload or request failed");
-    }
+    if (!userInfo.ok) return null;
 
     const idToken: jose.JWTPayload = await userInfo.json();
 
@@ -49,11 +41,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
     // const { payload } = await jose.jwtVerify(JSON.stringify(idToken), jwks);
     // if (!payload) throw new Error("Failed to verify token");
 
-    if (!idToken) {
-      if (!protectRoutes) return null;
-
-      throw new Error("Invalid ID token or request failed");
-    }
+    if (!idToken) return null;
 
     const insertedUser: InsertUser = {
       hidraId: idToken.sub!,
@@ -89,7 +77,7 @@ const useAuth = () =>
   useGenericAuth({
     contextFieldName: "observer",
     resolveUserFn: resolveUser,
-    mode: protectRoutes ? "protect-all" : "resolve-only",
+    mode: "resolve-only",
   });
 
 export default useAuth;
