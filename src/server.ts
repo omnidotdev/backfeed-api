@@ -87,66 +87,32 @@ webhooks.post("/stripe", async (context) => {
       STRIPE_WEBHOOK_SECRET as string,
     );
 
-    // TODO: add actions depending on event type
-    console.log(event.data);
+    switch (event.type) {
+      case "customer.subscription.created": {
+        // TODO: update organization with proper `tier` and `subscriptionId`
+        console.log(event.data);
+        break;
+      }
+      case "customer.subscription.updated": {
+        // TODO: if status is `active` update `tier`
+        // TODO: possibly check / handle status changes for `past_due`, `unpaid`, `canceled`
+        console.log(event.data);
+        break;
+      }
+      case "customer.subscription.deleted": {
+        // TODO:: set `tier` to free for organization
+        console.log(event.data);
+        break;
+      }
+      default:
+        break;
+    }
   } catch (err) {
     // TODO: make this more robust
     console.error(err);
     return context.text("Something went wrong", 400);
   }
 });
-
-// TODO: remove. Kept for reference.
-// webhooks.post(
-//   "/polar",
-//   Webhooks({
-//     webhookSecret: POLAR_WEBHOOK_SECRET!,
-//     onSubscriptionCreated: async (payload) => {
-//       const organizationId = payload.data.metadata.backfeedOrganizationId;
-//
-//       if (!organizationId) return;
-//
-//       await db
-//         .update(organizations)
-//         .set({ subscriptionId: payload.data.id })
-//         .where(eq(organizations.id, organizationId as string));
-//     },
-//     onSubscriptionUpdated: async (payload) => {
-//       const organizationId = payload.data.metadata.backfeedOrganizationId;
-//
-//       if (!organizationId) return;
-//
-//       if (payload.data.status === "active") {
-//         const tier = payload.data.product.metadata
-//           .title as SelectOrganization["tier"];
-//
-//         await db
-//           .update(organizations)
-//           .set({ tier })
-//           .where(eq(organizations.id, organizationId as string));
-//       }
-//     },
-//     onSubscriptionRevoked: async (payload) => {
-//       const organizationId = payload.data.metadata.backfeedOrganizationId;
-//
-//       if (!organizationId) return;
-//
-//       const organization = await db.query.organizations.findFirst({
-//         where: (table, { eq }) => eq(table.id, organizationId as string),
-//       });
-//
-//       if (!organization) return;
-//
-//       // NB: with the `onSubscriptionCreated` handler, there are cases where we revoke stale subscriptions which will trigger this callback. We only want to update the database tier if the subscription revoked matches the subscriptionId in the database.
-//       if (organization.subscriptionId === payload.data.id) {
-//         await db
-//           .update(organizations)
-//           .set({ tier: "free" })
-//           .where(eq(organizations.id, organizationId as string));
-//       }
-//     },
-//   }),
-// );
 
 const app = new Hono();
 
