@@ -1099,7 +1099,7 @@ const spec_organization = {
     },
     subscription_id: {
       description: undefined,
-      codec: TYPES.uuid,
+      codec: TYPES.text,
       notNull: false,
       hasDefault: false,
       extensions: {
@@ -6459,7 +6459,7 @@ type Organization {
   createdAt: Datetime
   updatedAt: Datetime
   tier: Tier!
-  subscriptionId: UUID
+  subscriptionId: String
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -7550,7 +7550,7 @@ input OrganizationFilter {
   tier: TierFilter
 
   """Filter by the object’s \`subscriptionId\` field."""
-  subscriptionId: UUIDFilter
+  subscriptionId: StringFilter
 
   """Filter by the object’s \`projects\` relation."""
   projects: OrganizationToManyProjectFilter
@@ -10687,7 +10687,7 @@ input OrganizationCondition {
   tier: Tier
 
   """Checks for equality with the object’s \`subscriptionId\` field."""
-  subscriptionId: UUID
+  subscriptionId: String
 }
 
 """Methods to use when ordering \`Organization\`."""
@@ -14869,7 +14869,7 @@ ${String(oldPlan13)}`);
       },
       subscriptionId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("subscription_id")}`,
-          sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+          sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       tier($pgSelectSingle) {
@@ -19198,7 +19198,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "subscription_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
         });
       },
@@ -26918,7 +26918,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       SUBSCRIPTION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("subscription_id")}`,
-          codec: TYPES.uuid
+          codec: TYPES.text
         });
       },
       TIER($pgSelect) {

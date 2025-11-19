@@ -107,6 +107,8 @@ webhooks.post("/stripe", async (context) => {
       default:
         break;
     }
+
+    return context.text("", 200);
   } catch (err) {
     // TODO: make this more robust
     console.error(err);
