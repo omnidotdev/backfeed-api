@@ -19,6 +19,7 @@ import {
 import { dbPool as db } from "lib/db/db";
 import { organizations } from "lib/drizzle/schema";
 import { createGraphQLContext } from "lib/graphql/context";
+import { PRODUCT_IDS } from "lib/payments/productIds";
 import { useAuth } from "lib/plugins/envelop";
 import Stripe from "stripe";
 
@@ -94,6 +95,11 @@ webhooks.post("/stripe", async (context) => {
 
     switch (event.type) {
       case "customer.subscription.created": {
+        const productId = event.data.object.items.data[0].price
+          .product as string;
+
+        if (!PRODUCT_IDS.includes(productId)) break;
+
         const organizationId = event.data.object.metadata.organizationId;
         const subscriptionId = event.data.object.id;
         const tier = event.data.object.items.data[0].price.metadata
@@ -107,6 +113,11 @@ webhooks.post("/stripe", async (context) => {
         break;
       }
       case "customer.subscription.updated": {
+        const productId = event.data.object.items.data[0].price
+          .product as string;
+
+        if (!PRODUCT_IDS.includes(productId)) break;
+
         // TODO: possibly check / handle status changes for `past_due`, `unpaid`, `canceled`
         if (
           event.data.object.status === "active" &&
@@ -129,6 +140,11 @@ webhooks.post("/stripe", async (context) => {
         break;
       }
       case "customer.subscription.deleted": {
+        const productId = event.data.object.items.data[0].price
+          .product as string;
+
+        if (!PRODUCT_IDS.includes(productId)) break;
+
         const organizationId = event.data.object.metadata.organizationId;
 
         await db
