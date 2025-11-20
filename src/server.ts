@@ -1,6 +1,7 @@
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { EnvelopArmor } from "@escape.tech/graphql-armor";
+import { eq } from "drizzle-orm";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import { createYoga } from "graphql-yoga";
@@ -15,9 +16,13 @@ import {
   isProdEnv,
   PORT,
 } from "lib/config/env.config";
+import { dbPool as db } from "lib/db/db";
+import { organizations } from "lib/drizzle/schema";
 import { createGraphQLContext } from "lib/graphql/context";
 import { useAuth } from "lib/plugins/envelop";
 import Stripe from "stripe";
+
+import type { SelectOrganization } from "lib/drizzle/schema";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
@@ -89,19 +94,49 @@ webhooks.post("/stripe", async (context) => {
 
     switch (event.type) {
       case "customer.subscription.created": {
-        // TODO: update organization with proper `tier` and `subscriptionId`
-        console.log(event.data);
+        const organizationId = event.data.object.metadata.organizationId;
+        const subscriptionId = event.data.object.id;
+        const tier = event.data.object.items.data[0].price.metadata
+          .tier as SelectOrganization["tier"];
+
+        await db
+          .update(organizations)
+          .set({ tier, subscriptionId })
+          .where(eq(organizations.id, organizationId));
+
         break;
       }
       case "customer.subscription.updated": {
-        // TODO: if status is `active` update `tier`
         // TODO: possibly check / handle status changes for `past_due`, `unpaid`, `canceled`
-        console.log(event.data);
+        if (
+          event.data.object.status === "active" &&
+          event.data.previous_attributes?.items
+        ) {
+          const organizationId = event.data.object.metadata.organizationId;
+          const previousTier =
+            event.data.previous_attributes.items.data[0].price.metadata.tier;
+          const currentTier =
+            event.data.object.items.data[0].price.metadata.tier;
+
+          if (previousTier !== currentTier) {
+            await db
+              .update(organizations)
+              .set({ tier: currentTier as SelectOrganization["tier"] })
+              .where(eq(organizations.id, organizationId));
+          }
+        }
+
         break;
       }
       case "customer.subscription.deleted": {
-        // TODO:: set `tier` to free for organization
-        console.log(event.data);
+        const organizationId = event.data.object.metadata.organizationId;
+
+        // TODO: possibly set `subscriptionId` to `null` as well, depending on if we get rid of `Free` tier for Stripe products.
+        await db
+          .update(organizations)
+          .set({ tier: "free" })
+          .where(eq(organizations.id, organizationId));
+
         break;
       }
       default:
