@@ -131,10 +131,9 @@ webhooks.post("/stripe", async (context) => {
       case "customer.subscription.deleted": {
         const organizationId = event.data.object.metadata.organizationId;
 
-        // TODO: possibly set `subscriptionId` to `null` as well, depending on if we get rid of `Free` tier for Stripe products.
         await db
           .update(organizations)
-          .set({ tier: "free" })
+          .set({ tier: "free", subscriptionId: null })
           .where(eq(organizations.id, organizationId));
 
         break;
