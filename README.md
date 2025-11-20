@@ -34,7 +34,27 @@ bun run dev
 
 ### Webhooks (Payments)
 
-Our Backfeed payment processor, [Polar](https://polar.sh), issues webhooks. Webhooks are used in this project for realtime updates. Webhooks can be managed at https://sandbox.polar.sh/dashboard/$ORGANIZATION_NAME/settings/webhooks.
+Our Backfeed payment processor, [Stripe](https://stripe.com/), issues webhooks. Webhooks are used in this project for realtime updates. Webhook events can be received locally through the following steps:
+
+First, install the [Stripe CLI](https://docs.stripe.com/stripe-cli/install), and
+follow the proper steps to login.
+
+> [!NOTE]
+> If you are completing the login through the browser, make sure you are currently signed in through the proper sandbox environment as each environment exposes it's own API key.
+
+Once logged in with the Stripe CLI, use the following command to forward
+snapshot events to your local listener:
+
+```sh
+stripe listen --forward-to localhost:{PORT}/webhooks/stripe
+```
+
+This will provide a webhook signing secret, which you will need to fill in the
+`STRIPE_WEBHOOK_SECRET` environment variable.
+
+From there, webhook events will be properly forwarded to the local listener. You
+can manage the events within the webhooks route under the `/stripe` endpoint
+found in `server.ts`
 
 ## License
 
