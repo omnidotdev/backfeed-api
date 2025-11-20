@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgEnum, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { invitations } from "./invitation.table";
@@ -27,7 +27,7 @@ export const organizations = pgTable(
       .unique()
       .notNull(),
     tier: tier().notNull().default("free"),
-    subscriptionId: uuid(),
+    subscriptionId: text(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },

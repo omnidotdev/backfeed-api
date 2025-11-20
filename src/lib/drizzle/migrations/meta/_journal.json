@@ -134,6 +134,13 @@
       "when": 1762726670798,
       "tag": "0018_mature_hex",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1763579221334,
+      "tag": "0019_quiet_mac_gargan",
+      "breakpoints": true
     }
   ]
 }
