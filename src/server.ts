@@ -118,7 +118,9 @@ webhooks.post("/stripe", async (context) => {
 
         if (!PRODUCT_IDS.includes(productId)) break;
 
-        // TODO: possibly check / handle status changes for `past_due`, `unpaid`, `canceled`
+        // TODO: discuss possibly handling status changes for `past_due`, `unpaid`, etc.
+        // Need to determine first what triggers `subscription.deleted` below (if it is beyond just a subscription being canceled).
+        // Then we need to determine how we should manage other status types. Is the plan to downgrade the organization to `free` tier ASAP? Or are there other means we wish to go about this?
         if (
           event.data.object.status === "active" &&
           event.data.previous_attributes?.items
@@ -160,7 +162,6 @@ webhooks.post("/stripe", async (context) => {
 
     return context.text("", 200);
   } catch (err) {
-    // TODO: make this more robust
     console.error(err);
     return context.text("Something went wrong", 400);
   }
