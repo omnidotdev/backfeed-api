@@ -94,15 +94,13 @@ webhooks.post("/stripe", async (context) => {
 
     switch (event.type) {
       case "customer.subscription.created": {
-        const productId = event.data.object.items.data[0].price
-          .product as string;
+        const price = event.data.object.items.data[0].price;
 
-        if (!STRIPE_PRODUCT_IDS.includes(productId)) break;
+        if (!STRIPE_PRODUCT_IDS.includes(price.product as string)) break;
 
         const organizationId = event.data.object.metadata.organizationId;
         const subscriptionId = event.data.object.id;
-        const tier = event.data.object.items.data[0].price.metadata
-          .tier as SelectOrganization["tier"];
+        const tier = price.metadata.tier as SelectOrganization["tier"];
 
         await db
           .update(organizations)
@@ -112,10 +110,9 @@ webhooks.post("/stripe", async (context) => {
         break;
       }
       case "customer.subscription.updated": {
-        const productId = event.data.object.items.data[0].price
-          .product as string;
+        const price = event.data.object.items.data[0].price;
 
-        if (!STRIPE_PRODUCT_IDS.includes(productId)) break;
+        if (!STRIPE_PRODUCT_IDS.includes(price.product as string)) break;
 
         // TODO: discuss possibly handling status changes for `past_due`, `unpaid`, etc.
         // Need to determine first what triggers `subscription.deleted` below (if it is beyond just a subscription being canceled).
@@ -127,8 +124,7 @@ webhooks.post("/stripe", async (context) => {
           const organizationId = event.data.object.metadata.organizationId;
           const previousTier =
             event.data.previous_attributes.items.data[0].price.metadata.tier;
-          const currentTier =
-            event.data.object.items.data[0].price.metadata.tier;
+          const currentTier = price.metadata.tier;
 
           if (previousTier !== currentTier) {
             await db
@@ -141,10 +137,9 @@ webhooks.post("/stripe", async (context) => {
         break;
       }
       case "customer.subscription.deleted": {
-        const productId = event.data.object.items.data[0].price
-          .product as string;
+        const price = event.data.object.items.data[0].price;
 
-        if (!STRIPE_PRODUCT_IDS.includes(productId)) break;
+        if (!STRIPE_PRODUCT_IDS.includes(price.product as string)) break;
 
         const organizationId = event.data.object.metadata.organizationId;
 
