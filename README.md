@@ -34,7 +34,7 @@ bun run dev
 
 ### Webhooks (Payments)
 
-Our Backfeed payment processor, [Stripe](https://stripe.com/), issues webhooks. Webhooks are used in this project for realtime updates. Webhook events can be received locally through the following steps:
+Our Backfeed payment processor, [Stripe](https://stripe.com), issues webhooks. Webhooks are used in this project for realtime updates. Webhook events can be received locally through the following steps:
 
 First, install the [Stripe CLI](https://docs.stripe.com/stripe-cli/install), and
 follow the proper steps to login.
