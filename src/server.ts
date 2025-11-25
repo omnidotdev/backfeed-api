@@ -1,29 +1,27 @@
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { EnvelopArmor } from "@escape.tech/graphql-armor";
-import { Checkout, CustomerPortal, Webhooks } from "@polar-sh/hono";
 import { eq } from "drizzle-orm";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import { createYoga } from "graphql-yoga";
 import { Hono } from "hono";
+import { env } from "hono/adapter";
 import { cors } from "hono/cors";
 import appConfig from "lib/config/app.config";
 import {
-  CHECKOUT_SUCCESS_URL,
-  enablePolarSandbox,
   GRAPHQL_COMPLEXITY_MAX_COST,
   HOST,
   isDevEnv,
   isProdEnv,
-  POLAR_ACCESS_TOKEN,
-  POLAR_WEBHOOK_SECRET,
   PORT,
+  STRIPE_PRODUCT_IDS,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
 import { organizations } from "lib/drizzle/schema";
 import { createGraphQLContext } from "lib/graphql/context";
 import { useAuth } from "lib/plugins/envelop";
+import Stripe from "stripe";
 
 import type { SelectOrganization } from "lib/drizzle/schema";
 
@@ -77,56 +75,96 @@ const yoga = createYoga({
 
 const webhooks = new Hono();
 
-webhooks.post(
-  "/polar",
-  Webhooks({
-    webhookSecret: POLAR_WEBHOOK_SECRET!,
-    onSubscriptionCreated: async (payload) => {
-      const organizationId = payload.data.metadata.backfeedOrganizationId;
+webhooks.post("/stripe", async (context) => {
+  const { STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET } = env(context);
 
-      if (!organizationId) return;
+  const stripe = new Stripe(STRIPE_API_KEY as string);
+  const signature = context.req.header("stripe-signature");
 
-      await db
-        .update(organizations)
-        .set({ subscriptionId: payload.data.id })
-        .where(eq(organizations.id, organizationId as string));
-    },
-    onSubscriptionUpdated: async (payload) => {
-      const organizationId = payload.data.metadata.backfeedOrganizationId;
+  if (!signature) return context.text("", 400);
 
-      if (!organizationId) return;
+  try {
+    const body = await context.req.text();
 
-      if (payload.data.status === "active") {
-        const tier = payload.data.product.metadata
-          .title as SelectOrganization["tier"];
+    const event = await stripe.webhooks.constructEventAsync(
+      body,
+      signature,
+      STRIPE_WEBHOOK_SECRET as string,
+    );
+
+    switch (event.type) {
+      case "customer.subscription.created": {
+        const productId = event.data.object.items.data[0].price
+          .product as string;
+
+        if (!STRIPE_PRODUCT_IDS.includes(productId)) break;
+
+        const organizationId = event.data.object.metadata.organizationId;
+        const subscriptionId = event.data.object.id;
+        const tier = event.data.object.items.data[0].price.metadata
+          .tier as SelectOrganization["tier"];
 
         await db
           .update(organizations)
-          .set({ tier })
-          .where(eq(organizations.id, organizationId as string));
+          .set({ tier, subscriptionId })
+          .where(eq(organizations.id, organizationId));
+
+        break;
       }
-    },
-    onSubscriptionRevoked: async (payload) => {
-      const organizationId = payload.data.metadata.backfeedOrganizationId;
+      case "customer.subscription.updated": {
+        const productId = event.data.object.items.data[0].price
+          .product as string;
 
-      if (!organizationId) return;
+        if (!STRIPE_PRODUCT_IDS.includes(productId)) break;
 
-      const organization = await db.query.organizations.findFirst({
-        where: (table, { eq }) => eq(table.id, organizationId as string),
-      });
+        // TODO: discuss possibly handling status changes for `past_due`, `unpaid`, etc.
+        // Need to determine first what triggers `subscription.deleted` below (if it is beyond just a subscription being canceled).
+        // Then we need to determine how we should manage other status types. Is the plan to downgrade the organization to `free` tier ASAP? Or are there other means we wish to go about this?
+        if (
+          event.data.object.status === "active" &&
+          event.data.previous_attributes?.items
+        ) {
+          const organizationId = event.data.object.metadata.organizationId;
+          const previousTier =
+            event.data.previous_attributes.items.data[0].price.metadata.tier;
+          const currentTier =
+            event.data.object.items.data[0].price.metadata.tier;
 
-      if (!organization) return;
+          if (previousTier !== currentTier) {
+            await db
+              .update(organizations)
+              .set({ tier: currentTier as SelectOrganization["tier"] })
+              .where(eq(organizations.id, organizationId));
+          }
+        }
 
-      // NB: with the `onSubscriptionCreated` handler, there are cases where we revoke stale subscriptions which will trigger this callback. We only want to update the database tier if the subscription revoked matches the subscriptionId in the database.
-      if (organization.subscriptionId === payload.data.id) {
+        break;
+      }
+      case "customer.subscription.deleted": {
+        const productId = event.data.object.items.data[0].price
+          .product as string;
+
+        if (!STRIPE_PRODUCT_IDS.includes(productId)) break;
+
+        const organizationId = event.data.object.metadata.organizationId;
+
         await db
           .update(organizations)
-          .set({ tier: "free" })
-          .where(eq(organizations.id, organizationId as string));
+          .set({ tier: "free", subscriptionId: null })
+          .where(eq(organizations.id, organizationId));
+
+        break;
       }
-    },
-  }),
-);
+      default:
+        break;
+    }
+
+    return context.text("", 200);
+  } catch (err) {
+    console.error(err);
+    return context.text("Something went wrong", 400);
+  }
+});
 
 const app = new Hono();
 
@@ -136,33 +174,6 @@ app.use(
     origin: isProdEnv ? appConfig.url : "https://localhost:3000",
     credentials: true,
     allowMethods: ["GET", "POST"],
-  }),
-);
-
-app.get(
-  "/checkout",
-  Checkout({
-    accessToken: POLAR_ACCESS_TOKEN,
-    server: enablePolarSandbox ? "sandbox" : "production",
-    successUrl: CHECKOUT_SUCCESS_URL,
-    // NB: needs to be static similar to `successUrl` above. Although the `CHECKOUT_SUCCESS_URL` naming convention is misleading now, same process should occur. Redirect back to confirmation route, which redirects to the user's profile.
-    // If desired, we could rename this env + rename the route in `backfeed-app` for more clarity on the widened scope / use case for said route
-    returnUrl: CHECKOUT_SUCCESS_URL,
-  }),
-);
-
-app.get(
-  "/portal",
-  CustomerPortal({
-    accessToken: POLAR_ACCESS_TOKEN,
-    server: enablePolarSandbox ? "sandbox" : "production",
-    getCustomerId: async ({ req }) => {
-      const { searchParams } = new URL(req.url);
-      return searchParams.get("customerId")!;
-    },
-    // NB: needs to be static similar to `successUrl` above. Although the `CHECKOUT_SUCCESS_URL` naming convention is misleading now, same process should occur. Redirect back to confirmation route, which redirects to the user's profile.
-    // If desired, we could rename this env + rename the route in `backfeed-app` for more clarity on the widened scope / use case for said route
-    returnUrl: CHECKOUT_SUCCESS_URL,
   }),
 );
 

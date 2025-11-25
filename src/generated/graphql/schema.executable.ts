@@ -147,7 +147,7 @@ const spec_downvote = {
   },
   description: undefined,
   extensions: {
-    oid: "316425",
+    oid: "319272",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -230,7 +230,7 @@ const spec_upvote = {
   },
   description: undefined,
   extensions: {
-    oid: "316338",
+    oid: "319185",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -313,7 +313,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "316525",
+    oid: "319371",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -396,7 +396,7 @@ const spec_projectSocial = {
   },
   description: undefined,
   extensions: {
-    oid: "316564",
+    oid: "319410",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -503,7 +503,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "316405",
+    oid: "319252",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -622,7 +622,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "316348",
+    oid: "319195",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -643,7 +643,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "316444",
+    oid: "319291",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -724,7 +724,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "316360",
+    oid: "319207",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -855,7 +855,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "316314",
+    oid: "319161",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -986,7 +986,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "316324",
+    oid: "319171",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1007,7 +1007,7 @@ const tierCodec = enumCodec({
   values: ["free", "basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "316548",
+    oid: "319394",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1099,7 +1099,7 @@ const spec_organization = {
     },
     subscription_id: {
       description: undefined,
-      codec: TYPES.uuid,
+      codec: TYPES.text,
       notNull: false,
       hasDefault: false,
       extensions: {
@@ -1114,7 +1114,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "316300",
+    oid: "319147",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1233,7 +1233,7 @@ const spec_postStatus = {
   },
   description: undefined,
   extensions: {
-    oid: "316499",
+    oid: "319345",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -6459,7 +6459,7 @@ type Organization {
   createdAt: Datetime
   updatedAt: Datetime
   tier: Tier!
-  subscriptionId: UUID
+  subscriptionId: String
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -7550,7 +7550,7 @@ input OrganizationFilter {
   tier: TierFilter
 
   """Filter by the object’s \`subscriptionId\` field."""
-  subscriptionId: UUIDFilter
+  subscriptionId: StringFilter
 
   """Filter by the object’s \`projects\` relation."""
   projects: OrganizationToManyProjectFilter
@@ -10687,7 +10687,7 @@ input OrganizationCondition {
   tier: Tier
 
   """Checks for equality with the object’s \`subscriptionId\` field."""
-  subscriptionId: UUID
+  subscriptionId: String
 }
 
 """Methods to use when ordering \`Organization\`."""
@@ -14869,7 +14869,7 @@ ${String(oldPlan13)}`);
       },
       subscriptionId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("subscription_id")}`,
-          sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+          sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       tier($pgSelectSingle) {
@@ -19198,7 +19198,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "subscription_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
         });
       },
@@ -26918,7 +26918,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       SUBSCRIPTION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("subscription_id")}`,
-          codec: TYPES.uuid
+          codec: TYPES.text
         });
       },
       TIER($pgSelect) {
