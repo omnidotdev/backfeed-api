@@ -81,12 +81,11 @@ webhooks.post("/stripe", async (context) => {
   const stripe = new Stripe(STRIPE_API_KEY as string);
   const signature = context.req.header("stripe-signature");
 
-  if (!signature) {
-    return context.text("", 400);
-  }
+  if (!signature) return context.text("", 400);
 
   try {
     const body = await context.req.text();
+
     const event = await stripe.webhooks.constructEventAsync(
       body,
       signature,
