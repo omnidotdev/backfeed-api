@@ -15,11 +15,11 @@ import {
   isDevEnv,
   isProdEnv,
   PORT,
+  STRIPE_PRODUCT_IDS,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
 import { organizations } from "lib/drizzle/schema";
 import { createGraphQLContext } from "lib/graphql/context";
-import { PRODUCT_IDS } from "lib/payments/productIds";
 import { useAuth } from "lib/plugins/envelop";
 import Stripe from "stripe";
 
@@ -98,7 +98,7 @@ webhooks.post("/stripe", async (context) => {
         const productId = event.data.object.items.data[0].price
           .product as string;
 
-        if (!PRODUCT_IDS.includes(productId)) break;
+        if (!STRIPE_PRODUCT_IDS.includes(productId)) break;
 
         const organizationId = event.data.object.metadata.organizationId;
         const subscriptionId = event.data.object.id;
@@ -116,7 +116,7 @@ webhooks.post("/stripe", async (context) => {
         const productId = event.data.object.items.data[0].price
           .product as string;
 
-        if (!PRODUCT_IDS.includes(productId)) break;
+        if (!STRIPE_PRODUCT_IDS.includes(productId)) break;
 
         // TODO: discuss possibly handling status changes for `past_due`, `unpaid`, etc.
         // Need to determine first what triggers `subscription.deleted` below (if it is beyond just a subscription being canceled).
@@ -145,7 +145,7 @@ webhooks.post("/stripe", async (context) => {
         const productId = event.data.object.items.data[0].price
           .product as string;
 
-        if (!PRODUCT_IDS.includes(productId)) break;
+        if (!STRIPE_PRODUCT_IDS.includes(productId)) break;
 
         const organizationId = event.data.object.metadata.organizationId;
 

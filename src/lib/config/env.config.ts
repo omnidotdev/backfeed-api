@@ -18,5 +18,5 @@ export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
 export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
 
-export const SANDBOX_PRODUCT_IDS =
-  process.env.SANDBOX_PRODUCT_IDS?.split(",") ?? [];
+export const STRIPE_PRODUCT_IDS =
+  process.env.STRIPE_PRODUCT_IDS?.split(",") ?? [];
