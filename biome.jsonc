@@ -1,5 +1,10 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.5/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
   "assist": {
     "actions": {
       "source": {
@@ -26,12 +31,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": [
-      "**",
-      "!!src/generated",
-      "!!src/lib/drizzle/migrations",
-      "!!node_modules"
-    ]
+    "includes": ["**", "!!src/generated", "!!src/lib/drizzle/migrations"]
   },
   "formatter": {
     "indentStyle": "space",
