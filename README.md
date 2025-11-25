@@ -47,12 +47,9 @@ Once logged in with the Stripe CLI, use the following command to forward snapsho
 stripe listen --forward-to localhost:$PORT/webhooks/stripe
 ```
 
-This will provide a webhook signing secret, which you will need to fill in the
-`STRIPE_WEBHOOK_SECRET` environment variable.
+This will provide a webhook signing secret, which you will need to fill in the `STRIPE_WEBHOOK_SECRET` environment variable.
 
-From there, webhook events will be forwarded to the local listener. You
-can manage the events within the webhooks route under the `/webhooks/stripe` endpoint
-found in [`src/server.ts`](src/server.ts).
+From there, webhook events will be forwarded to the local listener. You can manage the events within the webhooks route under the `/webhooks/stripe` endpoint found in [`src/server.ts`](src/server.ts).
 
 ## License
 
