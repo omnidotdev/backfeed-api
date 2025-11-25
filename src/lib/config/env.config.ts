@@ -18,5 +18,6 @@ export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
 export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
 
+// payment processing
 export const STRIPE_PRODUCT_IDS =
   process.env.STRIPE_PRODUCT_IDS?.split(",") ?? [];
