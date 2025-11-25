@@ -36,8 +36,7 @@ bun run dev
 
 Our Backfeed payment processor, [Stripe](https://stripe.com), issues webhooks. Webhooks are used in this project for realtime updates. Webhook events can be received locally through the following steps:
 
-First, install the [Stripe CLI](https://docs.stripe.com/stripe-cli/install), and
-follow the steps to login.
+First, follow the steps to download the Stripe CLI and authenticate at the [Stripe CLI installation guide](https://docs.stripe.com/stripe-cli/install).
 
 > [!NOTE]
 > If you are completing the login through the browser, make sure you are currently signed in through the proper environment as each environment exposes its own API key.
