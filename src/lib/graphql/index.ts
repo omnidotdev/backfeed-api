@@ -1,4 +1,4 @@
 export {
-  createGraphQLContext,
   type GraphQLContext,
+  createGraphQLContext,
 } from "./context";

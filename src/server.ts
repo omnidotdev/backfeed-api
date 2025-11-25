@@ -12,10 +12,10 @@ import appConfig from "lib/config/app.config";
 import {
   GRAPHQL_COMPLEXITY_MAX_COST,
   HOST,
-  isDevEnv,
-  isProdEnv,
   PORT,
   STRIPE_PRODUCT_IDS,
+  isDevEnv,
+  isProdEnv,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
 import { organizations } from "lib/drizzle/schema";

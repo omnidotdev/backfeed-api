@@ -1,9 +1,28 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.5/schema.json",
-  "vcs": {
-    "enabled": false,
-    "clientKind": "git",
-    "useIgnoreFile": false
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "identifierOrder": "lexicographic",
+            "groups": [
+              { "type": false, "source": [":BUN:", ":NODE:"] },
+              ":BLANK_LINE:",
+              {
+                "type": false,
+                "source": [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"]
+              },
+              ":BLANK_LINE:",
+              { "type": false, "source": ["**"] },
+              ":BLANK_LINE:",
+              { "type": true }
+            ]
+          }
+        }
+      }
+    }
   },
   "files": {
     "ignoreUnknown": false,
@@ -13,30 +32,6 @@
       "!!src/lib/drizzle/migrations",
       "!!node_modules"
     ]
-  },
-  "assist": {
-    "actions": {
-      "source": {
-        "organizeImports": {
-          "level": "on",
-          "options": {
-            "groups": [
-              { "type": false, "source": [":BUN:", ":NODE:"] },
-              ":BLANK_LINE:",
-              {
-                "type": false,
-                "source": [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"]
-              },
-              ":BLANK_LINE:",
-              // TODO look into this for TS `baseUrl` (https://github.com/omnidotdev/golden/pull/1#discussion_r2487186008)
-              { "type": false, "source": ["**"] },
-              ":BLANK_LINE:",
-              { "type": true }
-            ]
-          }
-        }
-      }
-    }
   },
   "formatter": {
     "indentStyle": "space",
