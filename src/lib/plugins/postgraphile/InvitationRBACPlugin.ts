@@ -117,7 +117,7 @@ const validateInvitationPermissions = (
 const InvitationRBACPlugin = wrapPlans({
   Mutation: {
     createInvitation: validateInvitationPermissions("invitation", "create"),
-    // TODO: validate updating invitations
+    // NB: updating invitations is disabled. See `SmartTags.plugin.ts`
     deleteInvitation: validateInvitationPermissions("rowId", "delete"),
   },
 });

@@ -4,6 +4,11 @@ export default jsonPgSmartTags({
   version: 1,
   config: {
     class: {
+      invitation: {
+        tags: {
+          behavior: "-update",
+        },
+      },
       organization: {
         attribute: {
           tier: {

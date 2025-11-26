@@ -321,7 +321,8 @@ const spec_invitation = {
       name: "invitation"
     },
     tags: {
-      __proto__: null
+      __proto__: null,
+      behavior: "-update"
     }
   },
   executor: executor
@@ -1378,7 +1379,9 @@ const registryConfig_pgResources_invitation_invitation = {
     isInsertable: true,
     isUpdatable: true,
     isDeletable: true,
-    tags: {},
+    tags: {
+      behavior: "-update"
+    },
     canSelect: true,
     canInsert: true,
     canUpdate: true,
@@ -10861,14 +10864,6 @@ type Mutation {
     input: UpdateUpvoteInput!
   ): UpdateUpvotePayload
 
-  """Updates a single \`Invitation\` using a unique key and a patch."""
-  updateInvitation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvitationInput!
-  ): UpdateInvitationPayload
-
   """Updates a single \`ProjectSocial\` using a unique key and a patch."""
   updateProjectSocial(
     """
@@ -11616,55 +11611,6 @@ input UpvotePatch {
   rowId: UUID
   postId: UUID
   userId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our update \`Invitation\` mutation."""
-type UpdateInvitationPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Invitation\` that was updated by this mutation."""
-  invitation: Invitation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Invitation\`. May be used by Relay 1."""
-  invitationEdge(
-    """The method to use when ordering \`Invitation\`."""
-    orderBy: [InvitationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvitationEdge
-}
-
-"""All input for the \`updateInvitation\` mutation."""
-input UpdateInvitationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Invitation\` being updated.
-  """
-  patch: InvitationPatch!
-}
-
-"""
-Represents an update to a \`Invitation\`. Fields that are set will be updated.
-"""
-input InvitationPatch {
-  rowId: UUID
-  organizationId: UUID
-  email: String
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -13593,22 +13539,6 @@ ${String(oldPlan9)}`);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      updateInvitation: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(resource_invitationPgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($update);
-          return object({
-            result: $update
-          });
         },
         args: {
           input(_, $object) {
@@ -15667,23 +15597,6 @@ ${String(oldPlan13)}`);
       },
       downvoteEdge($mutation, fieldArgs) {
         return pgMutationPayloadEdge(resource_downvotePgResource, downvoteUniques[0].attributes, $mutation, fieldArgs);
-      },
-      query() {
-        return rootValue();
-      }
-    }
-  },
-  UpdateInvitationPayload: {
-    assertStep: ObjectStep,
-    plans: {
-      clientMutationId($mutation) {
-        return $mutation.getStepForKey("result").getMeta("clientMutationId");
-      },
-      invitation($object) {
-        return $object.get("result");
-      },
-      invitationEdge($mutation, fieldArgs) {
-        return pgMutationPayloadEdge(resource_invitationPgResource, invitationUniques[0].attributes, $mutation, fieldArgs);
       },
       query() {
         return rootValue();
@@ -18702,41 +18615,6 @@ export const inputObjects = {
     }
   },
   InvitationInput: {
-    baked: createObjectAndApplyChildren,
-    plans: {
-      createdAt(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("created_at", bakedInputRuntime(schema, field.type, val));
-      },
-      email(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("email", bakedInputRuntime(schema, field.type, val));
-      },
-      organizationId(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
-      },
-      rowId(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("id", bakedInputRuntime(schema, field.type, val));
-      },
-      updatedAt(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
-      }
-    }
-  },
-  InvitationPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
       createdAt(obj, val, {
@@ -24216,16 +24094,6 @@ export const inputObjects = {
     }
   },
   UpdateDownvoteInput: {
-    plans: {
-      clientMutationId(qb, val) {
-        qb.setMeta("clientMutationId", val);
-      },
-      patch(qb, arg) {
-        if (arg != null) return qb.setBuilder();
-      }
-    }
-  },
-  UpdateInvitationInput: {
     plans: {
       clientMutationId(qb, val) {
         qb.setMeta("clientMutationId", val);
