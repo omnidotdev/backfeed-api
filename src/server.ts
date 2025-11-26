@@ -116,8 +116,7 @@ webhooks.post("/stripe", async (context) => {
         const price = event.data.object.items.data[0].price;
 
         // TODO: discuss possibly handling status changes for `past_due`, `unpaid`, etc.
-        // Need to determine first what triggers `subscription.deleted` below (if it is beyond just a subscription being canceled).
-        // Then we need to determine how we should manage other status types. Is the plan to downgrade the organization to `free` tier ASAP? Or are there other means we wish to go about this?
+        // Is the plan to downgrade the organization to `free` tier ASAP? Or are there other means we wish to go about this?
         if (
           event.data.object.status === "active" &&
           event.data.previous_attributes?.items
