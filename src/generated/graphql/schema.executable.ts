@@ -147,7 +147,7 @@ const spec_downvote = {
   },
   description: undefined,
   extensions: {
-    oid: "16998",
+    oid: "17343",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -230,7 +230,7 @@ const spec_upvote = {
   },
   description: undefined,
   extensions: {
-    oid: "16901",
+    oid: "17246",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -313,7 +313,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "17109",
+    oid: "17453",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -396,7 +396,7 @@ const spec_projectSocial = {
   },
   description: undefined,
   extensions: {
-    oid: "17154",
+    oid: "17498",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -503,7 +503,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "16975",
+    oid: "17320",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -622,7 +622,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "16914",
+    oid: "17259",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -643,7 +643,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "17022",
+    oid: "17367",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -724,7 +724,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "16927",
+    oid: "17272",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -855,7 +855,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "16872",
+    oid: "17217",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -986,7 +986,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "16885",
+    oid: "17230",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1007,7 +1007,7 @@ const tierCodec = enumCodec({
   values: ["free", "basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "17138",
+    oid: "17482",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1114,7 +1114,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "16857",
+    oid: "17202",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1233,7 +1233,7 @@ const spec_postStatus = {
   },
   description: undefined,
   extensions: {
-    oid: "17079",
+    oid: "17423",
     isTableLike: true,
     pg: {
       serviceName: "main",
