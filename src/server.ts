@@ -114,14 +114,12 @@ webhooks.post("/stripe", async (context) => {
         if (event.data.object.metadata.omniProduct !== productName) break;
 
         const price = event.data.object.items.data[0].price;
+        const organizationId = event.data.object.metadata.organizationId;
 
-        // TODO: discuss possibly handling status changes for `past_due`, `unpaid`, etc.
-        // Is the plan to downgrade the organization to `free` tier ASAP? Or are there other means we wish to go about this?
         if (
           event.data.object.status === "active" &&
           event.data.previous_attributes?.items
         ) {
-          const organizationId = event.data.object.metadata.organizationId;
           const previousTier =
             event.data.previous_attributes.items.data[0].price.metadata.tier;
           const currentTier = price.metadata.tier;
@@ -132,6 +130,14 @@ webhooks.post("/stripe", async (context) => {
               .set({ tier: currentTier as SelectOrganization["tier"] })
               .where(eq(organizations.id, organizationId));
           }
+        }
+
+        // NB: If the status of the subscription is deemed `unpaid`, we eagerly set the tier to `free` but keep the current subscription ID attached to the organization.
+        if (event.data.object.status === "unpaid") {
+          await db
+            .update(organizations)
+            .set({ tier: "free" })
+            .where(eq(organizations.id, organizationId));
         }
 
         break;
