@@ -13,7 +13,6 @@ import {
   GRAPHQL_COMPLEXITY_MAX_COST,
   HOST,
   PORT,
-  PRODUCT_NAME,
   isDevEnv,
   isProdEnv,
 } from "lib/config/env.config";
@@ -76,6 +75,8 @@ const yoga = createYoga({
 const webhooks = new Hono();
 
 webhooks.post("/stripe", async (context) => {
+  const productName = appConfig.name.toLowerCase();
+
   const { STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET } = env(context);
 
   const stripe = new Stripe(STRIPE_API_KEY as string);
@@ -96,7 +97,7 @@ webhooks.post("/stripe", async (context) => {
       case "customer.subscription.created": {
         const price = event.data.object.items.data[0].price;
 
-        if (event.data.object.metadata.omniProduct !== PRODUCT_NAME) break;
+        if (event.data.object.metadata.omniProduct !== productName) break;
 
         const organizationId = event.data.object.metadata.organizationId;
         const subscriptionId = event.data.object.id;
@@ -112,7 +113,7 @@ webhooks.post("/stripe", async (context) => {
       case "customer.subscription.updated": {
         const price = event.data.object.items.data[0].price;
 
-        if (event.data.object.metadata.omniProduct !== PRODUCT_NAME) break;
+        if (event.data.object.metadata.omniProduct !== productName) break;
 
         // TODO: discuss possibly handling status changes for `past_due`, `unpaid`, etc.
         // Need to determine first what triggers `subscription.deleted` below (if it is beyond just a subscription being canceled).
@@ -137,7 +138,7 @@ webhooks.post("/stripe", async (context) => {
         break;
       }
       case "customer.subscription.deleted": {
-        if (event.data.object.metadata.omniProduct !== PRODUCT_NAME) break;
+        if (event.data.object.metadata.omniProduct !== productName) break;
 
         const organizationId = event.data.object.metadata.organizationId;
 
