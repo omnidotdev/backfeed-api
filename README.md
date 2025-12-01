@@ -41,13 +41,7 @@ First, follow the steps to download the Stripe CLI and authenticate at the [Stri
 > [!NOTE]
 > If you are completing the login through the browser, make sure you are currently signed in through the proper environment as each environment exposes its own API key.
 
-Once logged in with the Stripe CLI, use the following command to forward snapshot events to your local listener, setting `PORT` as necessary:
-
-```sh
-stripe listen --forward-to localhost:$PORT/webhooks/stripe
-```
-
-This will provide a webhook signing secret, which you will need to fill in the `STRIPE_WEBHOOK_SECRET` environment variable.
+Once logged in with the Stripe CLI, `stripe listen` will work in the webhooks listener resource in Tilt, which creates a tunnel for local webhook testing. **The output of this provides a webhook signing secret, which you need to fill in the `STRIPE_WEBHOOK_SECRET` environment variable.**
 
 From there, webhook events will be forwarded to the local listener. You can manage the events within the webhooks route under the `/webhooks/stripe` endpoint found in [`src/server.ts`](src/server.ts).
 
