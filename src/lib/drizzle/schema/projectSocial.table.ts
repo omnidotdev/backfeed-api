@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
@@ -28,6 +29,16 @@ export const projectSocials = pgTable(
     index().on(table.url),
   ],
 );
+
+/**
+ * Project Social relations.
+ */
+export const projectSocialRelations = relations(projectSocials, ({ one }) => ({
+  project: one(projects, {
+    fields: [projectSocials.projectId],
+    references: [projects.id],
+  }),
+}));
 
 /**
  * Type helpers related to the project socials table.

@@ -1,31 +1,28 @@
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { EnvelopArmor } from "@escape.tech/graphql-armor";
-import { Checkout, CustomerPortal, Webhooks } from "@polar-sh/hono";
 import { eq } from "drizzle-orm";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import { createYoga } from "graphql-yoga";
 import { Hono } from "hono";
+import { env } from "hono/adapter";
 import { cors } from "hono/cors";
 import appConfig from "lib/config/app.config";
 import {
-  CHECKOUT_SUCCESS_URL,
-  enablePolarSandbox,
   GRAPHQL_COMPLEXITY_MAX_COST,
   HOST,
+  PORT,
   isDevEnv,
   isProdEnv,
-  POLAR_ACCESS_TOKEN,
-  POLAR_WEBHOOK_SECRET,
-  PORT,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
-import { users } from "lib/drizzle/schema";
+import { organizations } from "lib/drizzle/schema";
 import { createGraphQLContext } from "lib/graphql/context";
 import { useAuth } from "lib/plugins/envelop";
+import Stripe from "stripe";
 
-import type { SelectUser } from "lib/drizzle/schema";
+import type { SelectOrganization } from "lib/drizzle/schema";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
@@ -75,6 +72,99 @@ const yoga = createYoga({
   ],
 });
 
+const webhooks = new Hono();
+
+webhooks.post("/stripe", async (context) => {
+  const productName = appConfig.name.toLowerCase();
+
+  const { STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET } = env(context);
+
+  const stripe = new Stripe(STRIPE_API_KEY as string);
+  const signature = context.req.header("stripe-signature");
+
+  if (!signature) return context.text("", 400);
+
+  try {
+    const body = await context.req.text();
+
+    const event = await stripe.webhooks.constructEventAsync(
+      body,
+      signature,
+      STRIPE_WEBHOOK_SECRET as string,
+    );
+
+    switch (event.type) {
+      case "customer.subscription.created": {
+        if (event.data.object.metadata.omniProduct !== productName) break;
+
+        const price = event.data.object.items.data[0].price;
+
+        const organizationId = event.data.object.metadata.organizationId;
+        const subscriptionId = event.data.object.id;
+        const tier = price.metadata.tier as SelectOrganization["tier"];
+
+        await db
+          .update(organizations)
+          .set({ tier, subscriptionId })
+          .where(eq(organizations.id, organizationId));
+
+        break;
+      }
+      case "customer.subscription.updated": {
+        if (event.data.object.metadata.omniProduct !== productName) break;
+
+        const price = event.data.object.items.data[0].price;
+        const organizationId = event.data.object.metadata.organizationId;
+
+        if (
+          event.data.object.status === "active" &&
+          event.data.previous_attributes?.items
+        ) {
+          const previousTier =
+            event.data.previous_attributes.items.data[0].price.metadata.tier;
+          const currentTier = price.metadata.tier;
+
+          if (previousTier !== currentTier) {
+            await db
+              .update(organizations)
+              .set({ tier: currentTier as SelectOrganization["tier"] })
+              .where(eq(organizations.id, organizationId));
+          }
+        }
+
+        // NB: If the status of the subscription is deemed `unpaid`, we eagerly set the tier to `free` but keep the current subscription ID attached to the organization.
+        if (event.data.object.status === "unpaid") {
+          await db
+            .update(organizations)
+            .set({ tier: "free" })
+            .where(eq(organizations.id, organizationId));
+        }
+
+        break;
+      }
+      case "customer.subscription.deleted": {
+        if (event.data.object.metadata.omniProduct !== productName) break;
+
+        const organizationId = event.data.object.metadata.organizationId;
+
+        await db
+          .update(organizations)
+          .set({ tier: "free", subscriptionId: null })
+          .where(eq(organizations.id, organizationId));
+
+        break;
+      }
+      default:
+        break;
+    }
+
+    return context.text("", 200);
+  } catch (err) {
+    console.error(err);
+    return context.text("Something went wrong", 400);
+  }
+});
+
 const app = new Hono();
 
 app.use(
@@ -86,89 +176,7 @@ app.use(
   }),
 );
 
-app.get(
-  "/checkout",
-  Checkout({
-    accessToken: POLAR_ACCESS_TOKEN,
-    successUrl: CHECKOUT_SUCCESS_URL,
-    server: enablePolarSandbox ? "sandbox" : "production",
-  }),
-);
-
-app.get(
-  "/portal",
-  CustomerPortal({
-    accessToken: POLAR_ACCESS_TOKEN,
-    getCustomerId: async ({ req }) => {
-      const { searchParams } = new URL(req.url);
-      const customerId = searchParams.get("customerId")!;
-
-      return customerId;
-    },
-    server: enablePolarSandbox ? "sandbox" : "production",
-  }),
-);
-
-app.post(
-  "/polar/webhooks",
-  Webhooks({
-    webhookSecret: POLAR_WEBHOOK_SECRET!,
-    onSubscriptionCreated: async (payload) => {
-      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
-
-      if (!isBackfeedProduct) return;
-
-      const tier = payload.data.product.metadata.title as SelectUser["tier"];
-      const hidraId = payload.data.customer.externalId;
-
-      if (hidraId && tier) {
-        await db.update(users).set({ tier }).where(eq(users.hidraId, hidraId));
-
-        console.log(
-          `${tier.toUpperCase()} Subscription Tier set for User: ${hidraId}`,
-        );
-      }
-    },
-    onSubscriptionUpdated: async (payload) => {
-      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
-
-      if (!isBackfeedProduct) return;
-
-      // NB: important to check that this is handled only on `active` status. When a sub is canceled this event is triggered, but we want to wait until it is revoked to handle the tier being set to NULL.
-      if (payload.data.status === "active") {
-        const tier = payload.data.product.metadata.title as SelectUser["tier"];
-        const hidraId = payload.data.customer.externalId;
-
-        if (hidraId && tier) {
-          await db
-            .update(users)
-            .set({ tier })
-            .where(eq(users.hidraId, hidraId));
-
-          console.log(
-            `${tier.toUpperCase()} Subscription Tier set for User: ${hidraId}`,
-          );
-        }
-      }
-    },
-    onSubscriptionRevoked: async (payload) => {
-      const isBackfeedProduct = /backfeed/i.test(payload.data.product.name);
-
-      if (!isBackfeedProduct) return;
-
-      const hidraId = payload.data.customer.externalId;
-
-      if (hidraId) {
-        await db
-          .update(users)
-          .set({ tier: null })
-          .where(eq(users.hidraId, hidraId));
-
-        console.log(`Subscription Tier revoked for User: ${hidraId}`);
-      }
-    },
-  }),
-);
+app.route("/webhooks", webhooks);
 
 // mount GraphQL API
 app.use("/graphql", async (c) => yoga.handle(c.req.raw, {}));

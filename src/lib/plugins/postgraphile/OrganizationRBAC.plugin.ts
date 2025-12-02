@@ -1,79 +1,44 @@
-import { and, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import * as dbSchema from "lib/drizzle/schema";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import type { PlanWrapperFn } from "postgraphile/utils";
-
-type MutationScope = "create" | "update" | "delete";
+import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
+    (context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
-        const $organization = fieldArgs.getRaw(["input", propName]);
+        const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect(
-          [$organization, $observer, $db],
-          async ([organization, observer, db]) => {
-            // Do not allow users that are not subscribed to create, update, or delete organizations
-            if (!observer?.tier) {
-              throw new Error("Unauthorized");
-            }
+        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+          if (!observer) {
+            throw new Error("Unauthorized");
+          }
 
-            const { members } = dbSchema;
+          if (scope !== "create") {
+            const organization = await db.query.organizations.findFirst({
+              where: (table, { eq }) => eq(table.id, input),
+              with: {
+                members: {
+                  where: (table, { eq }) => eq(table.userId, observer.id),
+                },
+              },
+            });
 
-            if (scope === "create") {
-              if (observer.tier === "basic" || observer.tier === "free") {
-                // TODO: discuss validation. This checks how many organizations the user is *an owner* of, not strictly *a member* of.
-                const userMemberships = await db
-                  .select()
-                  .from(members)
-                  .where(
-                    and(
-                      eq(members.userId, observer.id),
-                      eq(members.role, "owner"),
-                    ),
-                  );
+            if (!organization?.members?.length) throw new Error("Unauthorized");
 
-                // If a user has a basic subscription, only allow for 1 organization to be created
-                if (userMemberships.length > 0) {
-                  throw new Error("Maximum number of organizations reached.");
-                }
-              }
-            } else {
-              const [userRole] = await db
-                .select({ role: members.role })
-                .from(members)
-                .where(
-                  and(
-                    eq(members.userId, observer.id),
-                    eq(members.organizationId, organization as string),
-                  ),
-                );
+            const role = organization.members[0].role;
 
-              // Only allow owners to delete organizations
-              if (scope === "delete" && userRole.role !== "owner") {
-                throw new Error("Insufficient permissions");
-              }
-
-              // Only allow admins and owners to update organizations
-              if (
-                scope === "update" &&
-                (!userRole || userRole.role === "member")
-              ) {
-                throw new Error("Insufficient permissions");
-              }
-            }
-          },
-        );
+            if (role !== "owner") throw new Error("Unauthorized");
+          }
+        });
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName, scope],
+    [context, sideEffect, propName, scope],
   );
 
 /**

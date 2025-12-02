@@ -1,17 +1,14 @@
-import { and, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import * as dbSchema from "lib/drizzle/schema";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import type { InsertMember } from "lib/drizzle/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
-
-type MutationScope = "create" | "update" | "delete";
+import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
+    (context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         // NB: this is a little hacky, but a "step" can not be undefined, and since `patch` only exists on `update` mutations, we fallback to `input`
@@ -27,26 +24,25 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               throw new Error("Unauthorized");
             }
 
-            const { members } = dbSchema;
-
             if (scope === "create") {
-              const role = (input as InsertMember).role;
-              const userId = (input as InsertMember).userId;
-              const organizationId = (input as InsertMember).organizationId;
+              const member = input as InsertMember;
 
-              const organizationUsers = await db
-                .select()
-                .from(members)
-                .where(eq(members.organizationId, organizationId));
+              const existingMembers = await db.query.members.findMany({
+                where: (table, { eq }) =>
+                  eq(table.organizationId, member.organizationId),
+              });
 
-              if (organizationUsers.length) {
-                const userRole = organizationUsers.find(
+              if (existingMembers.length) {
+                const userRole = existingMembers.find(
                   (user) => user.userId === observer.id,
                 )?.role;
 
                 // Allow users to join an organization as a member
                 if (!userRole) {
-                  if (userId !== observer.id || role !== "member") {
+                  if (
+                    member.userId !== observer.id ||
+                    member.role !== "member"
+                  ) {
                     throw new Error("Insufficient permissions");
                   }
                 } else {
@@ -57,24 +53,23 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 }
               }
             } else {
-              const [member] = await db
-                .select()
-                .from(members)
-                .where(eq(members.id, input));
+              const member = await db.query.members.findFirst({
+                where: (table, { eq }) => eq(table.id, input),
+                // A bit recursive, but allows us to get details about the member the mutation is for as well as the observer's membership
+                with: {
+                  organization: {
+                    with: {
+                      members: {
+                        where: (table, { eq }) => eq(table.userId, observer.id),
+                      },
+                    },
+                  },
+                },
+              });
 
-              if (observer.id !== member.userId) {
-                const [userRole] = await db
-                  .select({ role: members.role })
-                  .from(members)
-                  .where(
-                    and(
-                      eq(members.userId, observer.id),
-                      eq(members.organizationId, member.organizationId),
-                    ),
-                  );
-
+              if (observer.id !== member?.userId) {
                 // Only allow owners to update roles and/or kick other members from the organization
-                if (userRole.role !== "owner") {
+                if (member?.organization.members[0].role !== "owner") {
                   throw new Error("Insufficient permissions");
                 }
 
@@ -89,7 +84,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   throw new Error("Insufficient permissions");
 
                   // TODO: replace above with below when ownership transfers are allowed
-                  // if (scope === "update" && member.role !== "owner") {
+                  // if (scope === "update" && member?.organization.members[0].role !== "owner") {
                   //   throw new Error("Insufficient permissions");
                   // }
                 }
@@ -100,7 +95,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName, scope],
+    [context, sideEffect, propName, scope],
   );
 
 /**

@@ -1,0 +1,1 @@
+ALTER TABLE "organization" ALTER COLUMN "subscription_id" SET DATA TYPE text;

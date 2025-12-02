@@ -1,18 +1,9 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
   "vcs": {
-    "enabled": false,
+    "enabled": true,
     "clientKind": "git",
-    "useIgnoreFile": false
-  },
-  "files": {
-    "ignoreUnknown": false,
-    "includes": [
-      "**",
-      "!!src/generated",
-      "!!src/lib/drizzle/migrations",
-      "!!node_modules"
-    ]
+    "useIgnoreFile": true
   },
   "assist": {
     "actions": {
@@ -20,6 +11,7 @@
         "organizeImports": {
           "level": "on",
           "options": {
+            "identifierOrder": "lexicographic",
             "groups": [
               { "type": false, "source": [":BUN:", ":NODE:"] },
               ":BLANK_LINE:",
@@ -28,7 +20,6 @@
                 "source": [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"]
               },
               ":BLANK_LINE:",
-              // TODO look into this for TS `baseUrl` (https://github.com/omnidotdev/golden/pull/1#discussion_r2487186008)
               { "type": false, "source": ["**"] },
               ":BLANK_LINE:",
               { "type": true }
@@ -37,6 +28,10 @@
         }
       }
     }
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": ["**", "!!src/generated", "!!src/lib/drizzle/migrations"]
   },
   "formatter": {
     "indentStyle": "space",

@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   index,
   pgTable,
@@ -32,6 +33,16 @@ export const invitations = pgTable(
     index().on(table.organizationId),
   ],
 );
+
+/**
+ * Invitation relations.
+ */
+export const invitationRelations = relations(invitations, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [invitations.organizationId],
+    references: [organizations.id],
+  }),
+}));
 
 /**
  * Type helpers related to the invitation table.
