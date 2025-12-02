@@ -151,7 +151,12 @@ webhooks.post("/stripe", async (context) => {
           await db
             .update(organizations)
             .set({ tier: "free" })
-            .where(eq(organizations.id, organizationId));
+            .where(
+              and(
+                eq(organizations.id, organizationId),
+                eq(organizations.subscriptionId, subscriptionId),
+              ),
+            );
         }
 
         break;
@@ -160,11 +165,17 @@ webhooks.post("/stripe", async (context) => {
         if (event.data.object.metadata.omniProduct !== productName) break;
 
         const organizationId = event.data.object.metadata.organizationId;
+        const subscriptionId = event.data.object.id;
 
         await db
           .update(organizations)
           .set({ tier: "free", subscriptionId: null })
-          .where(eq(organizations.id, organizationId));
+          .where(
+            and(
+              eq(organizations.id, organizationId),
+              eq(organizations.subscriptionId, subscriptionId),
+            ),
+          );
 
         break;
       }
