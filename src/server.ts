@@ -1,7 +1,7 @@
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { EnvelopArmor } from "@escape.tech/graphql-armor";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import { createYoga } from "graphql-yoga";
@@ -103,10 +103,15 @@ webhooks.post("/stripe", async (context) => {
         const subscriptionId = event.data.object.id;
         const tier = price.metadata.tier as SelectOrganization["tier"];
 
-        await db
-          .update(organizations)
-          .set({ tier, subscriptionId })
-          .where(eq(organizations.id, organizationId));
+        const subscription =
+          await stripe.subscriptions.retrieve(subscriptionId);
+
+        if (subscription.status === "active") {
+          await db
+            .update(organizations)
+            .set({ tier, subscriptionId })
+            .where(eq(organizations.id, organizationId));
+        }
 
         break;
       }
@@ -115,9 +120,13 @@ webhooks.post("/stripe", async (context) => {
 
         const price = event.data.object.items.data[0].price;
         const organizationId = event.data.object.metadata.organizationId;
+        const subscriptionId = event.data.object.id;
+
+        const subscription =
+          await stripe.subscriptions.retrieve(subscriptionId);
 
         if (
-          event.data.object.status === "active" &&
+          subscription.status === "active" &&
           event.data.previous_attributes?.items
         ) {
           const previousTier =
@@ -128,7 +137,12 @@ webhooks.post("/stripe", async (context) => {
             await db
               .update(organizations)
               .set({ tier: currentTier as SelectOrganization["tier"] })
-              .where(eq(organizations.id, organizationId));
+              .where(
+                and(
+                  eq(organizations.id, organizationId),
+                  eq(organizations.subscriptionId, subscriptionId),
+                ),
+              );
           }
         }
 
