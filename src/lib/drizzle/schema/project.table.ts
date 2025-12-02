@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   index,
   pgTable,
@@ -10,6 +11,8 @@ import {
 import { defaultDate, defaultId } from "./constants";
 // import { generateSlug } from "./helpers";
 import { organizations } from "./organization.table";
+import { posts } from "./post.table";
+import { projectSocials } from "./projectSocial.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -42,6 +45,18 @@ export const projects = pgTable(
     index().on(table.organizationId),
   ],
 );
+
+/**
+ * Project relations.
+ */
+export const projectRelations = relations(projects, ({ many, one }) => ({
+  organization: one(organizations, {
+    fields: [projects.organizationId],
+    references: [organizations.id],
+  }),
+  posts: many(posts),
+  socials: many(projectSocials),
+}));
 
 /**
  * Type helpers related to the project table.

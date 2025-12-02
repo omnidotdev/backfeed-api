@@ -1,105 +1,79 @@
-import { and, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import * as dbSchema from "lib/drizzle/schema";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import type { InsertProject } from "lib/drizzle/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
-
-type MutationScope = "create" | "update" | "delete";
+import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
+    (context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
-        const $project = fieldArgs.getRaw(["input", propName]);
+        const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect(
-          [$project, $observer, $db],
-          async ([project, observer, db]) => {
-            // Do not allow users that are not subscribed to create, update, or delete projects
-            if (!observer?.tier) {
-              throw new Error("Unauthorized");
+        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+          if (!observer) throw new Error("Unauthorized");
+
+          let organizationId: string;
+
+          if (scope === "create") {
+            organizationId = (input as InsertProject).organizationId;
+          } else {
+            const project = await db.query.projects.findFirst({
+              where: (table, { eq }) => eq(table.id, input),
+            });
+
+            if (!project) throw new Error("Project not found");
+
+            organizationId = project.organizationId;
+          }
+
+          const organization = await db.query.organizations.findFirst({
+            where: (table, { eq }) => eq(table.id, organizationId),
+            with: {
+              members: {
+                where: (table, { eq }) => eq(table.userId, observer.id),
+              },
+              projects: {
+                limit: 3,
+              },
+            },
+          });
+
+          if (!organization) throw new Error("Organization not found");
+
+          // Only allow owners and admins to create, update, and delete projects
+          if (
+            !organization.members.length ||
+            organization.members[0].role === "member"
+          ) {
+            throw new Error("Insufficient permissions");
+          }
+
+          if (scope === "create") {
+            // NB: The following checks make sure that we do not allow users to create a new project if the maximum number of allowed projects has been met
+            if (
+              organization.tier === "free" &&
+              !!organization.projects.length
+            ) {
+              throw new Error("Maximum number of projects reached.");
             }
 
-            let organizationId: string;
-
-            const { organizations, users, members, projects } = dbSchema;
-
-            if (scope === "create") {
-              organizationId = (project as InsertProject).organizationId;
-            } else {
-              const [currentProject] = await db
-                .select()
-                .from(projects)
-                .where(eq(projects.id, project as string));
-
-              organizationId = currentProject.organizationId;
+            if (
+              organization.tier === "basic" &&
+              organization.projects.length >= 3
+            ) {
+              throw new Error("Maximum number of projects reached.");
             }
-
-            const [userRole] = await db
-              .select({ role: members.role })
-              .from(members)
-              .where(
-                and(
-                  eq(members.userId, observer.id),
-                  eq(members.organizationId, organizationId),
-                ),
-              );
-
-            // Only allow owners and admins to create, update, and delete projects
-            if (!userRole || userRole.role === "member") {
-              throw new Error("Insufficient permissions");
-            }
-
-            // If the current user has a basic subscription, validate the current number of projects for the organization
-            if (scope === "create") {
-              const [organizationOwner] = await db
-                .select({
-                  tier: users.tier,
-                })
-                .from(organizations)
-                .leftJoin(
-                  members,
-                  and(
-                    eq(members.organizationId, organizationId),
-                    eq(members.role, "owner"),
-                  ),
-                )
-                .leftJoin(users, eq(members.userId, users.id));
-
-              const currentProjects = await db
-                .select()
-                .from(projects)
-                .where(eq(projects.organizationId, organizationId));
-
-              // NB: The following checks make sure that we do not allow users to create a new project if the maximum number of allow projects has been met
-              if (!organizationOwner.tier)
-                throw new Error("Maximum number of projects reached.");
-
-              if (
-                organizationOwner.tier === "free" &&
-                !!currentProjects.length
-              ) {
-                throw new Error("Maximum number of projects reached.");
-              }
-
-              if (
-                organizationOwner.tier === "basic" &&
-                currentProjects.length >= 3
-              ) {
-                throw new Error("Maximum number of projects reached.");
-              }
-            }
-          },
-        );
+          }
+        });
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName, scope],
+    [context, sideEffect, propName, scope],
   );
 
 /**

@@ -1,71 +1,65 @@
-import { and, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export/helpers";
-import * as dbSchema from "lib/drizzle/schema";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import type { InsertPostStatus } from "lib/drizzle/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
-
-type MutationScope = "create" | "update" | "delete";
+import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (and, eq, dbSchema, context, sideEffect, propName, scope): PlanWrapperFn =>
+    (context, sideEffect, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
-        const $postStatus = fieldArgs.getRaw(["input", propName]);
+        const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect(
-          [$postStatus, $observer, $db],
-          async ([postStatus, observer, db]) => {
-            if (!observer) {
-              throw new Error("Unauthorized");
-            }
+        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+          if (!observer) {
+            throw new Error("Unauthorized");
+          }
 
-            const { members, projects, postStatuses } = dbSchema;
+          let projectId: string;
 
-            let projectId: string;
+          if (scope === "create") {
+            projectId = (input as InsertPostStatus).projectId;
+          } else {
+            const postStatus = await db.query.postStatuses.findFirst({
+              where: (table, { eq }) => eq(table.id, input),
+            });
 
-            if (scope === "create") {
-              projectId = (postStatus as InsertPostStatus).projectId;
-            } else {
-              const [currentPostStatus] = await db
-                .select()
-                .from(postStatuses)
-                .where(eq(postStatuses.id, postStatus as string));
+            if (!postStatus) throw new Error("Post status not found");
 
-              projectId = currentPostStatus.projectId;
-            }
+            projectId = postStatus.projectId;
+          }
 
-            const [project] = await db
-              .select({
-                organizationId: projects.organizationId,
-              })
-              .from(projects)
-              .where(eq(projects.id, projectId));
+          const project = await db.query.projects.findFirst({
+            where: (table, { eq }) => eq(table.id, projectId),
+            with: {
+              organization: {
+                with: {
+                  members: {
+                    where: (table, { eq }) => eq(table.userId, observer.id),
+                  },
+                },
+              },
+            },
+          });
 
-            const [userRole] = await db
-              .select({ role: members.role })
-              .from(members)
-              .where(
-                and(
-                  eq(members.userId, observer.id),
-                  eq(members.organizationId, project.organizationId),
-                ),
-              );
+          if (!project) throw new Error("Project not found");
 
-            // Allow admins and owners to create, update and delete post statuses
-            if (!userRole || userRole.role === "member") {
-              throw new Error("Insufficient permissions");
-            }
-          },
-        );
+          // Allow admins and owners to create, update and delete post statuses
+          if (
+            !project.organization.members.length ||
+            project.organization.members[0].role === "member"
+          ) {
+            throw new Error("Insufficient permissions");
+          }
+        });
 
         return plan();
       },
-    [and, eq, dbSchema, context, sideEffect, propName, scope],
+    [context, sideEffect, propName, scope],
   );
 
 /**

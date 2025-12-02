@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   index,
   pgEnum,
@@ -45,6 +46,20 @@ export const members = pgTable(
     index().on(table.organizationId),
   ],
 );
+
+/**
+ * Member relations.
+ */
+export const memberRelations = relations(members, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [members.organizationId],
+    references: [organizations.id],
+  }),
+  user: one(users, {
+    fields: [members.userId],
+    references: [users.id],
+  }),
+}));
 
 /**
  * Type helpers related to the members table.

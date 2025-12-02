@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -38,6 +39,17 @@ export const postStatuses = pgTable(
     index().on(table.projectId),
   ],
 );
+
+/**
+ * Post Status relations.
+ */
+export const postStatusRelations = relations(postStatuses, ({ one }) => ({
+  project: one(projects, {
+    fields: [postStatuses.projectId],
+    references: [projects.id],
+  }),
+  // TODO: add relation for post as well?
+}));
 
 /**
  * Type helpers related to the post status table.
