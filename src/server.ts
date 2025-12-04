@@ -97,19 +97,18 @@ webhooks.post("/stripe", async (context) => {
       case "customer.subscription.created": {
         if (event.data.object.metadata.omniProduct !== productName) break;
 
-        const price = event.data.object.items.data[0].price;
+        const subscription = await stripe.subscriptions.retrieve(
+          event.data.object.id,
+        );
 
-        const organizationId = event.data.object.metadata.organizationId;
-        const subscriptionId = event.data.object.id;
+        const price = subscription.items.data[0].price;
+        const organizationId = subscription.metadata.organizationId;
         const tier = price.metadata.tier as SelectOrganization["tier"];
-
-        const subscription =
-          await stripe.subscriptions.retrieve(subscriptionId);
 
         if (subscription.status === "active") {
           await db
             .update(organizations)
-            .set({ tier, subscriptionId })
+            .set({ tier, subscriptionId: subscription.id })
             .where(eq(organizations.id, organizationId));
         }
 
@@ -118,43 +117,35 @@ webhooks.post("/stripe", async (context) => {
       case "customer.subscription.updated": {
         if (event.data.object.metadata.omniProduct !== productName) break;
 
-        const price = event.data.object.items.data[0].price;
-        const organizationId = event.data.object.metadata.organizationId;
-        const subscriptionId = event.data.object.id;
+        const subscription = await stripe.subscriptions.retrieve(
+          event.data.object.id,
+        );
 
-        const subscription =
-          await stripe.subscriptions.retrieve(subscriptionId);
+        const price = subscription.items.data[0].price;
+        const organizationId = subscription.metadata.organizationId;
+        const tier = price.metadata.tier as SelectOrganization["tier"];
 
-        if (
-          subscription.status === "active" &&
-          event.data.previous_attributes?.items
-        ) {
-          const previousTier =
-            event.data.previous_attributes.items.data[0].price.metadata.tier;
-          const currentTier = price.metadata.tier;
-
-          if (previousTier !== currentTier) {
-            await db
-              .update(organizations)
-              .set({ tier: currentTier as SelectOrganization["tier"] })
-              .where(
-                and(
-                  eq(organizations.id, organizationId),
-                  eq(organizations.subscriptionId, subscriptionId),
-                ),
-              );
-          }
+        if (subscription.status === "active") {
+          await db
+            .update(organizations)
+            .set({ tier })
+            .where(
+              and(
+                eq(organizations.id, organizationId),
+                eq(organizations.subscriptionId, subscription.id),
+              ),
+            );
         }
 
         // NB: If the status of the subscription is deemed `unpaid`, we eagerly set the tier to `free` but keep the current subscription ID attached to the organization.
-        if (event.data.object.status === "unpaid") {
+        if (subscription.status === "unpaid") {
           await db
             .update(organizations)
             .set({ tier: "free" })
             .where(
               and(
                 eq(organizations.id, organizationId),
-                eq(organizations.subscriptionId, subscriptionId),
+                eq(organizations.subscriptionId, subscription.id),
               ),
             );
         }
@@ -164,18 +155,23 @@ webhooks.post("/stripe", async (context) => {
       case "customer.subscription.deleted": {
         if (event.data.object.metadata.omniProduct !== productName) break;
 
-        const organizationId = event.data.object.metadata.organizationId;
-        const subscriptionId = event.data.object.id;
+        const subscription = await stripe.subscriptions.retrieve(
+          event.data.object.id,
+        );
 
-        await db
-          .update(organizations)
-          .set({ tier: "free", subscriptionId: null })
-          .where(
-            and(
-              eq(organizations.id, organizationId),
-              eq(organizations.subscriptionId, subscriptionId),
-            ),
-          );
+        const organizationId = event.data.object.metadata.organizationId;
+
+        if (subscription.status === "canceled") {
+          await db
+            .update(organizations)
+            .set({ tier: "free", subscriptionId: null })
+            .where(
+              and(
+                eq(organizations.id, organizationId),
+                eq(organizations.subscriptionId, subscription.id),
+              ),
+            );
+        }
 
         break;
       }
@@ -183,10 +179,10 @@ webhooks.post("/stripe", async (context) => {
         break;
     }
 
-    return context.text("", 200);
+    return context.text("Webhook event consumed", 200);
   } catch (err) {
     console.error(err);
-    return context.text("Something went wrong", 400);
+    return context.text("Internal Server Error", 400);
   }
 });
 
