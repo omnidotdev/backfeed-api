@@ -159,7 +159,7 @@ webhooks.post("/stripe", async (context) => {
           event.data.object.id,
         );
 
-        const organizationId = event.data.object.metadata.organizationId;
+        const organizationId = subscription.metadata.organizationId;
 
         if (subscription.status === "canceled") {
           await db
