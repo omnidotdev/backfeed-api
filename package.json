@@ -41,7 +41,7 @@
     "@graphile/pg-aggregates": "^0.2.0-rc.1",
     "@graphile/simplify-inflection": "^8.0.0-rc.2",
     "dayjs": "^1.11.19",
-    "drizzle-orm": "^0.44.7",
+    "drizzle-orm": "^0.45.0",
     "drizzle-seed": "^0.3.1",
     "graphile-export": "^1.0.0-rc.2",
     "graphql": "^16.12.0",
