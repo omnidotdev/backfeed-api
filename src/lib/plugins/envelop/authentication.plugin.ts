@@ -56,20 +56,20 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
     }
 
     const insertedUser: InsertUser = {
-      hidraId: idToken.sub!,
+      identityProviderId: idToken.sub!,
       username: idToken.preferred_username as string,
       firstName: idToken.given_name as string,
       lastName: idToken.family_name as string,
       email: idToken.email as string,
     };
 
-    const { hidraId, ...rest } = insertedUser;
+    const { identityProviderId, ...rest } = insertedUser;
 
     const [user] = await context.db
       .insert(users)
       .values(insertedUser)
       .onConflictDoUpdate({
-        target: users.hidraId,
+        target: users.identityProviderId,
         set: {
           ...rest,
           updatedAt: new Date().toISOString(),
