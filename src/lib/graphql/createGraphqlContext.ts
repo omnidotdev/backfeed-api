@@ -1,6 +1,6 @@
-import { createWithPgClient } from "postgraphile/adaptors/pg";
 import { dbPool } from "lib/db/db";
 import { pgPool } from "lib/db/pool";
+import { createWithPgClient } from "postgraphile/adaptors/pg";
 
 import type { YogaInitialContext } from "graphql-yoga";
 import type { SelectUser } from "lib/drizzle/schema";
