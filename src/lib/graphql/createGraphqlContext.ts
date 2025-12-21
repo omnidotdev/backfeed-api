@@ -1,4 +1,4 @@
-import { createWithPgClient } from "@dataplan/pg/adaptors/pg";
+import { createWithPgClient } from "postgraphile/adaptors/pg";
 import { dbPool } from "lib/db/db";
 import { pgPool } from "lib/db/pool";
 
@@ -38,7 +38,7 @@ export interface GraphQLContext {
  * Create a GraphQL context.
  * @see https://graphql.org/learn/execution/#root-fields-and-resolvers
  */
-export const createGraphQLContext = async ({
+const createGraphqlContext = async ({
   request,
 }: Omit<YogaInitialContext, "waitUntil">): Promise<
   Omit<GraphQLContext, "observer" | "pgSettings" | "pgSubscriber">
@@ -47,3 +47,5 @@ export const createGraphQLContext = async ({
   request,
   withPgClient,
 });
+
+export default createGraphqlContext;
