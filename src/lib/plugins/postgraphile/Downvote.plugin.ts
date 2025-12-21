@@ -31,13 +31,13 @@ const validatePermissions = (propName: string) =>
   );
 
 /**
- * Plugin that handles API access for downvote table mutations.
+ * Authorization plugin for downvotes.
  */
-const DownvoteRBACPlugin = wrapPlans({
+const DownvotePlugin = wrapPlans({
   Mutation: {
     updateDownvote: validatePermissions("rowId"),
     deleteDownvote: validatePermissions("rowId"),
   },
 });
 
-export default DownvoteRBACPlugin;
+export default DownvotePlugin;

@@ -85,11 +85,14 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
   }
 };
 
-const useAuth = () =>
-  useGenericAuth({
-    contextFieldName: "observer",
-    resolveUserFn: resolveUser,
-    mode: protectRoutes ? "protect-all" : "resolve-only",
-  });
+/**
+ * Authentication plugin.
+ * @see https://the-guild.dev/graphql/envelop/plugins/use-generic-auth
+ */
+const authenticationPlugin = useGenericAuth({
+  contextFieldName: "observer",
+  resolveUserFn: resolveUser,
+  mode: protectRoutes ? "protect-all" : "resolve-only",
+});
 
-export default useAuth;
+export default authenticationPlugin;

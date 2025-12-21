@@ -42,9 +42,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Plugin that handles API access for organization table mutations.
+ * Authorization plugin for organizations.
  */
-const OrganizationRBACPlugin = wrapPlans({
+const OrganizationPlugin = wrapPlans({
   Mutation: {
     createOrganization: validatePermissions("organization", "create"),
     updateOrganization: validatePermissions("rowId", "update"),
@@ -52,4 +52,4 @@ const OrganizationRBACPlugin = wrapPlans({
   },
 });
 
-export default OrganizationRBACPlugin;
+export default OrganizationPlugin;

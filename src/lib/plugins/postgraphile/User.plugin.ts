@@ -27,9 +27,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Plugin that handles API access for user table mutations.
+ * Authorization plugin for users.
  */
-const UserRBACPlugin = wrapPlans({
+const UserPlugin = wrapPlans({
   Mutation: {
     createUser: validatePermissions("user", "create"),
     updateUser: validatePermissions("rowId", "update"),
@@ -37,4 +37,4 @@ const UserRBACPlugin = wrapPlans({
   },
 });
 
-export default UserRBACPlugin;
+export default UserPlugin;

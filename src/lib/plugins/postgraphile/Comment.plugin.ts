@@ -91,9 +91,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Plugin that handles API access for comment table mutations.
+ * Authorization plugin for comments.
  */
-const CommentRBACPlugin = wrapPlans({
+const CommentPlugin = wrapPlans({
   Mutation: {
     createComment: validatePermissions("comment", "create"),
     updateComment: validatePermissions("rowId", "update"),
@@ -101,4 +101,4 @@ const CommentRBACPlugin = wrapPlans({
   },
 });
 
-export default CommentRBACPlugin;
+export default CommentPlugin;

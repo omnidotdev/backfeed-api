@@ -77,9 +77,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Plugin that handles API access for project table mutations.
+ * Authorization plugin for projects.
  */
-const ProjectRBACPlugin = wrapPlans({
+const ProjectPlugin = wrapPlans({
   Mutation: {
     createProject: validatePermissions("project", "create"),
     updateProject: validatePermissions("rowId", "update"),
@@ -87,4 +87,4 @@ const ProjectRBACPlugin = wrapPlans({
   },
 });
 
-export default ProjectRBACPlugin;
+export default ProjectPlugin;

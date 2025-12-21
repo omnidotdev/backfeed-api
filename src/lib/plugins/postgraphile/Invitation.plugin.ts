@@ -112,9 +112,9 @@ const validateInvitationPermissions = (
   );
 
 /**
- * Plugin that handles API access for invitation-related mutations.
+ * Authorization plugin for invitations.
  */
-const InvitationRBACPlugin = wrapPlans({
+const InvitationPlugin = wrapPlans({
   Mutation: {
     createInvitation: validateInvitationPermissions("invitation", "create"),
     // NB: updating invitations is disabled. See `SmartTags.plugin.ts`
@@ -122,4 +122,4 @@ const InvitationRBACPlugin = wrapPlans({
   },
 });
 
-export default InvitationRBACPlugin;
+export default InvitationPlugin;

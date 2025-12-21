@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import type { InsertProjectSocial } from "lib/drizzle/schema";
+import type { InsertPostStatus } from "lib/drizzle/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -22,16 +22,17 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           let projectId: string;
 
           if (scope === "create") {
-            projectId = (input as InsertProjectSocial).projectId;
+            projectId = (input as InsertPostStatus).projectId;
           } else {
-            const social = await db.query.projectSocials.findFirst({
+            const postStatus = await db.query.postStatuses.findFirst({
               where: (table, { eq }) => eq(table.id, input),
             });
 
-            if (!social) throw new Error("Project social not found");
+            if (!postStatus) throw new Error("Post status not found");
 
-            projectId = social.projectId;
+            projectId = postStatus.projectId;
           }
+
           const project = await db.query.projects.findFirst({
             where: (table, { eq }) => eq(table.id, projectId),
             with: {
@@ -45,9 +46,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             },
           });
 
-          // Only allow owners and admins to create, update, and delete project socials
+          if (!project) throw new Error("Project not found");
+
+          // Allow admins and owners to create, update and delete post statuses
           if (
-            !project?.organization.members.length ||
+            !project.organization.members.length ||
             project.organization.members[0].role === "member"
           ) {
             throw new Error("Insufficient permissions");
@@ -60,14 +63,14 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Plugin that handles API access for project social table mutations.
+ * Authorization plugin for post statuses.
  */
-const ProjectSocialRBACPlugin = wrapPlans({
+const PostStatusPlugin = wrapPlans({
   Mutation: {
-    createProjectSocial: validatePermissions("projectSocial", "create"),
-    updateProjectSocial: validatePermissions("rowId", "update"),
-    deleteProjectSocial: validatePermissions("rowId", "delete"),
+    createPostStatus: validatePermissions("postStatus", "create"),
+    updatePostStatus: validatePermissions("rowId", "update"),
+    deletePostStatus: validatePermissions("rowId", "delete"),
   },
 });
 
-export default ProjectSocialRBACPlugin;
+export default PostStatusPlugin;
