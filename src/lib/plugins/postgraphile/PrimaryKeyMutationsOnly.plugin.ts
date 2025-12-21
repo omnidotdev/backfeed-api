@@ -1,5 +1,5 @@
 /**
- * Plugin that restricts the optionality for mutations to only expose those that are linked by a primary key.
+ * Plugin that restricts mutations to only expose those linked by a primary key.
  */
 const PrimaryKeyMutationsOnlyPlugin: GraphileConfig.Plugin = {
   name: "PrimaryKeyMutationsOnlyPlugin",

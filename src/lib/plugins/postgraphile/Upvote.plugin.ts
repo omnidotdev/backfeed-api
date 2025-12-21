@@ -31,13 +31,13 @@ const validatePermissions = (propName: string) =>
   );
 
 /**
- * Plugin that handles API access for upvote table mutations.
+ * Authorization plugin for upvotes.
  */
-const UpvoteRBACPlugin = wrapPlans({
+const UpvotePlugin = wrapPlans({
   Mutation: {
     updateUpvote: validatePermissions("rowId"),
     deleteUpvote: validatePermissions("rowId"),
   },
 });
 
-export default UpvoteRBACPlugin;
+export default UpvotePlugin;

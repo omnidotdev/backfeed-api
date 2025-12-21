@@ -19,7 +19,7 @@ import {
 import { dbPool as db } from "lib/db/db";
 import { organizations } from "lib/drizzle/schema";
 import { createGraphQLContext } from "lib/graphql/context";
-import { useAuth } from "lib/plugins/envelop";
+import { authenticationPlugin } from "lib/plugins/envelop";
 import Stripe from "stripe";
 
 import type { SelectOrganization } from "lib/drizzle/schema";
@@ -63,7 +63,7 @@ const yoga = createYoga({
   landingPage: isDevEnv,
   plugins: [
     ...armorPlugins,
-    useAuth(),
+    authenticationPlugin,
     useMoreDetailedErrors(),
     // NB: The below are used to handle caching and validation. Caching the parser results is critical for Grafast. See: https://grafast.org/grafast/servers#envelop
     useParserCache(),

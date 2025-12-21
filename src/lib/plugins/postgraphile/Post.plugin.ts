@@ -90,9 +90,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Plugin that handles API access for post table mutations.
+ * Authorization plugin for posts.
  */
-const PostRBACPlugin = wrapPlans({
+const PostPlugin = wrapPlans({
   Mutation: {
     createPost: validatePermissions("post", "create"),
     updatePost: validatePermissions("rowId", "update"),
@@ -100,4 +100,4 @@ const PostRBACPlugin = wrapPlans({
   },
 });
 
-export default PostRBACPlugin;
+export default PostPlugin;

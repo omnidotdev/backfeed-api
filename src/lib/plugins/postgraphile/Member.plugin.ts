@@ -99,9 +99,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Plugin that handles API access for member table mutations.
+ * Authorization plugin for members.
  */
-const membersRBACPlugin = wrapPlans({
+const MemberPlugin = wrapPlans({
   Mutation: {
     createMember: validatePermissions("member", "create"),
     updateMember: validatePermissions("rowId", "update"),
@@ -109,4 +109,4 @@ const membersRBACPlugin = wrapPlans({
   },
 });
 
-export default membersRBACPlugin;
+export default MemberPlugin;

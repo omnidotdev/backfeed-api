@@ -1,1 +1,1 @@
-export { default as useAuth } from "./useAuth.plugin";
+export { default as authenticationPlugin } from "./authentication.plugin";
