@@ -5,7 +5,7 @@ import { users } from "lib/drizzle/schema";
 import type { ResolveUserFn } from "@envelop/generic-auth";
 import type * as jose from "jose";
 import type { InsertUser, SelectUser } from "lib/drizzle/schema";
-import type { GraphQLContext } from "lib/graphql";
+import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
 // TODO research best practices for all of this file (token validation, caching, etc.). Validate access token (introspection endpoint)? Cache userinfo output? etc. (https://linear.app/omnidev/issue/OMNI-302/increase-security-of-useauth-plugin)
 

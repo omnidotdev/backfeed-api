@@ -18,7 +18,7 @@ import {
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
 import { organizations } from "lib/drizzle/schema";
-import { createGraphQLContext } from "lib/graphql/context";
+import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { authenticationPlugin } from "lib/plugins/envelop";
 import Stripe from "stripe";
 
@@ -56,7 +56,7 @@ const { plugins: armorPlugins } = armor.protect();
  */
 const yoga = createYoga({
   schema,
-  context: createGraphQLContext,
+  context: createGraphqlContext,
   // only enable web UIs in development
   // NB: can also provide an object of GraphiQL options instead of a boolean
   graphiql: isDevEnv,

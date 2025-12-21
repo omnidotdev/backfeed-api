@@ -21,8 +21,6 @@ import {
   UserPlugin,
 } from "./src/lib/plugins/postgraphile";
 
-import type { GraphileConfig } from "graphile-config";
-
 const preset: GraphileConfig.Preset = {
   extends: [
     PostGraphileAmberPreset,
