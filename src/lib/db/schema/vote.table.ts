@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { index, pgTable, unique, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgEnum,
+  pgTable,
+  unique,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { posts } from "./post.table";
@@ -8,10 +15,15 @@ import { users } from "./user.table";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Upvote table. Upvotes are used to represent positive sentiment on posts.
+ * Vote type enum for distinguishing upvotes from downvotes.
  */
-export const upvotes = pgTable(
-  "upvote",
+export const voteType = pgEnum("vote_type", ["up", "down"]);
+
+/**
+ * Vote table. Unified table for both upvotes and downvotes on posts.
+ */
+export const votes = pgTable(
+  "vote",
   {
     id: defaultId(),
     postId: uuid()
@@ -24,33 +36,35 @@ export const upvotes = pgTable(
       .references(() => users.id, {
         onDelete: "cascade",
       }),
+    voteType: voteType().notNull(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
   (table) => [
-    unique().on(table.postId, table.userId),
     uniqueIndex().on(table.id),
+    unique().on(table.postId, table.userId),
     index().on(table.postId),
     index().on(table.userId),
+    index().on(table.voteType),
   ],
 );
 
 /**
- * Upvote relations.
+ * Vote relations.
  */
-export const upvoteRelations = relations(upvotes, ({ one }) => ({
+export const voteRelations = relations(votes, ({ one }) => ({
   post: one(posts, {
-    fields: [upvotes.postId],
+    fields: [votes.postId],
     references: [posts.id],
   }),
   user: one(users, {
-    fields: [upvotes.userId],
+    fields: [votes.userId],
     references: [users.id],
   }),
 }));
 
 /**
- * Type helpers related to the upvote table.
+ * Type helpers related to the vote table.
  */
-export type InsertUpvote = InferInsertModel<typeof upvotes>;
-export type SelectUpvote = InferSelectModel<typeof upvotes>;
+export type InsertVote = InferInsertModel<typeof votes>;
+export type SelectVote = InferSelectModel<typeof votes>;

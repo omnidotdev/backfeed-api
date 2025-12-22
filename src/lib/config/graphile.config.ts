@@ -1,25 +1,25 @@
 import { PgAggregatesPreset } from "@graphile/pg-aggregates";
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
-import { makePgService } from "postgraphile/adaptors/pg";
-import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
-import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
-
-import { DATABASE_URL, isProdEnv } from "./src/lib/config/env.config";
 import {
   CommentPlugin,
-  DownvotePlugin,
   InvitationPlugin,
   MemberPlugin,
   OrganizationPlugin,
   PostPlugin,
-  PostStatusPlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectPlugin,
   ProjectSocialPlugin,
+  ProjectStatusConfigPlugin,
   SmartTagPlugin,
-  UpvotePlugin,
+  StatusTemplatePlugin,
   UserPlugin,
-} from "./src/lib/plugins/postgraphile";
+  VotePlugin,
+} from "lib/graphql/plugins/authorization";
+import { makePgService } from "postgraphile/adaptors/pg";
+import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
+import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
+
+import { DATABASE_URL, isProdEnv } from "./env.config";
 
 const preset: GraphileConfig.Preset = {
   extends: [
@@ -34,7 +34,7 @@ const preset: GraphileConfig.Preset = {
     pgForbidSetofFunctionsToReturnNull: false,
     jsonScalarAsString: false,
     defaultBehavior: "-type:node -interface:node",
-    // See https://github.com/graphile-contrib/postgraphile-plugin-connection-filter?tab=readme-ov-file#handling-null-and-empty-objects
+    // see https://github.com/graphile-contrib/postgraphile-plugin-connection-filter?tab=readme-ov-file#handling-null-and-empty-objects
     connectionFilterAllowNullInput: true,
     connectionFilterAllowEmptyObjectInput: true,
   },
@@ -47,10 +47,10 @@ const preset: GraphileConfig.Preset = {
     InvitationPlugin,
     ProjectPlugin,
     ProjectSocialPlugin,
+    ProjectStatusConfigPlugin,
     PostPlugin,
-    PostStatusPlugin,
-    DownvotePlugin,
-    UpvotePlugin,
+    StatusTemplatePlugin,
+    VotePlugin,
     CommentPlugin,
     SmartTagPlugin,
   ],

@@ -1,11 +1,11 @@
 import { useGenericAuth } from "@envelop/generic-auth";
 import { QueryClient } from "@tanstack/query-core";
 import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
-import { users } from "lib/drizzle/schema";
+import { users } from "lib/db/schema";
 import ms from "ms";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
-import type { InsertUser, SelectUser } from "lib/drizzle/schema";
+import type { InsertUser, SelectUser } from "lib/db/schema";
 import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
 interface UserInfoClaims {

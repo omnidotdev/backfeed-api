@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import type { InsertPost } from "lib/drizzle/schema";
+import type { InsertPost } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -17,9 +17,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $db = context().get("db");
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) {
-            throw new Error("Unauthorized");
-          }
+          if (!observer) throw new Error("Unauthorized");
 
           const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 15;
 
@@ -40,18 +38,19 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!project) throw new Error("Project not found");
 
+            // enforce tier limits for free organizations
             if (project.organization.tier === "free") {
               const uniqueUsers = [
                 ...new Set(project.posts.map((p) => p.userId)),
               ];
 
-              if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS) {
-                if (!uniqueUsers.includes(observer.id)) {
-                  throw new Error(
-                    "Maximum number of unique users providing feedback has been reached",
-                  );
-                }
-              }
+              if (
+                uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS &&
+                !uniqueUsers.includes(observer.id)
+              )
+                throw new Error(
+                  "Maximum number of unique users providing feedback has been reached",
+                );
             }
           } else {
             const post = await db.query.posts.findFirst({
@@ -73,13 +72,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             });
 
             if (observer.id !== post?.userId) {
-              // Allow admins and owners to update and delete posts
+              // allow admins and owners to update and delete posts
               if (
                 !post?.project.organization.members.length ||
                 post.project.organization.members[0].role === "member"
-              ) {
+              )
                 throw new Error("Insufficient permissions");
-              }
             }
           }
         });

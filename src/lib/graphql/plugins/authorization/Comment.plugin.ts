@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import type { InsertComment } from "lib/drizzle/schema";
+import type { InsertComment } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -15,9 +15,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $db = context().get("db");
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) {
-            throw new Error("Unauthorized");
-          }
+          if (!observer) throw new Error("Unauthorized");
 
           const MAX_FREE_TIER_COMMENTS = 100;
 
@@ -43,10 +41,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!post) throw new Error("Post does not exist");
 
-            const organizationTier = post.project.organization.tier;
-
+            // enforce tier limits for free organizations
             if (
-              organizationTier === "free" &&
+              post.project.organization.tier === "free" &&
               post.comments.length >= MAX_FREE_TIER_COMMENTS
             )
               throw new Error("Maximum number of comments has been reached");

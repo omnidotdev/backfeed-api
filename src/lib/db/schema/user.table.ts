@@ -3,10 +3,9 @@ import { pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { comments } from "./comment.table";
 import { defaultDate, defaultId } from "./constants";
-import { downvotes } from "./downvote.table";
 import { members } from "./member.table";
 import { posts } from "./post.table";
-import { upvotes } from "./upvote.table";
+import { votes } from "./vote.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -38,8 +37,7 @@ export const users = pgTable(
 export const userRelations = relations(users, ({ many }) => ({
   memberships: many(members),
   comments: many(comments),
-  downvotes: many(downvotes),
-  upvotes: many(upvotes),
+  votes: many(votes),
   posts: many(posts),
 }));
 

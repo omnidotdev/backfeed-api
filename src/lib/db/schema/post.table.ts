@@ -3,9 +3,10 @@ import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { comments } from "./comment.table";
 import { defaultDate, defaultId } from "./constants";
-import { postStatuses } from "./postStatus.table";
 import { projects } from "./project.table";
+import { statusTemplates } from "./statusTemplate.table";
 import { users } from "./user.table";
+import { votes } from "./vote.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -28,7 +29,7 @@ export const posts = pgTable(
       .references(() => users.id, {
         onDelete: "cascade",
       }),
-    statusId: uuid().references(() => postStatuses.id, {
+    statusTemplateId: uuid().references(() => statusTemplates.id, {
       onDelete: "set null",
     }),
     statusUpdatedAt: defaultDate(),
@@ -39,7 +40,7 @@ export const posts = pgTable(
     uniqueIndex().on(table.id),
     index().on(table.projectId),
     index().on(table.userId),
-    index().on(table.statusId),
+    index().on(table.statusTemplateId),
   ],
 );
 
@@ -55,11 +56,12 @@ export const postRelations = relations(posts, ({ many, one }) => ({
     fields: [posts.userId],
     references: [users.id],
   }),
-  status: one(postStatuses, {
-    fields: [posts.statusId],
-    references: [postStatuses.id],
+  statusTemplate: one(statusTemplates, {
+    fields: [posts.statusTemplateId],
+    references: [statusTemplates.id],
   }),
   comments: many(comments),
+  votes: many(votes),
 }));
 
 /**

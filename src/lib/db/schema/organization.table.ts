@@ -5,6 +5,7 @@ import { defaultDate, defaultId } from "./constants";
 import { invitations } from "./invitation.table";
 import { members } from "./member.table";
 import { projects } from "./project.table";
+import { statusTemplates } from "./statusTemplate.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -41,6 +42,7 @@ export const organizationRelations = relations(organizations, ({ many }) => ({
   members: many(members),
   projects: many(projects),
   invitations: many(invitations),
+  statusTemplates: many(statusTemplates),
 }));
 
 /**

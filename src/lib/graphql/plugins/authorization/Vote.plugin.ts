@@ -15,12 +15,12 @@ const validatePermissions = (propName: string) =>
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
 
-          const upvote = await db.query.upvotes.findFirst({
+          const vote = await db.query.votes.findFirst({
             where: (table, { eq }) => eq(table.id, input),
           });
 
-          // Only allow the user who upvoted to update or delete their own downvote
-          if (observer.id !== upvote?.userId) {
+          // only allow the user who voted to update or delete their own vote
+          if (observer.id !== vote?.userId) {
             throw new Error("Unauthorized");
           }
         });
@@ -31,13 +31,13 @@ const validatePermissions = (propName: string) =>
   );
 
 /**
- * Authorization plugin for upvotes.
+ * Authorization plugin for votes.
  */
-const UpvotePlugin = wrapPlans({
+const VotePlugin = wrapPlans({
   Mutation: {
-    updateUpvote: validatePermissions("rowId"),
-    deleteUpvote: validatePermissions("rowId"),
+    updateVote: validatePermissions("rowId"),
+    deleteVote: validatePermissions("rowId"),
   },
 });
 
-export default UpvotePlugin;
+export default VotePlugin;

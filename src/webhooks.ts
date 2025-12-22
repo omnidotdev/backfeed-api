@@ -3,10 +3,10 @@ import { Elysia, t } from "elysia";
 import app from "lib/config/app.config";
 import { STRIPE_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
-import { organizations } from "lib/drizzle/schema";
+import { organizations } from "lib/db/schema";
 import payments from "lib/payments";
 
-import type { SelectOrganization } from "lib/drizzle/schema";
+import type { SelectOrganization } from "lib/db/schema";
 
 /**
  * Webhooks Elysia instance (effectively used as a plugin).

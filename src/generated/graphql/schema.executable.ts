@@ -4517,7 +4517,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post does not exist");
-      if (post.project.organization.tier === "free" && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
+      if (post.project.organization.tier === "free" && post.project.organization.slug !== "omni" && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
     } else {
       const comment = await db.query.comments.findFirst({
         where(table, {
@@ -4661,11 +4661,9 @@ const planWrapper6 = (plan, _, fieldArgs) => {
           }
         });
       if (!project) throw Error("Project not found");
-      if (project.organization.tier === "free") {
+      if (project.organization.tier === "free" && project.organization.slug !== "omni") {
         const uniqueUsers = [...new Set(project.posts.map(p => p.userId))];
-        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS) {
-          if (!uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
-        }
+        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS && !uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
       }
     } else {
       const post = await db.query.posts.findFirst({
@@ -4745,7 +4743,7 @@ const planWrapper7 = (plan, _, fieldArgs) => {
     });
     if (!organization) throw Error("Organization not found");
     if (!organization.members.length || organization.members[0].role === "member") throw Error("Insufficient permissions");
-    if ("create" === "create") {
+    if ("create" === "create" && organization.slug !== "omni") {
       if (organization.tier === "free" && !!organization.projects.length) throw Error("Maximum number of projects reached.");
       if (organization.tier === "basic" && organization.projects.length >= 3) throw Error("Maximum number of projects reached.");
     }
@@ -4980,7 +4978,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post does not exist");
-      if (post.project.organization.tier === "free" && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
+      if (post.project.organization.tier === "free" && post.project.organization.slug !== "omni" && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
     } else {
       const comment = await db.query.comments.findFirst({
         where(table, {
@@ -5130,11 +5128,9 @@ const planWrapper16 = (plan, _, fieldArgs) => {
           }
         });
       if (!project) throw Error("Project not found");
-      if (project.organization.tier === "free") {
+      if (project.organization.tier === "free" && project.organization.slug !== "omni") {
         const uniqueUsers = [...new Set(project.posts.map(p => p.userId))];
-        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS) {
-          if (!uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
-        }
+        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS && !uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
       }
     } else {
       const post = await db.query.posts.findFirst({
@@ -5216,7 +5212,7 @@ const planWrapper17 = (plan, _, fieldArgs) => {
     });
     if (!organization) throw Error("Organization not found");
     if (!organization.members.length || organization.members[0].role === "member") throw Error("Insufficient permissions");
-    if ("update" === "create") {
+    if ("update" === "create" && organization.slug !== "omni") {
       if (organization.tier === "free" && !!organization.projects.length) throw Error("Maximum number of projects reached.");
       if (organization.tier === "basic" && organization.projects.length >= 3) throw Error("Maximum number of projects reached.");
     }
@@ -5541,7 +5537,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post does not exist");
-      if (post.project.organization.tier === "free" && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
+      if (post.project.organization.tier === "free" && post.project.organization.slug !== "omni" && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
     } else {
       const comment = await db.query.comments.findFirst({
         where(table, {
@@ -5691,11 +5687,9 @@ const planWrapper27 = (plan, _, fieldArgs) => {
           }
         });
       if (!project) throw Error("Project not found");
-      if (project.organization.tier === "free") {
+      if (project.organization.tier === "free" && project.organization.slug !== "omni") {
         const uniqueUsers = [...new Set(project.posts.map(p => p.userId))];
-        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS) {
-          if (!uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
-        }
+        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS && !uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
       }
     } else {
       const post = await db.query.posts.findFirst({
@@ -5777,7 +5771,7 @@ const planWrapper28 = (plan, _, fieldArgs) => {
     });
     if (!organization) throw Error("Organization not found");
     if (!organization.members.length || organization.members[0].role === "member") throw Error("Insufficient permissions");
-    if ("delete" === "create") {
+    if ("delete" === "create" && organization.slug !== "omni") {
       if (organization.tier === "free" && !!organization.projects.length) throw Error("Maximum number of projects reached.");
       if (organization.tier === "basic" && organization.projects.length >= 3) throw Error("Maximum number of projects reached.");
     }

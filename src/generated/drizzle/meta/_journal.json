@@ -148,6 +148,13 @@
       "when": 1766309255151,
       "tag": "0020_overconfident_squadron_sinister",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1766388371406,
+      "tag": "0021_handy_sphinx",
+      "breakpoints": true
     }
   ]
 }

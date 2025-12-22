@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import type { InsertPostStatus } from "lib/drizzle/schema";
+import type { InsertProjectStatusConfig } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -22,15 +22,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           let projectId: string;
 
           if (scope === "create") {
-            projectId = (input as InsertPostStatus).projectId;
+            projectId = (input as InsertProjectStatusConfig).projectId;
           } else {
-            const postStatus = await db.query.postStatuses.findFirst({
+            const config = await db.query.projectStatusConfigs.findFirst({
               where: (table, { eq }) => eq(table.id, input),
             });
 
-            if (!postStatus) throw new Error("Post status not found");
+            if (!config) throw new Error("Project status config not found");
 
-            projectId = postStatus.projectId;
+            projectId = config.projectId;
           }
 
           const project = await db.query.projects.findFirst({
@@ -48,7 +48,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
           if (!project) throw new Error("Project not found");
 
-          // Allow admins and owners to create, update and delete post statuses
+          // allow admins and owners to create, update and delete project status configs
           if (
             !project.organization.members.length ||
             project.organization.members[0].role === "member"
@@ -63,14 +63,17 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Authorization plugin for post statuses.
+ * Authorization plugin for project status configs.
  */
-const PostStatusPlugin = wrapPlans({
+const ProjectStatusConfigPlugin = wrapPlans({
   Mutation: {
-    createPostStatus: validatePermissions("postStatus", "create"),
-    updatePostStatus: validatePermissions("rowId", "update"),
-    deletePostStatus: validatePermissions("rowId", "delete"),
+    createProjectStatusConfig: validatePermissions(
+      "projectStatusConfig",
+      "create",
+    ),
+    updateProjectStatusConfig: validatePermissions("rowId", "update"),
+    deleteProjectStatusConfig: validatePermissions("rowId", "delete"),
   },
 });
 
-export default PostStatusPlugin;
+export default ProjectStatusConfigPlugin;

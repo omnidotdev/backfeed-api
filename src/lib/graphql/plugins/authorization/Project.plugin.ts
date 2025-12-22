@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import type { InsertProject } from "lib/drizzle/schema";
+import type { InsertProject } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -45,29 +45,23 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
           if (!organization) throw new Error("Organization not found");
 
-          // Only allow owners and admins to create, update, and delete projects
+          // only allow owners and admins to create, update, and delete projects
           if (
             !organization.members.length ||
             organization.members[0].role === "member"
-          ) {
+          )
             throw new Error("Insufficient permissions");
-          }
 
+          // enforce tier limits on project creation
           if (scope === "create") {
-            // NB: The following checks make sure that we do not allow users to create a new project if the maximum number of allowed projects has been met
-            if (
-              organization.tier === "free" &&
-              !!organization.projects.length
-            ) {
+            if (organization.tier === "free" && !!organization.projects.length)
               throw new Error("Maximum number of projects reached.");
-            }
 
             if (
               organization.tier === "basic" &&
               organization.projects.length >= 3
-            ) {
+            )
               throw new Error("Maximum number of projects reached.");
-            }
           }
         });
 
