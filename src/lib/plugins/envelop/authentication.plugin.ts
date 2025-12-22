@@ -1,13 +1,68 @@
 import { useGenericAuth } from "@envelop/generic-auth";
+import { QueryClient } from "@tanstack/query-core";
 import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
 import { users } from "lib/drizzle/schema";
+import ms from "ms";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
-import type * as jose from "jose";
 import type { InsertUser, SelectUser } from "lib/drizzle/schema";
 import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
-// TODO research best practices for all of this file (token validation, caching, etc.). Validate access token (introspection endpoint)? Cache userinfo output? etc. (https://linear.app/omnidev/issue/OMNI-302/increase-security-of-useauth-plugin)
+interface UserInfoClaims {
+  sub: string;
+  iss?: string;
+  aud?: string | string[];
+  exp?: number;
+  iat?: number;
+  preferred_username?: string;
+  given_name?: string;
+  family_name?: string;
+  email?: string;
+}
+
+class AuthenticationError extends Error {
+  readonly code: string;
+
+  constructor(message: string, code: string) {
+    super(message);
+    this.name = "AuthenticationError";
+    this.code = code;
+  }
+}
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      staleTime: ms("2m"),
+    },
+  },
+});
+
+/**
+ * Validate token claims.
+ */
+const validateClaims = (claims: UserInfoClaims): void => {
+  const now = Math.floor(Date.now() / 1000);
+
+  // validate `exp`
+  if (claims.exp !== undefined && claims.exp < now)
+    throw new AuthenticationError("Token has expired", "TOKEN_EXPIRED");
+
+  // validate `iat` (reject tokens issued in the future with clock skew allowance)
+  if (claims.iat !== undefined && claims.iat > now + ms("1m"))
+    throw new AuthenticationError(
+      "Token issued in the future",
+      "INVALID_TOKEN_IAT",
+    );
+
+  // validate issuer
+  if (AUTH_BASE_URL && claims.iss !== undefined && claims.iss !== AUTH_BASE_URL)
+    throw new AuthenticationError(
+      "Token issuer mismatch",
+      "INVALID_TOKEN_ISSUER",
+    );
+};
 
 /**
  * Validate user session and resolve user if successful.
@@ -24,43 +79,67 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
     if (!accessToken) {
       if (!protectRoutes) return null;
 
-      throw new Error("Invalid or missing access token");
+      throw new AuthenticationError(
+        "Invalid or missing access token",
+        "MISSING_TOKEN",
+      );
     }
 
-    // TODO validate access token (introspection endpoint?) here?
+    const claims = await queryClient.ensureQueryData({
+      queryKey: ["UserInfo", { accessToken }],
+      queryFn: async () => {
+        const response = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
-    // TODO cache so this doesn't occur on every request. Research best practices
-    const userInfo = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+        if (!response.ok) {
+          throw new AuthenticationError(
+            "Invalid access token or request failed",
+            "USERINFO_FAILED",
+          );
+        }
+
+        const userInfoClaims: UserInfoClaims = await response.json();
+
+        return userInfoClaims;
       },
     });
 
-    if (!userInfo.ok) {
+    if (!claims) {
       if (!protectRoutes) return null;
 
-      throw new Error("Invalid `userinfo` claims payload or request failed");
+      throw new AuthenticationError(
+        "Invalid access token or request failed",
+        "INVALID_CLAIMS",
+      );
     }
 
-    const idToken: jose.JWTPayload = await userInfo.json();
+    validateClaims(claims);
 
-    // TODO validate token, currently major security flaw (pending BA OIDC JWKS support: https://www.better-auth.com/docs/plugins/oidc-provider#jwks-endpoint-not-fully-implemented) (https://linear.app/omnidev/issue/OMNI-302/validate-id-token-with-jwks)
-    // const jwks = jose.createRemoteJWKSet(new URL(`${AUTH_BASE_URL}/jwks`));
-    // const { payload } = await jose.jwtVerify(JSON.stringify(idToken), jwks);
-    // if (!payload) throw new Error("Failed to verify token");
+    if (!claims.sub)
+      throw new AuthenticationError(
+        "Missing required 'sub' claim",
+        "MISSING_SUB_CLAIM",
+      );
 
-    if (!idToken) {
-      if (!protectRoutes) return null;
+    if (!claims.email)
+      throw new AuthenticationError(
+        "Missing required 'email' claim",
+        "MISSING_EMAIL_CLAIM",
+      );
 
-      throw new Error("Invalid ID token or request failed");
-    }
+    // TODO: Add JWKS signature verification when Better Auth supports it
+    // https://www.better-auth.com/docs/plugins/oidc-provider#jwks-endpoint-not-fully-implemented
+    // https://linear.app/omnidev/issue/OMNI-302/validate-id-token-with-jwks
 
     const insertedUser: InsertUser = {
-      identityProviderId: idToken.sub!,
-      username: idToken.preferred_username as string,
-      firstName: idToken.given_name as string,
-      lastName: idToken.family_name as string,
-      email: idToken.email as string,
+      identityProviderId: claims.sub,
+      username: claims.preferred_username ?? claims.email,
+      firstName: claims.given_name ?? "",
+      lastName: claims.family_name ?? "",
+      email: claims.email,
     };
 
     const { identityProviderId, ...rest } = insertedUser;
@@ -79,7 +158,11 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
     return user;
   } catch (err) {
-    console.error(err);
+    if (err instanceof AuthenticationError) {
+      console.error(`[Auth] ${err.code}: ${err.message}`);
+    } else {
+      console.error("[Auth] Unexpected error:", err);
+    }
 
     return null;
   }
