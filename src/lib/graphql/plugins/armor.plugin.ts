@@ -1,5 +1,4 @@
 import { EnvelopArmor } from "@escape.tech/graphql-armor";
-
 import { GRAPHQL_COMPLEXITY_MAX_COST, isProdEnv } from "lib/config/env.config";
 
 /**

@@ -1,6 +1,5 @@
 import { and, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
-
 import app from "lib/config/app.config";
 import { STRIPE_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";

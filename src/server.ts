@@ -5,7 +5,6 @@ import { useValidationCache } from "@envelop/validation-cache";
 import { Elysia } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
-
 import appConfig from "lib/config/app.config";
 import { CORS_ALLOWED_ORIGINS, PORT, isDevEnv } from "lib/config/env.config";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
@@ -55,12 +54,10 @@ const app = new Elysia({
   )
   .listen(PORT);
 
-// biome-ignore lint/suspicious/noConsole: root logging
 console.log(
   `🦊 ${appConfig.name} Elysia server running at ${app.server?.url.toString().slice(0, -1)}`,
 );
 
-// biome-ignore lint/suspicious/noConsole: root logging
 console.log(
   `🧘 ${appConfig.name} GraphQL Yoga API running at ${app.server?.url}graphql`,
 );

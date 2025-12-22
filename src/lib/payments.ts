@@ -1,6 +1,5 @@
-import Stripe from "stripe";
-
 import { STRIPE_API_KEY } from "lib/config/env.config";
+import Stripe from "stripe";
 
 /**
  * Payments client.
