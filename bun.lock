@@ -32,7 +32,7 @@
         "@types/pg": "^8.16.0",
         "drizzle-kit": "^0.31.8",
         "husky": "^9.1.7",
-        "knip": "^5.76.1",
+        "knip": "^5.76.2",
         "replace-in-file": "^8.4.0",
         "typescript": "^5.9.3",
       },
@@ -447,7 +447,7 @@
 
     "jws": ["jws@3.2.2", "", { "dependencies": { "jwa": "^1.4.1", "safe-buffer": "^5.0.1" } }, "sha512-YHlZCB6lMTllWDtSPHz/ZXTsi8S00usEV6v1tjq8tOUZzw7DpSDWVXjXDre6ed1w/pd495ODpHZYSdkRTsa0HA=="],
 
-    "knip": ["knip@5.76.1", "", { "dependencies": { "@nodelib/fs.walk": "^1.2.3", "fast-glob": "^3.3.3", "formatly": "^0.3.0", "jiti": "^2.6.0", "js-yaml": "^4.1.1", "minimist": "^1.2.8", "oxc-resolver": "^11.15.0", "picocolors": "^1.1.1", "picomatch": "^4.0.1", "smol-toml": "^1.5.2", "strip-json-comments": "5.0.3", "zod": "^4.1.11" }, "peerDependencies": { "@types/node": ">=18", "typescript": ">=5.0.4 <7" }, "bin": { "knip": "bin/knip.js", "knip-bun": "bin/knip-bun.js" } }, "sha512-V9CgrzE8ZhqsJeZE4VFUXZHm1cRDmL8WiRRZUPBi65rWJkExdJkEmV2ab+jiOQTzhoBIL/d3DegOPpMq5IF3DA=="],
+    "knip": ["knip@5.76.2", "", { "dependencies": { "@nodelib/fs.walk": "^1.2.3", "fast-glob": "^3.3.3", "formatly": "^0.3.0", "jiti": "^2.6.0", "js-yaml": "^4.1.1", "minimist": "^1.2.8", "oxc-resolver": "^11.15.0", "picocolors": "^1.1.1", "picomatch": "^4.0.1", "smol-toml": "^1.5.2", "strip-json-comments": "5.0.3", "zod": "^4.1.11" }, "peerDependencies": { "@types/node": ">=18", "typescript": ">=5.0.4 <7" }, "bin": { "knip": "bin/knip.js", "knip-bun": "bin/knip-bun.js" } }, "sha512-UCs2MNe+sUYo5rR/KcoyEqCqwWh1mrHcAkTvW7Hm7DcnaLa1xzHHRbEqmEeocI23bMXPaZtlSALrfjFIU0xNjQ=="],
 
     "lodash": ["lodash@4.17.21", "", {}, "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="],
 
