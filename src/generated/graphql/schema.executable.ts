@@ -560,7 +560,7 @@ const spec_user = {
         canUpdate: true
       }
     },
-    hidra_id: {
+    identity_provider_id: {
       description: undefined,
       codec: TYPES.uuid,
       notNull: true,
@@ -1481,7 +1481,7 @@ const userUniques = [{
   }
 }, {
   isPrimary: false,
-  attributes: ["hidra_id"],
+  attributes: ["identity_provider_id"],
   description: undefined,
   extensions: {
     tags: {
@@ -3468,9 +3468,9 @@ const colSpec26 = {
   attribute: spec_user.attributes.updated_at
 };
 const colSpec27 = {
-  fieldName: "hidraId",
-  attributeName: "hidra_id",
-  attribute: spec_user.attributes.hidra_id
+  fieldName: "identityProviderId",
+  attributeName: "identity_provider_id",
+  attribute: spec_user.attributes.identity_provider_id
 };
 const colSpec28 = {
   fieldName: "username",
@@ -5942,7 +5942,7 @@ type Query implements Node {
   userByEmail(email: String!): User
 
   """Get a single \`User\`."""
-  userByHidraId(hidraId: UUID!): User
+  userByIdentityProviderId(identityProviderId: UUID!): User
 
   """Get a single \`User\`."""
   userByUsername(username: String!): User
@@ -7409,8 +7409,8 @@ input UserFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
-  """Filter by the object’s \`hidraId\` field."""
-  hidraId: UUIDFilter
+  """Filter by the object’s \`identityProviderId\` field."""
+  identityProviderId: UUIDFilter
 
   """Filter by the object’s \`username\` field."""
   username: StringFilter
@@ -8559,7 +8559,7 @@ type User {
   rowId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
-  hidraId: UUID!
+  identityProviderId: UUID!
   username: String
   firstName: String
   lastName: String
@@ -10478,8 +10478,8 @@ type UserDistinctCountAggregates {
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
 
-  """Distinct count of hidraId across the matching connection"""
-  hidraId: BigInt
+  """Distinct count of identityProviderId across the matching connection"""
+  identityProviderId: BigInt
 
   """Distinct count of username across the matching connection"""
   username: BigInt
@@ -10579,8 +10579,8 @@ input UserCondition {
   """Checks for equality with the object’s \`updatedAt\` field."""
   updatedAt: Datetime
 
-  """Checks for equality with the object’s \`hidraId\` field."""
-  hidraId: UUID
+  """Checks for equality with the object’s \`identityProviderId\` field."""
+  identityProviderId: UUID
 
   """Checks for equality with the object’s \`username\` field."""
   username: String
@@ -10606,8 +10606,8 @@ enum UserOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  HIDRA_ID_ASC
-  HIDRA_ID_DESC
+  IDENTITY_PROVIDER_ID_ASC
+  IDENTITY_PROVIDER_ID_DESC
   USERNAME_ASC
   USERNAME_DESC
   FIRST_NAME_ASC
@@ -11449,7 +11449,7 @@ input UserInput {
   rowId: UUID
   createdAt: Datetime
   updatedAt: Datetime
-  hidraId: UUID!
+  identityProviderId: UUID!
   username: String
   firstName: String
   lastName: String
@@ -11928,7 +11928,7 @@ input UserPatch {
   rowId: UUID
   createdAt: Datetime
   updatedAt: Datetime
-  hidraId: UUID
+  identityProviderId: UUID
   username: String
   firstName: String
   lastName: String
@@ -13100,11 +13100,11 @@ export const objects = {
           email: $email
         });
       },
-      userByHidraId(_$root, {
-        $hidraId
+      userByIdentityProviderId(_$root, {
+        $identityProviderId
       }) {
         return resource_userPgResource.get({
-          hidra_id: $hidraId
+          identity_provider_id: $identityProviderId
         });
       },
       userByUsername(_$root, {
@@ -16126,8 +16126,8 @@ ${String(oldPlan14)}`);
       firstName($record) {
         return $record.get("first_name");
       },
-      hidraId($record) {
-        return $record.get("hidra_id");
+      identityProviderId($record) {
+        return $record.get("identity_provider_id");
       },
       lastName($record) {
         return $record.get("last_name");
@@ -16328,8 +16328,8 @@ ${String(oldPlan14)}`);
           sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
-      hidraId($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("hidra_id")}`,
+      identityProviderId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("identity_provider_id")}`,
           sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
@@ -24831,10 +24831,10 @@ export const inputObjects = {
           }
         });
       },
-      hidraId($condition, val) {
+      identityProviderId($condition, val) {
         $condition.where({
           type: "attribute",
-          attribute: "hidra_id",
+          attribute: "identity_provider_id",
           callback(expression) {
             return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
           }
@@ -24957,7 +24957,7 @@ export const inputObjects = {
         condition.extensions.pgFilterAttribute = colSpec29;
         return condition;
       },
-      hidraId(queryBuilder, value) {
+      identityProviderId(queryBuilder, value) {
         if (value === void 0) return;
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
@@ -25266,11 +25266,11 @@ export const inputObjects = {
       }) {
         obj.set("first_name", bakedInputRuntime(schema, field.type, val));
       },
-      hidraId(obj, val, {
+      identityProviderId(obj, val, {
         field,
         schema
       }) {
-        obj.set("hidra_id", bakedInputRuntime(schema, field.type, val));
+        obj.set("identity_provider_id", bakedInputRuntime(schema, field.type, val));
       },
       lastName(obj, val, {
         field,
@@ -25319,11 +25319,11 @@ export const inputObjects = {
       }) {
         obj.set("first_name", bakedInputRuntime(schema, field.type, val));
       },
-      hidraId(obj, val, {
+      identityProviderId(obj, val, {
         field,
         schema
       }) {
-        obj.set("hidra_id", bakedInputRuntime(schema, field.type, val));
+        obj.set("identity_provider_id", bakedInputRuntime(schema, field.type, val));
       },
       lastName(obj, val, {
         field,
@@ -31525,16 +31525,16 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      HIDRA_ID_ASC(queryBuilder) {
+      IDENTITY_PROVIDER_ID_ASC(queryBuilder) {
         queryBuilder.orderBy({
-          attribute: "hidra_id",
+          attribute: "identity_provider_id",
           direction: "ASC"
         });
         queryBuilder.setOrderIsUnique();
       },
-      HIDRA_ID_DESC(queryBuilder) {
+      IDENTITY_PROVIDER_ID_DESC(queryBuilder) {
         queryBuilder.orderBy({
-          attribute: "hidra_id",
+          attribute: "identity_provider_id",
           direction: "DESC"
         });
         queryBuilder.setOrderIsUnique();

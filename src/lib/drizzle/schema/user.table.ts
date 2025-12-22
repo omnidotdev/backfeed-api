@@ -17,8 +17,8 @@ export const users = pgTable(
   "user",
   {
     id: defaultId(),
-    // HIDRA ID mapped to `sub` claim
-    hidraId: uuid().notNull().unique(),
+    // identity provider ID mapped to `sub` claim from ID token
+    identityProviderId: uuid().notNull().unique(),
     username: text().unique(),
     firstName: text(),
     lastName: text(),
@@ -26,7 +26,10 @@ export const users = pgTable(
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.hidraId)],
+  (table) => [
+    uniqueIndex().on(table.id),
+    uniqueIndex().on(table.identityProviderId),
+  ],
 );
 
 /**
