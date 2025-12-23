@@ -14,6 +14,7 @@ export const {
   CORS_ALLOWED_ORIGINS,
   STRIPE_API_KEY,
   STRIPE_WEBHOOK_SECRET,
+  BILLING_BYPASS_SLUGS,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";

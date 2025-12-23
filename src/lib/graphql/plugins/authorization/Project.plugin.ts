@@ -2,13 +2,15 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { billingBypassSlugs } from "./constants";
+
 import type { InsertProject } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (context, sideEffect, billingBypassSlugs, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -52,8 +54,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           )
             throw new Error("Insufficient permissions");
 
-          // enforce tier limits on project creation
-          if (scope === "create") {
+          // Bypass tier limits for exempt organizations
+          if (
+            scope === "create" &&
+            !billingBypassSlugs.includes(organization.slug)
+          ) {
             if (organization.tier === "free" && !!organization.projects.length)
               throw new Error("Maximum number of projects reached.");
 
@@ -67,7 +72,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [context, sideEffect, billingBypassSlugs, propName, scope],
   );
 
 /**
