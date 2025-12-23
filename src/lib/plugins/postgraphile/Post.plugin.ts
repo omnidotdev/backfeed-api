@@ -2,6 +2,8 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { billingBypassSlugs } from "./constants";
+
 import type { InsertPost } from "lib/drizzle/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
@@ -10,7 +12,7 @@ import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (context, sideEffect, billingBypassSlugs, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -40,7 +42,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!project) throw new Error("Project not found");
 
-            if (project.organization.tier === "free") {
+            // Bypass tier limits for exempt organizations
+            if (
+              project.organization.tier === "free" &&
+              !billingBypassSlugs.includes(project.organization.slug)
+            ) {
               const uniqueUsers = [
                 ...new Set(project.posts.map((p) => p.userId)),
               ];
@@ -86,7 +92,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [context, sideEffect, billingBypassSlugs, propName, scope],
   );
 
 /**

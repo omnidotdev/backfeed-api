@@ -12,6 +12,7 @@ export const {
   CHECKOUT_SUCCESS_URL,
   AUTH_BASE_URL,
   GRAPHQL_COMPLEXITY_MAX_COST,
+  BILLING_BYPASS_SLUGS,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
