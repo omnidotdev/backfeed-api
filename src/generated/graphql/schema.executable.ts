@@ -4774,7 +4774,7 @@ function oldPlan3(_, args) {
     result: $insert
   });
 }
-const billingBypassSlugs = [];
+const billingBypassSlugs = ["omni"];
 const planWrapper3 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "comment"]),
     $observer = context().get("observer"),
