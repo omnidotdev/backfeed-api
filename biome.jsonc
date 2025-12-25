@@ -31,7 +31,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!!src/generated", "!!src/lib/drizzle/migrations"]
+    "includes": ["**", "!!src/generated"]
   },
   "formatter": {
     "indentStyle": "space",

@@ -4774,6 +4774,7 @@ function oldPlan3(_, args) {
     result: $insert
   });
 }
+const billingBypassSlugs = ["omni"];
 const planWrapper3 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "comment"]),
     $observer = context().get("observer"),
@@ -4804,7 +4805,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post does not exist");
-      if (post.project.organization.tier === "free" && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
+      if (post.project.organization.tier === "free" && !billingBypassSlugs.includes(post.project.organization.slug) && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
     } else {
       const comment = await db.query.comments.findFirst({
         where(table, {
@@ -4948,11 +4949,9 @@ const planWrapper6 = (plan, _, fieldArgs) => {
           }
         });
       if (!project) throw Error("Project not found");
-      if (project.organization.tier === "free") {
+      if (project.organization.tier === "free" && !billingBypassSlugs.includes(project.organization.slug)) {
         const uniqueUsers = [...new Set(project.posts.map(p => p.userId))];
-        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS) {
-          if (!uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
-        }
+        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS && !uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
       }
     } else {
       const post = await db.query.posts.findFirst({
@@ -5032,7 +5031,7 @@ const planWrapper7 = (plan, _, fieldArgs) => {
     });
     if (!organization) throw Error("Organization not found");
     if (!organization.members.length || organization.members[0].role === "member") throw Error("Insufficient permissions");
-    if ("create" === "create") {
+    if ("create" === "create" && !billingBypassSlugs.includes(organization.slug)) {
       if (organization.tier === "free" && !!organization.projects.length) throw Error("Maximum number of projects reached.");
       if (organization.tier === "basic" && organization.projects.length >= 3) throw Error("Maximum number of projects reached.");
     }
@@ -5040,13 +5039,109 @@ const planWrapper7 = (plan, _, fieldArgs) => {
   return plan();
 };
 function oldPlan8(_, args) {
-  const $insert = pgInsertSingle(resource_organizationPgResource, Object.create(null));
+  const $insert = pgInsertSingle(resource_project_status_configPgResource, Object.create(null));
   args.apply($insert);
   return object({
     result: $insert
   });
 }
 const planWrapper8 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "projectStatusConfig"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let projectId;
+    if ("create" === "create") projectId = input.projectId;else {
+      const config = await db.query.projectStatusConfigs.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!config) throw Error("Project status config not found");
+      projectId = config.projectId;
+    }
+    const project = await db.query.projects.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, projectId);
+      },
+      with: {
+        organization: {
+          with: {
+            members: {
+              where(table, {
+                eq
+              }) {
+                return eq(table.userId, observer.id);
+              }
+            }
+          }
+        }
+      }
+    });
+    if (!project) throw Error("Project not found");
+    if (!project.organization.members.length || project.organization.members[0].role === "member") throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan9(_, args) {
+  const $insert = pgInsertSingle(resource_status_templatePgResource, Object.create(null));
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper9 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "statusTemplate"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    if ("create" === "create") organizationId = input.organizationId;else {
+      const statusTemplate = await db.query.statusTemplates.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!statusTemplate) throw Error("Status template not found");
+      organizationId = statusTemplate.organizationId;
+    }
+    const organization = await db.query.organizations.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, organizationId);
+      },
+      with: {
+        members: {
+          where(table, {
+            eq
+          }) {
+            return eq(table.userId, observer.id);
+          }
+        }
+      }
+    });
+    if (!organization) throw Error("Organization not found");
+    if (!organization.members.length || organization.members[0].role === "member") throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan10(_, args) {
+  const $insert = pgInsertSingle(resource_organizationPgResource, Object.create(null));
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "organization"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5075,7 +5170,7 @@ const planWrapper8 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan9 = (_$root, args) => {
+const oldPlan11 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_project_socialPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5084,7 +5179,7 @@ const oldPlan9 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper9 = (plan, _, fieldArgs) => {
+const planWrapper11 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5126,7 +5221,7 @@ const planWrapper9 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan10 = (_$root, args) => {
+const oldPlan12 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_commentPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5135,7 +5230,7 @@ const oldPlan10 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper10 = (plan, _, fieldArgs) => {
+const planWrapper12 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5165,7 +5260,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post does not exist");
-      if (post.project.organization.tier === "free" && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
+      if (post.project.organization.tier === "free" && !billingBypassSlugs.includes(post.project.organization.slug) && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
     } else {
       const comment = await db.query.comments.findFirst({
         where(table, {
@@ -5203,7 +5298,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan11 = (_$root, args) => {
+const oldPlan13 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5212,7 +5307,7 @@ const oldPlan11 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper11 = (plan, _, fieldArgs) => {
+const planWrapper13 = (plan, _, fieldArgs) => {
   const $userId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$userId, $observer], async ([userId, observer]) => {
@@ -5221,7 +5316,33 @@ const planWrapper11 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan12 = (_$root, args) => {
+const oldPlan14 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_votePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper14 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    const vote = await db.query.votes.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, input);
+      }
+    });
+    if (observer.id !== vote?.userId) throw Error("Unauthorized");
+  });
+  return plan();
+};
+const oldPlan15 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_memberPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5230,7 +5351,7 @@ const oldPlan12 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper12 = (plan, _, fieldArgs) => {
+const planWrapper15 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $patch = "update" === "update" ? fieldArgs.getRaw(["input", "patch"]) : $input,
     $observer = context().get("observer"),
@@ -5281,7 +5402,7 @@ const planWrapper12 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan13 = (_$root, args) => {
+const oldPlan16 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5290,7 +5411,7 @@ const oldPlan13 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper13 = (plan, _, fieldArgs) => {
+const planWrapper16 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5315,11 +5436,9 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           }
         });
       if (!project) throw Error("Project not found");
-      if (project.organization.tier === "free") {
+      if (project.organization.tier === "free" && !billingBypassSlugs.includes(project.organization.slug)) {
         const uniqueUsers = [...new Set(project.posts.map(p => p.userId))];
-        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS) {
-          if (!uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
-        }
+        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS && !uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
       }
     } else {
       const post = await db.query.posts.findFirst({
@@ -5353,7 +5472,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan14 = (_$root, args) => {
+const oldPlan17 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5362,7 +5481,7 @@ const oldPlan14 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper14 = (plan, _, fieldArgs) => {
+const planWrapper17 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5401,14 +5520,114 @@ const planWrapper14 = (plan, _, fieldArgs) => {
     });
     if (!organization) throw Error("Organization not found");
     if (!organization.members.length || organization.members[0].role === "member") throw Error("Insufficient permissions");
-    if ("update" === "create") {
+    if ("update" === "create" && !billingBypassSlugs.includes(organization.slug)) {
       if (organization.tier === "free" && !!organization.projects.length) throw Error("Maximum number of projects reached.");
       if (organization.tier === "basic" && organization.projects.length >= 3) throw Error("Maximum number of projects reached.");
     }
   });
   return plan();
 };
-const oldPlan15 = (_$root, args) => {
+const oldPlan18 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_project_status_configPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper18 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let projectId;
+    if ("update" === "create") projectId = input.projectId;else {
+      const config = await db.query.projectStatusConfigs.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!config) throw Error("Project status config not found");
+      projectId = config.projectId;
+    }
+    const project = await db.query.projects.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, projectId);
+      },
+      with: {
+        organization: {
+          with: {
+            members: {
+              where(table, {
+                eq
+              }) {
+                return eq(table.userId, observer.id);
+              }
+            }
+          }
+        }
+      }
+    });
+    if (!project) throw Error("Project not found");
+    if (!project.organization.members.length || project.organization.members[0].role === "member") throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+const oldPlan19 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_status_templatePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper19 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    if ("update" === "create") organizationId = input.organizationId;else {
+      const statusTemplate = await db.query.statusTemplates.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!statusTemplate) throw Error("Status template not found");
+      organizationId = statusTemplate.organizationId;
+    }
+    const organization = await db.query.organizations.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, organizationId);
+      },
+      with: {
+        members: {
+          where(table, {
+            eq
+          }) {
+            return eq(table.userId, observer.id);
+          }
+        }
+      }
+    });
+    if (!organization) throw Error("Organization not found");
+    if (!organization.members.length || organization.members[0].role === "member") throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+const oldPlan20 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_organizationPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5417,7 +5636,7 @@ const oldPlan15 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper15 = (plan, _, fieldArgs) => {
+const planWrapper20 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5446,7 +5665,7 @@ const planWrapper15 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan16 = (_$root, args) => {
+const oldPlan21 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_invitationPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5455,7 +5674,7 @@ const oldPlan16 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper16 = (plan, _, fieldArgs) => {
+const planWrapper21 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5532,7 +5751,7 @@ const planWrapper16 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan17 = (_$root, args) => {
+const oldPlan22 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_project_socialPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5541,7 +5760,7 @@ const oldPlan17 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper17 = (plan, _, fieldArgs) => {
+const planWrapper22 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5583,7 +5802,7 @@ const planWrapper17 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan18 = (_$root, args) => {
+const oldPlan23 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_commentPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5592,7 +5811,7 @@ const oldPlan18 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper18 = (plan, _, fieldArgs) => {
+const planWrapper23 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5622,7 +5841,7 @@ const planWrapper18 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post does not exist");
-      if (post.project.organization.tier === "free" && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
+      if (post.project.organization.tier === "free" && !billingBypassSlugs.includes(post.project.organization.slug) && post.comments.length >= MAX_FREE_TIER_COMMENTS) throw Error("Maximum number of comments has been reached");
     } else {
       const comment = await db.query.comments.findFirst({
         where(table, {
@@ -5660,7 +5879,7 @@ const planWrapper18 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan19 = (_$root, args) => {
+const oldPlan24 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5669,7 +5888,7 @@ const oldPlan19 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper19 = (plan, _, fieldArgs) => {
+const planWrapper24 = (plan, _, fieldArgs) => {
   const $userId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$userId, $observer], async ([userId, observer]) => {
@@ -5678,7 +5897,33 @@ const planWrapper19 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan20 = (_$root, args) => {
+const oldPlan25 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_votePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper25 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    const vote = await db.query.votes.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, input);
+      }
+    });
+    if (observer.id !== vote?.userId) throw Error("Unauthorized");
+  });
+  return plan();
+};
+const oldPlan26 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_memberPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5687,7 +5932,7 @@ const oldPlan20 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper20 = (plan, _, fieldArgs) => {
+const planWrapper26 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $patch = "delete" === "update" ? fieldArgs.getRaw(["input", "patch"]) : $input,
     $observer = context().get("observer"),
@@ -5738,7 +5983,7 @@ const planWrapper20 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan21 = (_$root, args) => {
+const oldPlan27 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5747,7 +5992,7 @@ const oldPlan21 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper21 = (plan, _, fieldArgs) => {
+const planWrapper27 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5772,11 +6017,9 @@ const planWrapper21 = (plan, _, fieldArgs) => {
           }
         });
       if (!project) throw Error("Project not found");
-      if (project.organization.tier === "free") {
+      if (project.organization.tier === "free" && !billingBypassSlugs.includes(project.organization.slug)) {
         const uniqueUsers = [...new Set(project.posts.map(p => p.userId))];
-        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS) {
-          if (!uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
-        }
+        if (uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS && !uniqueUsers.includes(observer.id)) throw Error("Maximum number of unique users providing feedback has been reached");
       }
     } else {
       const post = await db.query.posts.findFirst({
@@ -5810,7 +6053,7 @@ const planWrapper21 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan22 = (_$root, args) => {
+const oldPlan28 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5819,7 +6062,7 @@ const oldPlan22 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper22 = (plan, _, fieldArgs) => {
+const planWrapper28 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5858,14 +6101,114 @@ const planWrapper22 = (plan, _, fieldArgs) => {
     });
     if (!organization) throw Error("Organization not found");
     if (!organization.members.length || organization.members[0].role === "member") throw Error("Insufficient permissions");
-    if ("delete" === "create") {
+    if ("delete" === "create" && !billingBypassSlugs.includes(organization.slug)) {
       if (organization.tier === "free" && !!organization.projects.length) throw Error("Maximum number of projects reached.");
       if (organization.tier === "basic" && organization.projects.length >= 3) throw Error("Maximum number of projects reached.");
     }
   });
   return plan();
 };
-const oldPlan23 = (_$root, args) => {
+const oldPlan29 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_project_status_configPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper29 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let projectId;
+    if ("delete" === "create") projectId = input.projectId;else {
+      const config = await db.query.projectStatusConfigs.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!config) throw Error("Project status config not found");
+      projectId = config.projectId;
+    }
+    const project = await db.query.projects.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, projectId);
+      },
+      with: {
+        organization: {
+          with: {
+            members: {
+              where(table, {
+                eq
+              }) {
+                return eq(table.userId, observer.id);
+              }
+            }
+          }
+        }
+      }
+    });
+    if (!project) throw Error("Project not found");
+    if (!project.organization.members.length || project.organization.members[0].role === "member") throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+const oldPlan30 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_status_templatePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper30 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    if ("delete" === "create") organizationId = input.organizationId;else {
+      const statusTemplate = await db.query.statusTemplates.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!statusTemplate) throw Error("Status template not found");
+      organizationId = statusTemplate.organizationId;
+    }
+    const organization = await db.query.organizations.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, organizationId);
+      },
+      with: {
+        members: {
+          where(table, {
+            eq
+          }) {
+            return eq(table.userId, observer.id);
+          }
+        }
+      }
+    });
+    if (!organization) throw Error("Organization not found");
+    if (!organization.members.length || organization.members[0].role === "member") throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+const oldPlan31 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_organizationPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5874,7 +6217,7 @@ const oldPlan23 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper23 = (plan, _, fieldArgs) => {
+const planWrapper31 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -13898,17 +14241,17 @@ ${String(oldPlan5)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan8.apply(this, args);
+                $prev = oldPlan10.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"createOrganization"}, but that function did not return a step!
-${String(oldPlan8)}`);
+${String(oldPlan10)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper8(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -13995,12 +14338,23 @@ ${String(oldPlan2)}`);
         }
       },
       createProjectStatusConfig: {
-        plan(_, args) {
-          const $insert = pgInsertSingle(resource_project_status_configPgResource, Object.create(null));
-          args.apply($insert);
-          return object({
-            result: $insert
-          });
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan8.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"createProjectStatusConfig"}, but that function did not return a step!
+${String(oldPlan8)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper8(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
         },
         args: {
           input(_, $object) {
@@ -14009,12 +14363,23 @@ ${String(oldPlan2)}`);
         }
       },
       createStatusTemplate: {
-        plan(_, args) {
-          const $insert = pgInsertSingle(resource_status_templatePgResource, Object.create(null));
-          args.apply($insert);
-          return object({
-            result: $insert
-          });
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan9.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"createStatusTemplate"}, but that function did not return a step!
+${String(oldPlan9)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
         },
         args: {
           input(_, $object) {
@@ -14065,84 +14430,9 @@ ${String(oldPlan4)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan18.apply(this, args);
-              if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteComment"}, but that function did not return a step!
-${String(oldPlan18)}`);
-                throw Error("Wrapped a plan function, but that function did not return a step!");
-              }
-              args[1].autoApply($prev);
-              return $prev;
-            },
-            [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
-          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-          return $newPlan;
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      deleteInvitation: {
-        plan(...planParams) {
-          const smartPlan = (...overrideParams) => {
-              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan16.apply(this, args);
-              if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteInvitation"}, but that function did not return a step!
-${String(oldPlan16)}`);
-                throw Error("Wrapped a plan function, but that function did not return a step!");
-              }
-              args[1].autoApply($prev);
-              return $prev;
-            },
-            [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
-          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-          return $newPlan;
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      deleteMember: {
-        plan(...planParams) {
-          const smartPlan = (...overrideParams) => {
-              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan20.apply(this, args);
-              if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteMember"}, but that function did not return a step!
-${String(oldPlan20)}`);
-                throw Error("Wrapped a plan function, but that function did not return a step!");
-              }
-              args[1].autoApply($prev);
-              return $prev;
-            },
-            [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
-          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-          return $newPlan;
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      deleteOrganization: {
-        plan(...planParams) {
-          const smartPlan = (...overrideParams) => {
-              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
                 $prev = oldPlan23.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteOrganization"}, but that function did not return a step!
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteComment"}, but that function did not return a step!
 ${String(oldPlan23)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
@@ -14161,13 +14451,13 @@ ${String(oldPlan23)}`);
           }
         }
       },
-      deletePost: {
+      deleteInvitation: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
                 $prev = oldPlan21.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"deletePost"}, but that function did not return a step!
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteInvitation"}, but that function did not return a step!
 ${String(oldPlan21)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
@@ -14186,13 +14476,113 @@ ${String(oldPlan21)}`);
           }
         }
       },
+      deleteMember: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan26.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteMember"}, but that function did not return a step!
+${String(oldPlan26)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper26(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      deleteOrganization: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan31.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteOrganization"}, but that function did not return a step!
+${String(oldPlan31)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      deletePost: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan27.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deletePost"}, but that function did not return a step!
+${String(oldPlan27)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
       deleteProject: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan28.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
+${String(oldPlan28)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      deleteProjectSocial: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
                 $prev = oldPlan22.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProjectSocial"}, but that function did not return a step!
 ${String(oldPlan22)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
@@ -14211,21 +14601,21 @@ ${String(oldPlan22)}`);
           }
         }
       },
-      deleteProjectSocial: {
+      deleteProjectStatusConfig: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan17.apply(this, args);
+                $prev = oldPlan29.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProjectSocial"}, but that function did not return a step!
-${String(oldPlan17)}`);
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProjectStatusConfig"}, but that function did not return a step!
+${String(oldPlan29)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -14236,31 +14626,24 @@ ${String(oldPlan17)}`);
           }
         }
       },
-      deleteProjectStatusConfig: {
-        plan(_$root, args) {
-          const $delete = pgDeleteSingle(resource_project_status_configPgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($delete);
-          return object({
-            result: $delete
-          });
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
       deleteStatusTemplate: {
-        plan(_$root, args) {
-          const $delete = pgDeleteSingle(resource_status_templatePgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($delete);
-          return object({
-            result: $delete
-          });
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan30.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteStatusTemplate"}, but that function did not return a step!
+${String(oldPlan30)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
         },
         args: {
           input(_, $object) {
@@ -14272,17 +14655,17 @@ ${String(oldPlan17)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan19.apply(this, args);
+                $prev = oldPlan24.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUser"}, but that function did not return a step!
-${String(oldPlan19)}`);
+${String(oldPlan24)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -14294,14 +14677,23 @@ ${String(oldPlan19)}`);
         }
       },
       deleteVote: {
-        plan(_$root, args) {
-          const $delete = pgDeleteSingle(resource_votePgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($delete);
-          return object({
-            result: $delete
-          });
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan25.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteVote"}, but that function did not return a step!
+${String(oldPlan25)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
         },
         args: {
           input(_, $object) {
@@ -14313,34 +14705,9 @@ ${String(oldPlan19)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan10.apply(this, args);
-              if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateComment"}, but that function did not return a step!
-${String(oldPlan10)}`);
-                throw Error("Wrapped a plan function, but that function did not return a step!");
-              }
-              args[1].autoApply($prev);
-              return $prev;
-            },
-            [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
-          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-          return $newPlan;
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      updateMember: {
-        plan(...planParams) {
-          const smartPlan = (...overrideParams) => {
-              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
                 $prev = oldPlan12.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateMember"}, but that function did not return a step!
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateComment"}, but that function did not return a step!
 ${String(oldPlan12)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
@@ -14359,13 +14726,13 @@ ${String(oldPlan12)}`);
           }
         }
       },
-      updateOrganization: {
+      updateMember: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
                 $prev = oldPlan15.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateOrganization"}, but that function did not return a step!
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateMember"}, but that function did not return a step!
 ${String(oldPlan15)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
@@ -14384,21 +14751,46 @@ ${String(oldPlan15)}`);
           }
         }
       },
-      updatePost: {
+      updateOrganization: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan13.apply(this, args);
+                $prev = oldPlan20.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"updatePost"}, but that function did not return a step!
-${String(oldPlan13)}`);
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateOrganization"}, but that function did not return a step!
+${String(oldPlan20)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      updatePost: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan16.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"updatePost"}, but that function did not return a step!
+${String(oldPlan16)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -14413,17 +14805,17 @@ ${String(oldPlan13)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan14.apply(this, args);
+                $prev = oldPlan17.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProject"}, but that function did not return a step!
-${String(oldPlan14)}`);
+${String(oldPlan17)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -14438,66 +14830,9 @@ ${String(oldPlan14)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan9.apply(this, args);
-              if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProjectSocial"}, but that function did not return a step!
-${String(oldPlan9)}`);
-                throw Error("Wrapped a plan function, but that function did not return a step!");
-              }
-              args[1].autoApply($prev);
-              return $prev;
-            },
-            [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
-          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-          return $newPlan;
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      updateProjectStatusConfig: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(resource_project_status_configPgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($update);
-          return object({
-            result: $update
-          });
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      updateStatusTemplate: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(resource_status_templatePgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($update);
-          return object({
-            result: $update
-          });
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      updateUser: {
-        plan(...planParams) {
-          const smartPlan = (...overrideParams) => {
-              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
                 $prev = oldPlan11.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUser"}, but that function did not return a step!
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProjectSocial"}, but that function did not return a step!
 ${String(oldPlan11)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
@@ -14516,15 +14851,99 @@ ${String(oldPlan11)}`);
           }
         }
       },
+      updateProjectStatusConfig: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan18.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProjectStatusConfig"}, but that function did not return a step!
+${String(oldPlan18)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      updateStatusTemplate: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan19.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateStatusTemplate"}, but that function did not return a step!
+${String(oldPlan19)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      updateUser: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan13.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUser"}, but that function did not return a step!
+${String(oldPlan13)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
       updateVote: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(resource_votePgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($update);
-          return object({
-            result: $update
-          });
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan14.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateVote"}, but that function did not return a step!
+${String(oldPlan14)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
         },
         args: {
           input(_, $object) {

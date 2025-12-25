@@ -12,6 +12,7 @@ const knipConfig: KnipConfig = {
     "src/lib/db/db.ts",
     "src/lib/config/env.config.ts",
   ],
+  ignoreDependencies: ["drizzle-kit"],
   tags: ["-knipignore"],
 };
 

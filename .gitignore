@@ -1,10 +1,12 @@
 build/
 node_modules/
+
+# TLS
+*.pem
+
+# environment
 .env
 .env.*
 !.env.*template
 !.env.development
 !.env.production
-
-## Misc
-.vscode

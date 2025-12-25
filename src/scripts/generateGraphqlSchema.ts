@@ -2,11 +2,10 @@ import { existsSync, mkdirSync } from "node:fs";
 
 import { exportSchema } from "graphile-export";
 import { EXPORTABLE } from "graphile-export/helpers";
+import preset from "lib/config/graphile.config";
 import { makeSchema } from "postgraphile";
 import { context, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
-
-import preset from "../../graphile.config";
 
 /**
  * Generate a GraphQL schema from the database.
