@@ -3,7 +3,7 @@ import { pgPool } from "lib/db/pool";
 import { createWithPgClient } from "postgraphile/adaptors/pg";
 
 import type { YogaInitialContext } from "graphql-yoga";
-import type { SelectUser } from "lib/drizzle/schema";
+import type { SelectUser } from "lib/db/schema";
 import type { WithPgClient } from "postgraphile/@dataplan/pg";
 import type {
   NodePostgresPgClient,

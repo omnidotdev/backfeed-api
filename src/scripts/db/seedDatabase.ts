@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { reset, seed } from "drizzle-seed";
 import { DATABASE_URL, isDevEnv } from "lib/config/env.config";
-import * as schema from "lib/drizzle/schema";
+import * as schema from "lib/db/schema";
 
 /**
  * Seed database with sample data.
@@ -37,8 +37,6 @@ const seedDatabase = async () => {
         }),
       },
       with: {
-        // TODO: figure out how to seed post statuses correctly
-        postStatuses: 5,
         posts: 20,
       },
     },
@@ -58,8 +56,33 @@ const seedDatabase = async () => {
     users: {
       count: 500,
       with: {
-        upvotes: 10,
-        downvotes: 10,
+        votes: 20,
+      },
+    },
+    statusTemplates: {
+      count: 5,
+      columns: {
+        name: f.valuesFromArray({
+          values: [
+            "open",
+            "in_progress",
+            "under_review",
+            "completed",
+            "closed",
+          ],
+        }),
+        displayName: f.valuesFromArray({
+          values: [
+            "Open",
+            "In Progress",
+            "Under Review",
+            "Completed",
+            "Closed",
+          ],
+        }),
+        color: f.valuesFromArray({
+          values: ["#10b981", "#f59e0b", "#3b82f6", "#8b5cf6", "#6b7280"],
+        }),
       },
     },
     members: {
