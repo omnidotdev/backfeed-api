@@ -55,7 +55,7 @@
     "@types/pg": "^8.16.0",
     "drizzle-kit": "^0.31.8",
     "husky": "^9.1.7",
-    "knip": "^5.76.3",
+    "knip": "^5.77.1",
     "replace-in-file": "^8.4.0",
     "typescript": "^5.9.3"
   },
