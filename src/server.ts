@@ -7,9 +7,9 @@ import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import appConfig from "lib/config/app.config";
 import { CORS_ALLOWED_ORIGINS, PORT, isDevEnv } from "lib/config/env.config";
+import entitlementsWebhook from "lib/entitlements/webhooks";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
-import webhooks from "webhooks";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
@@ -34,7 +34,7 @@ const app = new Elysia({
       methods: ["GET", "POST", "OPTIONS"],
     }),
   )
-  .use(webhooks)
+  .use(entitlementsWebhook)
   .use(
     yoga({
       schema,
