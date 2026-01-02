@@ -2,15 +2,23 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { billingBypassSlugs } from "./constants";
+import { FEATURE_KEYS, billingBypassSlugs, isWithinLimit } from "./constants";
 
-import type { InsertComment } from "lib/db/schema";
+import type { InsertComment, SelectOrganization } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, billingBypassSlugs, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      billingBypassSlugs,
+      FEATURE_KEYS,
+      isWithinLimit,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -18,8 +26,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
-
-          const MAX_FREE_TIER_COMMENTS = 100;
 
           if (scope === "create") {
             const postId = (input as InsertComment).postId;
@@ -31,7 +37,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   columns: {
                     id: true,
                   },
-                  limit: MAX_FREE_TIER_COMMENTS,
                 },
                 project: {
                   with: {
@@ -43,13 +48,21 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!post) throw new Error("Post does not exist");
 
-            // Bypass tier limits for exempt organizations
-            if (
-              post.project.organization.tier === "free" &&
-              !billingBypassSlugs.includes(post.project.organization.slug) &&
-              post.comments.length >= MAX_FREE_TIER_COMMENTS
-            )
+            // Check comments per post limit
+            const withinLimit = await isWithinLimit(
+              post.project.organization as {
+                id: string;
+                tier: SelectOrganization["tier"];
+                slug: string;
+              },
+              FEATURE_KEYS.MAX_COMMENTS_PER_POST,
+              post.comments.length,
+              billingBypassSlugs,
+            );
+
+            if (!withinLimit) {
               throw new Error("Maximum number of comments has been reached");
+            }
           } else {
             const comment = await db.query.comments.findFirst({
               where: (table, { eq }) => eq(table.id, input),
@@ -87,7 +100,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         return plan();
       },
-    [context, sideEffect, billingBypassSlugs, propName, scope],
+    [
+      context,
+      sideEffect,
+      billingBypassSlugs,
+      FEATURE_KEYS,
+      isWithinLimit,
+      propName,
+      scope,
+    ],
   );
 
 /**
