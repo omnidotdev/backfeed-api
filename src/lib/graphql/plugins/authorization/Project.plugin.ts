@@ -2,15 +2,23 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { billingBypassSlugs } from "./constants";
+import { FEATURE_KEYS, billingBypassSlugs, isWithinLimit } from "./constants";
 
-import type { InsertProject } from "lib/db/schema";
+import type { InsertProject, SelectOrganization } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, billingBypassSlugs, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      billingBypassSlugs,
+      FEATURE_KEYS,
+      isWithinLimit,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -39,9 +47,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               members: {
                 where: (table, { eq }) => eq(table.userId, observer.id),
               },
-              projects: {
-                limit: 3,
-              },
+              projects: true,
             },
           });
 
@@ -54,25 +60,36 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           )
             throw new Error("Insufficient permissions");
 
-          // Bypass tier limits for exempt organizations
-          if (
-            scope === "create" &&
-            !billingBypassSlugs.includes(organization.slug)
-          ) {
-            if (organization.tier === "free" && !!organization.projects.length)
-              throw new Error("Maximum number of projects reached.");
+          // Check tier limits for create operations
+          if (scope === "create") {
+            const withinLimit = await isWithinLimit(
+              organization as {
+                id: string;
+                tier: SelectOrganization["tier"];
+                slug: string;
+              },
+              FEATURE_KEYS.MAX_PROJECTS,
+              organization.projects.length,
+              billingBypassSlugs,
+            );
 
-            if (
-              organization.tier === "basic" &&
-              organization.projects.length >= 3
-            )
+            if (!withinLimit) {
               throw new Error("Maximum number of projects reached.");
+            }
           }
         });
 
         return plan();
       },
-    [context, sideEffect, billingBypassSlugs, propName, scope],
+    [
+      context,
+      sideEffect,
+      billingBypassSlugs,
+      FEATURE_KEYS,
+      isWithinLimit,
+      propName,
+      scope,
+    ],
   );
 
 /**
