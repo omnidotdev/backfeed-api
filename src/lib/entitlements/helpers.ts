@@ -100,20 +100,24 @@ const getOrganizationLimit = async (
 };
 
 /**
- * Check if an organization is within its limit for a resource.
- * Returns true if the current count is below the limit.
- * Returns true if the limit is -1 (unlimited).
+ * Check if an organization is within its limit, using organization object for fallback.
+ * This is the primary function for authorization plugins.
  */
-const checkOrganizationLimit = async (
-  organizationId: string,
+export const isWithinLimit = async (
+  organization: { id: string; tier: Tier; slug: string },
   limitKey: string,
   currentCount: number,
-  fallbackTier: Tier = "free",
+  billingBypassSlugs: string[] = [],
 ): Promise<boolean> => {
+  // Bypass check for exempt organizations
+  if (billingBypassSlugs.includes(organization.slug)) {
+    return true;
+  }
+
   const limit = await getOrganizationLimit(
-    organizationId,
+    organization.id,
     limitKey,
-    fallbackTier,
+    organization.tier,
   );
 
   // -1 means unlimited
@@ -121,26 +125,3 @@ const checkOrganizationLimit = async (
 
   return currentCount < limit;
 };
-
-/**
- * Check if an organization is within its limit, using organization object for fallback.
- * This is the primary function for authorization plugins.
- */
-export async function isWithinLimit(
-  organization: { id: string; tier: Tier; slug: string },
-  limitKey: string,
-  currentCount: number,
-  billingBypassSlugs: string[] = [],
-): Promise<boolean> {
-  // Bypass check for exempt organizations
-  if (billingBypassSlugs.includes(organization.slug)) {
-    return true;
-  }
-
-  return checkOrganizationLimit(
-    organization.id,
-    limitKey,
-    currentCount,
-    organization.tier,
-  );
-}
