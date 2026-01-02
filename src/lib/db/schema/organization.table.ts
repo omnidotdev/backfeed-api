@@ -29,6 +29,7 @@ export const organizations = pgTable(
       .notNull(),
     tier: tier().notNull().default("free"),
     subscriptionId: text(),
+    billingAccountId: text(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },

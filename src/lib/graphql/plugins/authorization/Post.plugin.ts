@@ -2,17 +2,23 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { billingBypassSlugs } from "./constants";
+import { FEATURE_KEYS, billingBypassSlugs, isWithinLimit } from "./constants";
 
-import type { InsertPost } from "lib/db/schema";
+import type { InsertPost, SelectOrganization } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
-// TODO: discuss handling field level permissions. For example, a user should not be able to update the `statusId` field for a post even if they are the author. That should be reserved for admins and owners.
-
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, billingBypassSlugs, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      billingBypassSlugs,
+      FEATURE_KEYS,
+      isWithinLimit,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -20,8 +26,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
-
-          const MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS = 15;
 
           if (scope === "create") {
             const post = input as InsertPost;
@@ -40,22 +44,29 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!project) throw new Error("Project not found");
 
-            // Bypass tier limits for exempt organizations
-            if (
-              project.organization.tier === "free" &&
-              !billingBypassSlugs.includes(project.organization.slug)
-            ) {
-              const uniqueUsers = [
-                ...new Set(project.posts.map((p) => p.userId)),
-              ];
+            // Check unique feedback users limit
+            const uniqueUsers = [
+              ...new Set(project.posts.map((p) => p.userId)),
+            ];
+            const currentUniqueCount = uniqueUsers.includes(observer.id)
+              ? uniqueUsers.length
+              : uniqueUsers.length + 1;
 
-              if (
-                uniqueUsers.length >= MAX_FREE_TIER_FEEDBACK_UNIQUE_USERS &&
-                !uniqueUsers.includes(observer.id)
-              )
-                throw new Error(
-                  "Maximum number of unique users providing feedback has been reached",
-                );
+            const withinLimit = await isWithinLimit(
+              project.organization as {
+                id: string;
+                tier: SelectOrganization["tier"];
+                slug: string;
+              },
+              FEATURE_KEYS.MAX_FEEDBACK_USERS,
+              currentUniqueCount - 1, // isWithinLimit checks currentCount < limit
+              billingBypassSlugs,
+            );
+
+            if (!withinLimit && !uniqueUsers.includes(observer.id)) {
+              throw new Error(
+                "Maximum number of unique users providing feedback has been reached",
+              );
             }
           } else {
             const post = await db.query.posts.findFirst({
@@ -89,7 +100,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         return plan();
       },
-    [context, sideEffect, billingBypassSlugs, propName, scope],
+    [
+      context,
+      sideEffect,
+      billingBypassSlugs,
+      FEATURE_KEYS,
+      isWithinLimit,
+      propName,
+      scope,
+    ],
   );
 
 /**
