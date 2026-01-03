@@ -149,7 +149,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "125207",
+    oid: "188405",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -233,7 +233,7 @@ const spec_projectSocial = {
   },
   description: undefined,
   extensions: {
-    oid: "125252",
+    oid: "188450",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -340,7 +340,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "125073",
+    oid: "188271",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -459,7 +459,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "125012",
+    oid: "188210",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -480,7 +480,7 @@ const voteTypeCodec = enumCodec({
   values: ["up", "down"],
   description: undefined,
   extensions: {
-    oid: "133750",
+    oid: "188486",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -571,7 +571,7 @@ const spec_vote = {
   },
   description: undefined,
   extensions: {
-    oid: "133790",
+    oid: "188526",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -592,7 +592,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "125120",
+    oid: "188318",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -673,7 +673,7 @@ const spec_member = {
   },
   description: undefined,
   extensions: {
-    oid: "125025",
+    oid: "188223",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -804,7 +804,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "124970",
+    oid: "188168",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -935,7 +935,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "124983",
+    oid: "188181",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1066,7 +1066,7 @@ const spec_projectStatusConfig = {
   },
   description: undefined,
   extensions: {
-    oid: "133774",
+    oid: "188510",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1197,7 +1197,7 @@ const spec_statusTemplate = {
   },
   description: undefined,
   extensions: {
-    oid: "133757",
+    oid: "188493",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1217,7 +1217,7 @@ const tierCodec = enumCodec({
   values: ["free", "basic", "team", "enterprise"],
   description: undefined,
   extensions: {
-    oid: "125236",
+    oid: "188434",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1337,7 +1337,7 @@ const spec_organization = {
   },
   description: undefined,
   extensions: {
-    oid: "124955",
+    oid: "188153",
     isTableLike: true,
     pg: {
       serviceName: "main",
