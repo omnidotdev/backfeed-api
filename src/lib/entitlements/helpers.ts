@@ -6,16 +6,16 @@
 import { getCached, setCached } from "./cache";
 import { getEntitlements } from "./client";
 
-import type { SelectOrganization } from "lib/db/schema";
+import type { SelectWorkspace } from "lib/db/schema";
 
 /** Backfeed product ID for entitlements */
 const PRODUCT_ID = "backfeed";
 
 /** Cache key prefix */
-const CACHE_PREFIX = "organization";
+const CACHE_PREFIX = "workspace";
 
-/** Tier type matching organization schema */
-type Tier = SelectOrganization["tier"];
+/** Tier type matching workspace schema */
+type Tier = SelectWorkspace["tier"];
 
 /** Default limits when entitlements service is unavailable or entitlement not found */
 const DEFAULT_LIMITS: Record<string, Record<Tier, number>> = {
@@ -31,23 +31,19 @@ interface CachedEntitlements {
 }
 
 /**
- * Fetch and cache entitlements for an organization.
+ * Fetch and cache entitlements for a workspace.
  */
-async function fetchOrganizationEntitlements(
-  organizationId: string,
+async function fetchWorkspaceEntitlements(
+  workspaceId: string,
 ): Promise<CachedEntitlements | null> {
-  const cacheKey = `${CACHE_PREFIX}:${organizationId}`;
+  const cacheKey = `${CACHE_PREFIX}:${workspaceId}`;
 
   // Check cache first
   const cached = getCached<CachedEntitlements>(cacheKey);
   if (cached) return cached;
 
   // Fetch from entitlements service
-  const response = await getEntitlements(
-    "organization",
-    organizationId,
-    PRODUCT_ID,
-  );
+  const response = await getEntitlements("workspace", workspaceId, PRODUCT_ID);
 
   if (!response) return null;
 
@@ -74,16 +70,16 @@ async function fetchOrganizationEntitlements(
 }
 
 /**
- * Get a specific limit for an organization.
+ * Get a specific limit for a workspace.
  * Returns -1 for unlimited, or the limit number.
  * Falls back to default limits based on tier if entitlements service unavailable.
  */
-async function getOrganizationLimit(
-  organizationId: string,
+async function getWorkspaceLimit(
+  workspaceId: string,
   limitKey: string,
   fallbackTier: Tier = "free",
 ): Promise<number> {
-  const entitlements = await fetchOrganizationEntitlements(organizationId);
+  const entitlements = await fetchWorkspaceEntitlements(workspaceId);
 
   if (entitlements) {
     // Check if we have a specific limit set
@@ -100,21 +96,17 @@ async function getOrganizationLimit(
 }
 
 /**
- * Check if an organization is within its limit for a resource.
+ * Check if a workspace is within its limit for a resource.
  * Returns true if the current count is below the limit.
  * Returns true if the limit is -1 (unlimited).
  */
-export async function checkOrganizationLimit(
-  organizationId: string,
+export async function checkWorkspaceLimit(
+  workspaceId: string,
   limitKey: string,
   currentCount: number,
   fallbackTier: Tier = "free",
 ): Promise<boolean> {
-  const limit = await getOrganizationLimit(
-    organizationId,
-    limitKey,
-    fallbackTier,
-  );
+  const limit = await getWorkspaceLimit(workspaceId, limitKey, fallbackTier);
 
   // -1 means unlimited
   if (limit === -1) return true;
@@ -123,24 +115,24 @@ export async function checkOrganizationLimit(
 }
 
 /**
- * Check if an organization is within its limit, using organization object for fallback.
+ * Check if a workspace is within its limit, using workspace object for fallback.
  * This is the primary function for authorization plugins.
  */
 export async function isWithinLimit(
-  organization: { id: string; tier: Tier; slug: string },
+  workspace: { id: string; tier: Tier; slug: string },
   limitKey: string,
   currentCount: number,
   billingBypassSlugs: string[] = [],
 ): Promise<boolean> {
-  // Bypass check for exempt organizations
-  if (billingBypassSlugs.includes(organization.slug)) {
+  // Bypass check for exempt workspaces
+  if (billingBypassSlugs.includes(workspace.slug)) {
     return true;
   }
 
-  return checkOrganizationLimit(
-    organization.id,
+  return checkWorkspaceLimit(
+    workspace.id,
     limitKey,
     currentCount,
-    organization.tier,
+    workspace.tier,
   );
 }

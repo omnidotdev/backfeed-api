@@ -29,7 +29,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
               const existingMembers = await db.query.members.findMany({
                 where: (table, { eq }) =>
-                  eq(table.organizationId, member.organizationId),
+                  eq(table.workspaceId, member.workspaceId),
               });
 
               if (existingMembers.length) {
@@ -37,7 +37,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   (user) => user.userId === observer.id,
                 )?.role;
 
-                // Allow users to join an organization as a member
+                // Allow users to join a workspace as a member
                 if (!userRole) {
                   if (
                     member.userId !== observer.id ||
@@ -46,7 +46,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                     throw new Error("Insufficient permissions");
                   }
                 } else {
-                  // If the user is already a member, they must be an owner to invite a new member to the organization
+                  // If the user is already a member, they must be an owner to invite a new member to the workspace
                   if (userRole !== "owner") {
                     throw new Error("Insufficient permissions");
                   }
@@ -57,7 +57,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 where: (table, { eq }) => eq(table.id, input),
                 // A bit recursive, but allows us to get details about the member the mutation is for as well as the observer's membership
                 with: {
-                  organization: {
+                  workspace: {
                     with: {
                       members: {
                         where: (table, { eq }) => eq(table.userId, observer.id),
@@ -68,15 +68,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               });
 
               if (observer.id !== member?.userId) {
-                // Only allow owners to update roles and/or kick other members from the organization
-                if (member?.organization.members[0].role !== "owner") {
+                // Only allow owners to update roles and/or kick other members from the workspace
+                if (member?.workspace.members[0].role !== "owner") {
                   throw new Error("Insufficient permissions");
                 }
 
                 // Disallow updates that include adding an additional owner
                 // TODO: remove when add owner / transfer ownership is resolved
                 if (patch.role === "owner") {
-                  throw new Error("Organizations can only have one owner");
+                  throw new Error("Workspaces can only have one owner");
                 }
               } else {
                 if (scope === "update") {
@@ -84,7 +84,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   throw new Error("Insufficient permissions");
 
                   // TODO: replace above with below when ownership transfers are allowed
-                  // if (scope === "update" && member?.organization.members[0].role !== "owner") {
+                  // if (scope === "update" && member?.workspace.members[0].role !== "owner") {
                   //   throw new Error("Insufficient permissions");
                   // }
                 }

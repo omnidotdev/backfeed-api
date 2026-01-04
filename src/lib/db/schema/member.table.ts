@@ -9,18 +9,18 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-import { organizations } from "./organization.table";
 import { users } from "./user.table";
+import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * User roles defined for organizations.
+ * User roles defined for workspaces.
  */
 export const role = pgEnum("role", ["owner", "admin", "member"]);
 
 /**
- * Organization members table.
+ * Workspace members table.
  */
 export const members = pgTable(
   "member",
@@ -31,19 +31,19 @@ export const members = pgTable(
       .references(() => users.id, {
         onDelete: "cascade",
       }),
-    organizationId: uuid()
+    workspaceId: uuid()
       .notNull()
-      .references(() => organizations.id, {
+      .references(() => workspaces.id, {
         onDelete: "cascade",
       }),
     role: role().notNull(),
     createdAt: defaultDate(),
   },
   (table) => [
-    unique().on(table.userId, table.organizationId),
+    unique().on(table.userId, table.workspaceId),
     uniqueIndex().on(table.id),
     index().on(table.userId),
-    index().on(table.organizationId),
+    index().on(table.workspaceId),
   ],
 );
 
@@ -51,9 +51,9 @@ export const members = pgTable(
  * Member relations.
  */
 export const memberRelations = relations(members, ({ one }) => ({
-  organization: one(organizations, {
-    fields: [members.organizationId],
-    references: [organizations.id],
+  workspace: one(workspaces, {
+    fields: [members.workspaceId],
+    references: [workspaces.id],
   }),
   user: one(users, {
     fields: [members.userId],

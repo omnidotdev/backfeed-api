@@ -13,7 +13,7 @@ const SmartTagPlugin = jsonPgSmartTags({
           behavior: "-update",
         },
       },
-      organization: {
+      workspace: {
         attribute: {
           tier: {
             tags: {

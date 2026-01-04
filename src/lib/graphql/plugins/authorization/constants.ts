@@ -2,7 +2,7 @@ import { BILLING_BYPASS_SLUGS } from "lib/config/env.config";
 import { isWithinLimit } from "lib/entitlements";
 
 /**
- * Organization slugs that bypass all billing/tier limits.
+ * Workspace slugs that bypass all billing/tier limits.
  * Configured via BILLING_BYPASS_SLUGS env var (comma-separated).
  *
  * NOTE: Exported as array for use in EXPORTABLE functions.
@@ -24,7 +24,7 @@ export const FEATURE_KEYS = {
 } as const;
 
 /**
- * Check if organization is within limit for a resource.
+ * Check if workspace is within limit for a resource.
  * Exported for use in EXPORTABLE functions.
  */
 export { isWithinLimit };

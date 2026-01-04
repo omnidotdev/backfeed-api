@@ -90,10 +90,10 @@ const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
         case "entitlement.updated":
         case "entitlement.deleted":
           // Invalidate all cached entitlements for this entity
-          invalidateCache(`organization:${body.entityId}:*`);
-          invalidateCache(`organization:${body.entityId}`);
+          invalidateCache(`workspace:${body.entityId}:*`);
+          invalidateCache(`workspace:${body.entityId}`);
 
-          console.log(`Cache invalidated for organization ${body.entityId}`);
+          console.log(`Cache invalidated for workspace ${body.entityId}`);
           break;
         default:
           break;

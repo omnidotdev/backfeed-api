@@ -25,8 +25,8 @@ const validateInvitationPermissions = (
           if (scope === "create") {
             const invitation = input as InsertInvitation;
 
-            const organization = await db.query.organizations.findFirst({
-              where: (table, { eq }) => eq(table.id, invitation.organizationId),
+            const workspace = await db.query.workspaces.findFirst({
+              where: (table, { eq }) => eq(table.id, invitation.workspaceId),
               with: {
                 members: {
                   where: (table, { eq }) => eq(table.userId, observer.id),
@@ -34,13 +34,13 @@ const validateInvitationPermissions = (
               },
             });
 
-            // Only organization owners or admins can send invitations
+            // Only workspace owners or admins can send invitations
             if (
-              !organization?.members.length ||
-              organization.members[0].role === "member"
+              !workspace?.members.length ||
+              workspace.members[0].role === "member"
             )
               throw new Error(
-                "Only organization owners or admins can send invitations",
+                "Only workspace owners or admins can send invitations",
               );
 
             // Prevent inviting yourself
@@ -53,7 +53,7 @@ const validateInvitationPermissions = (
               where: (table, { and, eq }) =>
                 and(
                   eq(table.email, invitation.email),
-                  eq(table.organizationId, invitation.organizationId),
+                  eq(table.workspaceId, invitation.workspaceId),
                 ),
             });
 
@@ -63,9 +63,9 @@ const validateInvitationPermissions = (
               );
 
             // If recipient is a user, make sure they're not already a member
-            const organizationMembers = await db.query.members.findMany({
+            const workspaceMembers = await db.query.members.findMany({
               where: (table, { eq }) =>
-                eq(table.organizationId, invitation.organizationId),
+                eq(table.workspaceId, invitation.workspaceId),
               with: {
                 user: {
                   columns: {
@@ -75,17 +75,15 @@ const validateInvitationPermissions = (
               },
             });
 
-            if (
-              organizationMembers.find((m) => m.user.email === invitation.email)
-            )
-              throw new Error("User is already a member of the organization.");
+            if (workspaceMembers.find((m) => m.user.email === invitation.email))
+              throw new Error("User is already a member of the workspace.");
           }
 
           if (scope === "delete") {
             const invitation = await db.query.invitations.findFirst({
               where: (table, { eq }) => eq(table.id, input),
               with: {
-                organization: {
+                workspace: {
                   with: {
                     members: {
                       where: (table, { eq }) => eq(table.userId, observer.id),
@@ -94,8 +92,7 @@ const validateInvitationPermissions = (
                 },
               },
             });
-            const isOwner =
-              invitation?.organization.members?.[0].role === "owner";
+            const isOwner = invitation?.workspace.members?.[0].role === "owner";
             const isRecipient = observer.email === invitation?.email;
 
             // Only allow owner or recipient to delete

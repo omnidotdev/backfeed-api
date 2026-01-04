@@ -10,21 +10,21 @@ import { statusTemplates } from "./statusTemplate.table";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Subscription tiers defined for organizations.
+ * Subscription tiers defined for workspaces.
  */
 export const tier = pgEnum("tier", ["free", "basic", "team", "enterprise"]);
 
 /**
- * Organization table. Organizations are used to group projects together and contain a set of users.
+ * Workspace table. Workspaces are used to group projects together and contain a set of users.
  */
-export const organizations = pgTable(
-  "organization",
+export const workspaces = pgTable(
+  "workspace",
   {
     id: defaultId(),
     name: text().unique().notNull(),
     slug: text()
       // TODO https://linear.app/omnidev/issue/69c6f70e-0821-4a3a-a04a-971547f29690
-      // .generatedAlwaysAs((): SQL => generateSlug(organizations.name))
+      // .generatedAlwaysAs((): SQL => generateSlug(workspaces.name))
       .unique()
       .notNull(),
     tier: tier().notNull().default("free"),
@@ -37,9 +37,9 @@ export const organizations = pgTable(
 );
 
 /**
- * Organization relations.
+ * Workspace relations.
  */
-export const organizationRelations = relations(organizations, ({ many }) => ({
+export const workspaceRelations = relations(workspaces, ({ many }) => ({
   members: many(members),
   projects: many(projects),
   invitations: many(invitations),
@@ -47,7 +47,7 @@ export const organizationRelations = relations(organizations, ({ many }) => ({
 }));
 
 /**
- * Type helpers related to the organization table.
+ * Type helpers related to the workspace table.
  */
-export type InsertOrganization = InferInsertModel<typeof organizations>;
-export type SelectOrganization = InferSelectModel<typeof organizations>;
+export type InsertWorkspace = InferInsertModel<typeof workspaces>;
+export type SelectWorkspace = InferSelectModel<typeof workspaces>;

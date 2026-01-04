@@ -36,7 +36,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           const project = await db.query.projects.findFirst({
             where: (table, { eq }) => eq(table.id, projectId),
             with: {
-              organization: {
+              workspace: {
                 with: {
                   members: {
                     where: (table, { eq }) => eq(table.userId, observer.id),
@@ -50,8 +50,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
           // allow admins and owners to create, update and delete project status configs
           if (
-            !project.organization.members.length ||
-            project.organization.members[0].role === "member"
+            !project.workspace.members.length ||
+            project.workspace.members[0].role === "member"
           ) {
             throw new Error("Insufficient permissions");
           }

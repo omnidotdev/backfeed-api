@@ -4,7 +4,7 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { FEATURE_KEYS, billingBypassSlugs, isWithinLimit } from "./constants";
 
-import type { InsertPost, SelectOrganization } from "lib/db/schema";
+import type { InsertPost, SelectWorkspace } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -33,7 +33,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             const project = await db.query.projects.findFirst({
               where: (table, { eq }) => eq(table.id, post.projectId),
               with: {
-                organization: true,
+                workspace: true,
                 posts: {
                   columns: {
                     userId: true,
@@ -53,9 +53,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               : uniqueUsers.length + 1;
 
             const withinLimit = await isWithinLimit(
-              project.organization as {
+              project.workspace as {
                 id: string;
-                tier: SelectOrganization["tier"];
+                tier: SelectWorkspace["tier"];
                 slug: string;
               },
               FEATURE_KEYS.MAX_FEEDBACK_USERS,
@@ -74,7 +74,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               with: {
                 project: {
                   with: {
-                    organization: {
+                    workspace: {
                       with: {
                         members: {
                           where: (table, { eq }) =>
@@ -90,8 +90,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (observer.id !== post?.userId) {
               // allow admins and owners to update and delete posts
               if (
-                !post?.project.organization.members.length ||
-                post.project.organization.members[0].role === "member"
+                !post?.project.workspace.members.length ||
+                post.project.workspace.members[0].role === "member"
               )
                 throw new Error("Insufficient permissions");
             }

@@ -162,6 +162,20 @@
       "when": 1767393651629,
       "tag": "0022_silent_may_parker",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1735920000000,
+      "tag": "0023_rename_organization_to_workspace",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1767485335081,
+      "tag": "0024_tiny_songbird",
+      "breakpoints": true
     }
   ]
 }

@@ -4,7 +4,7 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { FEATURE_KEYS, billingBypassSlugs, isWithinLimit } from "./constants";
 
-import type { InsertComment, SelectOrganization } from "lib/db/schema";
+import type { InsertComment, SelectWorkspace } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -40,7 +40,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 },
                 project: {
                   with: {
-                    organization: true,
+                    workspace: true,
                   },
                 },
               },
@@ -50,9 +50,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             // Check comments per post limit
             const withinLimit = await isWithinLimit(
-              post.project.organization as {
+              post.project.workspace as {
                 id: string;
-                tier: SelectOrganization["tier"];
+                tier: SelectWorkspace["tier"];
                 slug: string;
               },
               FEATURE_KEYS.MAX_COMMENTS_PER_POST,
@@ -71,7 +71,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   with: {
                     project: {
                       with: {
-                        organization: {
+                        workspace: {
                           with: {
                             members: {
                               where: (table, { eq }) =>
@@ -86,13 +86,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               },
             });
 
-            if (!comment?.post.project.organization.members.length)
+            if (!comment?.post.project.workspace.members.length)
               throw new Error("Unauthorized");
 
             if (comment.userId !== observer.id) {
-              if (
-                comment.post.project.organization.members[0].role === "member"
-              )
+              if (comment.post.project.workspace.members[0].role === "member")
                 throw new Error("Unauthorized");
             }
           }

@@ -19,10 +19,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             throw new Error("Unauthorized");
           }
 
-          let organizationId: string;
+          let workspaceId: string;
 
           if (scope === "create") {
-            organizationId = (input as InsertStatusTemplate).organizationId;
+            workspaceId = (input as InsertStatusTemplate).workspaceId;
           } else {
             const statusTemplate = await db.query.statusTemplates.findFirst({
               where: (table, { eq }) => eq(table.id, input),
@@ -30,11 +30,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!statusTemplate) throw new Error("Status template not found");
 
-            organizationId = statusTemplate.organizationId;
+            workspaceId = statusTemplate.workspaceId;
           }
 
-          const organization = await db.query.organizations.findFirst({
-            where: (table, { eq }) => eq(table.id, organizationId),
+          const workspace = await db.query.workspaces.findFirst({
+            where: (table, { eq }) => eq(table.id, workspaceId),
             with: {
               members: {
                 where: (table, { eq }) => eq(table.userId, observer.id),
@@ -42,12 +42,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             },
           });
 
-          if (!organization) throw new Error("Organization not found");
+          if (!workspace) throw new Error("Workspace not found");
 
           // allow admins and owners to create, update and delete status templates
           if (
-            !organization.members.length ||
-            organization.members[0].role === "member"
+            !workspace.members.length ||
+            workspace.members[0].role === "member"
           ) {
             throw new Error("Insufficient permissions");
           }
