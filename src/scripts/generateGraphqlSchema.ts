@@ -3,7 +3,7 @@ import { existsSync, mkdirSync } from "node:fs";
 import { exportSchema } from "graphile-export";
 import { EXPORTABLE } from "graphile-export/helpers";
 import preset from "lib/config/graphile.config";
-import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
+import { checkWorkspaceLimit, isWithinLimit } from "lib/entitlements";
 import {
   FEATURE_KEYS,
   billingBypassSlugs,
@@ -33,7 +33,7 @@ const generateGraphqlSchema = async () => {
     modules: {
       "graphile-export/helpers": { EXPORTABLE },
       "postgraphile/grafast": { context, sideEffect },
-      "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
+      "lib/entitlements": { isWithinLimit, checkWorkspaceLimit },
       "lib/graphql/plugins/authorization/constants": {
         FEATURE_KEYS,
         billingBypassSlugs,

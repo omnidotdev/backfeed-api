@@ -4,7 +4,7 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { FEATURE_KEYS, billingBypassSlugs, isWithinLimit } from "./constants";
 
-import type { InsertProject, SelectOrganization } from "lib/db/schema";
+import type { InsertProject, SelectWorkspace } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -27,10 +27,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
 
-          let organizationId: string;
+          let workspaceId: string;
 
           if (scope === "create") {
-            organizationId = (input as InsertProject).organizationId;
+            workspaceId = (input as InsertProject).workspaceId;
           } else {
             const project = await db.query.projects.findFirst({
               where: (table, { eq }) => eq(table.id, input),
@@ -38,11 +38,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!project) throw new Error("Project not found");
 
-            organizationId = project.organizationId;
+            workspaceId = project.workspaceId;
           }
 
-          const organization = await db.query.organizations.findFirst({
-            where: (table, { eq }) => eq(table.id, organizationId),
+          const workspace = await db.query.workspaces.findFirst({
+            where: (table, { eq }) => eq(table.id, workspaceId),
             with: {
               members: {
                 where: (table, { eq }) => eq(table.userId, observer.id),
@@ -51,25 +51,25 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             },
           });
 
-          if (!organization) throw new Error("Organization not found");
+          if (!workspace) throw new Error("Workspace not found");
 
           // only allow owners and admins to create, update, and delete projects
           if (
-            !organization.members.length ||
-            organization.members[0].role === "member"
+            !workspace.members.length ||
+            workspace.members[0].role === "member"
           )
             throw new Error("Insufficient permissions");
 
           // Check tier limits for create operations
           if (scope === "create") {
             const withinLimit = await isWithinLimit(
-              organization as {
+              workspace as {
                 id: string;
-                tier: SelectOrganization["tier"];
+                tier: SelectWorkspace["tier"];
                 slug: string;
               },
               FEATURE_KEYS.MAX_PROJECTS,
-              organization.projects.length,
+              workspace.projects.length,
               billingBypassSlugs,
             );
 
