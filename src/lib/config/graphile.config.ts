@@ -4,7 +4,6 @@ import {
   CommentPlugin,
   InvitationPlugin,
   MemberPlugin,
-  WorkspacePlugin,
   PostPlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectPlugin,
@@ -14,6 +13,7 @@ import {
   StatusTemplatePlugin,
   UserPlugin,
   VotePlugin,
+  WorkspacePlugin,
 } from "lib/graphql/plugins/authorization";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";

@@ -1,7 +1,6 @@
 export * from "./comment.table";
 export * from "./invitation.table";
 export * from "./member.table";
-export * from "./workspace.table";
 export * from "./post.table";
 export * from "./project.table";
 export * from "./projectSocial.table";
@@ -9,3 +8,4 @@ export * from "./projectStatusConfig.table";
 export * from "./statusTemplate.table";
 export * from "./user.table";
 export * from "./vote.table";
+export * from "./workspace.table";

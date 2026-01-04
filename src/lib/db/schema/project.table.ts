@@ -9,11 +9,11 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-// import { generateSlug } from "./helpers";
-import { workspaces } from "./workspace.table";
 import { posts } from "./post.table";
 import { projectSocials } from "./projectSocial.table";
 import { projectStatusConfigs } from "./projectStatusConfig.table";
+// import { generateSlug } from "./helpers";
+import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 

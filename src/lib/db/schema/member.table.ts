@@ -9,8 +9,8 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-import { workspaces } from "./workspace.table";
 import { users } from "./user.table";
+import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
