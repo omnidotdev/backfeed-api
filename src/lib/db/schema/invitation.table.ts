@@ -9,28 +9,28 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-import { organizations } from "./organization.table";
+import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Invitation table. Stores invitations sent to users for joining an organization.
+ * Invitation table. Stores invitations sent to users for joining a workspace.
  */
 export const invitations = pgTable(
   "invitation",
   {
     id: defaultId(),
-    organizationId: uuid()
+    workspaceId: uuid()
       .notNull()
-      .references(() => organizations.id, { onDelete: "cascade" }),
+      .references(() => workspaces.id, { onDelete: "cascade" }),
     email: text().notNull(),
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),
-    unique().on(table.organizationId, table.email),
-    index().on(table.organizationId),
+    unique().on(table.workspaceId, table.email),
+    index().on(table.workspaceId),
   ],
 );
 
@@ -38,9 +38,9 @@ export const invitations = pgTable(
  * Invitation relations.
  */
 export const invitationRelations = relations(invitations, ({ one }) => ({
-  organization: one(organizations, {
-    fields: [invitations.organizationId],
-    references: [organizations.id],
+  workspace: one(workspaces, {
+    fields: [invitations.workspaceId],
+    references: [workspaces.id],
   }),
 }));
 

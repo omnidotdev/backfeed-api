@@ -19,7 +19,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           }
 
           if (scope !== "create") {
-            const organization = await db.query.organizations.findFirst({
+            const workspace = await db.query.workspaces.findFirst({
               where: (table, { eq }) => eq(table.id, input),
               with: {
                 members: {
@@ -28,9 +28,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               },
             });
 
-            if (!organization?.members?.length) throw new Error("Unauthorized");
+            if (!workspace?.members?.length) throw new Error("Unauthorized");
 
-            const role = organization.members[0].role;
+            const role = workspace.members[0].role;
 
             if (role !== "owner") throw new Error("Unauthorized");
           }
@@ -42,14 +42,14 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Authorization plugin for organizations.
+ * Authorization plugin for workspaces.
  */
-const OrganizationPlugin = wrapPlans({
+const WorkspacePlugin = wrapPlans({
   Mutation: {
-    createOrganization: validatePermissions("organization", "create"),
-    updateOrganization: validatePermissions("rowId", "update"),
-    deleteOrganization: validatePermissions("rowId", "delete"),
+    createWorkspace: validatePermissions("workspace", "create"),
+    updateWorkspace: validatePermissions("rowId", "update"),
+    deleteWorkspace: validatePermissions("rowId", "delete"),
   },
 });
 
-export default OrganizationPlugin;
+export default WorkspacePlugin;

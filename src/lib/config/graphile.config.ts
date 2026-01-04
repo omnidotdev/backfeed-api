@@ -4,7 +4,7 @@ import {
   CommentPlugin,
   InvitationPlugin,
   MemberPlugin,
-  OrganizationPlugin,
+  WorkspacePlugin,
   PostPlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectPlugin,
@@ -41,7 +41,7 @@ const preset: GraphileConfig.Preset = {
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   plugins: [
     PrimaryKeyMutationsOnlyPlugin,
-    OrganizationPlugin,
+    WorkspacePlugin,
     UserPlugin,
     MemberPlugin,
     InvitationPlugin,

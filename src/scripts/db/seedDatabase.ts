@@ -20,7 +20,7 @@ const seedDatabase = async () => {
   console.log("Seeding database...");
 
   await seed(db, schema).refine((f) => ({
-    organizations: {
+    workspaces: {
       count: 200,
       columns: {
         name: f.companyName(),

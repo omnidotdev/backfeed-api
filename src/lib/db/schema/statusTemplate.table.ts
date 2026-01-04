@@ -10,20 +10,20 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
-import { organizations } from "./organization.table";
+import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Status template table. Organization-level status definitions shared across projects.
+ * Status template table. Workspace-level status definitions shared across projects.
  */
 export const statusTemplates = pgTable(
   "status_template",
   {
     id: defaultId(),
-    organizationId: uuid()
+    workspaceId: uuid()
       .notNull()
-      .references(() => organizations.id, {
+      .references(() => workspaces.id, {
         onDelete: "cascade",
       }),
     name: text().notNull(),
@@ -36,8 +36,8 @@ export const statusTemplates = pgTable(
   },
   (table) => [
     uniqueIndex().on(table.id),
-    unique().on(table.organizationId, table.name),
-    index().on(table.organizationId),
+    unique().on(table.workspaceId, table.name),
+    index().on(table.workspaceId),
   ],
 );
 
@@ -47,9 +47,9 @@ export const statusTemplates = pgTable(
 export const statusTemplateRelations = relations(
   statusTemplates,
   ({ one }) => ({
-    organization: one(organizations, {
-      fields: [statusTemplates.organizationId],
-      references: [organizations.id],
+    workspace: one(workspaces, {
+      fields: [statusTemplates.workspaceId],
+      references: [workspaces.id],
     }),
   }),
 );
