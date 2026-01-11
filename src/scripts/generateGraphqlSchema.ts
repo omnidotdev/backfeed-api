@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync } from "node:fs";
 
 import { EXPORTABLE, exportSchema } from "graphile-export";
+import { getDefaultOrganization } from "lib/auth/organizations";
 import {
   AUTHZ_ENABLED,
   AUTHZ_PROVIDER_URL,
@@ -51,6 +52,7 @@ const generateGraphqlSchema = async () => {
         FEATURE_KEYS,
         billingBypassSlugs,
       },
+      "lib/auth/organizations": { getDefaultOrganization },
     },
   });
 

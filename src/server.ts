@@ -9,7 +9,11 @@ import appConfig from "lib/config/app.config";
 import { CORS_ALLOWED_ORIGINS, PORT, isDevEnv } from "lib/config/env.config";
 import entitlementsWebhook from "lib/entitlements/webhooks";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
-import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
+import {
+  armorPlugin,
+  authenticationPlugin,
+  organizationsPlugin,
+} from "lib/graphql/plugins";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
@@ -44,6 +48,8 @@ const app = new Elysia({
       plugins: [
         ...armorPlugin,
         authenticationPlugin,
+        // organizations plugin must run after authentication to access observer
+        organizationsPlugin,
         useMoreDetailedErrors(),
         // parser and validation caches recommended for Grafast (https://grafast.org/grafast/servers#envelop)
         useParserCache(),
