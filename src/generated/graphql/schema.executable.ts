@@ -5177,19 +5177,69 @@ ${String(oldPlan13)}`);
   if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
+const DEFAULT_STATUS_TEMPLATES = [{
+  name: "open",
+  displayName: "Open",
+  color: "#3b82f6",
+  description: "New and awaiting review",
+  sortOrder: 0
+}, {
+  name: "under_review",
+  displayName: "Under Review",
+  color: "#f59e0b",
+  description: "Being evaluated by the team",
+  sortOrder: 1
+}, {
+  name: "planned",
+  displayName: "Planned",
+  color: "#8b5cf6",
+  description: "Scheduled for implementation",
+  sortOrder: 2
+}, {
+  name: "in_progress",
+  displayName: "In Progress",
+  color: "#10b981",
+  description: "Currently being worked on",
+  sortOrder: 3
+}, {
+  name: "completed",
+  displayName: "Completed",
+  color: "#22c55e",
+  description: "Done",
+  sortOrder: 4
+}, {
+  name: "closed",
+  displayName: "Closed",
+  color: "#6b7280",
+  description: "Will not be implemented",
+  sortOrder: 5
+}];
 const planWrapper13 = (plan, _, _fieldArgs) => {
   const $result = plan(),
-    $observer = context().get("observer");
-  sideEffect([$result, $observer], async ([result, observer]) => {
+    $observer = context().get("observer"),
+    $withPgClient = context().get("withPgClient");
+  sideEffect([$result, $observer, $withPgClient], async ([result, observer, withPgClient]) => {
     if (!result || !observer) return;
-    if (undefined !== "true") return;
-    if (!undefined) return;
     const workspaceId = result?.id;
     if (!workspaceId) {
       console.error("[AuthZ Sync] Workspace ID not found in result");
       return;
     }
     try {
+      await withPgClient(null, async client => {
+        const values = DEFAULT_STATUS_TEMPLATES.map((t, i) => `(gen_random_uuid(), $${i * 5 + 1}, $${i * 5 + 2}, $${i * 5 + 3}, $${i * 5 + 4}, ${t.sortOrder}, $${DEFAULT_STATUS_TEMPLATES.length * 5 + 1}, now(), now())`).join(", "),
+          params = DEFAULT_STATUS_TEMPLATES.flatMap(t => [t.name, t.displayName, t.color, t.description]);
+        params.push(workspaceId);
+        await client.query({
+          text: `INSERT INTO status_templates (id, name, display_name, color, description, sort_order, workspace_id, created_at, updated_at)
+                   VALUES ${values}`,
+          values: params
+        });
+      });
+    } catch (error) {
+      console.error("[Workspace Init] Failed to seed default status templates:", error);
+    }
+    if (undefined === "true" && undefined) try {
       await writeTuples(undefined, [{
         user: `user:${observer.id}`,
         relation: "owner",

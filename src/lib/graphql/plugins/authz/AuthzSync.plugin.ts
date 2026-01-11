@@ -14,7 +14,6 @@ import {
   deleteTuples,
   writeTuples,
 } from "lib/authz";
-import { statusTemplates } from "lib/db/schema";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -24,6 +23,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
  * Default status templates for new workspaces.
+ * Defined as a constant array of plain objects for graphile-export compatibility.
  */
 const DEFAULT_STATUS_TEMPLATES = [
   {
@@ -360,17 +360,16 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       writeTuples,
-      statusTemplates,
       DEFAULT_STATUS_TEMPLATES,
     ): PlanWrapperFn =>
       (plan, _, _fieldArgs) => {
         const $result = plan();
         const $observer = context().get("observer");
-        const $db = context().get("db");
+        const $withPgClient = context().get("withPgClient");
 
         sideEffect(
-          [$result, $observer, $db],
-          async ([result, observer, db]) => {
+          [$result, $observer, $withPgClient],
+          async ([result, observer, withPgClient]) => {
             if (!result || !observer) return;
 
             const workspaceId = (result as { id?: string })?.id;
@@ -382,12 +381,23 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
 
             // Seed default status templates for the new workspace
             try {
-              await db.insert(statusTemplates).values(
-                DEFAULT_STATUS_TEMPLATES.map((template) => ({
-                  ...template,
-                  workspaceId,
-                })),
-              );
+              await withPgClient(null, async (client) => {
+                const values = DEFAULT_STATUS_TEMPLATES.map(
+                  (t, i) =>
+                    `(gen_random_uuid(), $${i * 5 + 1}, $${i * 5 + 2}, $${i * 5 + 3}, $${i * 5 + 4}, ${t.sortOrder}, $${DEFAULT_STATUS_TEMPLATES.length * 5 + 1}, now(), now())`,
+                ).join(", ");
+
+                const params: string[] = DEFAULT_STATUS_TEMPLATES.flatMap(
+                  (t) => [t.name, t.displayName, t.color, t.description],
+                );
+                params.push(workspaceId);
+
+                await client.query({
+                  text: `INSERT INTO status_templates (id, name, display_name, color, description, sort_order, workspace_id, created_at, updated_at)
+                   VALUES ${values}`,
+                  values: params,
+                });
+              });
             } catch (error) {
               console.error(
                 "[Workspace Init] Failed to seed default status templates:",
@@ -424,7 +434,6 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       writeTuples,
-      statusTemplates,
       DEFAULT_STATUS_TEMPLATES,
     ],
   );
