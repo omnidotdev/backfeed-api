@@ -2,7 +2,7 @@
  * Authorization module for Backfeed.
  *
  * Provides EXPORTABLE-compatible functions for PostGraphile plugins
- * to check permissions and sync tuples to Warden (OpenFGA).
+ * to check permissions and sync tuples to PDP (OpenFGA).
  */
 
 export * from "./sync";

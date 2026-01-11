@@ -8,7 +8,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate member permissions via Warden.
+ * Validate member permissions via PDP.
  *
  * - Create: Admin+ can invite, or users can self-join as member
  * - Update: Owner only can change roles
@@ -50,7 +50,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   member.userId === observer.id && member.role === "member";
 
                 if (!isSelfJoin) {
-                  // Check admin permission via Warden for inviting others
+                  // Check admin permission via PDP for inviting others
                   const allowed = await checkPermission(
                     AUTHZ_ENABLED,
                     AUTHZ_PROVIDER_URL,
@@ -72,7 +72,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               const isSelf = observer.id === member.userId;
 
               if (!isSelf) {
-                // Check owner permission via Warden to modify others
+                // Check owner permission via PDP to modify others
                 const allowed = await checkPermission(
                   AUTHZ_ENABLED,
                   AUTHZ_PROVIDER_URL,

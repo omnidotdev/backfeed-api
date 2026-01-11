@@ -10,7 +10,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate comment permissions via Warden.
+ * Validate comment permissions via PDP.
  *
  * - Create: Any authenticated user (with tier limits)
  * - Update: Author or admin+ on workspace
@@ -90,7 +90,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             // Author can always modify their own comments
             if (comment.userId !== observer.id) {
-              // Check admin permission via Warden
+              // Check admin permission via PDP
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,

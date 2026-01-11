@@ -3,7 +3,7 @@
  * Mirrors the pattern from entitlements/cache.ts.
  *
  * Caches permission check results with a 5-minute TTL to reduce
- * redundant Warden calls across GraphQL requests.
+ * redundant PDP calls across GraphQL requests.
  */
 
 interface CacheEntry {

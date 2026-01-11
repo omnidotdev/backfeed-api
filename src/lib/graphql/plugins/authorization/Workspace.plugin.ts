@@ -19,7 +19,7 @@ const validateOrgMembership = (
 };
 
 /**
- * Validate workspace permissions via Warden.
+ * Validate workspace permissions via PDP.
  *
  * - Create: User must belong to the specified organization
  * - Update: Owner permission required
@@ -72,7 +72,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 );
               }
             } else {
-              // For update/delete, check Warden permissions
+              // For update/delete, check PDP permissions
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,

@@ -10,7 +10,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate project permissions via Warden.
+ * Validate project permissions via PDP.
  *
  * - Create: Admin+ permission on workspace required
  * - Update: Admin+ permission on workspace required
@@ -52,7 +52,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             workspaceId = project.workspaceId;
           }
 
-          // Check admin permission via Warden
+          // Check admin permission via PDP
           const allowed = await checkPermission(
             AUTHZ_ENABLED,
             AUTHZ_PROVIDER_URL,
