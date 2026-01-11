@@ -55,7 +55,7 @@ const preset: GraphileConfig.Preset = {
     VotePlugin,
     CommentPlugin,
     SmartTagPlugin,
-    // AuthZ sync plugin (post-mutation sync to Warden)
+    // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
   ],
   grafserv: {

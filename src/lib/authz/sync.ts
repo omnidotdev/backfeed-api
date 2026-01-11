@@ -60,7 +60,7 @@ function logAuthzEvent(event: AuthzEvent): void {
 }
 
 /**
- * Circuit breaker for Warden calls.
+ * Circuit breaker for PDP calls.
  * Fails closed (denies access) when circuit is open to prevent security bypass.
  *
  * States:
@@ -79,7 +79,7 @@ class CircuitBreaker {
         this.state = "half-open";
         logAuthzEvent({ type: "circuit_half_open" });
       } else {
-        throw new Error("Warden unavailable - circuit open (fail-closed)");
+        throw new Error("PDP unavailable - circuit open (fail-closed)");
       }
     }
 
@@ -206,7 +206,7 @@ export async function deleteTuples(
  *
  * Returns true if authorized, false otherwise.
  * Returns true (permissive) when authz is disabled.
- * Throws error (fail-closed) when Warden is unavailable.
+ * Throws error (fail-closed) when PDP is unavailable.
  */
 export async function checkPermission(
   authzEnabled: string | undefined,
@@ -293,7 +293,7 @@ export async function checkPermission(
       durationMs: Date.now() - startTime,
       error: error instanceof Error ? error.message : String(error),
     });
-    // Fail-closed: deny access when Warden is unavailable
+    // Fail-closed: deny access when PDP is unavailable
     throw error;
   }
 }

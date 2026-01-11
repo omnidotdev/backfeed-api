@@ -1,6 +1,8 @@
 import { getOrganizationClaimsFromCache } from "./authentication.plugin";
 
+import type { Plugin } from "@envelop/types";
 import type { OrganizationClaim } from "lib/auth/organizations";
+import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
 /**
  * Plugin that extracts organization claims from the cached userinfo response.
@@ -8,7 +10,7 @@ import type { OrganizationClaim } from "lib/auth/organizations";
  *
  * Adds `organizations` to the context for use in authorization checks.
  */
-const organizationsPlugin = {
+const organizationsPlugin: Plugin<GraphQLContext> = {
   onContextBuilding({ extendContext, context }) {
     // Extract access token from request
     const accessToken = context.request.headers

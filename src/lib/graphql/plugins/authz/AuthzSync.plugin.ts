@@ -1,7 +1,7 @@
 /**
  * AuthZ Sync Plugin
  *
- * Syncs Backfeed mutations to the authorization store (Warden/OpenFGA).
+ * Syncs Backfeed mutations to the authorization store (PDP/OpenFGA).
  * Uses sideEffect to run sync logic after mutations complete.
  *
  * This is a Pattern A implementation - sync happens alongside mutations.

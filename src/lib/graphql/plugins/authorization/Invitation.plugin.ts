@@ -8,7 +8,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate invitation permissions via Warden.
+ * Validate invitation permissions via PDP.
  *
  * - Create: Admin+ can send invitations
  * - Delete: Owner or recipient can delete
@@ -38,7 +38,7 @@ const validateInvitationPermissions = (
           if (scope === "create") {
             const invitation = input as InsertInvitation;
 
-            // Check admin permission via Warden
+            // Check admin permission via PDP
             const allowed = await checkPermission(
               AUTHZ_ENABLED,
               AUTHZ_PROVIDER_URL,
@@ -99,7 +99,7 @@ const validateInvitationPermissions = (
 
             // Recipient can always delete their own invitation
             if (!isRecipient) {
-              // Check owner permission via Warden
+              // Check owner permission via PDP
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,
