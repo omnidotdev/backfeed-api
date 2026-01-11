@@ -1,4 +1,5 @@
 import { EXPORTABLE } from "graphile-export/helpers";
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -6,18 +7,31 @@ import type { InsertStatusTemplate } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate status template permissions via Warden.
+ *
+ * - Create: Admin+ on workspace
+ * - Update: Admin+ on workspace
+ * - Delete: Admin+ on workspace
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) {
-            throw new Error("Unauthorized");
-          }
+          if (!observer) throw new Error("Unauthorized");
 
           let workspaceId: string;
 
@@ -33,33 +47,37 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             workspaceId = statusTemplate.workspaceId;
           }
 
-          const workspace = await db.query.workspaces.findFirst({
-            where: (table, { eq }) => eq(table.id, workspaceId),
-            with: {
-              members: {
-                where: (table, { eq }) => eq(table.userId, observer.id),
-              },
-            },
-          });
-
-          if (!workspace) throw new Error("Workspace not found");
-
-          // allow admins and owners to create, update and delete status templates
-          if (
-            !workspace.members.length ||
-            workspace.members[0].role === "member"
-          ) {
-            throw new Error("Insufficient permissions");
-          }
+          // Check admin permission via Warden
+          const allowed = await checkPermission(
+            AUTHZ_ENABLED,
+            AUTHZ_PROVIDER_URL,
+            observer.id,
+            "workspace",
+            workspaceId,
+            "admin",
+          );
+          if (!allowed) throw new Error("Insufficient permissions");
         });
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ],
   );
 
 /**
  * Authorization plugin for status templates.
+ *
+ * - Create: Admin+ on workspace
+ * - Update: Admin+ on workspace
+ * - Delete: Admin+ on workspace
  */
 const StatusTemplatePlugin = wrapPlans({
   Mutation: {

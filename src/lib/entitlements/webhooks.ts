@@ -1,7 +1,10 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
+import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import { ENTITLEMENTS_WEBHOOK_SECRET } from "lib/config/env.config";
+import { dbPool } from "lib/db/db";
+import { workspaces } from "lib/db/schema";
 
 import { invalidateCache } from "./cache";
 
@@ -14,6 +17,7 @@ interface EntitlementWebhookPayload {
   value?: unknown;
   version: number;
   timestamp: string;
+  billingAccountId?: string;
 }
 
 /**
@@ -84,7 +88,7 @@ const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
         `Entitlement event received: ${body.eventType} for ${body.entityType}/${body.entityId}`,
       );
 
-      // Handle events - invalidate local cache
+      // Handle events - invalidate local cache and sync billingAccountId
       switch (body.eventType) {
         case "entitlement.created":
         case "entitlement.updated":
@@ -94,6 +98,26 @@ const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
           invalidateCache(`workspace:${body.entityId}`);
 
           console.log(`Cache invalidated for workspace ${body.entityId}`);
+
+          // Sync billingAccountId to workspace if provided
+          if (body.billingAccountId && body.entityType === "workspace") {
+            try {
+              await dbPool
+                .update(workspaces)
+                .set({ billingAccountId: body.billingAccountId })
+                .where(eq(workspaces.id, body.entityId));
+
+              console.log(
+                `Updated billingAccountId for workspace ${body.entityId}`,
+              );
+            } catch (dbError) {
+              console.error(
+                `Failed to update billingAccountId for workspace ${body.entityId}:`,
+                dbError,
+              );
+              // Don't fail the webhook - billingAccountId sync is best-effort
+            }
+          }
           break;
         default:
           break;

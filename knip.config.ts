@@ -11,6 +11,7 @@ const knipConfig: KnipConfig = {
     "src/scripts/**",
     "src/lib/db/db.ts",
     "src/lib/config/env.config.ts",
+    "src/lib/authz/**",
   ],
   ignoreDependencies: ["drizzle-kit"],
   tags: ["-knipignore"],

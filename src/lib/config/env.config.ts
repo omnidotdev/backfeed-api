@@ -15,6 +15,8 @@ export const {
   BILLING_BYPASS_SLUGS,
   ENTITLEMENTS_BASE_URL,
   ENTITLEMENTS_WEBHOOK_SECRET,
+  AUTHZ_ENABLED,
+  AUTHZ_PROVIDER_URL,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";

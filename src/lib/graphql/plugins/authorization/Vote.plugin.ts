@@ -4,6 +4,11 @@ import { wrapPlans } from "postgraphile/utils";
 
 import type { PlanWrapperFn } from "postgraphile/utils";
 
+/**
+ * Validate vote permissions.
+ *
+ * Votes are user-owned: only the author can update/delete their own vote.
+ */
 const validatePermissions = (propName: string) =>
   EXPORTABLE(
     (context, sideEffect, propName): PlanWrapperFn =>
@@ -19,7 +24,7 @@ const validatePermissions = (propName: string) =>
             where: (table, { eq }) => eq(table.id, input),
           });
 
-          // only allow the user who voted to update or delete their own vote
+          // Only allow the user who voted to update or delete their own vote
           if (observer.id !== vote?.userId) {
             throw new Error("Unauthorized");
           }
@@ -32,6 +37,9 @@ const validatePermissions = (propName: string) =>
 
 /**
  * Authorization plugin for votes.
+ *
+ * - Update: Author only
+ * - Delete: Author only
  */
 const VotePlugin = wrapPlans({
   Mutation: {

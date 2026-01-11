@@ -1,4 +1,5 @@
 import { EXPORTABLE } from "graphile-export/helpers";
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -8,11 +9,21 @@ import type { InsertPost, SelectWorkspace } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate post permissions via Warden.
+ *
+ * - Create: Any authenticated user (with tier limits)
+ * - Update: Author or admin+ on workspace
+ * - Delete: Author or admin+ on workspace
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       billingBypassSlugs,
       FEATURE_KEYS,
       isWithinLimit,
@@ -59,7 +70,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 slug: string;
               },
               FEATURE_KEYS.MAX_FEEDBACK_USERS,
-              currentUniqueCount - 1, // isWithinLimit checks currentCount < limit
+              currentUniqueCount - 1,
               billingBypassSlugs,
             );
 
@@ -72,28 +83,24 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             const post = await db.query.posts.findFirst({
               where: (table, { eq }) => eq(table.id, input),
               with: {
-                project: {
-                  with: {
-                    workspace: {
-                      with: {
-                        members: {
-                          where: (table, { eq }) =>
-                            eq(table.userId, observer.id),
-                        },
-                      },
-                    },
-                  },
-                },
+                project: true,
               },
             });
 
-            if (observer.id !== post?.userId) {
-              // allow admins and owners to update and delete posts
-              if (
-                !post?.project.workspace.members.length ||
-                post.project.workspace.members[0].role === "member"
-              )
-                throw new Error("Insufficient permissions");
+            if (!post) throw new Error("Post not found");
+
+            // Author can always modify their own posts
+            if (observer.id !== post.userId) {
+              // Check admin permission via Warden
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "workspace",
+                post.project.workspaceId,
+                "admin",
+              );
+              if (!allowed) throw new Error("Insufficient permissions");
             }
           }
         });
@@ -103,6 +110,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       billingBypassSlugs,
       FEATURE_KEYS,
       isWithinLimit,
@@ -113,6 +123,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
 /**
  * Authorization plugin for posts.
+ *
+ * - Create: Any authenticated user (with tier limits)
+ * - Update: Author or admin+
+ * - Delete: Author or admin+
  */
 const PostPlugin = wrapPlans({
   Mutation: {

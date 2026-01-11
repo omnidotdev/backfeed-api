@@ -1,7 +1,8 @@
-/* eslint-disable graphile-export/export-instances, graphile-export/export-methods, graphile-export/export-plans, graphile-export/exhaustive-deps */
+// @ts-nocheck
 import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertExecutableStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inspect, isExecutableStep, lambda, makeDecodeNodeId, makeGrafastSchema, object, rootValue, sideEffect } from "grafast";
 import { GraphQLError, Kind } from "graphql";
+import { checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassSlugs } from "lib/graphql/plugins/authorization/constants";
 import { sql } from "pg-sql2";
@@ -4667,24 +4668,8 @@ const planWrapper = (plan, _, fieldArgs) => {
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
-      const invitation = input,
-        workspace = await db.query.workspaces.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, invitation.workspaceId);
-          },
-          with: {
-            members: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.members.length || workspace.members[0].role === "member") throw Error("Only workspace owners or admins can send invitations");
+      const invitation = input;
+      if (!(await checkPermission(undefined, undefined, observer.id, "workspace", invitation.workspaceId, "admin"))) throw Error("Only workspace owners or admins can send invitations");
       if (observer.email === invitation.email) throw Error("Self-invites are not allowed");
       if (await db.query.invitations.findFirst({
         where(table, {
@@ -4711,28 +4696,16 @@ const planWrapper = (plan, _, fieldArgs) => {
     }
     if ("create" === "delete") {
       const invitation = await db.query.invitations.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, input);
-          },
-          with: {
-            workspace: {
-              with: {
-                members: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        }),
-        isOwner = invitation?.workspace.members?.[0].role === "owner",
-        isRecipient = observer.email === invitation?.email;
-      if (!isOwner || !isRecipient) throw Error("Only the recipient or owner can delete the invitation");
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!invitation) throw Error("Invitation not found");
+      if (observer.email !== invitation.email) {
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", invitation.workspaceId, "owner"))) throw Error("Only the recipient or owner can delete the invitation");
+      }
     }
   });
   return plan();
@@ -4750,39 +4723,33 @@ const planWrapper2 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
-    let projectId;
-    if ("create" === "create") projectId = input.projectId;else {
+    let workspaceId;
+    if ("create" === "create") {
+      const projectId = input.projectId,
+        project = await db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          }
+        });
+      if (!project) throw Error("Project not found");
+      workspaceId = project.workspaceId;
+    } else {
       const social = await db.query.projectSocials.findFirst({
         where(table, {
           eq
         }) {
           return eq(table.id, input);
+        },
+        with: {
+          project: !0
         }
       });
       if (!social) throw Error("Project social not found");
-      projectId = social.projectId;
+      workspaceId = social.project.workspaceId;
     }
-    const project = await db.query.projects.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, projectId);
-      },
-      with: {
-        workspace: {
-          with: {
-            members: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        }
-      }
-    });
-    if (!project?.workspace.members.length || project.workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4832,28 +4799,14 @@ const planWrapper3 = (plan, _, fieldArgs) => {
         with: {
           post: {
             with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      members: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              project: !0
             }
           }
         }
       });
-      if (!comment?.post.project.workspace.members.length) throw Error("Unauthorized");
+      if (!comment) throw Error("Comment not found");
       if (comment.userId !== observer.id) {
-        if (comment.post.project.workspace.members[0].role === "member") throw Error("Unauthorized");
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", comment.post.project.workspaceId, "admin"))) throw Error("Unauthorized");
       }
     }
   });
@@ -4890,19 +4843,17 @@ const planWrapper5 = (plan, _, fieldArgs) => {
   sideEffect([$input, $patch, $observer, $db], async ([input, patch, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
-      const member = input,
-        existingMembers = await db.query.members.findMany({
-          where(table, {
-            eq
-          }) {
-            return eq(table.workspaceId, member.workspaceId);
-          }
-        });
-      if (existingMembers.length) {
-        const userRole = existingMembers.find(user => user.userId === observer.id)?.role;
-        if (!userRole) {
-          if (member.userId !== observer.id || member.role !== "member") throw Error("Insufficient permissions");
-        } else if (userRole !== "owner") throw Error("Insufficient permissions");
+      const member = input;
+      if ((await db.query.members.findMany({
+        where(table, {
+          eq
+        }) {
+          return eq(table.workspaceId, member.workspaceId);
+        }
+      })).length) {
+        if (!(member.userId === observer.id && member.role === "member")) {
+          if (!(await checkPermission(undefined, undefined, observer.id, "workspace", member.workspaceId, "admin"))) throw Error("Insufficient permissions");
+        }
       }
     } else {
       const member = await db.query.members.findFirst({
@@ -4910,24 +4861,12 @@ const planWrapper5 = (plan, _, fieldArgs) => {
           eq
         }) {
           return eq(table.id, input);
-        },
-        with: {
-          workspace: {
-            with: {
-              members: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
         }
       });
-      if (observer.id !== member?.userId) {
-        if (member?.workspace.members[0].role !== "owner") throw Error("Insufficient permissions");
-        if (patch.role === "owner") throw Error("Workspaces can only have one owner");
+      if (!member) throw Error("Member not found");
+      if (observer.id !== member.userId) {
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", member.workspaceId, "owner"))) throw Error("Insufficient permissions");
+        if ("create" === "update" && patch.role === "owner") throw Error("Workspaces can only have one owner");
       } else if ("create" === "update") throw Error("Insufficient permissions");
     }
   });
@@ -4975,25 +4914,12 @@ const planWrapper6 = (plan, _, fieldArgs) => {
           return eq(table.id, input);
         },
         with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  members: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+          project: !0
         }
       });
-      if (observer.id !== post?.userId) {
-        if (!post?.project.workspace.members.length || post.project.workspace.members[0].role === "member") throw Error("Insufficient permissions");
+      if (!post) throw Error("Post not found");
+      if (observer.id !== post.userId) {
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", post.project.workspaceId, "admin"))) throw Error("Insufficient permissions");
       }
     }
   });
@@ -5024,26 +4950,19 @@ const planWrapper7 = (plan, _, fieldArgs) => {
       if (!project) throw Error("Project not found");
       workspaceId = project.workspaceId;
     }
-    const workspace = await db.query.workspaces.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, workspaceId);
-      },
-      with: {
-        members: {
-          where(table, {
-            eq
-          }) {
-            return eq(table.userId, observer.id);
-          }
-        },
-        projects: !0
-      }
-    });
-    if (!workspace) throw Error("Workspace not found");
-    if (!workspace.members.length || workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
     if ("create" === "create") {
+      const workspace = await db.query.workspaces.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, workspaceId);
+        },
+        with: {
+          projects: !0
+        }
+      });
+      if (!workspace) throw Error("Workspace not found");
       if (!(await isWithinLimit(workspace, FEATURE_KEYS.MAX_PROJECTS, workspace.projects.length, billingBypassSlugs))) throw Error("Maximum number of projects reached.");
     }
   });
@@ -5062,40 +4981,33 @@ const planWrapper8 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
-    let projectId;
-    if ("create" === "create") projectId = input.projectId;else {
+    let workspaceId;
+    if ("create" === "create") {
+      const projectId = input.projectId,
+        project = await db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          }
+        });
+      if (!project) throw Error("Project not found");
+      workspaceId = project.workspaceId;
+    } else {
       const config = await db.query.projectStatusConfigs.findFirst({
         where(table, {
           eq
         }) {
           return eq(table.id, input);
+        },
+        with: {
+          project: !0
         }
       });
       if (!config) throw Error("Project status config not found");
-      projectId = config.projectId;
+      workspaceId = config.project.workspaceId;
     }
-    const project = await db.query.projects.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, projectId);
-      },
-      with: {
-        workspace: {
-          with: {
-            members: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        }
-      }
-    });
-    if (!project) throw Error("Project not found");
-    if (!project.workspace.members.length || project.workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5124,24 +5036,7 @@ const planWrapper9 = (plan, _, fieldArgs) => {
       if (!statusTemplate) throw Error("Status template not found");
       workspaceId = statusTemplate.workspaceId;
     }
-    const workspace = await db.query.workspaces.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, workspaceId);
-      },
-      with: {
-        members: {
-          where(table, {
-            eq
-          }) {
-            return eq(table.userId, observer.id);
-          }
-        }
-      }
-    });
-    if (!workspace) throw Error("Workspace not found");
-    if (!workspace.members.length || workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5154,29 +5049,11 @@ function oldPlan10(_, args) {
 }
 const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "workspace"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" !== "create") {
-      const workspace = await db.query.workspaces.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          members: {
-            where(table, {
-              eq
-            }) {
-              return eq(table.userId, observer.id);
-            }
-          }
-        }
-      });
-      if (!workspace?.members?.length) throw Error("Unauthorized");
-      if (workspace.members[0].role !== "owner") throw Error("Unauthorized");
+      if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5196,39 +5073,33 @@ const planWrapper11 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
-    let projectId;
-    if ("update" === "create") projectId = input.projectId;else {
+    let workspaceId;
+    if ("update" === "create") {
+      const projectId = input.projectId,
+        project = await db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          }
+        });
+      if (!project) throw Error("Project not found");
+      workspaceId = project.workspaceId;
+    } else {
       const social = await db.query.projectSocials.findFirst({
         where(table, {
           eq
         }) {
           return eq(table.id, input);
+        },
+        with: {
+          project: !0
         }
       });
       if (!social) throw Error("Project social not found");
-      projectId = social.projectId;
+      workspaceId = social.project.workspaceId;
     }
-    const project = await db.query.projects.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, projectId);
-      },
-      with: {
-        workspace: {
-          with: {
-            members: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        }
-      }
-    });
-    if (!project?.workspace.members.length || project.workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5280,28 +5151,14 @@ const planWrapper12 = (plan, _, fieldArgs) => {
         with: {
           post: {
             with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      members: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              project: !0
             }
           }
         }
       });
-      if (!comment?.post.project.workspace.members.length) throw Error("Unauthorized");
+      if (!comment) throw Error("Comment not found");
       if (comment.userId !== observer.id) {
-        if (comment.post.project.workspace.members[0].role === "member") throw Error("Unauthorized");
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", comment.post.project.workspaceId, "admin"))) throw Error("Unauthorized");
       }
     }
   });
@@ -5368,19 +5225,17 @@ const planWrapper15 = (plan, _, fieldArgs) => {
   sideEffect([$input, $patch, $observer, $db], async ([input, patch, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
-      const member = input,
-        existingMembers = await db.query.members.findMany({
-          where(table, {
-            eq
-          }) {
-            return eq(table.workspaceId, member.workspaceId);
-          }
-        });
-      if (existingMembers.length) {
-        const userRole = existingMembers.find(user => user.userId === observer.id)?.role;
-        if (!userRole) {
-          if (member.userId !== observer.id || member.role !== "member") throw Error("Insufficient permissions");
-        } else if (userRole !== "owner") throw Error("Insufficient permissions");
+      const member = input;
+      if ((await db.query.members.findMany({
+        where(table, {
+          eq
+        }) {
+          return eq(table.workspaceId, member.workspaceId);
+        }
+      })).length) {
+        if (!(member.userId === observer.id && member.role === "member")) {
+          if (!(await checkPermission(undefined, undefined, observer.id, "workspace", member.workspaceId, "admin"))) throw Error("Insufficient permissions");
+        }
       }
     } else {
       const member = await db.query.members.findFirst({
@@ -5388,24 +5243,12 @@ const planWrapper15 = (plan, _, fieldArgs) => {
           eq
         }) {
           return eq(table.id, input);
-        },
-        with: {
-          workspace: {
-            with: {
-              members: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
         }
       });
-      if (observer.id !== member?.userId) {
-        if (member?.workspace.members[0].role !== "owner") throw Error("Insufficient permissions");
-        if (patch.role === "owner") throw Error("Workspaces can only have one owner");
+      if (!member) throw Error("Member not found");
+      if (observer.id !== member.userId) {
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", member.workspaceId, "owner"))) throw Error("Insufficient permissions");
+        if ("update" === "update" && patch.role === "owner") throw Error("Workspaces can only have one owner");
       } else if ("update" === "update") throw Error("Insufficient permissions");
     }
   });
@@ -5455,25 +5298,12 @@ const planWrapper16 = (plan, _, fieldArgs) => {
           return eq(table.id, input);
         },
         with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  members: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+          project: !0
         }
       });
-      if (observer.id !== post?.userId) {
-        if (!post?.project.workspace.members.length || post.project.workspace.members[0].role === "member") throw Error("Insufficient permissions");
+      if (!post) throw Error("Post not found");
+      if (observer.id !== post.userId) {
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", post.project.workspaceId, "admin"))) throw Error("Insufficient permissions");
       }
     }
   });
@@ -5506,26 +5336,19 @@ const planWrapper17 = (plan, _, fieldArgs) => {
       if (!project) throw Error("Project not found");
       workspaceId = project.workspaceId;
     }
-    const workspace = await db.query.workspaces.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, workspaceId);
-      },
-      with: {
-        members: {
-          where(table, {
-            eq
-          }) {
-            return eq(table.userId, observer.id);
-          }
-        },
-        projects: !0
-      }
-    });
-    if (!workspace) throw Error("Workspace not found");
-    if (!workspace.members.length || workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
     if ("update" === "create") {
+      const workspace = await db.query.workspaces.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, workspaceId);
+        },
+        with: {
+          projects: !0
+        }
+      });
+      if (!workspace) throw Error("Workspace not found");
       if (!(await isWithinLimit(workspace, FEATURE_KEYS.MAX_PROJECTS, workspace.projects.length, billingBypassSlugs))) throw Error("Maximum number of projects reached.");
     }
   });
@@ -5546,40 +5369,33 @@ const planWrapper18 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
-    let projectId;
-    if ("update" === "create") projectId = input.projectId;else {
+    let workspaceId;
+    if ("update" === "create") {
+      const projectId = input.projectId,
+        project = await db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          }
+        });
+      if (!project) throw Error("Project not found");
+      workspaceId = project.workspaceId;
+    } else {
       const config = await db.query.projectStatusConfigs.findFirst({
         where(table, {
           eq
         }) {
           return eq(table.id, input);
+        },
+        with: {
+          project: !0
         }
       });
       if (!config) throw Error("Project status config not found");
-      projectId = config.projectId;
+      workspaceId = config.project.workspaceId;
     }
-    const project = await db.query.projects.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, projectId);
-      },
-      with: {
-        workspace: {
-          with: {
-            members: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        }
-      }
-    });
-    if (!project) throw Error("Project not found");
-    if (!project.workspace.members.length || project.workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5610,24 +5426,7 @@ const planWrapper19 = (plan, _, fieldArgs) => {
       if (!statusTemplate) throw Error("Status template not found");
       workspaceId = statusTemplate.workspaceId;
     }
-    const workspace = await db.query.workspaces.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, workspaceId);
-      },
-      with: {
-        members: {
-          where(table, {
-            eq
-          }) {
-            return eq(table.userId, observer.id);
-          }
-        }
-      }
-    });
-    if (!workspace) throw Error("Workspace not found");
-    if (!workspace.members.length || workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5642,29 +5441,11 @@ const oldPlan20 = (_$root, args) => {
 };
 const planWrapper20 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" !== "create") {
-      const workspace = await db.query.workspaces.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          members: {
-            where(table, {
-              eq
-            }) {
-              return eq(table.userId, observer.id);
-            }
-          }
-        }
-      });
-      if (!workspace?.members?.length) throw Error("Unauthorized");
-      if (workspace.members[0].role !== "owner") throw Error("Unauthorized");
+      if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5685,24 +5466,8 @@ const planWrapper21 = (plan, _, fieldArgs) => {
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
-      const invitation = input,
-        workspace = await db.query.workspaces.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, invitation.workspaceId);
-          },
-          with: {
-            members: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.members.length || workspace.members[0].role === "member") throw Error("Only workspace owners or admins can send invitations");
+      const invitation = input;
+      if (!(await checkPermission(undefined, undefined, observer.id, "workspace", invitation.workspaceId, "admin"))) throw Error("Only workspace owners or admins can send invitations");
       if (observer.email === invitation.email) throw Error("Self-invites are not allowed");
       if (await db.query.invitations.findFirst({
         where(table, {
@@ -5729,28 +5494,16 @@ const planWrapper21 = (plan, _, fieldArgs) => {
     }
     if ("delete" === "delete") {
       const invitation = await db.query.invitations.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, input);
-          },
-          with: {
-            workspace: {
-              with: {
-                members: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        }),
-        isOwner = invitation?.workspace.members?.[0].role === "owner",
-        isRecipient = observer.email === invitation?.email;
-      if (!isOwner || !isRecipient) throw Error("Only the recipient or owner can delete the invitation");
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!invitation) throw Error("Invitation not found");
+      if (observer.email !== invitation.email) {
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", invitation.workspaceId, "owner"))) throw Error("Only the recipient or owner can delete the invitation");
+      }
     }
   });
   return plan();
@@ -5770,39 +5523,33 @@ const planWrapper22 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
-    let projectId;
-    if ("delete" === "create") projectId = input.projectId;else {
+    let workspaceId;
+    if ("delete" === "create") {
+      const projectId = input.projectId,
+        project = await db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          }
+        });
+      if (!project) throw Error("Project not found");
+      workspaceId = project.workspaceId;
+    } else {
       const social = await db.query.projectSocials.findFirst({
         where(table, {
           eq
         }) {
           return eq(table.id, input);
+        },
+        with: {
+          project: !0
         }
       });
       if (!social) throw Error("Project social not found");
-      projectId = social.projectId;
+      workspaceId = social.project.workspaceId;
     }
-    const project = await db.query.projects.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, projectId);
-      },
-      with: {
-        workspace: {
-          with: {
-            members: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        }
-      }
-    });
-    if (!project?.workspace.members.length || project.workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -5854,28 +5601,14 @@ const planWrapper23 = (plan, _, fieldArgs) => {
         with: {
           post: {
             with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      members: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              project: !0
             }
           }
         }
       });
-      if (!comment?.post.project.workspace.members.length) throw Error("Unauthorized");
+      if (!comment) throw Error("Comment not found");
       if (comment.userId !== observer.id) {
-        if (comment.post.project.workspace.members[0].role === "member") throw Error("Unauthorized");
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", comment.post.project.workspaceId, "admin"))) throw Error("Unauthorized");
       }
     }
   });
@@ -5942,19 +5675,17 @@ const planWrapper26 = (plan, _, fieldArgs) => {
   sideEffect([$input, $patch, $observer, $db], async ([input, patch, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
-      const member = input,
-        existingMembers = await db.query.members.findMany({
-          where(table, {
-            eq
-          }) {
-            return eq(table.workspaceId, member.workspaceId);
-          }
-        });
-      if (existingMembers.length) {
-        const userRole = existingMembers.find(user => user.userId === observer.id)?.role;
-        if (!userRole) {
-          if (member.userId !== observer.id || member.role !== "member") throw Error("Insufficient permissions");
-        } else if (userRole !== "owner") throw Error("Insufficient permissions");
+      const member = input;
+      if ((await db.query.members.findMany({
+        where(table, {
+          eq
+        }) {
+          return eq(table.workspaceId, member.workspaceId);
+        }
+      })).length) {
+        if (!(member.userId === observer.id && member.role === "member")) {
+          if (!(await checkPermission(undefined, undefined, observer.id, "workspace", member.workspaceId, "admin"))) throw Error("Insufficient permissions");
+        }
       }
     } else {
       const member = await db.query.members.findFirst({
@@ -5962,24 +5693,12 @@ const planWrapper26 = (plan, _, fieldArgs) => {
           eq
         }) {
           return eq(table.id, input);
-        },
-        with: {
-          workspace: {
-            with: {
-              members: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
         }
       });
-      if (observer.id !== member?.userId) {
-        if (member?.workspace.members[0].role !== "owner") throw Error("Insufficient permissions");
-        if (patch.role === "owner") throw Error("Workspaces can only have one owner");
+      if (!member) throw Error("Member not found");
+      if (observer.id !== member.userId) {
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", member.workspaceId, "owner"))) throw Error("Insufficient permissions");
+        if ("delete" === "update" && patch.role === "owner") throw Error("Workspaces can only have one owner");
       } else if ("delete" === "update") throw Error("Insufficient permissions");
     }
   });
@@ -6029,25 +5748,12 @@ const planWrapper27 = (plan, _, fieldArgs) => {
           return eq(table.id, input);
         },
         with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  members: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+          project: !0
         }
       });
-      if (observer.id !== post?.userId) {
-        if (!post?.project.workspace.members.length || post.project.workspace.members[0].role === "member") throw Error("Insufficient permissions");
+      if (!post) throw Error("Post not found");
+      if (observer.id !== post.userId) {
+        if (!(await checkPermission(undefined, undefined, observer.id, "workspace", post.project.workspaceId, "admin"))) throw Error("Insufficient permissions");
       }
     }
   });
@@ -6080,26 +5786,19 @@ const planWrapper28 = (plan, _, fieldArgs) => {
       if (!project) throw Error("Project not found");
       workspaceId = project.workspaceId;
     }
-    const workspace = await db.query.workspaces.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, workspaceId);
-      },
-      with: {
-        members: {
-          where(table, {
-            eq
-          }) {
-            return eq(table.userId, observer.id);
-          }
-        },
-        projects: !0
-      }
-    });
-    if (!workspace) throw Error("Workspace not found");
-    if (!workspace.members.length || workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
     if ("delete" === "create") {
+      const workspace = await db.query.workspaces.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, workspaceId);
+        },
+        with: {
+          projects: !0
+        }
+      });
+      if (!workspace) throw Error("Workspace not found");
       if (!(await isWithinLimit(workspace, FEATURE_KEYS.MAX_PROJECTS, workspace.projects.length, billingBypassSlugs))) throw Error("Maximum number of projects reached.");
     }
   });
@@ -6120,40 +5819,33 @@ const planWrapper29 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
-    let projectId;
-    if ("delete" === "create") projectId = input.projectId;else {
+    let workspaceId;
+    if ("delete" === "create") {
+      const projectId = input.projectId,
+        project = await db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          }
+        });
+      if (!project) throw Error("Project not found");
+      workspaceId = project.workspaceId;
+    } else {
       const config = await db.query.projectStatusConfigs.findFirst({
         where(table, {
           eq
         }) {
           return eq(table.id, input);
+        },
+        with: {
+          project: !0
         }
       });
       if (!config) throw Error("Project status config not found");
-      projectId = config.projectId;
+      workspaceId = config.project.workspaceId;
     }
-    const project = await db.query.projects.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, projectId);
-      },
-      with: {
-        workspace: {
-          with: {
-            members: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        }
-      }
-    });
-    if (!project) throw Error("Project not found");
-    if (!project.workspace.members.length || project.workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -6184,24 +5876,7 @@ const planWrapper30 = (plan, _, fieldArgs) => {
       if (!statusTemplate) throw Error("Status template not found");
       workspaceId = statusTemplate.workspaceId;
     }
-    const workspace = await db.query.workspaces.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, workspaceId);
-      },
-      with: {
-        members: {
-          where(table, {
-            eq
-          }) {
-            return eq(table.userId, observer.id);
-          }
-        }
-      }
-    });
-    if (!workspace) throw Error("Workspace not found");
-    if (!workspace.members.length || workspace.members[0].role === "member") throw Error("Insufficient permissions");
+    if (!(await checkPermission(undefined, undefined, observer.id, "workspace", workspaceId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -6216,29 +5891,11 @@ const oldPlan31 = (_$root, args) => {
 };
 const planWrapper31 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" !== "create") {
-      const workspace = await db.query.workspaces.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          members: {
-            where(table, {
-              eq
-            }) {
-              return eq(table.userId, observer.id);
-            }
-          }
-        }
-      });
-      if (!workspace?.members?.length) throw Error("Unauthorized");
-      if (workspace.members[0].role !== "owner") throw Error("Unauthorized");
+      if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
     }
   });
   return plan();

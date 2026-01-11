@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgEnum, pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
+import { index, pgEnum, pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
 
 import { defaultDate, defaultId } from "./constants";
 import { invitations } from "./invitation.table";
@@ -21,6 +21,8 @@ export const workspaces = pgTable(
   "workspace",
   {
     id: defaultId(),
+    // FK to Gatekeeper organization - workspaces belong to orgs
+    organizationId: text("organization_id"),
     name: text().unique().notNull(),
     slug: text()
       // TODO https://linear.app/omnidev/issue/69c6f70e-0821-4a3a-a04a-971547f29690
@@ -33,7 +35,13 @@ export const workspaces = pgTable(
     createdAt: defaultDate(),
     updatedAt: defaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.slug)],
+  (table) => [
+    uniqueIndex().on(table.id),
+    // Org-scoped slug uniqueness (after migration complete)
+    // uniqueIndex("workspace_org_slug_idx").on(table.organizationId, table.slug),
+    uniqueIndex().on(table.slug), // Keep global uniqueness until migration complete
+    index("workspace_organization_id_idx").on(table.organizationId),
+  ],
 );
 
 /**

@@ -15,6 +15,7 @@ import {
   VotePlugin,
   WorkspacePlugin,
 } from "lib/graphql/plugins/authorization";
+import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
@@ -40,6 +41,7 @@ const preset: GraphileConfig.Preset = {
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   plugins: [
+    // Authorization plugins (pre-mutation validation)
     PrimaryKeyMutationsOnlyPlugin,
     WorkspacePlugin,
     UserPlugin,
@@ -53,6 +55,8 @@ const preset: GraphileConfig.Preset = {
     VotePlugin,
     CommentPlugin,
     SmartTagPlugin,
+    // AuthZ sync plugin (post-mutation sync to Warden)
+    AuthzSyncPlugin,
   ],
   grafserv: {
     graphiql: false,
