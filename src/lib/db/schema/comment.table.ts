@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
-import { defaultDate, defaultId } from "./constants";
 import { posts } from "./post.table";
 import { users } from "./user.table";
 
@@ -14,7 +14,7 @@ import type { AnyPgColumn } from "drizzle-orm/pg-core";
 export const comments = pgTable(
   "comment",
   {
-    id: defaultId(),
+    id: generateDefaultId(),
     message: text(),
     postId: uuid()
       .notNull()
@@ -29,8 +29,8 @@ export const comments = pgTable(
     parentId: uuid().references((): AnyPgColumn => comments.id, {
       onDelete: "cascade",
     }),
-    createdAt: defaultDate(),
-    updatedAt: defaultDate(),
+    createdAt: generateDefaultDate(),
+    updatedAt: generateDefaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),

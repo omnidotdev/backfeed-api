@@ -8,8 +8,8 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
-import { defaultDate, defaultId } from "./constants";
 import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -20,7 +20,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const statusTemplates = pgTable(
   "status_template",
   {
-    id: defaultId(),
+    id: generateDefaultId(),
     workspaceId: uuid()
       .notNull()
       .references(() => workspaces.id, {
@@ -31,8 +31,8 @@ export const statusTemplates = pgTable(
     color: text(),
     description: text(),
     sortOrder: integer().default(0),
-    createdAt: defaultDate(),
-    updatedAt: defaultDate(),
+    createdAt: generateDefaultDate(),
+    updatedAt: generateDefaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),

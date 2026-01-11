@@ -7,8 +7,8 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
-import { defaultDate, defaultId } from "./constants";
 import { users } from "./user.table";
 import { workspaces } from "./workspace.table";
 
@@ -25,7 +25,7 @@ export const role = pgEnum("role", ["owner", "admin", "member"]);
 export const members = pgTable(
   "member",
   {
-    id: defaultId(),
+    id: generateDefaultId(),
     userId: uuid()
       .notNull()
       .references(() => users.id, {
@@ -37,7 +37,7 @@ export const members = pgTable(
         onDelete: "cascade",
       }),
     role: role().notNull(),
-    createdAt: defaultDate(),
+    createdAt: generateDefaultDate(),
   },
   (table) => [
     unique().on(table.userId, table.workspaceId),

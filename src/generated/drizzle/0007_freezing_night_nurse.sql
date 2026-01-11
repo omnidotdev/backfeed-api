@@ -1,2 +1,0 @@
-ALTER TABLE "user_organization" ADD COLUMN "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL;--> statement-breakpoint
-CREATE UNIQUE INDEX "user_organization_id_index" ON "user_organization" USING btree ("id");

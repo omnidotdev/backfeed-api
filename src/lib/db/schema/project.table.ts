@@ -7,8 +7,8 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
-import { defaultDate, defaultId } from "./constants";
 import { posts } from "./post.table";
 import { projectSocials } from "./projectSocial.table";
 import { projectStatusConfigs } from "./projectStatusConfig.table";
@@ -23,7 +23,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const projects = pgTable(
   "project",
   {
-    id: defaultId(),
+    id: generateDefaultId(),
     name: text().notNull(),
     image: text(),
     slug: text()
@@ -37,8 +37,8 @@ export const projects = pgTable(
       .references(() => workspaces.id, {
         onDelete: "cascade",
       }),
-    createdAt: defaultDate(),
-    updatedAt: defaultDate(),
+    createdAt: generateDefaultDate(),
+    updatedAt: generateDefaultDate(),
   },
   (table) => [
     unique().on(table.slug, table.workspaceId),

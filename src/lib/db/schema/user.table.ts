@@ -1,8 +1,8 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { comments } from "./comment.table";
-import { defaultDate, defaultId } from "./constants";
 import { members } from "./member.table";
 import { posts } from "./post.table";
 import { votes } from "./vote.table";
@@ -15,15 +15,15 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const users = pgTable(
   "user",
   {
-    id: defaultId(),
+    id: generateDefaultId(),
     // identity provider ID mapped to `sub` claim from ID token
     identityProviderId: uuid().notNull().unique(),
     username: text().unique(),
     firstName: text(),
     lastName: text(),
     email: text().notNull().unique(),
-    createdAt: defaultDate(),
-    updatedAt: defaultDate(),
+    createdAt: generateDefaultDate(),
+    updatedAt: generateDefaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),
