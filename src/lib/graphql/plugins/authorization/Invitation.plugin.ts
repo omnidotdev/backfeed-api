@@ -1,4 +1,5 @@
 import { EXPORTABLE } from "graphile-export/helpers";
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -6,39 +7,47 @@ import type { InsertInvitation } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate invitation permissions via Warden.
+ *
+ * - Create: Admin+ can send invitations
+ * - Delete: Owner or recipient can delete
+ */
 const validateInvitationPermissions = (
   propName: string,
   scope: MutationScope,
 ) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) {
-            throw new Error("Unauthorized");
-          }
+          if (!observer) throw new Error("Unauthorized");
 
           if (scope === "create") {
             const invitation = input as InsertInvitation;
 
-            const workspace = await db.query.workspaces.findFirst({
-              where: (table, { eq }) => eq(table.id, invitation.workspaceId),
-              with: {
-                members: {
-                  where: (table, { eq }) => eq(table.userId, observer.id),
-                },
-              },
-            });
-
-            // Only workspace owners or admins can send invitations
-            if (
-              !workspace?.members.length ||
-              workspace.members[0].role === "member"
-            )
+            // Check admin permission via Warden
+            const allowed = await checkPermission(
+              AUTHZ_ENABLED,
+              AUTHZ_PROVIDER_URL,
+              observer.id,
+              "workspace",
+              invitation.workspaceId,
+              "admin",
+            );
+            if (!allowed)
               throw new Error(
                 "Only workspace owners or admins can send invitations",
               );
@@ -82,39 +91,53 @@ const validateInvitationPermissions = (
           if (scope === "delete") {
             const invitation = await db.query.invitations.findFirst({
               where: (table, { eq }) => eq(table.id, input),
-              with: {
-                workspace: {
-                  with: {
-                    members: {
-                      where: (table, { eq }) => eq(table.userId, observer.id),
-                    },
-                  },
-                },
-              },
             });
-            const isOwner = invitation?.workspace.members?.[0].role === "owner";
-            const isRecipient = observer.email === invitation?.email;
 
-            // Only allow owner or recipient to delete
-            if (!isOwner || !isRecipient)
-              throw new Error(
-                "Only the recipient or owner can delete the invitation",
+            if (!invitation) throw new Error("Invitation not found");
+
+            const isRecipient = observer.email === invitation.email;
+
+            // Recipient can always delete their own invitation
+            if (!isRecipient) {
+              // Check owner permission via Warden
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "workspace",
+                invitation.workspaceId,
+                "owner",
               );
+              if (!allowed)
+                throw new Error(
+                  "Only the recipient or owner can delete the invitation",
+                );
+            }
           }
         });
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ],
   );
 
 /**
  * Authorization plugin for invitations.
+ *
+ * - Create: Admin+ can invite
+ * - Delete: Owner or recipient
  */
 const InvitationPlugin = wrapPlans({
   Mutation: {
     createInvitation: validateInvitationPermissions("invitation", "create"),
-    // NB: updating invitations is disabled. See `SmartTags.plugin.ts`
     deleteInvitation: validateInvitationPermissions("rowId", "delete"),
   },
 });

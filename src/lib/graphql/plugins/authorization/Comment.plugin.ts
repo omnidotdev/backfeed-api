@@ -1,4 +1,5 @@
 import { EXPORTABLE } from "graphile-export/helpers";
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -8,11 +9,21 @@ import type { InsertComment, SelectWorkspace } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate comment permissions via Warden.
+ *
+ * - Create: Any authenticated user (with tier limits)
+ * - Update: Author or admin+ on workspace
+ * - Delete: Author or admin+ on workspace
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       billingBypassSlugs,
       FEATURE_KEYS,
       isWithinLimit,
@@ -69,29 +80,26 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               with: {
                 post: {
                   with: {
-                    project: {
-                      with: {
-                        workspace: {
-                          with: {
-                            members: {
-                              where: (table, { eq }) =>
-                                eq(table.userId, observer.id),
-                            },
-                          },
-                        },
-                      },
-                    },
+                    project: true,
                   },
                 },
               },
             });
 
-            if (!comment?.post.project.workspace.members.length)
-              throw new Error("Unauthorized");
+            if (!comment) throw new Error("Comment not found");
 
+            // Author can always modify their own comments
             if (comment.userId !== observer.id) {
-              if (comment.post.project.workspace.members[0].role === "member")
-                throw new Error("Unauthorized");
+              // Check admin permission via Warden
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "workspace",
+                comment.post.project.workspaceId,
+                "admin",
+              );
+              if (!allowed) throw new Error("Unauthorized");
             }
           }
         });
@@ -101,6 +109,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       billingBypassSlugs,
       FEATURE_KEYS,
       isWithinLimit,
@@ -111,6 +122,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
 /**
  * Authorization plugin for comments.
+ *
+ * - Create: Any authenticated user (with tier limits)
+ * - Update: Author or admin+
+ * - Delete: Author or admin+
  */
 const CommentPlugin = wrapPlans({
   Mutation: {

@@ -1,4 +1,5 @@
 import { EXPORTABLE } from "graphile-export/helpers";
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -6,61 +7,88 @@ import type { InsertProjectSocial } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate project social permissions via Warden.
+ *
+ * - Create: Admin+ on workspace
+ * - Update: Admin+ on workspace
+ * - Delete: Admin+ on workspace
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) {
-            throw new Error("Unauthorized");
-          }
+          if (!observer) throw new Error("Unauthorized");
 
-          let projectId: string;
+          let workspaceId: string;
 
           if (scope === "create") {
-            projectId = (input as InsertProjectSocial).projectId;
+            const projectId = (input as InsertProjectSocial).projectId;
+
+            const project = await db.query.projects.findFirst({
+              where: (table, { eq }) => eq(table.id, projectId),
+            });
+
+            if (!project) throw new Error("Project not found");
+
+            workspaceId = project.workspaceId;
           } else {
             const social = await db.query.projectSocials.findFirst({
               where: (table, { eq }) => eq(table.id, input),
+              with: {
+                project: true,
+              },
             });
 
             if (!social) throw new Error("Project social not found");
 
-            projectId = social.projectId;
+            workspaceId = social.project.workspaceId;
           }
-          const project = await db.query.projects.findFirst({
-            where: (table, { eq }) => eq(table.id, projectId),
-            with: {
-              workspace: {
-                with: {
-                  members: {
-                    where: (table, { eq }) => eq(table.userId, observer.id),
-                  },
-                },
-              },
-            },
-          });
 
-          // Only allow owners and admins to create, update, and delete project socials
-          if (
-            !project?.workspace.members.length ||
-            project.workspace.members[0].role === "member"
-          ) {
-            throw new Error("Insufficient permissions");
-          }
+          // Check admin permission via Warden
+          const allowed = await checkPermission(
+            AUTHZ_ENABLED,
+            AUTHZ_PROVIDER_URL,
+            observer.id,
+            "workspace",
+            workspaceId,
+            "admin",
+          );
+          if (!allowed) throw new Error("Insufficient permissions");
         });
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ],
   );
 
 /**
  * Authorization plugin for project socials.
+ *
+ * - Create: Admin+ on workspace
+ * - Update: Admin+ on workspace
+ * - Delete: Admin+ on workspace
  */
 const ProjectSocialPlugin = wrapPlans({
   Mutation: {

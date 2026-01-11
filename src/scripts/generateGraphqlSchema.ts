@@ -1,7 +1,13 @@
 import { existsSync, mkdirSync } from "node:fs";
 
-import { exportSchema } from "graphile-export";
-import { EXPORTABLE } from "graphile-export/helpers";
+import { EXPORTABLE, exportSchema } from "graphile-export";
+import {
+  AUTHZ_ENABLED,
+  AUTHZ_PROVIDER_URL,
+  checkPermission,
+  deleteTuples,
+  writeTuples,
+} from "lib/authz";
 import preset from "lib/config/graphile.config";
 import { checkWorkspaceLimit, isWithinLimit } from "lib/entitlements";
 import {
@@ -31,8 +37,15 @@ const generateGraphqlSchema = async () => {
   await exportSchema(schema, schemaFilePath, {
     mode: "typeDefs",
     modules: {
-      "graphile-export/helpers": { EXPORTABLE },
+      "graphile-export": { EXPORTABLE },
       "postgraphile/grafast": { context, sideEffect },
+      "lib/authz": {
+        AUTHZ_ENABLED,
+        AUTHZ_PROVIDER_URL,
+        checkPermission,
+        writeTuples,
+        deleteTuples,
+      },
       "lib/entitlements": { isWithinLimit, checkWorkspaceLimit },
       "lib/graphql/plugins/authorization/constants": {
         FEATURE_KEYS,
@@ -43,8 +56,23 @@ const generateGraphqlSchema = async () => {
 
   await replaceInFile({
     files: schemaFilePath,
-    from: /\/\* eslint-disable graphile-export\/export-instances, graphile-export\/export-methods, graphile-export\/exhaustive-deps \*\//g,
+    from: /\/\* eslint-disable graphile-export[^*]+\*\//g,
     to: "// @ts-nocheck",
+  });
+
+  // Remove invalid globalThis import and use native fetch
+  // graphile-export doesn't recognize fetch as a known global
+  await replaceInFile({
+    files: schemaFilePath,
+    from: /import \{ [^}]*\} from "globalThis";\n/g,
+    to: "",
+  });
+
+  // Replace _fetch with fetch (native global)
+  await replaceInFile({
+    files: schemaFilePath,
+    from: /_fetch/g,
+    to: "fetch",
   });
 };
 

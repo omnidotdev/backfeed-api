@@ -1,4 +1,5 @@
 import { EXPORTABLE } from "graphile-export/helpers";
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -8,11 +9,21 @@ import type { InsertProject, SelectWorkspace } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate project permissions via Warden.
+ *
+ * - Create: Admin+ permission on workspace required
+ * - Update: Admin+ permission on workspace required
+ * - Delete: Admin+ permission on workspace required
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       billingBypassSlugs,
       FEATURE_KEYS,
       isWithinLimit,
@@ -41,27 +52,28 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             workspaceId = project.workspaceId;
           }
 
-          const workspace = await db.query.workspaces.findFirst({
-            where: (table, { eq }) => eq(table.id, workspaceId),
-            with: {
-              members: {
-                where: (table, { eq }) => eq(table.userId, observer.id),
-              },
-              projects: true,
-            },
-          });
-
-          if (!workspace) throw new Error("Workspace not found");
-
-          // only allow owners and admins to create, update, and delete projects
-          if (
-            !workspace.members.length ||
-            workspace.members[0].role === "member"
-          )
-            throw new Error("Insufficient permissions");
+          // Check admin permission via Warden
+          const allowed = await checkPermission(
+            AUTHZ_ENABLED,
+            AUTHZ_PROVIDER_URL,
+            observer.id,
+            "workspace",
+            workspaceId,
+            "admin",
+          );
+          if (!allowed) throw new Error("Insufficient permissions");
 
           // Check tier limits for create operations
           if (scope === "create") {
+            const workspace = await db.query.workspaces.findFirst({
+              where: (table, { eq }) => eq(table.id, workspaceId),
+              with: {
+                projects: true,
+              },
+            });
+
+            if (!workspace) throw new Error("Workspace not found");
+
             const withinLimit = await isWithinLimit(
               workspace as {
                 id: string;
@@ -84,6 +96,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       billingBypassSlugs,
       FEATURE_KEYS,
       isWithinLimit,
@@ -94,6 +109,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
 /**
  * Authorization plugin for projects.
+ *
+ * - Create: Admin+ on workspace
+ * - Update: Admin+ on workspace
+ * - Delete: Admin+ on workspace
  */
 const ProjectPlugin = wrapPlans({
   Mutation: {

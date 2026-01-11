@@ -1,4 +1,5 @@
 import { EXPORTABLE } from "graphile-export/helpers";
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -6,12 +7,26 @@ import type { InsertMember } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate member permissions via Warden.
+ *
+ * - Create: Admin+ can invite, or users can self-join as member
+ * - Update: Owner only can change roles
+ * - Delete: Owner can remove anyone, users can remove themselves
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
-        // NB: this is a little hacky, but a "step" can not be undefined, and since `patch` only exists on `update` mutations, we fallback to `input`
         const $patch =
           scope === "update" ? fieldArgs.getRaw(["input", "patch"]) : $input;
         const $observer = context().get("observer");
@@ -20,9 +35,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         sideEffect(
           [$input, $patch, $observer, $db],
           async ([input, patch, observer, db]) => {
-            if (!observer) {
-              throw new Error("Unauthorized");
-            }
+            if (!observer) throw new Error("Unauthorized");
 
             if (scope === "create") {
               const member = input as InsertMember;
@@ -33,61 +46,53 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               });
 
               if (existingMembers.length) {
-                const userRole = existingMembers.find(
-                  (user) => user.userId === observer.id,
-                )?.role;
+                const isSelfJoin =
+                  member.userId === observer.id && member.role === "member";
 
-                // Allow users to join a workspace as a member
-                if (!userRole) {
-                  if (
-                    member.userId !== observer.id ||
-                    member.role !== "member"
-                  ) {
-                    throw new Error("Insufficient permissions");
-                  }
-                } else {
-                  // If the user is already a member, they must be an owner to invite a new member to the workspace
-                  if (userRole !== "owner") {
-                    throw new Error("Insufficient permissions");
-                  }
+                if (!isSelfJoin) {
+                  // Check admin permission via Warden for inviting others
+                  const allowed = await checkPermission(
+                    AUTHZ_ENABLED,
+                    AUTHZ_PROVIDER_URL,
+                    observer.id,
+                    "workspace",
+                    member.workspaceId,
+                    "admin",
+                  );
+                  if (!allowed) throw new Error("Insufficient permissions");
                 }
               }
             } else {
               const member = await db.query.members.findFirst({
                 where: (table, { eq }) => eq(table.id, input),
-                // A bit recursive, but allows us to get details about the member the mutation is for as well as the observer's membership
-                with: {
-                  workspace: {
-                    with: {
-                      members: {
-                        where: (table, { eq }) => eq(table.userId, observer.id),
-                      },
-                    },
-                  },
-                },
               });
 
-              if (observer.id !== member?.userId) {
-                // Only allow owners to update roles and/or kick other members from the workspace
-                if (member?.workspace.members[0].role !== "owner") {
-                  throw new Error("Insufficient permissions");
-                }
+              if (!member) throw new Error("Member not found");
 
-                // Disallow updates that include adding an additional owner
-                // TODO: remove when add owner / transfer ownership is resolved
-                if (patch.role === "owner") {
+              const isSelf = observer.id === member.userId;
+
+              if (!isSelf) {
+                // Check owner permission via Warden to modify others
+                const allowed = await checkPermission(
+                  AUTHZ_ENABLED,
+                  AUTHZ_PROVIDER_URL,
+                  observer.id,
+                  "workspace",
+                  member.workspaceId,
+                  "owner",
+                );
+                if (!allowed) throw new Error("Insufficient permissions");
+
+                // Disallow adding additional owners
+                if (scope === "update" && patch.role === "owner") {
                   throw new Error("Workspaces can only have one owner");
                 }
               } else {
+                // Users cannot update their own role
                 if (scope === "update") {
-                  // Restrict current users from updating their own role
                   throw new Error("Insufficient permissions");
-
-                  // TODO: replace above with below when ownership transfers are allowed
-                  // if (scope === "update" && member?.workspace.members[0].role !== "owner") {
-                  //   throw new Error("Insufficient permissions");
-                  // }
                 }
+                // Users can delete themselves (leave workspace)
               }
             }
           },
@@ -95,11 +100,23 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ],
   );
 
 /**
  * Authorization plugin for members.
+ *
+ * - Create: Admin+ can invite, users can self-join as member
+ * - Update: Owner only
+ * - Delete: Owner or self
  */
 const MemberPlugin = wrapPlans({
   Mutation: {
