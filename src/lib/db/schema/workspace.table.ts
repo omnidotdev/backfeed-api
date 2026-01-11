@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { index, pgEnum, pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
-import { defaultDate, defaultId } from "./constants";
 import { invitations } from "./invitation.table";
 import { members } from "./member.table";
 import { projects } from "./project.table";
@@ -20,7 +20,7 @@ export const tier = pgEnum("tier", ["free", "basic", "team", "enterprise"]);
 export const workspaces = pgTable(
   "workspace",
   {
-    id: defaultId(),
+    id: generateDefaultId(),
     // FK to IDP organization - workspaces belong to orgs
     organizationId: text("organization_id").notNull(),
     name: text().unique().notNull(),
@@ -31,8 +31,8 @@ export const workspaces = pgTable(
     tier: tier().notNull().default("free"),
     subscriptionId: text(),
     billingAccountId: text(),
-    createdAt: defaultDate(),
-    updatedAt: defaultDate(),
+    createdAt: generateDefaultDate(),
+    updatedAt: generateDefaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),

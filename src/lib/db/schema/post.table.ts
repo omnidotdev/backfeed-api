@@ -1,8 +1,8 @@
 import { relations } from "drizzle-orm";
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { comments } from "./comment.table";
-import { defaultDate, defaultId } from "./constants";
 import { projects } from "./project.table";
 import { statusTemplates } from "./statusTemplate.table";
 import { users } from "./user.table";
@@ -16,7 +16,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const posts = pgTable(
   "post",
   {
-    id: defaultId(),
+    id: generateDefaultId(),
     title: text(),
     description: text(),
     projectId: uuid()
@@ -32,9 +32,9 @@ export const posts = pgTable(
     statusTemplateId: uuid().references(() => statusTemplates.id, {
       onDelete: "set null",
     }),
-    statusUpdatedAt: defaultDate(),
-    createdAt: defaultDate(),
-    updatedAt: defaultDate(),
+    statusUpdatedAt: generateDefaultDate(),
+    createdAt: generateDefaultDate(),
+    updatedAt: generateDefaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),

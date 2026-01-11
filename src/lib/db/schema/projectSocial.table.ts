@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
-import { defaultDate, defaultId } from "./constants";
 import { projects } from "./project.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -12,15 +12,15 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const projectSocials = pgTable(
   "project_social",
   {
-    id: defaultId(),
+    id: generateDefaultId(),
     projectId: uuid()
       .notNull()
       .references(() => projects.id, {
         onDelete: "cascade",
       }),
     url: text().notNull(),
-    createdAt: defaultDate(),
-    updatedAt: defaultDate(),
+    createdAt: generateDefaultDate(),
+    updatedAt: generateDefaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),

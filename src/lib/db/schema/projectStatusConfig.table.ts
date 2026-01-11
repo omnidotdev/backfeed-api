@@ -9,8 +9,8 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
-import { defaultDate, defaultId } from "./constants";
 import { projects } from "./project.table";
 import { statusTemplates } from "./statusTemplate.table";
 
@@ -22,7 +22,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const projectStatusConfigs = pgTable(
   "project_status_config",
   {
-    id: defaultId(),
+    id: generateDefaultId(),
     projectId: uuid()
       .notNull()
       .references(() => projects.id, {
@@ -38,7 +38,7 @@ export const projectStatusConfigs = pgTable(
     isEnabled: boolean().default(true),
     isDefault: boolean().default(false),
     sortOrder: integer(),
-    createdAt: defaultDate(),
+    createdAt: generateDefaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),
