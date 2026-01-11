@@ -8,6 +8,18 @@ import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { InsertUser, SelectUser } from "lib/db/schema";
 import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
+/** Claim key for organization claims in JWT. */
+const OMNI_CLAIMS_ORGANIZATIONS =
+  "https://manifold.omni.dev/@omni/claims/organizations";
+
+interface OrganizationClaim {
+  id: string;
+  slug: string;
+  type: "personal" | "team";
+  roles: string[];
+  teams: Array<{ id: string; name: string }>;
+}
+
 interface UserInfoClaims {
   sub: string;
   iss?: string;
@@ -18,6 +30,7 @@ interface UserInfoClaims {
   given_name?: string;
   family_name?: string;
   email?: string;
+  [OMNI_CLAIMS_ORGANIZATIONS]?: OrganizationClaim[];
 }
 
 class AuthenticationError extends Error {
@@ -38,6 +51,17 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+/** Extract organization claims from cached userinfo for a given access token. */
+export function getOrganizationClaimsFromCache(
+  accessToken: string,
+): OrganizationClaim[] {
+  const cached = queryClient.getQueryData<UserInfoClaims>([
+    "UserInfo",
+    { accessToken },
+  ]);
+  return cached?.[OMNI_CLAIMS_ORGANIZATIONS] ?? [];
+}
 
 /**
  * Validate token claims.

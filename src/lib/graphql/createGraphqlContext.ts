@@ -3,6 +3,7 @@ import { pgPool } from "lib/db/pool";
 import { createWithPgClient } from "postgraphile/adaptors/pg";
 
 import type { YogaInitialContext } from "graphql-yoga";
+import type { OrganizationClaim } from "lib/auth/organizations";
 import type { SelectUser } from "lib/db/schema";
 import type { WithPgClient } from "postgraphile/@dataplan/pg";
 import type {
@@ -17,6 +18,7 @@ declare global {
   namespace Grafast {
     interface Context {
       observer: SelectUser | null;
+      organizations: OrganizationClaim[];
       db: typeof dbPool;
     }
   }
@@ -25,6 +27,8 @@ declare global {
 export interface GraphQLContext {
   /** API observer, injected by the authentication plugin and controlled via `contextFieldName`. Related to the viewer pattern: https://wundergraph.com/blog/graphql_federation_viewer_pattern */
   observer: SelectUser | null;
+  /** User's organizations from the IDP, used for authorization checks. */
+  organizations: OrganizationClaim[];
   db: typeof dbPool;
   request: Request;
   withPgClient: WithPgClient<NodePostgresPgClient>;
@@ -44,6 +48,7 @@ const createGraphqlContext = async ({
   Omit<GraphQLContext, "observer" | "pgSettings" | "pgSubscriber">
 > => ({
   db: dbPool,
+  organizations: [],
   request,
   withPgClient,
 });

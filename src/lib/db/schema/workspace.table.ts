@@ -21,13 +21,12 @@ export const workspaces = pgTable(
   "workspace",
   {
     id: defaultId(),
-    // FK to Gatekeeper organization - workspaces belong to orgs
-    organizationId: text("organization_id"),
+    // FK to IDP organization - workspaces belong to orgs
+    organizationId: text("organization_id").notNull(),
     name: text().unique().notNull(),
     slug: text()
       // TODO https://linear.app/omnidev/issue/69c6f70e-0821-4a3a-a04a-971547f29690
       // .generatedAlwaysAs((): SQL => generateSlug(workspaces.name))
-      .unique()
       .notNull(),
     tier: tier().notNull().default("free"),
     subscriptionId: text(),
@@ -37,9 +36,7 @@ export const workspaces = pgTable(
   },
   (table) => [
     uniqueIndex().on(table.id),
-    // Org-scoped slug uniqueness (after migration complete)
-    // uniqueIndex("workspace_org_slug_idx").on(table.organizationId, table.slug),
-    uniqueIndex().on(table.slug), // Keep global uniqueness until migration complete
+    uniqueIndex("workspace_slug_idx").on(table.slug),
     index("workspace_organization_id_idx").on(table.organizationId),
   ],
 );

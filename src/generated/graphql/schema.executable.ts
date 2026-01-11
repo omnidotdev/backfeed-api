@@ -2,6 +2,7 @@
 import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertExecutableStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inspect, isExecutableStep, lambda, makeDecodeNodeId, makeGrafastSchema, object, rootValue, sideEffect } from "grafast";
 import { GraphQLError, Kind } from "graphql";
+import { getDefaultOrganization } from "lib/auth/organizations";
 import { checkPermission, deleteTuples, writeTuples } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassSlugs } from "lib/graphql/plugins/authorization/constants";
@@ -1338,7 +1339,7 @@ const spec_workspace = {
     organization_id: {
       description: undefined,
       codec: TYPES.text,
-      notNull: false,
+      notNull: true,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -1828,16 +1829,6 @@ const workspaceUniques = [{
 }, {
   isPrimary: false,
   attributes: ["name"],
-  description: undefined,
-  extensions: {
-    tags: {
-      __proto__: null,
-      behavior: ["-update", "-delete"]
-    }
-  }
-}, {
-  isPrimary: false,
-  attributes: ["slug"],
   description: undefined,
   extensions: {
     tags: {
@@ -5151,14 +5142,20 @@ function oldPlan13(_, args) {
     result: $insert
   });
 }
+const validateOrgMembership = (organizations, organizationId) => {
+  return organizations.some(org => org.id === organizationId);
+};
 const planWrapper12 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "workspace"]),
-    $observer = context().get("observer");
-  sideEffect([$input, $observer], async ([input, observer]) => {
+    $observer = context().get("observer"),
+    $organizations = context().get("organizations");
+  sideEffect([$input, $observer, $organizations], async ([input, observer, organizations]) => {
     if (!observer) throw Error("Unauthorized");
-    if ("create" !== "create") {
-      if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
-    }
+    if ("create" === "create") {
+      const targetOrgId = input.organizationId ?? getDefaultOrganization(organizations)?.id;
+      if (!targetOrgId) throw Error("No organization available");
+      if (!validateOrgMembership(organizations, targetOrgId)) throw Error("Unauthorized: You are not a member of this organization");
+    } else if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
   });
   return plan();
 };
@@ -5643,12 +5640,15 @@ const oldPlan24 = (_$root, args) => {
 };
 const planWrapper24 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer");
-  sideEffect([$input, $observer], async ([input, observer]) => {
+    $observer = context().get("observer"),
+    $organizations = context().get("organizations");
+  sideEffect([$input, $observer, $organizations], async ([input, observer, organizations]) => {
     if (!observer) throw Error("Unauthorized");
-    if ("update" !== "create") {
-      if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
-    }
+    if ("update" === "create") {
+      const targetOrgId = input.organizationId ?? getDefaultOrganization(organizations)?.id;
+      if (!targetOrgId) throw Error("No organization available");
+      if (!validateOrgMembership(organizations, targetOrgId)) throw Error("Unauthorized: You are not a member of this organization");
+    } else if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
   });
   return plan();
 };
@@ -6186,12 +6186,15 @@ const oldPlan37 = (_$root, args) => {
 };
 const planWrapper37 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer");
-  sideEffect([$input, $observer], async ([input, observer]) => {
+    $observer = context().get("observer"),
+    $organizations = context().get("organizations");
+  sideEffect([$input, $observer, $organizations], async ([input, observer, organizations]) => {
     if (!observer) throw Error("Unauthorized");
-    if ("delete" !== "create") {
-      if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
-    }
+    if ("delete" === "create") {
+      const targetOrgId = input.organizationId ?? getDefaultOrganization(organizations)?.id;
+      if (!targetOrgId) throw Error("No organization available");
+      if (!validateOrgMembership(organizations, targetOrgId)) throw Error("Unauthorized: You are not a member of this organization");
+    } else if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
   });
   return plan();
 };
@@ -6294,9 +6297,6 @@ type Query implements Node {
 
   """Get a single \`Workspace\`."""
   workspaceByName(name: String!): Workspace
-
-  """Get a single \`Workspace\`."""
-  workspaceBySlug(slug: String!): Workspace
 
   """Reads and enables pagination through a set of \`Invitation\`."""
   invitations(
@@ -6715,7 +6715,7 @@ type Workspace {
   tier: Tier!
   subscriptionId: String
   billingAccountId: String
-  organizationId: String
+  organizationId: String!
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -11676,6 +11676,7 @@ type WorkspaceDistinctCountAggregates {
 
 """Grouping methods for \`Workspace\` for usage during aggregation."""
 enum WorkspaceGroupBy {
+  SLUG
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
@@ -12650,7 +12651,7 @@ input WorkspaceInput {
   createdAt: Datetime
   updatedAt: Datetime
   billingAccountId: String
-  organizationId: String
+  organizationId: String!
 }
 
 """The output of our update \`ProjectSocial\` mutation."""
@@ -14086,13 +14087,6 @@ export const objects = {
       }) {
         return resource_workspacePgResource.get({
           name: $name
-        });
-      },
-      workspaceBySlug(_$root, {
-        $slug
-      }) {
-        return resource_workspacePgResource.get({
-          slug: $slug
         });
       },
       workspaces: {
@@ -34916,6 +34910,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           codec: TYPES.text
         });
       },
+      SLUG($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("slug")}`,
+          codec: TYPES.text
+        });
+      },
       SUBSCRIPTION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("subscription_id")}`,
@@ -35867,14 +35867,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           attribute: "slug",
           direction: "ASC"
         });
-        queryBuilder.setOrderIsUnique();
       },
       SLUG_DESC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "slug",
           direction: "DESC"
         });
-        queryBuilder.setOrderIsUnique();
       },
       STATUS_TEMPLATES_AVERAGE_SORT_ORDER_ASC($select) {
         const foreignTableAlias = $select.alias,
