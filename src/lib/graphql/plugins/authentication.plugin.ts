@@ -194,12 +194,16 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
 /**
  * Authentication plugin.
+ *
+ * Uses "resolve-only" mode to allow unauthenticated queries (public board access).
+ * Mutations are protected by authorization plugins that check for observer.
+ *
  * @see https://the-guild.dev/graphql/envelop/plugins/use-generic-auth
  */
 const authenticationPlugin = useGenericAuth({
   contextFieldName: "observer",
   resolveUserFn: resolveUser,
-  mode: protectRoutes ? "protect-all" : "resolve-only",
+  mode: "resolve-only",
 });
 
 export default authenticationPlugin;
