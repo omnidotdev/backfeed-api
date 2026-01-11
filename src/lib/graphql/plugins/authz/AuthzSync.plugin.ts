@@ -4,7 +4,6 @@
  * Syncs Backfeed mutations to the authorization store (PDP/OpenFGA).
  * Uses sideEffect to run sync logic after mutations complete.
  *
- * This is a Pattern A implementation - sync happens alongside mutations.
  * TODO: Replace with Vortex event-driven sync for durability.
  */
 
@@ -15,12 +14,61 @@ import {
   deleteTuples,
   writeTuples,
 } from "lib/authz";
+import { statusTemplates } from "lib/db/schema";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import type { Role } from "lib/authz";
 import type { InsertMember, InsertProject } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
+
+/**
+ * Default status templates for new workspaces.
+ */
+const DEFAULT_STATUS_TEMPLATES = [
+  {
+    name: "open",
+    displayName: "Open",
+    color: "#3b82f6",
+    description: "New and awaiting review",
+    sortOrder: 0,
+  },
+  {
+    name: "under_review",
+    displayName: "Under Review",
+    color: "#f59e0b",
+    description: "Being evaluated by the team",
+    sortOrder: 1,
+  },
+  {
+    name: "planned",
+    displayName: "Planned",
+    color: "#8b5cf6",
+    description: "Scheduled for implementation",
+    sortOrder: 2,
+  },
+  {
+    name: "in_progress",
+    displayName: "In Progress",
+    color: "#10b981",
+    description: "Currently being worked on",
+    sortOrder: 3,
+  },
+  {
+    name: "completed",
+    displayName: "Completed",
+    color: "#22c55e",
+    description: "Done",
+    sortOrder: 4,
+  },
+  {
+    name: "closed",
+    displayName: "Closed",
+    color: "#6b7280",
+    description: "Will not be implemented",
+    sortOrder: 5,
+  },
+] as const;
 
 /**
  * Sync member creation to authz store.
@@ -302,7 +350,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
   );
 
 /**
- * Sync workspace creation - adds owner tuple.
+ * Sync workspace creation - adds owner tuple and seeds default status templates.
  */
 const syncCreateWorkspace = (): PlanWrapperFn =>
   EXPORTABLE(
@@ -312,43 +360,73 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       writeTuples,
+      statusTemplates,
+      DEFAULT_STATUS_TEMPLATES,
     ): PlanWrapperFn =>
       (plan, _, _fieldArgs) => {
         const $result = plan();
         const $observer = context().get("observer");
+        const $db = context().get("db");
 
-        sideEffect([$result, $observer], async ([result, observer]) => {
-          if (!result || !observer) return;
-          if (AUTHZ_ENABLED !== "true") return;
-          if (!AUTHZ_PROVIDER_URL) return;
+        sideEffect(
+          [$result, $observer, $db],
+          async ([result, observer, db]) => {
+            if (!result || !observer) return;
 
-          const workspaceId = (result as { id?: string })?.id;
+            const workspaceId = (result as { id?: string })?.id;
 
-          if (!workspaceId) {
-            console.error("[AuthZ Sync] Workspace ID not found in result");
-            return;
-          }
+            if (!workspaceId) {
+              console.error("[AuthZ Sync] Workspace ID not found in result");
+              return;
+            }
 
-          try {
-            // The workspace creator becomes the owner
-            await writeTuples(AUTHZ_PROVIDER_URL, [
-              {
-                user: `user:${observer.id}`,
-                relation: "owner",
-                object: `workspace:${workspaceId}`,
-              },
-            ]);
-          } catch (error) {
-            console.error(
-              "[AuthZ Sync] Failed to sync workspace creation:",
-              error,
-            );
-          }
-        });
+            // Seed default status templates for the new workspace
+            try {
+              await db.insert(statusTemplates).values(
+                DEFAULT_STATUS_TEMPLATES.map((template) => ({
+                  ...template,
+                  workspaceId,
+                })),
+              );
+            } catch (error) {
+              console.error(
+                "[Workspace Init] Failed to seed default status templates:",
+                error,
+              );
+            }
+
+            // Sync to AuthZ store if enabled
+            if (AUTHZ_ENABLED === "true" && AUTHZ_PROVIDER_URL) {
+              try {
+                // The workspace creator becomes the owner
+                await writeTuples(AUTHZ_PROVIDER_URL, [
+                  {
+                    user: `user:${observer.id}`,
+                    relation: "owner",
+                    object: `workspace:${workspaceId}`,
+                  },
+                ]);
+              } catch (error) {
+                console.error(
+                  "[AuthZ Sync] Failed to sync workspace creation:",
+                  error,
+                );
+              }
+            }
+          },
+        );
 
         return $result;
       },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, writeTuples],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      writeTuples,
+      statusTemplates,
+      DEFAULT_STATUS_TEMPLATES,
+    ],
   );
 
 /**
