@@ -8,6 +8,13 @@
       "when": 1768125661909,
       "tag": "0000_motionless_dagger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1768192254743,
+      "tag": "0001_fine_silver_centurion",
+      "breakpoints": true
     }
   ]
 }
