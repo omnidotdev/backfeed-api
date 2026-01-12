@@ -15,20 +15,21 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const tier = pgEnum("tier", ["free", "basic", "team", "enterprise"]);
 
 /**
- * Workspace table. Workspaces are used to group projects together and contain a set of users.
+ * Workspace table.
+ *
+ * Organization identity (name, slug) is owned by Gatekeeper (IDP).
+ * Apps resolve org name/slug from JWT claims, not DB.
+ * This table stores only app-specific settings.
  */
 export const workspaces = pgTable(
   "workspace",
   {
     id: generateDefaultId(),
-    // FK to IDP organization - workspaces belong to orgs
-    organizationId: text("organization_id").notNull(),
-    name: text().unique().notNull(),
-    slug: text()
-      // TODO https://linear.app/omnidev/issue/69c6f70e-0821-4a3a-a04a-971547f29690
-      // .generatedAlwaysAs((): SQL => generateSlug(workspaces.name))
-      .notNull(),
+    // FK to IDP organization - workspaces are 1:1 with orgs
+    // Org name/slug resolved from JWT claims at runtime
+    organizationId: text("organization_id").notNull().unique(),
     tier: tier().notNull().default("free"),
+    // Cached from Aether, synced via webhook
     subscriptionId: text(),
     billingAccountId: text(),
     createdAt: generateDefaultDate(),
@@ -36,7 +37,6 @@ export const workspaces = pgTable(
   },
   (table) => [
     uniqueIndex().on(table.id),
-    uniqueIndex("workspace_slug_idx").on(table.slug),
     index("workspace_organization_id_idx").on(table.organizationId),
   ],
 );

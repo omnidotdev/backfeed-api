@@ -3,9 +3,25 @@ import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import type { InsertStatusTemplate } from "lib/db/schema";
+import type { InsertStatusTemplate, members } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
+
+/**
+ * Check member table for admin+ permission as fallback.
+ * Used when OpenFGA tuples haven't synced yet (race condition).
+ */
+const checkMemberTablePermission = async (
+  db: any,
+  userId: string,
+  workspaceId: string,
+): Promise<boolean> => {
+  const membership = await db.query.members.findFirst({
+    where: (table: typeof members, { and, eq }: any) =>
+      and(eq(table.userId, userId), eq(table.workspaceId, workspaceId)),
+  });
+  return membership?.role === "owner" || membership?.role === "admin";
+};
 
 /**
  * Validate status template permissions via PDP.
@@ -13,6 +29,9 @@ import type { MutationScope } from "./types";
  * - Create: Admin+ on workspace
  * - Update: Admin+ on workspace
  * - Delete: Admin+ on workspace
+ *
+ * Falls back to member table check when OpenFGA denies (handles race condition
+ * where tuples haven't synced yet after workspace/member creation).
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
@@ -22,6 +41,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
+      checkMemberTablePermission,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -56,7 +76,18 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             workspaceId,
             "admin",
           );
-          if (!allowed) throw new Error("Insufficient permissions");
+
+          if (!allowed) {
+            // Fallback: Check member table directly (handles tuple sync race condition)
+            const hasPermission = await checkMemberTablePermission(
+              db,
+              observer.id,
+              workspaceId,
+            );
+            if (!hasPermission) {
+              throw new Error("Insufficient permissions");
+            }
+          }
         });
 
         return plan();
@@ -67,6 +98,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
+      checkMemberTablePermission,
       propName,
       scope,
     ],

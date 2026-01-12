@@ -13,7 +13,7 @@ import preset from "lib/config/graphile.config";
 import { checkWorkspaceLimit, isWithinLimit } from "lib/entitlements";
 import {
   FEATURE_KEYS,
-  billingBypassSlugs,
+  billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 import { makeSchema } from "postgraphile";
 import { context, sideEffect } from "postgraphile/grafast";
@@ -50,7 +50,7 @@ const generateGraphqlSchema = async () => {
       "lib/entitlements": { isWithinLimit, checkWorkspaceLimit },
       "lib/graphql/plugins/authorization/constants": {
         FEATURE_KEYS,
-        billingBypassSlugs,
+        billingBypassOrgIds,
       },
       "lib/auth/organizations": { getDefaultOrganization },
     },

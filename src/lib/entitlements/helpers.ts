@@ -119,13 +119,13 @@ export async function checkWorkspaceLimit(
  * This is the primary function for authorization plugins.
  */
 export async function isWithinLimit(
-  workspace: { id: string; tier: Tier; slug: string },
+  workspace: { id: string; tier: Tier; organizationId: string },
   limitKey: string,
   currentCount: number,
-  billingBypassSlugs: string[] = [],
+  billingBypassOrgIds: string[] = [],
 ): Promise<boolean> {
-  // Bypass check for exempt workspaces
-  if (billingBypassSlugs.includes(workspace.slug)) {
+  // Bypass check for exempt organizations
+  if (billingBypassOrgIds.includes(workspace.organizationId)) {
     return true;
   }
 
