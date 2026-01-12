@@ -3,7 +3,7 @@ import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { FEATURE_KEYS, billingBypassSlugs, isWithinLimit } from "./constants";
+import { FEATURE_KEYS, billingBypassOrgIds, isWithinLimit } from "./constants";
 
 import type { InsertPost, SelectWorkspace } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -24,7 +24,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
-      billingBypassSlugs,
+      billingBypassOrgIds,
       FEATURE_KEYS,
       isWithinLimit,
       propName,
@@ -67,11 +67,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               project.workspace as {
                 id: string;
                 tier: SelectWorkspace["tier"];
-                slug: string;
+                organizationId: string;
               },
               FEATURE_KEYS.MAX_FEEDBACK_USERS,
               currentUniqueCount - 1,
-              billingBypassSlugs,
+              billingBypassOrgIds,
             );
 
             if (!withinLimit && !uniqueUsers.includes(observer.id)) {
@@ -113,7 +113,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
-      billingBypassSlugs,
+      billingBypassOrgIds,
       FEATURE_KEYS,
       isWithinLimit,
       propName,

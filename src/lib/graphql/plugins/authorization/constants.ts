@@ -1,15 +1,15 @@
-import { BILLING_BYPASS_SLUGS } from "lib/config/env.config";
+import { BILLING_BYPASS_ORG_IDS } from "lib/config/env.config";
 import { isWithinLimit } from "lib/entitlements";
 
 /**
- * Workspace slugs that bypass all billing/tier limits.
- * Configured via BILLING_BYPASS_SLUGS env var (comma-separated).
+ * Organization IDs that bypass all billing/tier limits.
+ * Configured via BILLING_BYPASS_ORG_IDS env var (comma-separated).
  *
  * NOTE: Exported as array for use in EXPORTABLE functions.
- * Use `billingBypassSlugs.includes(slug)` inline within EXPORTABLE blocks.
+ * Use `billingBypassOrgIds.includes(organizationId)` inline within EXPORTABLE blocks.
  */
-export const billingBypassSlugs: string[] =
-  BILLING_BYPASS_SLUGS?.split(",")
+export const billingBypassOrgIds: string[] =
+  BILLING_BYPASS_ORG_IDS?.split(",")
     .map((s) => s.trim())
     .filter(Boolean) ?? [];
 

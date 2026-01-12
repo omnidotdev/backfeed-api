@@ -15,6 +15,13 @@
       "when": 1768192254743,
       "tag": "0001_fine_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1768194188667,
+      "tag": "0002_nebulous_silver_sable",
+      "breakpoints": true
     }
   ]
 }

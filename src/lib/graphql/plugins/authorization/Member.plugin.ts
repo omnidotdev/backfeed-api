@@ -1,5 +1,6 @@
 import { EXPORTABLE } from "graphile-export/helpers";
 import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
+import { AUTH_BASE_URL, addOrgMember } from "lib/idp/client";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -22,6 +23,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
+      AUTH_BASE_URL,
+      addOrgMember,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -40,12 +43,14 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (scope === "create") {
               const member = input as InsertMember;
 
-              const existingMembers = await db.query.members.findMany({
-                where: (table, { eq }) =>
-                  eq(table.workspaceId, member.workspaceId),
+              const workspace = await db.query.workspaces.findFirst({
+                where: (table, { eq }) => eq(table.id, member.workspaceId),
+                with: { members: true },
               });
 
-              if (existingMembers.length) {
+              if (!workspace) throw new Error("Workspace not found");
+
+              if (workspace.members.length) {
                 const isSelfJoin =
                   member.userId === observer.id && member.role === "member";
 
@@ -60,6 +65,17 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                     "admin",
                   );
                   if (!allowed) throw new Error("Insufficient permissions");
+                }
+
+                // Sync org membership to IDP when user joins (self-join or invitation accept)
+                if (isSelfJoin && AUTH_BASE_URL) {
+                  addOrgMember(AUTH_BASE_URL, {
+                    organizationId: workspace.organizationId,
+                    userId: observer.id,
+                    role: "member",
+                  }).catch((err) =>
+                    console.error("Failed to sync org membership to IDP:", err),
+                  );
                 }
               }
             } else {
@@ -106,6 +122,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
+      AUTH_BASE_URL,
+      addOrgMember,
       propName,
       scope,
     ],
@@ -117,6 +135,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
  * - Create: Admin+ can invite, users can self-join as member
  * - Update: Owner only
  * - Delete: Owner or self
+ *
+ * Syncs org membership to IDP when users join a workspace.
  */
 const MemberPlugin = wrapPlans({
   Mutation: {

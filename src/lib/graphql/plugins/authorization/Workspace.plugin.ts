@@ -52,8 +52,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               // For create, validate org membership
               const workspaceInput = input as {
                 organizationId?: string;
-                name: string;
-                slug: string;
               };
 
               // If organizationId provided, validate membership
