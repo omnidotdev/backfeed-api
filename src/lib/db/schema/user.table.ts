@@ -18,9 +18,12 @@ export const users = pgTable(
     id: generateDefaultId(),
     // identity provider ID mapped to `sub` claim from ID token
     identityProviderId: uuid().notNull().unique(),
+    // full name from OIDC `name` claim
+    name: text().notNull(),
+    // username from OIDC `preferred_username` claim
     username: text().unique(),
-    firstName: text(),
-    lastName: text(),
+    // avatar URL from OIDC `picture` claim
+    avatarUrl: text(),
     email: text().notNull().unique(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),

@@ -26,9 +26,9 @@ interface UserInfoClaims {
   aud?: string | string[];
   exp?: number;
   iat?: number;
+  name?: string;
   preferred_username?: string;
-  given_name?: string;
-  family_name?: string;
+  picture?: string;
   email?: string;
   [OMNI_CLAIMS_ORGANIZATIONS]?: OrganizationClaim[];
 }
@@ -160,9 +160,9 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
     const insertedUser: InsertUser = {
       identityProviderId: claims.sub,
-      username: claims.preferred_username ?? claims.email,
-      firstName: claims.given_name ?? "",
-      lastName: claims.family_name ?? "",
+      name: claims.name ?? claims.preferred_username ?? claims.email,
+      username: claims.preferred_username,
+      avatarUrl: claims.picture,
       email: claims.email,
     };
 
