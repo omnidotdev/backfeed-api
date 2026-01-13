@@ -8,8 +8,6 @@ import {
 } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
-import { invitations } from "./invitation.table";
-import { members } from "./member.table";
 import { projects } from "./project.table";
 import { statusTemplates } from "./statusTemplate.table";
 
@@ -55,9 +53,7 @@ export const workspaces = pgTable(
  * Workspace relations.
  */
 export const workspaceRelations = relations(workspaces, ({ many }) => ({
-  members: many(members),
   projects: many(projects),
-  invitations: many(invitations),
   statusTemplates: many(statusTemplates),
 }));
 

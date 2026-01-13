@@ -5,7 +5,7 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { FEATURE_KEYS, billingBypassOrgIds, isWithinLimit } from "./constants";
 
-import type { InsertPost, SelectWorkspace } from "lib/db/schema";
+import type { InsertPost } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -64,10 +64,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               : uniqueUsers.length + 1;
 
             const withinLimit = await isWithinLimit(
-              project.workspace as {
-                id: string;
-                tier: SelectWorkspace["tier"];
-                organizationId: string;
+              {
+                id: project.workspace.id,
+                organizationId: project.workspace.organizationId,
               },
               FEATURE_KEYS.MAX_FEEDBACK_USERS,
               currentUniqueCount - 1,

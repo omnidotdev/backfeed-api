@@ -5,7 +5,7 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { FEATURE_KEYS, billingBypassOrgIds, isWithinLimit } from "./constants";
 
-import type { InsertComment, SelectWorkspace } from "lib/db/schema";
+import type { InsertComment } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -61,10 +61,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             // Check comments per post limit
             const withinLimit = await isWithinLimit(
-              post.project.workspace as {
-                id: string;
-                tier: SelectWorkspace["tier"];
-                organizationId: string;
+              {
+                id: post.project.workspace.id,
+                organizationId: post.project.workspace.organizationId,
               },
               FEATURE_KEYS.MAX_COMMENTS_PER_POST,
               post.comments.length,

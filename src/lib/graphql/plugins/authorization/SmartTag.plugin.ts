@@ -8,30 +8,11 @@ const SmartTagPlugin = jsonPgSmartTags({
   version: 1,
   config: {
     class: {
-      invitation: {
-        tags: {
-          behavior: "-update",
-        },
-      },
       workspace: {
         attribute: {
-          tier: {
-            tags: {
-              behavior: "-insert -update",
-            },
-          },
           subscription_id: {
             tags: {
               behavior: "-insert -update",
-            },
-          },
-        },
-      },
-      member: {
-        attribute: {
-          role: {
-            tags: {
-              behavior: "+orderBy",
             },
           },
         },
