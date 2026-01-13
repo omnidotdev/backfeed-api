@@ -2,8 +2,6 @@ import { PgAggregatesPreset } from "@graphile/pg-aggregates";
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
 import {
   CommentPlugin,
-  InvitationPlugin,
-  MemberPlugin,
   PostPlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectPlugin,
@@ -45,8 +43,6 @@ const preset: GraphileConfig.Preset = {
     PrimaryKeyMutationsOnlyPlugin,
     WorkspacePlugin,
     UserPlugin,
-    MemberPlugin,
-    InvitationPlugin,
     ProjectPlugin,
     ProjectSocialPlugin,
     ProjectStatusConfigPlugin,

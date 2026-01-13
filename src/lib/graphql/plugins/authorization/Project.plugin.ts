@@ -5,27 +5,9 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { FEATURE_KEYS, billingBypassOrgIds, isWithinLimit } from "./constants";
 
-import type { InsertProject, SelectWorkspace, members } from "lib/db/schema";
+import type { InsertProject } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
-
-/**
- * Check member table for admin+ permission as fallback.
- * Used when OpenFGA tuples haven't synced yet (race condition).
- */
-const checkMemberTablePermission = async (
-  // biome-ignore lint/suspicious/noExplicitAny: db type from postgraphile context
-  db: any,
-  userId: string,
-  workspaceId: string,
-): Promise<boolean> => {
-  const membership = await db.query.members.findFirst({
-    // biome-ignore lint/suspicious/noExplicitAny: drizzle query builder callback
-    where: (table: typeof members, { and, eq }: any) =>
-      and(eq(table.userId, userId), eq(table.workspaceId, workspaceId)),
-  });
-  return membership?.role === "owner" || membership?.role === "admin";
-};
 
 /**
  * Validate project permissions via PDP.
@@ -34,8 +16,8 @@ const checkMemberTablePermission = async (
  * - Update: Admin+ permission on workspace required
  * - Delete: Admin+ permission on workspace required
  *
- * Falls back to member table check when OpenFGA denies (handles race condition
- * where tuples haven't synced yet after workspace/member creation).
+ * Note: Member tuples are synced to PDP by IDP (Gatekeeper), so we rely
+ * entirely on PDP checks. No local member table fallback.
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
@@ -45,7 +27,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
-      checkMemberTablePermission,
       billingBypassOrgIds,
       FEATURE_KEYS,
       isWithinLimit,
@@ -85,15 +66,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           );
 
           if (!allowed) {
-            // Fallback: Check member table directly (handles tuple sync race condition)
-            const hasPermission = await checkMemberTablePermission(
-              db,
-              observer.id,
-              workspaceId,
-            );
-            if (!hasPermission) {
-              throw new Error("Insufficient permissions");
-            }
+            throw new Error("Insufficient permissions");
           }
 
           // Check tier limits for create operations
@@ -108,11 +81,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!workspace) throw new Error("Workspace not found");
 
             const withinLimit = await isWithinLimit(
-              workspace as {
-                id: string;
-                tier: SelectWorkspace["tier"];
-                organizationId: string;
-              },
+              { id: workspace.id, organizationId: workspace.organizationId },
               FEATURE_KEYS.MAX_PROJECTS,
               workspace.projects.length,
               billingBypassOrgIds,
@@ -132,7 +101,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
-      checkMemberTablePermission,
       billingBypassOrgIds,
       FEATURE_KEYS,
       isWithinLimit,

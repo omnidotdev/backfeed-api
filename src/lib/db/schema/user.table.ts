@@ -3,7 +3,6 @@ import { pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { comments } from "./comment.table";
-import { members } from "./member.table";
 import { posts } from "./post.table";
 import { votes } from "./vote.table";
 
@@ -38,7 +37,6 @@ export const users = pgTable(
  * User relations.
  */
 export const userRelations = relations(users, ({ many }) => ({
-  memberships: many(members),
   comments: many(comments),
   votes: many(votes),
   posts: many(posts),

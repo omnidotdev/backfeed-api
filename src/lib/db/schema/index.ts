@@ -1,6 +1,4 @@
 export * from "./comment.table";
-export * from "./invitation.table";
-export * from "./member.table";
 export * from "./post.table";
 export * from "./project.table";
 export * from "./projectSocial.table";
