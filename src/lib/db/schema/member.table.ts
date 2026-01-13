@@ -21,6 +21,14 @@ export const role = pgEnum("role", ["owner", "admin", "member"]);
 
 /**
  * Workspace members table.
+ *
+ * This table manages workspace-level access control, which is distinct from
+ * IDP organization membership. A user must be an IDP org member to access
+ * any workspace, but workspace membership controls which specific workspaces
+ * within that org the user can access.
+ *
+ * IDP org membership: "Can this user access this organization's apps?"
+ * Workspace membership: "Which workspaces within the org can this user see?"
  */
 export const members = pgTable(
   "member",

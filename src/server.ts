@@ -14,6 +14,7 @@ import {
   authenticationPlugin,
   organizationsPlugin,
 } from "lib/graphql/plugins";
+import idpWebhook from "lib/idp/webhooks";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
@@ -39,6 +40,7 @@ const app = new Elysia({
     }),
   )
   .use(entitlementsWebhook)
+  .use(idpWebhook)
   .use(
     yoga({
       schema,

@@ -1,5 +1,11 @@
 import { relations } from "drizzle-orm";
-import { index, pgEnum, pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { invitations } from "./invitation.table";
@@ -10,33 +16,37 @@ import { statusTemplates } from "./statusTemplate.table";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Subscription tiers defined for workspaces.
- */
-export const tier = pgEnum("tier", ["free", "basic", "team", "enterprise"]);
-
-/**
  * Workspace table.
  *
  * Organization identity (name, slug) is owned by Gatekeeper (IDP).
  * Apps resolve org name/slug from JWT claims, not DB.
  * This table stores only app-specific settings.
+ *
+ * BILLING: Entitlements (tier, limits) are owned by Aether at the
+ * organization level. Query Aether with entityType="organization".
  */
 export const workspaces = pgTable(
   "workspace",
   {
     id: generateDefaultId(),
-    // FK to IDP organization - workspaces are 1:1 with orgs
+    // FK to IDP organization - multiple workspaces per org supported
     // Org name/slug resolved from JWT claims at runtime
-    organizationId: text("organization_id").notNull().unique(),
-    tier: tier().notNull().default("free"),
-    // Cached from Aether, synced via webhook
+    organizationId: text("organization_id").notNull(),
+    name: text().notNull(),
+    slug: text().notNull(),
+    // Cached from Aether, synced via webhook (for display purposes only)
     subscriptionId: text(),
     billingAccountId: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
+    // Soft delete fields - set when IDP organization is deleted
+    deletedAt: timestamp("deleted_at"),
+    deletionReason: text("deletion_reason"),
   },
   (table) => [
     uniqueIndex().on(table.id),
+    // Slug must be unique within an organization
+    uniqueIndex("workspace_org_slug_idx").on(table.organizationId, table.slug),
     index("workspace_organization_id_idx").on(table.organizationId),
   ],
 );

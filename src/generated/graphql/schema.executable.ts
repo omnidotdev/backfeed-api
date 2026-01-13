@@ -6,6 +6,7 @@ import { getDefaultOrganization } from "lib/auth/organizations";
 import { checkPermission, deleteTuples, writeTuples } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassOrgIds } from "lib/graphql/plugins/authorization/constants";
+import { validateOrgExists } from "lib/idp/validateOrg";
 import { sql } from "pg-sql2";
 const nodeIdHandler_Query = {
   typeName: "Query",
@@ -5186,6 +5187,7 @@ const planWrapper12 = (plan, _, fieldArgs) => {
       const targetOrgId = input.organizationId ?? getDefaultOrganization(organizations)?.id;
       if (!targetOrgId) throw Error("No organization available");
       if (!validateOrgMembership(organizations, targetOrgId)) throw Error("Unauthorized: You are not a member of this organization");
+      if (!(await validateOrgExists(targetOrgId))) throw Error("Organization not found in identity provider");
     } else if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
   });
   return plan();
@@ -5245,13 +5247,15 @@ const DEFAULT_STATUS_TEMPLATES = [{
   description: "Will not be implemented",
   sortOrder: 5
 }];
-const planWrapper13 = (plan, _, _fieldArgs) => {
+const planWrapper13 = (plan, _, fieldArgs) => {
   const $result = plan(),
+    $input = fieldArgs.getRaw(["input", "workspace"]),
     $observer = context().get("observer"),
     $withPgClient = context().get("withPgClient");
-  sideEffect([$result, $observer, $withPgClient], async ([result, observer, withPgClient]) => {
+  sideEffect([$result, $input, $observer, $withPgClient], async ([result, input, observer, withPgClient]) => {
     if (!result || !observer) return;
-    const workspaceId = result?.id;
+    const workspaceId = result?.id,
+      organizationId = input?.organizationId;
     if (!workspaceId) {
       console.error("[AuthZ Sync] Workspace ID not found in result");
       return;
@@ -5271,11 +5275,17 @@ const planWrapper13 = (plan, _, _fieldArgs) => {
       console.error("[Workspace Init] Failed to seed default status templates:", error);
     }
     if (undefined === "true" && undefined) try {
-      await writeTuples(undefined, [{
+      const tuples = [{
         user: `user:${observer.id}`,
         relation: "owner",
         object: `workspace:${workspaceId}`
-      }]);
+      }];
+      if (organizationId) tuples.push({
+        user: `organization:${organizationId}`,
+        relation: "organization",
+        object: `workspace:${workspaceId}`
+      });
+      await writeTuples(undefined, tuples);
     } catch (error) {
       console.error("[AuthZ Sync] Failed to sync workspace creation:", error);
     }
@@ -5744,6 +5754,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
       const targetOrgId = input.organizationId ?? getDefaultOrganization(organizations)?.id;
       if (!targetOrgId) throw Error("No organization available");
       if (!validateOrgMembership(organizations, targetOrgId)) throw Error("Unauthorized: You are not a member of this organization");
+      if (!(await validateOrgExists(targetOrgId))) throw Error("Organization not found in identity provider");
     } else if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
   });
   return plan();
@@ -6305,6 +6316,7 @@ const planWrapper37 = (plan, _, fieldArgs) => {
       const targetOrgId = input.organizationId ?? getDefaultOrganization(organizations)?.id;
       if (!targetOrgId) throw Error("No organization available");
       if (!validateOrgMembership(organizations, targetOrgId)) throw Error("Unauthorized: You are not a member of this organization");
+      if (!(await validateOrgExists(targetOrgId))) throw Error("Organization not found in identity provider");
     } else if (!(await checkPermission(undefined, undefined, observer.id, "workspace", input, "owner"))) throw Error("Unauthorized");
   });
   return plan();

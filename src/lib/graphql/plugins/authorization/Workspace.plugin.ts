@@ -1,6 +1,7 @@
 import { EXPORTABLE } from "graphile-export/helpers";
 import { getDefaultOrganization } from "lib/auth/organizations";
 import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
+import { validateOrgExists } from "lib/idp/validateOrg";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -35,6 +36,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       checkPermission,
       getDefaultOrganization,
       validateOrgMembership,
+      validateOrgExists,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -69,6 +71,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   "Unauthorized: You are not a member of this organization",
                 );
               }
+
+              // Validate org exists in IDP (fail-open if IDP unavailable)
+              const orgExists = await validateOrgExists(targetOrgId);
+              if (!orgExists) {
+                throw new Error("Organization not found in identity provider");
+              }
             } else {
               // For update/delete, check PDP permissions
               const allowed = await checkPermission(
@@ -94,6 +102,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       checkPermission,
       getDefaultOrganization,
       validateOrgMembership,
+      validateOrgExists,
       propName,
       scope,
     ],
