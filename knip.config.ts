@@ -9,6 +9,7 @@ const knipConfig: KnipConfig = {
     "**/generated/**",
     "src/lib/config/drizzle.config.ts",
     "src/scripts/**",
+    "src/jobs/**",
     "src/lib/db/db.ts",
     "src/lib/config/env.config.ts",
     "src/lib/authz/**",

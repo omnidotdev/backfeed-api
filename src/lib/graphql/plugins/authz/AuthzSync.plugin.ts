@@ -350,7 +350,8 @@ const syncDeleteProject = (): PlanWrapperFn =>
   );
 
 /**
- * Sync workspace creation - adds owner tuple and seeds default status templates.
+ * Sync workspace creation - adds organization→workspace tuple, owner tuple,
+ * and seeds default status templates.
  */
 const syncCreateWorkspace = (): PlanWrapperFn =>
   EXPORTABLE(
@@ -362,17 +363,20 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
       writeTuples,
       DEFAULT_STATUS_TEMPLATES,
     ): PlanWrapperFn =>
-      (plan, _, _fieldArgs) => {
+      (plan, _, fieldArgs) => {
         const $result = plan();
+        const $input = fieldArgs.getRaw(["input", "workspace"]);
         const $observer = context().get("observer");
         const $withPgClient = context().get("withPgClient");
 
         sideEffect(
-          [$result, $observer, $withPgClient],
-          async ([result, observer, withPgClient]) => {
+          [$result, $input, $observer, $withPgClient],
+          async ([result, input, observer, withPgClient]) => {
             if (!result || !observer) return;
 
             const workspaceId = (result as { id?: string })?.id;
+            const organizationId = (input as { organizationId?: string })
+              ?.organizationId;
 
             if (!workspaceId) {
               console.error("[AuthZ Sync] Workspace ID not found in result");
@@ -408,14 +412,25 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
             // Sync to AuthZ store if enabled
             if (AUTHZ_ENABLED === "true" && AUTHZ_PROVIDER_URL) {
               try {
-                // The workspace creator becomes the owner
-                await writeTuples(AUTHZ_PROVIDER_URL, [
+                const tuples = [
+                  // The workspace creator becomes the owner
                   {
                     user: `user:${observer.id}`,
                     relation: "owner",
                     object: `workspace:${workspaceId}`,
                   },
-                ]);
+                ];
+
+                // Link workspace to organization for permission inheritance
+                if (organizationId) {
+                  tuples.push({
+                    user: `organization:${organizationId}`,
+                    relation: "organization",
+                    object: `workspace:${workspaceId}`,
+                  });
+                }
+
+                await writeTuples(AUTHZ_PROVIDER_URL, tuples);
               } catch (error) {
                 console.error(
                   "[AuthZ Sync] Failed to sync workspace creation:",

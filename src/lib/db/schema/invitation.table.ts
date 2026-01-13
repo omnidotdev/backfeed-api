@@ -15,6 +15,14 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Invitation table. Stores invitations sent to users for joining a workspace.
+ *
+ * This table manages workspace-level invitations, which are distinct from
+ * IDP organization invitations. When a user accepts a workspace invitation:
+ * 1. If not already an IDP org member, they are added to the org
+ * 2. They are added to this specific workspace's member list
+ *
+ * IDP org invitation: "Join this organization"
+ * Workspace invitation: "Join this specific workspace within the org"
  */
 export const invitations = pgTable(
   "invitation",

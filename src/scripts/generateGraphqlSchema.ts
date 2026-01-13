@@ -10,11 +10,12 @@ import {
   writeTuples,
 } from "lib/authz";
 import preset from "lib/config/graphile.config";
-import { checkWorkspaceLimit, isWithinLimit } from "lib/entitlements";
+import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
 import {
   FEATURE_KEYS,
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
+import { validateOrgExists } from "lib/idp/validateOrg";
 import { makeSchema } from "postgraphile";
 import { context, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
@@ -47,12 +48,13 @@ const generateGraphqlSchema = async () => {
         writeTuples,
         deleteTuples,
       },
-      "lib/entitlements": { isWithinLimit, checkWorkspaceLimit },
+      "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "lib/graphql/plugins/authorization/constants": {
         FEATURE_KEYS,
         billingBypassOrgIds,
       },
       "lib/auth/organizations": { getDefaultOrganization },
+      "lib/idp/validateOrg": { validateOrgExists },
     },
   });
 
