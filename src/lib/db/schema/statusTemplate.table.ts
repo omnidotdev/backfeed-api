@@ -1,4 +1,3 @@
-import { relations } from "drizzle-orm";
 import {
   index,
   integer,
@@ -6,26 +5,23 @@ import {
   text,
   unique,
   uniqueIndex,
-  uuid,
 } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
-
-import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Status template table. Workspace-level status definitions shared across projects.
+ * Status template table. Organization-level status definitions shared across projects.
+ *
+ * Organization identity is owned by Gatekeeper (IDP).
+ * The organizationId references the IDP organization directly.
  */
 export const statusTemplates = pgTable(
   "status_template",
   {
     id: generateDefaultId(),
-    workspaceId: uuid()
-      .notNull()
-      .references(() => workspaces.id, {
-        onDelete: "cascade",
-      }),
+    // Direct reference to IDP organization - validated via JWT claims
+    organizationId: text("organization_id").notNull(),
     name: text().notNull(),
     displayName: text().notNull(),
     color: text(),
@@ -36,22 +32,9 @@ export const statusTemplates = pgTable(
   },
   (table) => [
     uniqueIndex().on(table.id),
-    unique().on(table.workspaceId, table.name),
-    index().on(table.workspaceId),
+    unique("status_template_org_name_idx").on(table.organizationId, table.name),
+    index("status_template_organization_id_idx").on(table.organizationId),
   ],
-);
-
-/**
- * Status template relations.
- */
-export const statusTemplateRelations = relations(
-  statusTemplates,
-  ({ one }) => ({
-    workspace: one(workspaces, {
-      fields: [statusTemplates.workspaceId],
-      references: [workspaces.id],
-    }),
-  }),
 );
 
 /**

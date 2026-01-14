@@ -10,9 +10,9 @@ import type { MutationScope } from "./types";
 /**
  * Validate status template permissions via PDP.
  *
- * - Create: Admin+ on workspace
- * - Update: Admin+ on workspace
- * - Delete: Admin+ on workspace
+ * - Create: Admin+ on organization
+ * - Update: Admin+ on organization
+ * - Delete: Admin+ on organization
  *
  * Note: Member tuples are synced to PDP by IDP (Gatekeeper), so we rely
  * entirely on PDP checks. No local member table fallback.
@@ -36,10 +36,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
 
-          let workspaceId: string;
+          let organizationId: string;
 
           if (scope === "create") {
-            workspaceId = (input as InsertStatusTemplate).workspaceId;
+            organizationId = (input as InsertStatusTemplate).organizationId;
           } else {
             const statusTemplate = await db.query.statusTemplates.findFirst({
               where: (table, { eq }) => eq(table.id, input),
@@ -47,16 +47,16 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!statusTemplate) throw new Error("Status template not found");
 
-            workspaceId = statusTemplate.workspaceId;
+            organizationId = statusTemplate.organizationId;
           }
 
-          // Check admin permission via PDP
+          // Check admin permission via PDP on organization
           const allowed = await checkPermission(
             AUTHZ_ENABLED,
             AUTHZ_PROVIDER_URL,
             observer.id,
-            "workspace",
-            workspaceId,
+            "organization",
+            organizationId,
             "admin",
           );
 
@@ -81,9 +81,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 /**
  * Authorization plugin for status templates.
  *
- * - Create: Admin+ on workspace
- * - Update: Admin+ on workspace
- * - Delete: Admin+ on workspace
+ * - Create: Admin+ on organization
+ * - Update: Admin+ on organization
+ * - Delete: Admin+ on organization
  */
 const StatusTemplatePlugin = wrapPlans({
   Mutation: {

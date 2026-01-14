@@ -46,16 +46,15 @@ export async function validateOrgExists(
   try {
     // Query IDP for organization existence
     // Using the Better Auth organization API endpoint
-    const response = await fetch(
-      `${AUTH_BASE_URL}/api/organization/${organizationId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    const url = `${AUTH_BASE_URL}/api/organization/${organizationId}`;
+    console.log(`[IDP] Validating organization: ${url}`);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
 
     if (response.ok) {
       // Cache positive result

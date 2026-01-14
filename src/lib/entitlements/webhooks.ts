@@ -1,10 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import { ENTITLEMENTS_WEBHOOK_SECRET } from "lib/config/env.config";
-import { dbPool } from "lib/db/db";
-import { workspaces } from "lib/db/schema";
 
 import { invalidateCache } from "./cache";
 
@@ -17,7 +14,6 @@ interface EntitlementWebhookPayload {
   value?: unknown;
   version: number;
   timestamp: string;
-  billingAccountId?: string;
 }
 
 /**
@@ -48,7 +44,8 @@ const verifySignature = (
 
 /**
  * Entitlements webhook receiver.
- * Receives entitlement change events from the billing service.
+ * Receives entitlement change events from the billing service (Aether).
+ * Entitlements are at the organization level - no local caching needed.
  */
 const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
   "/entitlements",
@@ -88,36 +85,16 @@ const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
         `Entitlement event received: ${body.eventType} for ${body.entityType}/${body.entityId}`,
       );
 
-      // Handle events - invalidate local cache and sync billingAccountId
+      // Handle events - invalidate local entitlements cache
       switch (body.eventType) {
         case "entitlement.created":
         case "entitlement.updated":
         case "entitlement.deleted":
-          // Invalidate all cached entitlements for this entity
-          invalidateCache(`workspace:${body.entityId}:*`);
-          invalidateCache(`workspace:${body.entityId}`);
+          // Invalidate cached entitlements for this organization
+          invalidateCache(`organization:${body.entityId}:*`);
+          invalidateCache(`organization:${body.entityId}`);
 
-          console.log(`Cache invalidated for workspace ${body.entityId}`);
-
-          // Sync billingAccountId to workspace if provided
-          if (body.billingAccountId && body.entityType === "workspace") {
-            try {
-              await dbPool
-                .update(workspaces)
-                .set({ billingAccountId: body.billingAccountId })
-                .where(eq(workspaces.id, body.entityId));
-
-              console.log(
-                `Updated billingAccountId for workspace ${body.entityId}`,
-              );
-            } catch (dbError) {
-              console.error(
-                `Failed to update billingAccountId for workspace ${body.entityId}:`,
-                dbError,
-              );
-              // Don't fail the webhook - billingAccountId sync is best-effort
-            }
-          }
+          console.log(`Cache invalidated for organization ${body.entityId}`);
           break;
         default:
           break;

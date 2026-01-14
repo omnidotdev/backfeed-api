@@ -8,4 +8,3 @@ export { default as SmartTagPlugin } from "./SmartTag.plugin";
 export { default as StatusTemplatePlugin } from "./StatusTemplate.plugin";
 export { default as UserPlugin } from "./User.plugin";
 export { default as VotePlugin } from "./Vote.plugin";
-export { default as WorkspacePlugin } from "./Workspace.plugin";

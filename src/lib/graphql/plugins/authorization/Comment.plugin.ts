@@ -13,8 +13,8 @@ import type { MutationScope } from "./types";
  * Validate comment permissions via PDP.
  *
  * - Create: Any authenticated user (with tier limits)
- * - Update: Author or admin+ on workspace
- * - Delete: Author or admin+ on workspace
+ * - Update: Author or admin+ on organization
+ * - Delete: Author or admin+ on organization
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
@@ -44,29 +44,23 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             const post = await db.query.posts.findFirst({
               where: (table, { eq }) => eq(table.id, postId),
               with: {
-                comments: {
-                  columns: {
-                    id: true,
-                  },
-                },
-                project: {
-                  with: {
-                    workspace: true,
-                  },
-                },
+                project: true,
               },
             });
 
             if (!post) throw new Error("Post does not exist");
 
+            // Get comment count for this post
+            const comments = await db.query.comments.findMany({
+              where: (table, { eq }) => eq(table.postId, postId),
+              columns: { id: true },
+            });
+
             // Check comments per post limit
             const withinLimit = await isWithinLimit(
-              {
-                id: post.project.workspace.id,
-                organizationId: post.project.workspace.organizationId,
-              },
+              { organizationId: post.project.organizationId },
               FEATURE_KEYS.MAX_COMMENTS_PER_POST,
-              post.comments.length,
+              comments.length,
               billingBypassOrgIds,
             );
 
@@ -89,13 +83,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             // Author can always modify their own comments
             if (comment.userId !== observer.id) {
-              // Check admin permission via PDP
+              // Check admin permission via PDP on organization
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,
                 observer.id,
-                "workspace",
-                comment.post.project.workspaceId,
+                "organization",
+                comment.post.project.organizationId,
                 "admin",
               );
               if (!allowed) throw new Error("Unauthorized");

@@ -2,7 +2,7 @@
  * IDP (Identity Provider) webhook handler.
  *
  * Receives organization lifecycle events from the IDP.
- * Handles soft-deletion of workspaces when organizations are deleted.
+ * Handles cleanup of app data when organizations are deleted.
  */
 
 import { createHmac, timingSafeEqual } from "node:crypto";
@@ -11,7 +11,7 @@ import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import { GATEKEEPER_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { workspaces } from "lib/db/schema";
+import { projects, statusTemplates } from "lib/db/schema";
 
 interface OrganizationDeletedPayload {
   eventType: "organization.deleted";
@@ -116,37 +116,32 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
 
 /**
  * Handle organization deleted event.
- * Soft-deletes the associated workspace.
+ * Deletes all projects and status templates for the organization.
+ * Cascading deletes will clean up posts, comments, etc.
  */
 async function handleOrganizationDeleted(
   payload: OrganizationDeletedPayload,
 ): Promise<void> {
-  const { organizationId, deletedAt } = payload;
+  const { organizationId } = payload;
 
   try {
-    const result = await dbPool
-      .update(workspaces)
-      .set({
-        deletedAt: new Date(deletedAt),
-        deletionReason: "organization_deleted",
-      })
-      .where(eq(workspaces.organizationId, organizationId))
-      .returning({ id: workspaces.id });
+    // Delete status templates for the organization
+    const deletedTemplates = await dbPool
+      .delete(statusTemplates)
+      .where(eq(statusTemplates.organizationId, organizationId))
+      .returning({ id: statusTemplates.id });
 
-    if (result.length > 0) {
-      console.log(
-        `Soft-deleted workspace ${result[0].id} (org ${organizationId} deleted)`,
-      );
-    } else {
-      console.log(
-        `No workspace found for deleted org ${organizationId} (may not exist in this app)`,
-      );
-    }
-  } catch (err) {
-    console.error(
-      `Failed to soft-delete workspace for org ${organizationId}:`,
-      err,
+    // Delete projects for the organization (cascades to posts, comments, etc.)
+    const deletedProjects = await dbPool
+      .delete(projects)
+      .where(eq(projects.organizationId, organizationId))
+      .returning({ id: projects.id });
+
+    console.log(
+      `Deleted ${deletedProjects.length} projects and ${deletedTemplates.length} status templates for org ${organizationId}`,
     );
+  } catch (err) {
+    console.error(`Failed to delete data for org ${organizationId}:`, err);
     throw err;
   }
 }

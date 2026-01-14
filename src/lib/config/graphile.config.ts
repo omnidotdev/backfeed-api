@@ -11,7 +11,6 @@ import {
   StatusTemplatePlugin,
   UserPlugin,
   VotePlugin,
-  WorkspacePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
 import { makePgService } from "postgraphile/adaptors/pg";
@@ -41,7 +40,6 @@ const preset: GraphileConfig.Preset = {
   plugins: [
     // Authorization plugins (pre-mutation validation)
     PrimaryKeyMutationsOnlyPlugin,
-    WorkspacePlugin,
     UserPlugin,
     ProjectPlugin,
     ProjectSocialPlugin,

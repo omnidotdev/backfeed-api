@@ -2,7 +2,7 @@
  * High-level entitlement check helpers for authorization plugins.
  * Wraps the entitlements client with caching.
  *
- * Entitlements are queried at the ORGANIZATION level, not workspace level.
+ * Entitlements are queried at the ORGANIZATION level.
  * This enables bundle billing where one subscription covers all Omni products.
  */
 
@@ -130,23 +130,23 @@ export async function checkOrganizationLimit(
 }
 
 /**
- * Check if a workspace is within its limit.
- * Queries entitlements at the organization level (bundle billing model).
+ * Check if an organization is within its limit for a resource.
+ * Queries entitlements at the organization level.
  * This is the primary function for authorization plugins.
  */
 export async function isWithinLimit(
-  workspace: { id: string; organizationId: string },
+  entity: { organizationId: string },
   limitKey: string,
   currentCount: number,
   billingBypassOrgIds: string[] = [],
 ): Promise<boolean> {
   // Bypass check for exempt organizations
-  if (billingBypassOrgIds.includes(workspace.organizationId)) {
+  if (billingBypassOrgIds.includes(entity.organizationId)) {
     return true;
   }
 
   return checkOrganizationLimit(
-    workspace.organizationId,
+    entity.organizationId,
     limitKey,
     currentCount,
     "free", // Default to free tier if Aether unavailable
