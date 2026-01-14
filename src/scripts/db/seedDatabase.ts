@@ -6,6 +6,9 @@ import * as schema from "lib/db/schema";
 
 /**
  * Seed database with sample data.
+ *
+ * Note: organizationId values are UUIDs that would normally come from Gatekeeper.
+ * For local development, we generate fake org IDs.
  */
 const seedDatabase = async () => {
   // ! NB: only run this script in development
@@ -20,21 +23,16 @@ const seedDatabase = async () => {
   console.log("Seeding database...");
 
   await seed(db, schema).refine((f) => ({
-    workspaces: {
-      count: 200,
+    projects: {
+      count: 50,
       columns: {
         name: f.companyName(),
-      },
-      with: {
-        projects: 50,
-      },
-    },
-    projects: {
-      columns: {
         description: f.loremIpsum(),
         slug: f.string({
           isUnique: true,
         }),
+        // Generate fake org IDs for development
+        organizationId: f.uuid(),
       },
       with: {
         posts: 20,
@@ -83,10 +81,9 @@ const seedDatabase = async () => {
         color: f.valuesFromArray({
           values: ["#10b981", "#f59e0b", "#3b82f6", "#8b5cf6", "#6b7280"],
         }),
+        // Generate fake org IDs for development
+        organizationId: f.uuid(),
       },
-    },
-    members: {
-      count: 100,
     },
     comments: {
       columns: {

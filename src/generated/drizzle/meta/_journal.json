@@ -36,6 +36,13 @@
       "when": 1768343075875,
       "tag": "0004_simple_iceman",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1768373005245,
+      "tag": "0005_remove_workspace",
+      "breakpoints": true
     }
   ]
 }

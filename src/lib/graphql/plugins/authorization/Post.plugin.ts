@@ -13,8 +13,8 @@ import type { MutationScope } from "./types";
  * Validate post permissions via PDP.
  *
  * - Create: Any authenticated user (with tier limits)
- * - Update: Author or admin+ on workspace
- * - Delete: Author or admin+ on workspace
+ * - Update: Author or admin+ on workspace (organization)
+ * - Delete: Author or admin+ on workspace (organization)
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
@@ -43,31 +43,24 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             const project = await db.query.projects.findFirst({
               where: (table, { eq }) => eq(table.id, post.projectId),
-              with: {
-                workspace: true,
-                posts: {
-                  columns: {
-                    userId: true,
-                  },
-                },
-              },
             });
 
             if (!project) throw new Error("Project not found");
 
+            // Get posts for this project to check unique users
+            const posts = await db.query.posts.findMany({
+              where: (table, { eq }) => eq(table.projectId, post.projectId),
+              columns: { userId: true },
+            });
+
             // Check unique feedback users limit
-            const uniqueUsers = [
-              ...new Set(project.posts.map((p) => p.userId)),
-            ];
+            const uniqueUsers = [...new Set(posts.map((p) => p.userId))];
             const currentUniqueCount = uniqueUsers.includes(observer.id)
               ? uniqueUsers.length
               : uniqueUsers.length + 1;
 
             const withinLimit = await isWithinLimit(
-              {
-                id: project.workspace.id,
-                organizationId: project.workspace.organizationId,
-              },
+              { organizationId: project.organizationId },
               FEATURE_KEYS.MAX_FEEDBACK_USERS,
               currentUniqueCount - 1,
               billingBypassOrgIds,
@@ -90,13 +83,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             // Author can always modify their own posts
             if (observer.id !== post.userId) {
-              // Check admin permission via PDP
+              // Check admin permission via PDP on organization
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,
                 observer.id,
-                "workspace",
-                post.project.workspaceId,
+                "organization",
+                post.project.organizationId,
                 "admin",
               );
               if (!allowed) throw new Error("Insufficient permissions");

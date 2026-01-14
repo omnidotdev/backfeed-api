@@ -12,9 +12,9 @@ import type { MutationScope } from "./types";
 /**
  * Validate project permissions via PDP.
  *
- * - Create: Admin+ permission on workspace required
- * - Update: Admin+ permission on workspace required
- * - Delete: Admin+ permission on workspace required
+ * - Create: Admin+ permission on organization required
+ * - Update: Admin+ permission on organization required
+ * - Delete: Admin+ permission on organization required
  *
  * Note: Member tuples are synced to PDP by IDP (Gatekeeper), so we rely
  * entirely on PDP checks. No local member table fallback.
@@ -41,10 +41,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
 
-          let workspaceId: string;
+          let organizationId: string;
 
           if (scope === "create") {
-            workspaceId = (input as InsertProject).workspaceId;
+            organizationId = (input as InsertProject).organizationId;
           } else {
             const project = await db.query.projects.findFirst({
               where: (table, { eq }) => eq(table.id, input),
@@ -52,16 +52,16 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!project) throw new Error("Project not found");
 
-            workspaceId = project.workspaceId;
+            organizationId = project.organizationId;
           }
 
-          // Check admin permission via PDP
+          // Check admin permission via PDP on organization
           const allowed = await checkPermission(
             AUTHZ_ENABLED,
             AUTHZ_PROVIDER_URL,
             observer.id,
-            "workspace",
-            workspaceId,
+            "organization",
+            organizationId,
             "admin",
           );
 
@@ -71,19 +71,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
           // Check tier limits for create operations
           if (scope === "create") {
-            const workspace = await db.query.workspaces.findFirst({
-              where: (table, { eq }) => eq(table.id, workspaceId),
-              with: {
-                projects: true,
-              },
+            const projectCount = await db.query.projects.findMany({
+              where: (table, { eq }) =>
+                eq(table.organizationId, organizationId),
             });
 
-            if (!workspace) throw new Error("Workspace not found");
-
             const withinLimit = await isWithinLimit(
-              { id: workspace.id, organizationId: workspace.organizationId },
+              { organizationId },
               FEATURE_KEYS.MAX_PROJECTS,
-              workspace.projects.length,
+              projectCount.length,
               billingBypassOrgIds,
             );
 
@@ -112,9 +108,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 /**
  * Authorization plugin for projects.
  *
- * - Create: Admin+ on workspace
- * - Update: Admin+ on workspace
- * - Delete: Admin+ on workspace
+ * - Create: Admin+ on organization
+ * - Update: Admin+ on organization
+ * - Delete: Admin+ on organization
  */
 const ProjectPlugin = wrapPlans({
   Mutation: {

@@ -1,24 +1,19 @@
 import { relations } from "drizzle-orm";
-import {
-  index,
-  pgTable,
-  text,
-  unique,
-  uniqueIndex,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { index, pgTable, text, unique, uniqueIndex } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { posts } from "./post.table";
 import { projectSocials } from "./projectSocial.table";
 import { projectStatusConfigs } from "./projectStatusConfig.table";
-// import { generateSlug } from "./helpers";
-import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Project table. Projects contain a collection of feedback and are nested under workspaces.
+ * Project table. Projects contain a collection of feedback.
+ *
+ * Organization identity (name, slug) is owned by Gatekeeper (IDP).
+ * The organizationId references the IDP organization directly.
+ * Org name/slug are resolved from JWT claims at runtime, not stored here.
  */
 export const projects = pgTable(
   "project",
@@ -26,35 +21,26 @@ export const projects = pgTable(
     id: generateDefaultId(),
     name: text().notNull(),
     image: text(),
-    slug: text()
-      // TODO https://linear.app/omnidev/issue/69c6f70e-0821-4a3a-a04a-971547f29690
-      // .generatedAlwaysAs((): SQL => generateSlug(workspaces.name))
-      .notNull(),
+    slug: text().notNull(),
     description: text(),
     website: text(),
-    workspaceId: uuid()
-      .notNull()
-      .references(() => workspaces.id, {
-        onDelete: "cascade",
-      }),
+    // Direct reference to IDP organization - validated via JWT claims
+    organizationId: text("organization_id").notNull(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
   (table) => [
-    unique().on(table.slug, table.workspaceId),
+    // Slug must be unique within an organization
+    unique("project_org_slug_idx").on(table.slug, table.organizationId),
     uniqueIndex().on(table.id),
-    index().on(table.workspaceId),
+    index("project_organization_id_idx").on(table.organizationId),
   ],
 );
 
 /**
  * Project relations.
  */
-export const projectRelations = relations(projects, ({ many, one }) => ({
-  workspace: one(workspaces, {
-    fields: [projects.workspaceId],
-    references: [workspaces.id],
-  }),
+export const projectRelations = relations(projects, ({ many }) => ({
   posts: many(posts),
   socials: many(projectSocials),
   statusConfigs: many(projectStatusConfigs),

@@ -1,7 +1,7 @@
 /**
  * Orphan Detection Job
  *
- * Detects workspaces that reference organizations that no longer exist in the IDP.
+ * Detects projects that reference organizations that no longer exist in the IDP.
  * Run this job periodically (e.g., daily via cron) to identify data inconsistencies.
  *
  * Usage:
@@ -14,7 +14,6 @@
  * @knipignore - standalone job script, not imported by main app
  */
 
-import { isNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "lib/db/schema";
 
@@ -36,13 +35,14 @@ const db = drizzle(DATABASE_URL, { schema });
 /** Request timeout in milliseconds */
 const REQUEST_TIMEOUT_MS = 5000;
 
-/** Batch size for processing workspaces */
+/** Batch size for processing */
 const BATCH_SIZE = 50;
 
-interface OrphanedWorkspace {
+interface OrphanedProject {
   id: string;
+  name: string;
   organizationId: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 /**
@@ -69,58 +69,65 @@ async function checkOrgExists(organizationId: string): Promise<boolean> {
 }
 
 /**
- * Detect orphaned workspaces.
+ * Detect orphaned projects (projects with non-existent organizations).
  */
-async function detectOrphanedWorkspaces(): Promise<OrphanedWorkspace[]> {
+async function detectOrphanedProjects(): Promise<OrphanedProject[]> {
   console.log("Starting orphan detection job...");
 
-  // Get all active (non-deleted) workspaces
-  const workspaces = await db.query.workspaces.findMany({
-    where: isNull(schema.workspaces.deletedAt),
+  // Get all projects
+  const projects = await db.query.projects.findMany({
     columns: {
       id: true,
+      name: true,
       organizationId: true,
       createdAt: true,
     },
   });
 
-  console.log(`Found ${workspaces.length} active workspaces to check`);
+  // Get unique organization IDs
+  const orgIds = [...new Set(projects.map((p) => p.organizationId))];
+  console.log(
+    `Found ${projects.length} projects across ${orgIds.length} organizations`,
+  );
 
-  const orphaned: OrphanedWorkspace[] = [];
+  // Check which orgs exist
+  const orphanedOrgIds = new Set<string>();
   let checked = 0;
 
-  // Process in batches to avoid overwhelming the IDP
-  for (let i = 0; i < workspaces.length; i += BATCH_SIZE) {
-    const batch = workspaces.slice(i, i + BATCH_SIZE);
+  for (let i = 0; i < orgIds.length; i += BATCH_SIZE) {
+    const batch = orgIds.slice(i, i + BATCH_SIZE);
 
-    // Check each workspace in the batch concurrently
     const results = await Promise.all(
-      batch.map(async (ws) => {
-        const exists = await checkOrgExists(ws.organizationId);
-        return { workspace: ws, exists };
+      batch.map(async (orgId) => {
+        const exists = await checkOrgExists(orgId);
+        return { orgId, exists };
       }),
     );
 
-    for (const { workspace, exists } of results) {
+    for (const { orgId, exists } of results) {
       if (!exists) {
-        orphaned.push({
-          id: workspace.id,
-          organizationId: workspace.organizationId,
-          createdAt: workspace.createdAt,
-        });
+        orphanedOrgIds.add(orgId);
       }
     }
 
     checked += batch.length;
-    console.log(`Checked ${checked}/${workspaces.length} workspaces`);
+    console.log(`Checked ${checked}/${orgIds.length} organizations`);
 
     // Small delay between batches to be gentle on the IDP
-    if (i + BATCH_SIZE < workspaces.length) {
+    if (i + BATCH_SIZE < orgIds.length) {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
 
-  return orphaned;
+  // Return projects belonging to orphaned orgs
+  return projects
+    .filter((p) => orphanedOrgIds.has(p.organizationId))
+    .map((p) => ({
+      id: p.id,
+      name: p.name,
+      organizationId: p.organizationId,
+      createdAt: new Date(p.createdAt),
+    }));
 }
 
 /**
@@ -128,23 +135,24 @@ async function detectOrphanedWorkspaces(): Promise<OrphanedWorkspace[]> {
  */
 async function main(): Promise<void> {
   try {
-    const orphaned = await detectOrphanedWorkspaces();
+    const orphaned = await detectOrphanedProjects();
 
     if (orphaned.length === 0) {
-      console.log("No orphaned workspaces detected");
+      console.log("No orphaned projects detected");
       return;
     }
 
-    console.log(`\nDetected ${orphaned.length} orphaned workspace(s):`);
+    console.log(`\nDetected ${orphaned.length} orphaned project(s):`);
     console.log("-------------------------------------------");
 
-    for (const ws of orphaned) {
+    for (const project of orphaned) {
       console.log(
         JSON.stringify({
-          type: "orphaned_workspace",
-          workspaceId: ws.id,
-          organizationId: ws.organizationId,
-          createdAt: ws.createdAt,
+          type: "orphaned_project",
+          projectId: project.id,
+          projectName: project.name,
+          organizationId: project.organizationId,
+          createdAt: project.createdAt,
           timestamp: new Date().toISOString(),
         }),
       );
@@ -152,10 +160,10 @@ async function main(): Promise<void> {
 
     console.log("-------------------------------------------");
     console.log(
-      "\nAction required: Review these workspaces and consider soft-deleting them.",
+      "\nAction required: Review these projects and consider deleting them.",
     );
     console.log(
-      "To soft-delete, update the workspace with deletedAt and deletionReason='orphaned'",
+      "The IDP webhook should have handled deletion, so these may indicate missed events.",
     );
 
     // Exit with non-zero code to indicate orphans were found (useful for alerting)
