@@ -20,6 +20,9 @@ export const {
   AUTHZ_PROVIDER_URL,
   // Gatekeeper (IDP) webhook
   GATEKEEPER_WEBHOOK_SECRET,
+  // Feature flags
+  FLAGS_API_HOST,
+  FLAGS_CLIENT_KEY,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
