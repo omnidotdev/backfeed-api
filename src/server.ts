@@ -15,6 +15,7 @@ import {
   organizationsPlugin,
 } from "lib/graphql/plugins";
 import idpWebhook from "lib/idp/webhooks";
+import { maintenanceMiddleware } from "lib/middleware/maintenance";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
@@ -33,6 +34,7 @@ const app = new Elysia({
     },
   }),
 })
+  .use(maintenanceMiddleware)
   .use(
     cors({
       origin: CORS_ALLOWED_ORIGINS!.split(","),
