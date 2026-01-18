@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  integer,
+  pgTable,
+  text,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { projects } from "./project.table";
@@ -7,10 +14,10 @@ import { projects } from "./project.table";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
- * Project socials table.
+ * Project links table. Unified table for all project links (website, socials, etc.).
  */
-export const projectSocials = pgTable(
-  "project_social",
+export const projectLinks = pgTable(
+  "project_link",
   {
     id: generateDefaultId(),
     projectId: uuid()
@@ -19,6 +26,8 @@ export const projectSocials = pgTable(
         onDelete: "cascade",
       }),
     url: text().notNull(),
+    title: text(),
+    order: integer().notNull().default(0),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
@@ -31,17 +40,17 @@ export const projectSocials = pgTable(
 );
 
 /**
- * Project Social relations.
+ * Project Link relations.
  */
-export const projectSocialRelations = relations(projectSocials, ({ one }) => ({
+export const projectLinkRelations = relations(projectLinks, ({ one }) => ({
   project: one(projects, {
-    fields: [projectSocials.projectId],
+    fields: [projectLinks.projectId],
     references: [projects.id],
   }),
 }));
 
 /**
- * Type helpers related to the project socials table.
+ * Type helpers related to the project links table.
  */
-export type InsertProjectSocial = InferInsertModel<typeof projectSocials>;
-export type SelectProjectSocial = InferSelectModel<typeof projectSocials>;
+export type InsertProjectLink = InferInsertModel<typeof projectLinks>;
+export type SelectProjectLink = InferSelectModel<typeof projectLinks>;

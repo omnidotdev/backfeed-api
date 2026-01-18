@@ -2,7 +2,7 @@ export { default as CommentPlugin } from "./Comment.plugin";
 export { default as PostPlugin } from "./Post.plugin";
 export { default as PrimaryKeyMutationsOnlyPlugin } from "./PrimaryKeyMutationsOnly.plugin";
 export { default as ProjectPlugin } from "./Project.plugin";
-export { default as ProjectSocialPlugin } from "./ProjectSocial.plugin";
+export { default as ProjectLinkPlugin } from "./ProjectLink.plugin";
 export { default as ProjectStatusConfigPlugin } from "./ProjectStatusConfig.plugin";
 export { default as SmartTagPlugin } from "./SmartTag.plugin";
 export { default as StatusTemplatePlugin } from "./StatusTemplate.plugin";

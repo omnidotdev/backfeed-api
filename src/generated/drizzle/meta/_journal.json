@@ -43,6 +43,13 @@
       "when": 1768373005245,
       "tag": "0005_remove_workspace",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1768734057072,
+      "tag": "0006_complete_grey_gargoyle",
+      "breakpoints": true
     }
   ]
 }
