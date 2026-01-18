@@ -4979,6 +4979,12 @@ type Query implements Node {
     """The method to use when ordering \`StatusTemplate\`."""
     orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
   ): StatusTemplateConnection
+
+  """
+  Returns the currently authenticated user (observer).
+  Returns null if not authenticated.
+  """
+  observer: Observer
 }
 
 """An object with a globally unique \`ID\`."""
@@ -10072,6 +10078,15 @@ input DeleteStatusTemplateInput {
   """
   clientMutationId: String
   rowId: UUID!
+}
+
+"""The currently authenticated user."""
+type Observer {
+  rowId: UUID!
+  identityProviderId: UUID!
+  username: String
+  name: String!
+  email: String!
 }`;
 export const objects = {
   Query: {
@@ -10131,6 +10146,19 @@ export const objects = {
       },
       node(_$root, fieldArgs) {
         return fieldArgs.getRaw("id");
+      },
+      observer() {
+        const $observer = context().get("observer");
+        return lambda($observer, observer => {
+          if (!observer) return null;
+          return {
+            rowId: observer.id,
+            identityProviderId: observer.identityProviderId,
+            username: observer.username,
+            name: observer.name,
+            email: observer.email
+          };
+        });
       },
       post(_$root, {
         $rowId

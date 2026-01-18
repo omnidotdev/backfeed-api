@@ -13,6 +13,7 @@ import {
   VotePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import { observerPlugin } from "lib/graphql/plugins";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
@@ -38,6 +39,8 @@ const preset: GraphileConfig.Preset = {
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   plugins: [
+    // Observer query plugin (returns current authenticated user)
+    observerPlugin,
     // Authorization plugins (pre-mutation validation)
     PrimaryKeyMutationsOnlyPlugin,
     UserPlugin,
