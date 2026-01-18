@@ -1,5 +1,6 @@
 import { PgAggregatesPreset } from "@graphile/pg-aggregates";
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
+import { observerPlugin } from "lib/graphql/plugins";
 import {
   CommentPlugin,
   PostPlugin,
@@ -13,7 +14,6 @@ import {
   VotePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
-import { observerPlugin } from "lib/graphql/plugins";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
