@@ -3,12 +3,12 @@ import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import type { InsertProjectSocial } from "lib/db/schema";
+import type { InsertProjectLink } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate project social permissions via PDP.
+ * Validate project link permissions via PDP.
  *
  * - Create: Admin+ on organization
  * - Update: Admin+ on organization
@@ -36,7 +36,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           let organizationId: string;
 
           if (scope === "create") {
-            const projectId = (input as InsertProjectSocial).projectId;
+            const projectId = (input as InsertProjectLink).projectId;
 
             const project = await db.query.projects.findFirst({
               where: (table, { eq }) => eq(table.id, projectId),
@@ -46,16 +46,16 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             organizationId = project.organizationId;
           } else {
-            const social = await db.query.projectSocials.findFirst({
+            const link = await db.query.projectLinks.findFirst({
               where: (table, { eq }) => eq(table.id, input),
               with: {
                 project: true,
               },
             });
 
-            if (!social) throw new Error("Project social not found");
+            if (!link) throw new Error("Project link not found");
 
-            organizationId = social.project.organizationId;
+            organizationId = link.project.organizationId;
           }
 
           // Check admin permission via PDP on organization
@@ -84,18 +84,18 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Authorization plugin for project socials.
+ * Authorization plugin for project links.
  *
  * - Create: Admin+ on organization
  * - Update: Admin+ on organization
  * - Delete: Admin+ on organization
  */
-const ProjectSocialPlugin = wrapPlans({
+const ProjectLinkPlugin = wrapPlans({
   Mutation: {
-    createProjectSocial: validatePermissions("projectSocial", "create"),
-    updateProjectSocial: validatePermissions("rowId", "update"),
-    deleteProjectSocial: validatePermissions("rowId", "delete"),
+    createProjectLink: validatePermissions("projectLink", "create"),
+    updateProjectLink: validatePermissions("rowId", "update"),
+    deleteProjectLink: validatePermissions("rowId", "delete"),
   },
 });
 
-export default ProjectSocialPlugin;
+export default ProjectLinkPlugin;

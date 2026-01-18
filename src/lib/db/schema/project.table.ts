@@ -3,7 +3,7 @@ import { index, pgTable, text, unique, uniqueIndex } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { posts } from "./post.table";
-import { projectSocials } from "./projectSocial.table";
+import { projectLinks } from "./projectLink.table";
 import { projectStatusConfigs } from "./projectStatusConfig.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -23,7 +23,6 @@ export const projects = pgTable(
     image: text(),
     slug: text().notNull(),
     description: text(),
-    website: text(),
     // Direct reference to IDP organization - validated via JWT claims
     organizationId: text("organization_id").notNull(),
     createdAt: generateDefaultDate(),
@@ -42,7 +41,7 @@ export const projects = pgTable(
  */
 export const projectRelations = relations(projects, ({ many }) => ({
   posts: many(posts),
-  socials: many(projectSocials),
+  links: many(projectLinks),
   statusConfigs: many(projectStatusConfigs),
 }));
 

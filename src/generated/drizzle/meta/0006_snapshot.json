@@ -1,6 +1,6 @@
 {
-  "id": "0aafc096-f90d-430b-9249-75a18db6c15f",
-  "prevId": "758800a1-42d6-4bad-bbcf-75dc2889c816",
+  "id": "bce8bcfe-328c-45e6-8810-058820a18dd8",
+  "prevId": "0aafc096-f90d-430b-9249-75a18db6c15f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -355,12 +355,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "website": {
-          "name": "website",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "organization_id": {
           "name": "organization_id",
           "type": "text",
@@ -430,8 +424,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.project_social": {
-      "name": "project_social",
+    "public.project_link": {
+      "name": "project_link",
       "schema": "",
       "columns": {
         "id": {
@@ -453,6 +447,19 @@
           "primaryKey": false,
           "notNull": true
         },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp(6) with time zone",
@@ -469,8 +476,8 @@
         }
       },
       "indexes": {
-        "project_social_id_index": {
-          "name": "project_social_id_index",
+        "project_link_id_index": {
+          "name": "project_link_id_index",
           "columns": [
             {
               "expression": "id",
@@ -484,8 +491,8 @@
           "method": "btree",
           "with": {}
         },
-        "project_social_url_project_id_index": {
-          "name": "project_social_url_project_id_index",
+        "project_link_url_project_id_index": {
+          "name": "project_link_url_project_id_index",
           "columns": [
             {
               "expression": "url",
@@ -505,8 +512,8 @@
           "method": "btree",
           "with": {}
         },
-        "project_social_project_id_index": {
-          "name": "project_social_project_id_index",
+        "project_link_project_id_index": {
+          "name": "project_link_project_id_index",
           "columns": [
             {
               "expression": "project_id",
@@ -520,8 +527,8 @@
           "method": "btree",
           "with": {}
         },
-        "project_social_url_index": {
-          "name": "project_social_url_index",
+        "project_link_url_index": {
+          "name": "project_link_url_index",
           "columns": [
             {
               "expression": "url",
@@ -537,9 +544,9 @@
         }
       },
       "foreignKeys": {
-        "project_social_project_id_project_id_fk": {
-          "name": "project_social_project_id_project_id_fk",
-          "tableFrom": "project_social",
+        "project_link_project_id_project_id_fk": {
+          "name": "project_link_project_id_project_id_fk",
+          "tableFrom": "project_link",
           "tableTo": "project",
           "columnsFrom": [
             "project_id"
