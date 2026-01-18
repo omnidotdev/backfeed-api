@@ -7,3 +7,4 @@
 
 export * from "./sync";
 export * from "./types";
+export { default as authzRoutes } from "./routes";
