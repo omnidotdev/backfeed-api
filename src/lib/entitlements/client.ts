@@ -1,4 +1,4 @@
-import { ENTITLEMENTS_BASE_URL } from "lib/config/env.config";
+import { BILLING_BASE_URL } from "lib/config/env.config";
 
 interface EntitlementsResponse {
   billingAccountId: string;
@@ -25,13 +25,13 @@ export async function getEntitlements(
   entityId: string,
   productId?: string,
 ): Promise<EntitlementsResponse | null> {
-  if (!ENTITLEMENTS_BASE_URL) {
+  if (!BILLING_BASE_URL) {
     return null;
   }
 
   try {
     const url = new URL(
-      `${ENTITLEMENTS_BASE_URL}/entitlements/${entityType}/${entityId}`,
+      `${BILLING_BASE_URL}/entitlements/${entityType}/${entityId}`,
     );
     if (productId) {
       url.searchParams.set("productId", productId);
