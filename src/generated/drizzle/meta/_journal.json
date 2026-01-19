@@ -50,6 +50,13 @@
       "when": 1768734057072,
       "tag": "0006_complete_grey_gargoyle",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1768861874343,
+      "tag": "0007_fast_typhoid_mary",
+      "breakpoints": true
     }
   ]
 }
