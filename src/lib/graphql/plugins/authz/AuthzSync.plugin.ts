@@ -4,6 +4,8 @@
  * Syncs Backfeed resource mutations to the authorization store (PDP/OpenFGA).
  * Uses sideEffect to run sync logic after mutations complete.
  *
+ * Uses Vortex for durable delivery when configured, falls back to direct Warden API.
+ *
  * Note: Organization membership is managed by IDP (Gatekeeper), which syncs
  * member tuples directly to the AuthZ store. This plugin only handles
  * Backfeed-specific resources (projects).
@@ -13,6 +15,8 @@ import { EXPORTABLE } from "graphile-export";
 import {
   AUTHZ_ENABLED,
   AUTHZ_PROVIDER_URL,
+  VORTEX_API_URL,
+  VORTEX_AUTHZ_WEBHOOK_SECRET,
   deleteTuples,
   writeTuples,
 } from "lib/authz";
@@ -33,6 +37,8 @@ const syncCreateProject = (): PlanWrapperFn =>
       sideEffect,
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
+      VORTEX_API_URL,
+      VORTEX_AUTHZ_WEBHOOK_SECRET,
       writeTuples,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
@@ -41,8 +47,6 @@ const syncCreateProject = (): PlanWrapperFn =>
 
         sideEffect([$result, $input], async ([result, input]) => {
           if (!result) return;
-          if (AUTHZ_ENABLED !== "true") return;
-          if (!AUTHZ_PROVIDER_URL) return;
 
           const { organizationId } = input as InsertProject;
           const projectId = (result as { id?: string })?.id;
@@ -53,13 +57,19 @@ const syncCreateProject = (): PlanWrapperFn =>
           }
 
           try {
-            await writeTuples(AUTHZ_PROVIDER_URL, [
-              {
-                user: `organization:${organizationId}`,
-                relation: "organization",
-                object: `project:${projectId}`,
-              },
-            ]);
+            await writeTuples(
+              AUTHZ_PROVIDER_URL,
+              [
+                {
+                  user: `organization:${organizationId}`,
+                  relation: "organization",
+                  object: `project:${projectId}`,
+                },
+              ],
+              VORTEX_API_URL,
+              VORTEX_AUTHZ_WEBHOOK_SECRET,
+              AUTHZ_ENABLED,
+            );
           } catch (error) {
             console.error(
               "[AuthZ Sync] Failed to sync project creation:",
@@ -70,7 +80,15 @@ const syncCreateProject = (): PlanWrapperFn =>
 
         return $result;
       },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, writeTuples],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      VORTEX_API_URL,
+      VORTEX_AUTHZ_WEBHOOK_SECRET,
+      writeTuples,
+    ],
   );
 
 /**
@@ -83,6 +101,8 @@ const syncDeleteProject = (): PlanWrapperFn =>
       sideEffect,
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
+      VORTEX_API_URL,
+      VORTEX_AUTHZ_WEBHOOK_SECRET,
       deleteTuples,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
@@ -94,8 +114,6 @@ const syncDeleteProject = (): PlanWrapperFn =>
           [$result, $projectId, $db],
           async ([result, projectId, db]) => {
             if (!result) return;
-            if (AUTHZ_ENABLED !== "true") return;
-            if (!AUTHZ_PROVIDER_URL) return;
 
             // Get the organization ID before deletion
             const project = await db.query.projects.findFirst({
@@ -105,13 +123,19 @@ const syncDeleteProject = (): PlanWrapperFn =>
             if (!project) return;
 
             try {
-              await deleteTuples(AUTHZ_PROVIDER_URL, [
-                {
-                  user: `organization:${project.organizationId}`,
-                  relation: "organization",
-                  object: `project:${projectId}`,
-                },
-              ]);
+              await deleteTuples(
+                AUTHZ_PROVIDER_URL,
+                [
+                  {
+                    user: `organization:${project.organizationId}`,
+                    relation: "organization",
+                    object: `project:${projectId}`,
+                  },
+                ],
+                VORTEX_API_URL,
+                VORTEX_AUTHZ_WEBHOOK_SECRET,
+                AUTHZ_ENABLED,
+              );
             } catch (error) {
               console.error(
                 "[AuthZ Sync] Failed to sync project deletion:",
@@ -123,7 +147,15 @@ const syncDeleteProject = (): PlanWrapperFn =>
 
         return $result;
       },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, deleteTuples],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      VORTEX_API_URL,
+      VORTEX_AUTHZ_WEBHOOK_SECRET,
+      deleteTuples,
+    ],
   );
 
 /**

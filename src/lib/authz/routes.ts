@@ -1,5 +1,4 @@
 import { Elysia } from "elysia";
-
 import { dbPool } from "lib/db/db";
 import { projects } from "lib/db/schema";
 

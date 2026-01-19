@@ -5,7 +5,6 @@ import { useValidationCache } from "@envelop/validation-cache";
 import { Elysia } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
-
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {

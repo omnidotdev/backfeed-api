@@ -18,6 +18,9 @@ export const {
   // AuthZ (PDP)
   AUTHZ_ENABLED,
   AUTHZ_PROVIDER_URL,
+  // Vortex (durable event sync)
+  VORTEX_API_URL,
+  VORTEX_AUTHZ_WEBHOOK_SECRET,
   // Gatekeeper (IDP) webhook
   GATEKEEPER_WEBHOOK_SECRET,
   // Feature flags
