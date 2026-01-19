@@ -14,7 +14,7 @@
 import { EXPORTABLE } from "graphile-export";
 import {
   AUTHZ_ENABLED,
-  AUTHZ_PROVIDER_URL,
+  AUTHZ_API_URL,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
   deleteTuples,
@@ -36,7 +36,7 @@ const syncCreateProject = (): PlanWrapperFn =>
       _context,
       sideEffect,
       AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
+      AUTHZ_API_URL,
       VORTEX_API_URL,
       VORTEX_AUTHZ_WEBHOOK_SECRET,
       writeTuples,
@@ -58,7 +58,7 @@ const syncCreateProject = (): PlanWrapperFn =>
 
           try {
             await writeTuples(
-              AUTHZ_PROVIDER_URL,
+              AUTHZ_API_URL,
               [
                 {
                   user: `organization:${organizationId}`,
@@ -84,7 +84,7 @@ const syncCreateProject = (): PlanWrapperFn =>
       context,
       sideEffect,
       AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
+      AUTHZ_API_URL,
       VORTEX_API_URL,
       VORTEX_AUTHZ_WEBHOOK_SECRET,
       writeTuples,
@@ -100,7 +100,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
       context,
       sideEffect,
       AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
+      AUTHZ_API_URL,
       VORTEX_API_URL,
       VORTEX_AUTHZ_WEBHOOK_SECRET,
       deleteTuples,
@@ -124,7 +124,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
 
             try {
               await deleteTuples(
-                AUTHZ_PROVIDER_URL,
+                AUTHZ_API_URL,
                 [
                   {
                     user: `organization:${project.organizationId}`,
@@ -151,7 +151,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
       context,
       sideEffect,
       AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
+      AUTHZ_API_URL,
       VORTEX_API_URL,
       VORTEX_AUTHZ_WEBHOOK_SECRET,
       deleteTuples,

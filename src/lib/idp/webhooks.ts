@@ -9,7 +9,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
-import { GATEKEEPER_WEBHOOK_SECRET } from "lib/config/env.config";
+import { AUTH_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { projects, statusTemplates } from "lib/db/schema";
 
@@ -58,9 +58,9 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
     const signature = headers["x-idp-signature"];
     const eventType = headers["x-idp-event"];
 
-    if (!GATEKEEPER_WEBHOOK_SECRET) {
+    if (!AUTH_WEBHOOK_SECRET) {
       console.warn(
-        "GATEKEEPER_WEBHOOK_SECRET not set - skipping signature verification",
+        "AUTH_WEBHOOK_SECRET not set - skipping signature verification",
       );
     }
 
@@ -68,18 +68,18 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
       const rawBody = await request.text();
 
       // Verify signature if secret is configured
-      if (GATEKEEPER_WEBHOOK_SECRET && signature) {
+      if (AUTH_WEBHOOK_SECRET && signature) {
         const isValid = verifySignature(
           rawBody,
           signature,
-          GATEKEEPER_WEBHOOK_SECRET,
+          AUTH_WEBHOOK_SECRET,
         );
 
         if (!isValid) {
           set.status = 401;
           return { error: "Invalid signature" };
         }
-      } else if (GATEKEEPER_WEBHOOK_SECRET && !signature) {
+      } else if (AUTH_WEBHOOK_SECRET && !signature) {
         set.status = 401;
         return { error: "Missing signature" };
       }

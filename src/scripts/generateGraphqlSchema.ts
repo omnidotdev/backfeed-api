@@ -4,7 +4,7 @@ import { EXPORTABLE, exportSchema } from "graphile-export";
 import { getDefaultOrganization } from "lib/auth/organizations";
 import {
   AUTHZ_ENABLED,
-  AUTHZ_PROVIDER_URL,
+  AUTHZ_API_URL,
   checkPermission,
   deleteTuples,
   writeTuples,
@@ -43,7 +43,7 @@ const generateGraphqlSchema = async () => {
       "postgraphile/grafast": { context, sideEffect },
       "lib/authz": {
         AUTHZ_ENABLED,
-        AUTHZ_PROVIDER_URL,
+        AUTHZ_API_URL,
         checkPermission,
         writeTuples,
         deleteTuples,

@@ -1,5 +1,5 @@
 import { EnvelopArmor } from "@escape.tech/graphql-armor";
-import { GRAPHQL_COMPLEXITY_MAX_COST, isProdEnv } from "lib/config/env.config";
+import { GRAPHQL_MAX_COMPLEXITY_COST, isProdEnv } from "lib/config/env.config";
 
 /**
  * GraphQL Armor security plugin.
@@ -18,7 +18,7 @@ const armor = new EnvelopArmor({
   // https://escape.tech/graphql-armor/docs/plugins/cost-limit
   costLimit: {
     enabled: true,
-    maxCost: +GRAPHQL_COMPLEXITY_MAX_COST!,
+    maxCost: +GRAPHQL_MAX_COMPLEXITY_COST!,
     objectCost: 2,
     scalarCost: 1,
     depthCostFactor: 1.5,
