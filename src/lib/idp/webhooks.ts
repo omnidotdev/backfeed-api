@@ -11,7 +11,7 @@ import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import { AUTH_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { projects, statusTemplates } from "lib/db/schema";
+import { projects, statusTemplates, users } from "lib/db/schema";
 
 interface OrganizationDeletedPayload {
   eventType: "organization.deleted";
@@ -20,7 +20,14 @@ interface OrganizationDeletedPayload {
   timestamp: string;
 }
 
-type IdpWebhookPayload = OrganizationDeletedPayload;
+interface UserDeletedPayload {
+  eventType: "user.deleted";
+  userId: string;
+  deletedAt: string;
+  timestamp: string;
+}
+
+type IdpWebhookPayload = OrganizationDeletedPayload | UserDeletedPayload;
 
 /**
  * Verify HMAC-SHA256 signature from IDP.
@@ -87,12 +94,17 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
       const body = JSON.parse(rawBody) as IdpWebhookPayload;
 
       console.log(
-        `IDP event received: ${body.eventType} for org ${body.organizationId}`,
+        `IDP event received: ${body.eventType}${
+          "organizationId" in body ? ` for org ${body.organizationId}` : ""
+        }${body.eventType === "user.deleted" ? ` for user ${body.userId}` : ""}`,
       );
 
       switch (body.eventType) {
         case "organization.deleted":
           await handleOrganizationDeleted(body);
+          break;
+        case "user.deleted":
+          await handleUserDeleted(body);
           break;
         default:
           console.warn(`Unknown IDP event type: ${eventType}`);
@@ -142,6 +154,34 @@ async function handleOrganizationDeleted(
     );
   } catch (err) {
     console.error(`Failed to delete data for org ${organizationId}:`, err);
+    throw err;
+  }
+}
+
+/**
+ * Handle user deleted event.
+ * Deletes the local user record.
+ * Cascading deletes will clean up posts, comments, votes created by this user.
+ */
+async function handleUserDeleted(payload: UserDeletedPayload): Promise<void> {
+  const { userId } = payload;
+
+  try {
+    // Delete the user record (cascades to posts, comments, votes via FKs)
+    const result = await dbPool
+      .delete(users)
+      .where(eq(users.identityProviderId, userId))
+      .returning({ id: users.id });
+
+    if (result.length > 0) {
+      console.log(`Deleted user ${result[0].id} (IDP user ${userId} was deleted)`);
+    } else {
+      console.log(
+        `No local user found for IDP user ${userId} (may not exist in this app)`,
+      );
+    }
+  } catch (err) {
+    console.error(`Failed to delete user for IDP user ${userId}:`, err);
     throw err;
   }
 }
