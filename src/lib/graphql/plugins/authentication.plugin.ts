@@ -149,6 +149,15 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       );
     }
 
+    // Validate JWT format before attempting verification
+    const parts = accessToken.split(".");
+    if (parts.length !== 3) {
+      throw new AuthenticationError(
+        `Invalid JWT format: expected 3 parts, got ${parts.length}. Token prefix: ${accessToken.substring(0, 20)}...`,
+        "INVALID_JWT_FORMAT",
+      );
+    }
+
     // Verify JWT signature using JWKS (cryptographic verification)
     const verifiedPayload = await verifyAccessToken(accessToken);
 

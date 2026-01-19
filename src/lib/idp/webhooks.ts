@@ -174,7 +174,9 @@ async function handleUserDeleted(payload: UserDeletedPayload): Promise<void> {
       .returning({ id: users.id });
 
     if (result.length > 0) {
-      console.log(`Deleted user ${result[0].id} (IDP user ${userId} was deleted)`);
+      console.log(
+        `Deleted user ${result[0].id} (IDP user ${userId} was deleted)`,
+      );
     } else {
       console.log(
         `No local user found for IDP user ${userId} (may not exist in this app)`,

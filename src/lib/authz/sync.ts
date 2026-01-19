@@ -61,7 +61,6 @@ interface AuthzEvent {
  * Log authz events as structured JSON for observability.
  */
 function logAuthzEvent(event: AuthzEvent): void {
-  // biome-ignore lint/suspicious/noConsole: structured logging
   console.log(
     JSON.stringify({ ...event, timestamp: new Date().toISOString() }),
   );
@@ -336,6 +335,150 @@ export async function deleteTuples(
       error: error instanceof Error ? error.message : String(error),
       viaVortex: false,
     });
+  }
+}
+
+interface PermissionCheck {
+  userId: string;
+  resourceType: string;
+  resourceId: string;
+  permission: string;
+}
+
+interface PermissionCheckResult {
+  userId: string;
+  resourceType: string;
+  resourceId: string;
+  permission: string;
+  allowed: boolean;
+}
+
+/**
+ * Batch check multiple permissions in a single API call.
+ * Reduces N+1 queries when checking permissions on multiple resources.
+ *
+ * Uses two-layer caching:
+ * 1. Request-scoped cache (passed as parameter) - avoids duplicate calls within same request
+ * 2. TTL cache (module-level) - avoids duplicate calls across requests
+ *
+ * Checks cache first for each permission, then batches remaining checks.
+ * Returns true (permissive) when authz is disabled.
+ * Throws error (fail-closed) when PDP is unavailable.
+ */
+export async function checkPermissionsBatch(
+  authzEnabled: string | undefined,
+  authzProviderUrl: string | undefined,
+  checks: PermissionCheck[],
+  requestCache?: Map<string, boolean>,
+): Promise<PermissionCheckResult[]> {
+  // Permissive when disabled
+  if (authzEnabled !== "true" || !authzProviderUrl) {
+    return checks.map((check) => ({ ...check, allowed: true }));
+  }
+
+  // Import cache functions inline to avoid circular dependencies
+  const { buildPermissionCacheKey, getCachedPermission, setCachedPermission } =
+    await import("./cache");
+
+  const results: PermissionCheckResult[] = [];
+  const uncachedChecks: Array<{ index: number; check: PermissionCheck }> = [];
+
+  // Check caches first
+  for (let i = 0; i < checks.length; i++) {
+    const check = checks[i];
+    const cacheKey = buildPermissionCacheKey(
+      check.userId,
+      check.resourceType,
+      check.resourceId,
+      check.permission,
+    );
+
+    // Layer 1: Check request-scoped cache
+    if (requestCache?.has(cacheKey)) {
+      results[i] = { ...check, allowed: requestCache.get(cacheKey)! };
+      continue;
+    }
+
+    // Layer 2: Check TTL cache
+    const cachedResult = getCachedPermission(cacheKey);
+    if (cachedResult !== null) {
+      requestCache?.set(cacheKey, cachedResult);
+      results[i] = { ...check, allowed: cachedResult };
+      continue;
+    }
+
+    // Need to fetch from PDP
+    uncachedChecks.push({ index: i, check });
+  }
+
+  // If all checks were cached, return early
+  if (uncachedChecks.length === 0) {
+    logAuthzEvent({
+      type: "permission_check",
+      durationMs: 0,
+    });
+    return results;
+  }
+
+  const startTime = Date.now();
+
+  try {
+    const batchResults = await circuitBreaker.execute(async () => {
+      const response = await fetch(`${authzProviderUrl}/check/batch`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          checks: uncachedChecks.map(({ check }) => ({
+            user: `user:${check.userId}`,
+            relation: check.permission,
+            object: `${check.resourceType}:${check.resourceId}`,
+          })),
+        }),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      });
+
+      if (!response.ok) {
+        throw new Error(`AuthZ batch check failed: ${response.status}`);
+      }
+
+      const result = (await response.json()) as {
+        results: Array<{ allowed: boolean }>;
+      };
+      return result.results;
+    });
+
+    // Process results and populate caches
+    for (let i = 0; i < uncachedChecks.length; i++) {
+      const { index, check } = uncachedChecks[i];
+      const allowed = batchResults[i].allowed;
+      const cacheKey = buildPermissionCacheKey(
+        check.userId,
+        check.resourceType,
+        check.resourceId,
+        check.permission,
+      );
+
+      // Store in both caches
+      requestCache?.set(cacheKey, allowed);
+      setCachedPermission(cacheKey, allowed);
+
+      results[index] = { ...check, allowed };
+    }
+
+    logAuthzEvent({
+      type: "permission_check",
+      durationMs: Date.now() - startTime,
+    });
+
+    return results;
+  } catch (error) {
+    logAuthzEvent({
+      type: "permission_check",
+      durationMs: Date.now() - startTime,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    // Fail-closed: deny access when PDP is unavailable
+    throw error;
   }
 }
 
