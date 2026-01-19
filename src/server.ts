@@ -35,7 +35,6 @@ const HEALTH_CHECK_TIMEOUT_MS = 5000;
  */
 async function verifyPdpHealth(): Promise<void> {
   if (AUTHZ_ENABLED !== "true" || !AUTHZ_API_URL) {
-    // biome-ignore lint/suspicious/noConsole: startup logging
     console.log("[AuthZ] Disabled or not configured, skipping health check");
     return;
   }
@@ -49,7 +48,6 @@ async function verifyPdpHealth(): Promise<void> {
       throw new Error(`PDP health check failed: ${response.status}`);
     }
 
-    // biome-ignore lint/suspicious/noConsole: startup logging
     console.log("[AuthZ] PDP health check passed");
   } catch (error) {
     const message =
