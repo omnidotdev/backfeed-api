@@ -114,12 +114,10 @@ async function startServer(): Promise<void> {
     )
     .listen(PORT);
 
-  // biome-ignore lint/suspicious/noConsole: root logging
   console.log(
     `🦊 ${appConfig.name} Elysia server running at ${app.server?.url.toString().slice(0, -1)}`,
   );
 
-  // biome-ignore lint/suspicious/noConsole: root logging
   console.log(
     `🧘 ${appConfig.name} GraphQL Yoga API running at ${app.server?.url}graphql`,
   );
