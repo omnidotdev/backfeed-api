@@ -8,8 +8,8 @@ import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
-  AUTHZ_ENABLED,
   AUTHZ_API_URL,
+  AUTHZ_ENABLED,
   CORS_ALLOWED_ORIGINS,
   PORT,
   isDevEnv,

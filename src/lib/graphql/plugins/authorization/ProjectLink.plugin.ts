@@ -1,5 +1,5 @@
 import { EXPORTABLE } from "graphile-export/helpers";
-import { AUTHZ_ENABLED, AUTHZ_API_URL, checkPermission } from "lib/authz";
+import { AUTHZ_API_URL, AUTHZ_ENABLED, checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
