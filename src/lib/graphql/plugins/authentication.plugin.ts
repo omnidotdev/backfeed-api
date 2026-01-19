@@ -1,10 +1,12 @@
 import { useGenericAuth } from "@envelop/generic-auth";
 import { QueryClient } from "@tanstack/query-core";
+import { createRemoteJWKSet, jwtVerify } from "jose";
 import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
 import { users } from "lib/db/schema";
 import ms from "ms";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
+import type { JWTPayload } from "jose";
 import type { InsertUser, SelectUser } from "lib/db/schema";
 import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
@@ -20,12 +22,8 @@ interface OrganizationClaim {
   teams: Array<{ id: string; name: string }>;
 }
 
-interface UserInfoClaims {
+interface UserInfoClaims extends JWTPayload {
   sub: string;
-  iss?: string;
-  aud?: string | string[];
-  exp?: number;
-  iat?: number;
   name?: string;
   preferred_username?: string;
   picture?: string;
@@ -51,6 +49,34 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+/**
+ * Remote JWKS for verifying JWT signatures from Gatekeeper.
+ * jose's createRemoteJWKSet handles caching and key rotation automatically.
+ * @see https://www.better-auth.com/docs/plugins/jwt
+ */
+const JWKS = createRemoteJWKSet(
+  new URL(`${AUTH_BASE_URL}/.well-known/jwks.json`),
+);
+
+/**
+ * Verify JWT signature using Gatekeeper's JWKS endpoint.
+ * Returns the verified payload or throws an error.
+ */
+async function verifyAccessToken(token: string): Promise<UserInfoClaims> {
+  const { payload } = await jwtVerify(token, JWKS, {
+    issuer: AUTH_BASE_URL,
+  });
+
+  if (!payload.sub) {
+    throw new AuthenticationError(
+      "Missing required 'sub' claim",
+      "MISSING_SUB_CLAIM",
+    );
+  }
+
+  return payload as UserInfoClaims;
+}
 
 /** Extract organization claims from cached userinfo for a given access token. */
 export function getOrganizationClaimsFromCache(
@@ -109,6 +135,11 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       );
     }
 
+    // Verify JWT signature using JWKS (cryptographic verification)
+    const verifiedPayload = await verifyAccessToken(accessToken);
+
+    // Fetch additional claims from userinfo (org membership, profile data)
+    // Access tokens may not contain all claims, userinfo provides the full set
     const claims = await queryClient.ensureQueryData({
       queryKey: ["UserInfo", { accessToken }],
       queryFn: async () => {
@@ -140,23 +171,14 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
       );
     }
 
-    validateClaims(claims);
-
-    if (!claims.sub)
-      throw new AuthenticationError(
-        "Missing required 'sub' claim",
-        "MISSING_SUB_CLAIM",
-      );
+    // Validate time-based claims from verified payload
+    validateClaims(verifiedPayload);
 
     if (!claims.email)
       throw new AuthenticationError(
         "Missing required 'email' claim",
         "MISSING_EMAIL_CLAIM",
       );
-
-    // TODO: Add JWKS signature verification when Better Auth supports it
-    // https://www.better-auth.com/docs/plugins/oidc-provider#jwks-endpoint-not-fully-implemented
-    // https://linear.app/omnidev/issue/OMNI-302/validate-id-token-with-jwks
 
     const insertedUser: InsertUser = {
       identityProviderId: claims.sub,

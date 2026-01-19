@@ -1,5 +1,13 @@
 import { relations } from "drizzle-orm";
-import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  integer,
+  pgTable,
+  text,
+  unique,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { comments } from "./comment.table";
@@ -17,6 +25,8 @@ export const posts = pgTable(
   "post",
   {
     id: generateDefaultId(),
+    // Persistent post number within project (auto-assigned by trigger, immutable)
+    number: integer(),
     title: text(),
     description: text(),
     projectId: uuid()
@@ -41,6 +51,7 @@ export const posts = pgTable(
     index().on(table.projectId),
     index().on(table.userId),
     index().on(table.statusTemplateId),
+    unique("post_project_number_unique").on(table.projectId, table.number),
   ],
 );
 

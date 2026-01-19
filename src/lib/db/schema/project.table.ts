@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { index, pgTable, text, unique, uniqueIndex } from "drizzle-orm/pg-core";
+import {
+  index,
+  integer,
+  pgTable,
+  text,
+  unique,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { posts } from "./post.table";
@@ -25,6 +32,8 @@ export const projects = pgTable(
     description: text(),
     // Direct reference to IDP organization - validated via JWT claims
     organizationId: text("organization_id").notNull(),
+    // Counter for auto-incrementing post numbers within this project
+    nextPostNumber: integer("next_post_number").notNull().default(1),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
