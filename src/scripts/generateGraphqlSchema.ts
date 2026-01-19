@@ -3,8 +3,8 @@ import { existsSync, mkdirSync } from "node:fs";
 import { EXPORTABLE, exportSchema } from "graphile-export";
 import { getDefaultOrganization } from "lib/auth/organizations";
 import {
-  AUTHZ_ENABLED,
   AUTHZ_API_URL,
+  AUTHZ_ENABLED,
   checkPermission,
   deleteTuples,
   writeTuples,

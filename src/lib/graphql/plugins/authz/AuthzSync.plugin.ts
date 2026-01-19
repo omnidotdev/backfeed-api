@@ -13,8 +13,8 @@
 
 import { EXPORTABLE } from "graphile-export";
 import {
-  AUTHZ_ENABLED,
   AUTHZ_API_URL,
+  AUTHZ_ENABLED,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
   deleteTuples,

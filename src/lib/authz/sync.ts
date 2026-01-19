@@ -12,8 +12,8 @@
 
 // Re-export for EXPORTABLE compatibility in plugins
 export {
-  AUTHZ_ENABLED,
   AUTHZ_API_URL,
+  AUTHZ_ENABLED,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
 } from "lib/config/env.config";
