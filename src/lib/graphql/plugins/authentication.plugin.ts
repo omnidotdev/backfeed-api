@@ -53,18 +53,32 @@ const queryClient = new QueryClient({
 /**
  * Remote JWKS for verifying JWT signatures from Gatekeeper.
  * jose's createRemoteJWKSet handles caching and key rotation automatically.
+ * Lazily initialized to avoid errors during build scripts when AUTH_BASE_URL is not set.
  * @see https://www.better-auth.com/docs/plugins/jwt
  */
-const JWKS = createRemoteJWKSet(
-  new URL(`${AUTH_BASE_URL}/.well-known/jwks.json`),
-);
+let JWKS: ReturnType<typeof createRemoteJWKSet> | null = null;
+
+function getJWKS() {
+  if (!JWKS) {
+    if (!AUTH_BASE_URL) {
+      throw new AuthenticationError(
+        "AUTH_BASE_URL is not configured",
+        "AUTH_CONFIG_MISSING",
+      );
+    }
+    JWKS = createRemoteJWKSet(
+      new URL(`${AUTH_BASE_URL}/.well-known/jwks.json`),
+    );
+  }
+  return JWKS;
+}
 
 /**
  * Verify JWT signature using Gatekeeper's JWKS endpoint.
  * Returns the verified payload or throws an error.
  */
 async function verifyAccessToken(token: string): Promise<UserInfoClaims> {
-  const { payload } = await jwtVerify(token, JWKS, {
+  const { payload } = await jwtVerify(token, getJWKS(), {
     issuer: AUTH_BASE_URL,
   });
 
