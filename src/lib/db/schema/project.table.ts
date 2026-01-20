@@ -6,6 +6,7 @@ import {
   text,
   unique,
   uniqueIndex,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
@@ -29,6 +30,7 @@ export const projects = pgTable(
     name: text().notNull(),
     image: text(),
     slug: text().notNull(),
+    prefix: varchar({ length: 10 }),
     description: text(),
     // Direct reference to IDP organization - validated via JWT claims
     organizationId: text("organization_id").notNull(),

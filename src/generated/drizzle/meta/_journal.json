@@ -57,6 +57,13 @@
       "when": 1768861874343,
       "tag": "0007_fast_typhoid_mary",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1768889026168,
+      "tag": "0008_aberrant_silver_fox",
+      "breakpoints": true
     }
   ]
 }
