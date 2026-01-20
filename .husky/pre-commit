@@ -1,1 +1,3 @@
-bun knip && bun biome check --write --staged --no-errors-on-unmatched src
+bun knip
+bun biome check --write --staged --no-errors-on-unmatched src
+bunx tsc --noEmit
