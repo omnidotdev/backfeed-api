@@ -24,7 +24,7 @@ export const FEATURE_KEYS = {
 } as const;
 
 /**
- * Check if workspace is within limit for a resource.
+ * Check if organization is within limit for a resource.
  * Exported for use in EXPORTABLE functions.
  */
 export { isWithinLimit };
