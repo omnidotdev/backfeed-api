@@ -174,7 +174,7 @@ const spec_comment = {
   },
   description: undefined,
   extensions: {
-    oid: "270503",
+    oid: "42367",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -195,7 +195,7 @@ const voteTypeCodec = enumCodec({
   values: ["up", "down"],
   description: undefined,
   extensions: {
-    oid: "270486",
+    oid: "42350",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -286,7 +286,7 @@ const spec_vote = {
   },
   description: undefined,
   extensions: {
-    oid: "270656",
+    oid: "42520",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -393,7 +393,7 @@ const spec_projectLink = {
   },
   description: undefined,
   extensions: {
-    oid: "300307",
+    oid: "43635",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -524,7 +524,7 @@ const spec_statusTemplate = {
   },
   description: undefined,
   extensions: {
-    oid: "270616",
+    oid: "42480",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -643,7 +643,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "270635",
+    oid: "42499",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -774,7 +774,7 @@ const spec_projectStatusConfig = {
   },
   description: undefined,
   extensions: {
-    oid: "270599",
+    oid: "42463",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -905,7 +905,7 @@ const spec_post = {
     number: {
       description: undefined,
       codec: TYPES.int,
-      notNull: true,
+      notNull: false,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -917,7 +917,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "270549",
+    oid: "42413",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1060,7 +1060,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "270566",
+    oid: "42430",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5150,7 +5150,7 @@ type Post {
   statusUpdatedAt: Datetime!
   createdAt: Datetime!
   updatedAt: Datetime!
-  number: Int!
+  number: Int
 
   """Reads a single \`Project\` that is related to this \`Post\`."""
   project: Project
@@ -9952,7 +9952,7 @@ input PostInput {
   statusUpdatedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  number: Int!
+  number: Int
 }
 
 """The output of our create \`Project\` mutation."""

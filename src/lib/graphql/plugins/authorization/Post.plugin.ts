@@ -13,8 +13,8 @@ import type { MutationScope } from "./types";
  * Validate post permissions via PDP.
  *
  * - Create: Any authenticated user (with tier limits)
- * - Update: Author or admin+ on workspace (organization)
- * - Delete: Author or admin+ on workspace (organization)
+ * - Update: Author or admin+ on organization
+ * - Delete: Author or admin+ on organization
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(

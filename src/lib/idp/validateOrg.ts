@@ -1,7 +1,7 @@
 /**
  * IDP organization validation.
  *
- * Validates that an organization exists in the IDP before creating workspaces.
+ * Validates that an organization exists in the IDP before creating resources.
  * Uses caching and fail-open circuit breaker for resilience.
  */
 

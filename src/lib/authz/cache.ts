@@ -63,9 +63,9 @@ export function setCachedPermission(
  * Used when membership changes to clear stale permissions.
  *
  * Pattern examples:
- * - `user123:workspace:` - All workspace permissions for user
+ * - `user123:organization:` - All organization permissions for user
  * - `user123:` - All permissions for user
- * - `:workspace:ws456:` - All permissions for workspace
+ * - `:organization:org456:` - All permissions for organization
  */
 export function invalidatePermissionCache(pattern: string): void {
   for (const key of cache.keys()) {
