@@ -3,7 +3,7 @@
   "private": true,
   "main": "build/server.js",
   "scripts": {
-    "dev": "GRAPHILE_ENV=development NODE_ENV=development bun run --env-file .env.local --hot src/server.ts",
+    "dev": "GRAPHILE_ENV=development NODE_ENV=development bun run --env-file .env.local --env-file .env.development --hot src/server.ts",
     "build": "bun build --target node --outdir build src/server.ts",
     "start": "GRAPHILE_ENV=production NODE_ENV=production bun db:migrate && GRAPHILE_ENV=production NODE_ENV=production bun run build/server.js",
     "lint": "biome lint",

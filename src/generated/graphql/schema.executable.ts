@@ -1948,6 +1948,7 @@ function findTypeNameMatch(specifier) {
     const value = specifier[typeSpec.codec.name];
     if (value != null && typeSpec.match(value)) return typeName;
   }
+  console.warn(`Could not find a type that matched the specifier '${inspect(specifier)}'`);
   return null;
 }
 function assertAllowed9(value, mode) {
