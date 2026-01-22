@@ -1,5 +1,5 @@
 import { EXPORTABLE } from "graphile-export/helpers";
-import { AUTHZ_API_URL, AUTHZ_ENABLED, checkPermission } from "lib/authz";
+import { checkPermission } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -21,8 +21,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     (
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
       checkPermission,
       billingBypassOrgIds,
       FEATURE_KEYS,
@@ -85,8 +83,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (observer.id !== post.userId) {
               // Check admin permission via PDP on organization
               const allowed = await checkPermission(
-                AUTHZ_ENABLED,
-                AUTHZ_API_URL,
                 observer.id,
                 "organization",
                 post.project.organizationId,
@@ -102,8 +98,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
       checkPermission,
       billingBypassOrgIds,
       FEATURE_KEYS,
