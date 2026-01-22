@@ -12,14 +12,7 @@
  */
 
 import { EXPORTABLE } from "graphile-export";
-import {
-  AUTHZ_API_URL,
-  AUTHZ_ENABLED,
-  VORTEX_API_URL,
-  VORTEX_AUTHZ_WEBHOOK_SECRET,
-  deleteTuples,
-  writeTuples,
-} from "lib/authz";
+import { deleteTuples, isAuthzEnabled, writeTuples } from "lib/authz";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -32,21 +25,14 @@ import type { PlanWrapperFn } from "postgraphile/utils";
  */
 const syncCreateProject = (): PlanWrapperFn =>
   EXPORTABLE(
-    (
-      _context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      VORTEX_API_URL,
-      VORTEX_AUTHZ_WEBHOOK_SECRET,
-      writeTuples,
-    ): PlanWrapperFn =>
+    (_context, sideEffect, isAuthzEnabled, writeTuples): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
         const $input = fieldArgs.getRaw(["input", "project"]);
 
         sideEffect([$result, $input], async ([result, input]) => {
           if (!result) return;
+          if (!isAuthzEnabled()) return;
 
           const { organizationId } = input as InsertProject;
           const projectId = (result as { id?: string })?.id;
@@ -57,19 +43,13 @@ const syncCreateProject = (): PlanWrapperFn =>
           }
 
           try {
-            await writeTuples(
-              AUTHZ_API_URL,
-              [
-                {
-                  user: `organization:${organizationId}`,
-                  relation: "organization",
-                  object: `project:${projectId}`,
-                },
-              ],
-              VORTEX_API_URL,
-              VORTEX_AUTHZ_WEBHOOK_SECRET,
-              AUTHZ_ENABLED,
-            );
+            await writeTuples([
+              {
+                user: `organization:${organizationId}`,
+                relation: "organization",
+                object: `project:${projectId}`,
+              },
+            ]);
           } catch (error) {
             console.error(
               "[AuthZ Sync] Failed to sync project creation:",
@@ -80,15 +60,7 @@ const syncCreateProject = (): PlanWrapperFn =>
 
         return $result;
       },
-    [
-      context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      VORTEX_API_URL,
-      VORTEX_AUTHZ_WEBHOOK_SECRET,
-      writeTuples,
-    ],
+    [context, sideEffect, isAuthzEnabled, writeTuples],
   );
 
 /**
@@ -96,15 +68,7 @@ const syncCreateProject = (): PlanWrapperFn =>
  */
 const syncDeleteProject = (): PlanWrapperFn =>
   EXPORTABLE(
-    (
-      context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      VORTEX_API_URL,
-      VORTEX_AUTHZ_WEBHOOK_SECRET,
-      deleteTuples,
-    ): PlanWrapperFn =>
+    (context, sideEffect, isAuthzEnabled, deleteTuples): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
         const $projectId = fieldArgs.getRaw(["input", "rowId"]);
@@ -114,6 +78,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
           [$result, $projectId, $db],
           async ([result, projectId, db]) => {
             if (!result) return;
+            if (!isAuthzEnabled()) return;
 
             // Get the organization ID before deletion
             const project = await db.query.projects.findFirst({
@@ -123,19 +88,13 @@ const syncDeleteProject = (): PlanWrapperFn =>
             if (!project) return;
 
             try {
-              await deleteTuples(
-                AUTHZ_API_URL,
-                [
-                  {
-                    user: `organization:${project.organizationId}`,
-                    relation: "organization",
-                    object: `project:${projectId}`,
-                  },
-                ],
-                VORTEX_API_URL,
-                VORTEX_AUTHZ_WEBHOOK_SECRET,
-                AUTHZ_ENABLED,
-              );
+              await deleteTuples([
+                {
+                  user: `organization:${project.organizationId}`,
+                  relation: "organization",
+                  object: `project:${projectId}`,
+                },
+              ]);
             } catch (error) {
               console.error(
                 "[AuthZ Sync] Failed to sync project deletion:",
@@ -147,15 +106,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
 
         return $result;
       },
-    [
-      context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      VORTEX_API_URL,
-      VORTEX_AUTHZ_WEBHOOK_SECRET,
-      deleteTuples,
-    ],
+    [context, sideEffect, isAuthzEnabled, deleteTuples],
   );
 
 /**

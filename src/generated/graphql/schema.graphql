@@ -429,7 +429,7 @@ type Post {
   statusUpdatedAt: Datetime!
   createdAt: Datetime!
   updatedAt: Datetime!
-  number: Int!
+  number: Int
 
   """Reads a single `Project` that is related to this `Post`."""
   project: Project
@@ -5231,7 +5231,7 @@ input PostInput {
   statusUpdatedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  number: Int!
+  number: Int
 }
 
 """The output of our create `Project` mutation."""

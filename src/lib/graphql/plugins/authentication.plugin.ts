@@ -1,7 +1,7 @@
 import { useGenericAuth } from "@envelop/generic-auth";
 import { QueryClient } from "@tanstack/query-core";
 import { createRemoteJWKSet, jwtVerify } from "jose";
-import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
+import { AUTH_BASE_URL, isDevEnv, protectRoutes } from "lib/config/env.config";
 import { users } from "lib/db/schema";
 import ms from "ms";
 
@@ -104,6 +104,16 @@ export function getOrganizationClaimsFromCache(
 }
 
 /**
+ * Check if a GraphQL query is an introspection query.
+ * Introspection queries contain `__schema` or `IntrospectionQuery`.
+ */
+function isIntrospectionQuery(query: string | undefined): boolean {
+  if (!query) return false;
+
+  return query.includes("__schema") || query.includes("IntrospectionQuery");
+}
+
+/**
  * Validate token claims.
  */
 const validateClaims = (claims: UserInfoClaims): void => {
@@ -142,6 +152,12 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (
 
     if (!accessToken) {
       if (!protectRoutes) return null;
+
+      // Allow unauthenticated introspection queries in development (e.g., for graphql-codegen)
+      if (isDevEnv) {
+        const params = (context as { params?: { query?: string } }).params;
+        if (isIntrospectionQuery(params?.query)) return null;
+      }
 
       throw new AuthenticationError(
         "Invalid or missing access token",
