@@ -3,14 +3,14 @@
  * Wraps the entitlements client with caching.
  *
  * Entitlements are queried at the ORGANIZATION level.
- * This enables bundle billing where one subscription covers all Omni products.
+ * This enables bundle billing where one subscription covers all Omni apps.
  */
 
 import { getCached, setCached } from "./cache";
 import { getEntitlements } from "./client";
 
-/** Backfeed product ID for entitlements */
-const PRODUCT_ID = "backfeed";
+/** Backfeed app ID for entitlements */
+const APP_ID = "backfeed";
 
 /** Cache key prefix */
 const CACHE_PREFIX = "organization";
@@ -47,13 +47,11 @@ async function fetchOrganizationEntitlements(
   if (cached) return cached;
 
   // Fetch from entitlements service using organization entity type
-  const response = await getEntitlements(
-    "organization",
-    organizationId,
-    PRODUCT_ID,
-  );
+  const result = await getEntitlements("organization", organizationId, APP_ID);
 
-  if (!response) return null;
+  if (result.status === "unavailable") return null;
+
+  const response = result.data;
 
   // Parse entitlements into a usable format
   const entitlements: CachedEntitlements = {
@@ -63,12 +61,12 @@ async function fetchOrganizationEntitlements(
   };
 
   for (const ent of response.entitlements) {
-    // Check product-specific tier first (backfeed:tier), then shared tier
-    if (ent.featureKey === `${PRODUCT_ID}:tier` || ent.featureKey === "tier") {
+    // Check app-specific tier first (backfeed:tier), then shared tier
+    if (ent.featureKey === `${APP_ID}:tier` || ent.featureKey === "tier") {
       entitlements.tier = (ent.value as Tier) ?? "free";
     } else if (ent.featureKey.startsWith("max_")) {
-      // Handle both product-specific (backfeed:max_projects) and shared (max_projects)
-      const key = ent.featureKey.replace(`${PRODUCT_ID}:`, "");
+      // Handle both app-specific (backfeed:max_projects) and shared (max_projects)
+      const key = ent.featureKey.replace(`${APP_ID}:`, "");
       entitlements.limits[key] =
         typeof ent.value === "number" ? ent.value : Number(ent.value) || -1;
     }

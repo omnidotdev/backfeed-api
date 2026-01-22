@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { Elysia, t } from "elysia";
-import { BILLING_WEBHOOK_SECRET } from "lib/config/env.config";
+import { BILLING_WEBHOOK_SECRET, isSelfHosted } from "lib/config/env.config";
 
 import { invalidateCache } from "./cache";
 
@@ -9,7 +9,7 @@ interface EntitlementWebhookPayload {
   eventType: string;
   entityType: string;
   entityId: string;
-  productId: string;
+  appId: string;
   featureKey?: string;
   value?: unknown;
   version: number;
@@ -50,6 +50,12 @@ const verifySignature = (
 const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
   "/entitlements",
   async ({ request, headers, set }) => {
+    // Early return for self-hosted mode - no external billing service
+    if (isSelfHosted) {
+      set.status = 204;
+      return { received: true, selfHosted: true };
+    }
+
     const signature = headers["x-billing-signature"];
 
     if (!BILLING_WEBHOOK_SECRET) {
