@@ -1,0 +1,5969 @@
+"""The root query type which gives access points into the data universe."""
+type Query implements Node {
+  """
+  Exposes the root query type nested one level down. This is helpful for Relay 1
+  which can only query top level fields if they are in a particular form.
+  """
+  query: Query!
+
+  """
+  The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
+  """
+  id: ID!
+
+  """Fetches an object given its globally unique `ID`."""
+  node(
+    """The globally unique `ID`."""
+    id: ID!
+  ): Node
+
+  """Get a single `Comment`."""
+  comment(rowId: UUID!): Comment
+
+  """Get a single `Vote`."""
+  vote(rowId: UUID!): Vote
+
+  """Get a single `Vote`."""
+  voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
+
+  """Get a single `ProjectLink`."""
+  projectLink(rowId: UUID!): ProjectLink
+
+  """Get a single `StatusTemplate`."""
+  statusTemplate(rowId: UUID!): StatusTemplate
+
+  """Get a single `StatusTemplate`."""
+  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
+
+  """Get a single `User`."""
+  user(rowId: UUID!): User
+
+  """Get a single `User`."""
+  userByEmail(email: String!): User
+
+  """Get a single `User`."""
+  userByIdentityProviderId(identityProviderId: UUID!): User
+
+  """Get a single `User`."""
+  userByUsername(username: String!): User
+
+  """Get a single `ProjectStatusConfig`."""
+  projectStatusConfig(rowId: UUID!): ProjectStatusConfig
+
+  """Get a single `ProjectStatusConfig`."""
+  projectStatusConfigByProjectIdAndStatusTemplateId(projectId: UUID!, statusTemplateId: UUID!): ProjectStatusConfig
+
+  """Get a single `Post`."""
+  post(rowId: UUID!): Post
+
+  """Get a single `Post`."""
+  postByProjectIdAndNumber(projectId: UUID!, number: Int!): Post
+
+  """Get a single `Project`."""
+  project(rowId: UUID!): Project
+
+  """Get a single `Project`."""
+  projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
+
+  """Reads and enables pagination through a set of `Comment`."""
+  comments(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CommentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CommentFilter
+
+    """The method to use when ordering `Comment`."""
+    orderBy: [CommentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CommentConnection
+
+  """Reads and enables pagination through a set of `Vote`."""
+  votes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VoteCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VoteFilter
+
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VoteConnection
+
+  """Reads and enables pagination through a set of `ProjectLink`."""
+  projectLinks(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectLinkCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectLinkFilter
+
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectLinkConnection
+
+  """Reads and enables pagination through a set of `StatusTemplate`."""
+  statusTemplates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: StatusTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StatusTemplateFilter
+
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): StatusTemplateConnection
+
+  """Reads and enables pagination through a set of `User`."""
+  users(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: UserFilter
+
+    """The method to use when ordering `User`."""
+    orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserConnection
+
+  """Reads and enables pagination through a set of `ProjectStatusConfig`."""
+  projectStatusConfigs(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectStatusConfigCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectStatusConfigFilter
+
+    """The method to use when ordering `ProjectStatusConfig`."""
+    orderBy: [ProjectStatusConfigOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectStatusConfigConnection
+
+  """Reads and enables pagination through a set of `Post`."""
+  posts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection
+
+  """Reads and enables pagination through a set of `Project`."""
+  projects(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectFilter
+
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectConnection
+
+  """
+  Returns the currently authenticated user (observer).
+  Returns null if not authenticated.
+  """
+  observer: Observer
+}
+
+"""An object with a globally unique `ID`."""
+interface Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+}
+
+type Comment {
+  rowId: UUID!
+  message: String
+  postId: UUID!
+  userId: UUID!
+  parentId: UUID
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Comment` that is related to this `Comment`."""
+  parent: Comment
+
+  """Reads a single `Post` that is related to this `Comment`."""
+  post: Post
+
+  """Reads a single `User` that is related to this `Comment`."""
+  user: User
+
+  """Reads and enables pagination through a set of `Comment`."""
+  childComments(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CommentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CommentFilter
+
+    """The method to use when ordering `Comment`."""
+    orderBy: [CommentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CommentConnection!
+}
+
+"""
+A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
+"""
+scalar UUID
+
+"""
+A point in time as described by the [ISO
+8601](https://en.wikipedia.org/wiki/ISO_8601) and, if it has a timezone, [RFC
+3339](https://datatracker.ietf.org/doc/html/rfc3339) standards. Input values
+that do not conform to both ISO 8601 and RFC 3339 may be coerced, which may lead
+to unexpected results.
+"""
+scalar Datetime
+
+type Post {
+  rowId: UUID!
+  title: String
+  description: String
+  projectId: UUID!
+  userId: UUID!
+  statusTemplateId: UUID
+  statusUpdatedAt: Datetime!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+  number: Int!
+
+  """Reads a single `Project` that is related to this `Post`."""
+  project: Project
+
+  """Reads a single `StatusTemplate` that is related to this `Post`."""
+  statusTemplate: StatusTemplate
+
+  """Reads a single `User` that is related to this `Post`."""
+  user: User
+
+  """Reads and enables pagination through a set of `Comment`."""
+  comments(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CommentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CommentFilter
+
+    """The method to use when ordering `Comment`."""
+    orderBy: [CommentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CommentConnection!
+
+  """Reads and enables pagination through a set of `Vote`."""
+  votes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VoteCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VoteFilter
+
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VoteConnection!
+}
+
+type Project {
+  rowId: UUID!
+  name: String!
+  image: String
+  slug: String!
+  description: String
+  organizationId: UUID!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+  nextPostNumber: Int!
+  prefix: String
+
+  """Reads and enables pagination through a set of `Post`."""
+  posts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection!
+
+  """Reads and enables pagination through a set of `ProjectStatusConfig`."""
+  projectStatusConfigs(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectStatusConfigCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectStatusConfigFilter
+
+    """The method to use when ordering `ProjectStatusConfig`."""
+    orderBy: [ProjectStatusConfigOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectStatusConfigConnection!
+
+  """Reads and enables pagination through a set of `ProjectLink`."""
+  projectLinks(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectLinkCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectLinkFilter
+
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectLinkConnection!
+}
+
+"""A connection to a list of `Post` values."""
+type PostConnection {
+  """A list of `Post` objects."""
+  nodes: [Post]!
+
+  """
+  A list of edges which contains the `Post` and cursor to aid in pagination.
+  """
+  edges: [PostEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Post` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: PostAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `Post` for these aggregates."""
+    groupBy: [PostGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: PostHavingInput
+  ): [PostAggregates!]
+}
+
+"""A `Post` edge in the connection."""
+type PostEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Post` at the end of the edge."""
+  node: Post
+}
+
+"""A location in a connection that can be used for resuming pagination."""
+scalar Cursor
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+}
+
+type PostAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: PostSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: PostDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: PostMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: PostMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: PostAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: PostStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: PostStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: PostVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: PostVariancePopulationAggregates
+}
+
+type PostSumAggregates {
+  """Sum of number across the matching connection"""
+  number: BigInt!
+}
+
+"""
+A signed eight-byte integer. The upper big integer values are greater than the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
+"""
+scalar BigInt
+
+type PostDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of title across the matching connection"""
+  title: BigInt
+
+  """Distinct count of description across the matching connection"""
+  description: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of statusTemplateId across the matching connection"""
+  statusTemplateId: BigInt
+
+  """Distinct count of statusUpdatedAt across the matching connection"""
+  statusUpdatedAt: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+
+  """Distinct count of number across the matching connection"""
+  number: BigInt
+}
+
+type PostMinAggregates {
+  """Minimum of number across the matching connection"""
+  number: Int
+}
+
+type PostMaxAggregates {
+  """Maximum of number across the matching connection"""
+  number: Int
+}
+
+type PostAverageAggregates {
+  """Mean average of number across the matching connection"""
+  number: BigFloat
+}
+
+"""
+A floating point number that requires more precision than IEEE 754 binary 64
+"""
+scalar BigFloat
+
+type PostStddevSampleAggregates {
+  """Sample standard deviation of number across the matching connection"""
+  number: BigFloat
+}
+
+type PostStddevPopulationAggregates {
+  """Population standard deviation of number across the matching connection"""
+  number: BigFloat
+}
+
+type PostVarianceSampleAggregates {
+  """Sample variance of number across the matching connection"""
+  number: BigFloat
+}
+
+type PostVariancePopulationAggregates {
+  """Population variance of number across the matching connection"""
+  number: BigFloat
+}
+
+"""Grouping methods for `Post` for usage during aggregation."""
+enum PostGroupBy {
+  TITLE
+  DESCRIPTION
+  PROJECT_ID
+  USER_ID
+  STATUS_TEMPLATE_ID
+  STATUS_UPDATED_AT
+  STATUS_UPDATED_AT_TRUNCATED_TO_HOUR
+  STATUS_UPDATED_AT_TRUNCATED_TO_DAY
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+  NUMBER
+}
+
+"""Conditions for `Post` aggregates."""
+input PostHavingInput {
+  AND: [PostHavingInput!]
+  OR: [PostHavingInput!]
+  sum: PostHavingSumInput
+  distinctCount: PostHavingDistinctCountInput
+  min: PostHavingMinInput
+  max: PostHavingMaxInput
+  average: PostHavingAverageInput
+  stddevSample: PostHavingStddevSampleInput
+  stddevPopulation: PostHavingStddevPopulationInput
+  varianceSample: PostHavingVarianceSampleInput
+  variancePopulation: PostHavingVariancePopulationInput
+}
+
+input PostHavingSumInput {
+  statusUpdatedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  number: HavingIntFilter
+}
+
+input HavingDatetimeFilter {
+  equalTo: Datetime
+  notEqualTo: Datetime
+  greaterThan: Datetime
+  greaterThanOrEqualTo: Datetime
+  lessThan: Datetime
+  lessThanOrEqualTo: Datetime
+}
+
+input HavingIntFilter {
+  equalTo: Int
+  notEqualTo: Int
+  greaterThan: Int
+  greaterThanOrEqualTo: Int
+  lessThan: Int
+  lessThanOrEqualTo: Int
+}
+
+input PostHavingDistinctCountInput {
+  statusUpdatedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  number: HavingIntFilter
+}
+
+input PostHavingMinInput {
+  statusUpdatedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  number: HavingIntFilter
+}
+
+input PostHavingMaxInput {
+  statusUpdatedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  number: HavingIntFilter
+}
+
+input PostHavingAverageInput {
+  statusUpdatedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  number: HavingIntFilter
+}
+
+input PostHavingStddevSampleInput {
+  statusUpdatedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  number: HavingIntFilter
+}
+
+input PostHavingStddevPopulationInput {
+  statusUpdatedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  number: HavingIntFilter
+}
+
+input PostHavingVarianceSampleInput {
+  statusUpdatedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  number: HavingIntFilter
+}
+
+input PostHavingVariancePopulationInput {
+  statusUpdatedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  number: HavingIntFilter
+}
+
+"""
+A condition to be used against `Post` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input PostCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s `statusTemplateId` field."""
+  statusTemplateId: UUID
+
+  """Checks for equality with the object’s `statusUpdatedAt` field."""
+  statusUpdatedAt: Datetime
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s `number` field."""
+  number: Int
+}
+
+"""
+A filter to be used against `Post` object types. All fields are combined with a logical ‘and.’
+"""
+input PostFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `description` field."""
+  description: StringFilter
+
+  """Filter by the object’s `projectId` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s `userId` field."""
+  userId: UUIDFilter
+
+  """Filter by the object’s `statusTemplateId` field."""
+  statusTemplateId: UUIDFilter
+
+  """Filter by the object’s `statusUpdatedAt` field."""
+  statusUpdatedAt: DatetimeFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `number` field."""
+  number: IntFilter
+
+  """Filter by the object’s `comments` relation."""
+  comments: PostToManyCommentFilter
+
+  """Some related `comments` exist."""
+  commentsExist: Boolean
+
+  """Filter by the object’s `votes` relation."""
+  votes: PostToManyVoteFilter
+
+  """Some related `votes` exist."""
+  votesExist: Boolean
+
+  """Filter by the object’s `project` relation."""
+  project: ProjectFilter
+
+  """Filter by the object’s `statusTemplate` relation."""
+  statusTemplate: StatusTemplateFilter
+
+  """A related `statusTemplate` exists."""
+  statusTemplateExists: Boolean
+
+  """Filter by the object’s `user` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [PostFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PostFilter!]
+
+  """Negates the expression."""
+  not: PostFilter
+}
+
+"""
+A filter to be used against UUID fields. All fields are combined with a logical ‘and.’
+"""
+input UUIDFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: UUID
+
+  """Not equal to the specified value."""
+  notEqualTo: UUID
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: UUID
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: UUID
+
+  """Included in the specified list."""
+  in: [UUID!]
+
+  """Not included in the specified list."""
+  notIn: [UUID!]
+
+  """Less than the specified value."""
+  lessThan: UUID
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: UUID
+
+  """Greater than the specified value."""
+  greaterThan: UUID
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: UUID
+}
+
+"""
+A filter to be used against String fields. All fields are combined with a logical ‘and.’
+"""
+input StringFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: String
+
+  """Not equal to the specified value."""
+  notEqualTo: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: String
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: String
+
+  """Included in the specified list."""
+  in: [String!]
+
+  """Not included in the specified list."""
+  notIn: [String!]
+
+  """Less than the specified value."""
+  lessThan: String
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: String
+
+  """Greater than the specified value."""
+  greaterThan: String
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: String
+
+  """Contains the specified string (case-sensitive)."""
+  includes: String
+
+  """Does not contain the specified string (case-sensitive)."""
+  notIncludes: String
+
+  """Contains the specified string (case-insensitive)."""
+  includesInsensitive: String
+
+  """Does not contain the specified string (case-insensitive)."""
+  notIncludesInsensitive: String
+
+  """Starts with the specified string (case-sensitive)."""
+  startsWith: String
+
+  """Does not start with the specified string (case-sensitive)."""
+  notStartsWith: String
+
+  """Starts with the specified string (case-insensitive)."""
+  startsWithInsensitive: String
+
+  """Does not start with the specified string (case-insensitive)."""
+  notStartsWithInsensitive: String
+
+  """Ends with the specified string (case-sensitive)."""
+  endsWith: String
+
+  """Does not end with the specified string (case-sensitive)."""
+  notEndsWith: String
+
+  """Ends with the specified string (case-insensitive)."""
+  endsWithInsensitive: String
+
+  """Does not end with the specified string (case-insensitive)."""
+  notEndsWithInsensitive: String
+
+  """
+  Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  like: String
+
+  """
+  Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLike: String
+
+  """
+  Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  likeInsensitive: String
+
+  """
+  Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLikeInsensitive: String
+
+  """Equal to the specified value (case-insensitive)."""
+  equalToInsensitive: String
+
+  """Not equal to the specified value (case-insensitive)."""
+  notEqualToInsensitive: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  distinctFromInsensitive: String
+
+  """
+  Equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  notDistinctFromInsensitive: String
+
+  """Included in the specified list (case-insensitive)."""
+  inInsensitive: [String!]
+
+  """Not included in the specified list (case-insensitive)."""
+  notInInsensitive: [String!]
+
+  """Less than the specified value (case-insensitive)."""
+  lessThanInsensitive: String
+
+  """Less than or equal to the specified value (case-insensitive)."""
+  lessThanOrEqualToInsensitive: String
+
+  """Greater than the specified value (case-insensitive)."""
+  greaterThanInsensitive: String
+
+  """Greater than or equal to the specified value (case-insensitive)."""
+  greaterThanOrEqualToInsensitive: String
+}
+
+"""
+A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’
+"""
+input DatetimeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Datetime
+
+  """Not equal to the specified value."""
+  notEqualTo: Datetime
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Datetime
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Datetime
+
+  """Included in the specified list."""
+  in: [Datetime!]
+
+  """Not included in the specified list."""
+  notIn: [Datetime!]
+
+  """Less than the specified value."""
+  lessThan: Datetime
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Datetime
+
+  """Greater than the specified value."""
+  greaterThan: Datetime
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Datetime
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against many `Comment` object types. All fields are combined with a logical ‘and.’
+"""
+input PostToManyCommentFilter {
+  """
+  Every related `Comment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CommentFilter
+
+  """
+  Some related `Comment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CommentFilter
+
+  """
+  No related `Comment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CommentFilter
+
+  """Aggregates across related `Comment` match the filter criteria."""
+  aggregates: CommentAggregatesFilter
+}
+
+"""
+A filter to be used against `Comment` object types. All fields are combined with a logical ‘and.’
+"""
+input CommentFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `message` field."""
+  message: StringFilter
+
+  """Filter by the object’s `postId` field."""
+  postId: UUIDFilter
+
+  """Filter by the object’s `userId` field."""
+  userId: UUIDFilter
+
+  """Filter by the object’s `parentId` field."""
+  parentId: UUIDFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `childComments` relation."""
+  childComments: CommentToManyCommentFilter
+
+  """Some related `childComments` exist."""
+  childCommentsExist: Boolean
+
+  """Filter by the object’s `parent` relation."""
+  parent: CommentFilter
+
+  """A related `parent` exists."""
+  parentExists: Boolean
+
+  """Filter by the object’s `post` relation."""
+  post: PostFilter
+
+  """Filter by the object’s `user` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [CommentFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CommentFilter!]
+
+  """Negates the expression."""
+  not: CommentFilter
+}
+
+"""
+A filter to be used against many `Comment` object types. All fields are combined with a logical ‘and.’
+"""
+input CommentToManyCommentFilter {
+  """
+  Every related `Comment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CommentFilter
+
+  """
+  Some related `Comment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CommentFilter
+
+  """
+  No related `Comment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CommentFilter
+
+  """Aggregates across related `Comment` match the filter criteria."""
+  aggregates: CommentAggregatesFilter
+}
+
+"""A filter to be used against aggregates of `Comment` object types."""
+input CommentAggregatesFilter {
+  """
+  A filter that must pass for the relevant `Comment` object to be included within the aggregate.
+  """
+  filter: CommentFilter
+
+  """Distinct count aggregate over matching `Comment` objects."""
+  distinctCount: CommentDistinctCountAggregateFilter
+}
+
+input CommentDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  message: BigIntFilter
+  postId: BigIntFilter
+  userId: BigIntFilter
+  parentId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+"""
+A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’
+"""
+input BigIntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigInt
+
+  """Not equal to the specified value."""
+  notEqualTo: BigInt
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigInt
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigInt
+
+  """Included in the specified list."""
+  in: [BigInt!]
+
+  """Not included in the specified list."""
+  notIn: [BigInt!]
+
+  """Less than the specified value."""
+  lessThan: BigInt
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigInt
+
+  """Greater than the specified value."""
+  greaterThan: BigInt
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigInt
+}
+
+"""
+A filter to be used against `User` object types. All fields are combined with a logical ‘and.’
+"""
+input UserFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `identityProviderId` field."""
+  identityProviderId: UUIDFilter
+
+  """Filter by the object’s `username` field."""
+  username: StringFilter
+
+  """Filter by the object’s `email` field."""
+  email: StringFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `avatarUrl` field."""
+  avatarUrl: StringFilter
+
+  """Filter by the object’s `comments` relation."""
+  comments: UserToManyCommentFilter
+
+  """Some related `comments` exist."""
+  commentsExist: Boolean
+
+  """Filter by the object’s `posts` relation."""
+  posts: UserToManyPostFilter
+
+  """Some related `posts` exist."""
+  postsExist: Boolean
+
+  """Filter by the object’s `votes` relation."""
+  votes: UserToManyVoteFilter
+
+  """Some related `votes` exist."""
+  votesExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [UserFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [UserFilter!]
+
+  """Negates the expression."""
+  not: UserFilter
+}
+
+"""
+A filter to be used against many `Comment` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyCommentFilter {
+  """
+  Every related `Comment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CommentFilter
+
+  """
+  Some related `Comment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CommentFilter
+
+  """
+  No related `Comment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CommentFilter
+
+  """Aggregates across related `Comment` match the filter criteria."""
+  aggregates: CommentAggregatesFilter
+}
+
+"""
+A filter to be used against many `Post` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyPostFilter {
+  """
+  Every related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PostFilter
+
+  """
+  Some related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PostFilter
+
+  """
+  No related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PostFilter
+
+  """Aggregates across related `Post` match the filter criteria."""
+  aggregates: PostAggregatesFilter
+}
+
+"""A filter to be used against aggregates of `Post` object types."""
+input PostAggregatesFilter {
+  """
+  A filter that must pass for the relevant `Post` object to be included within the aggregate.
+  """
+  filter: PostFilter
+
+  """Sum aggregate over matching `Post` objects."""
+  sum: PostSumAggregateFilter
+
+  """Distinct count aggregate over matching `Post` objects."""
+  distinctCount: PostDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching `Post` objects."""
+  min: PostMinAggregateFilter
+
+  """Maximum aggregate over matching `Post` objects."""
+  max: PostMaxAggregateFilter
+
+  """Mean average aggregate over matching `Post` objects."""
+  average: PostAverageAggregateFilter
+
+  """Sample standard deviation aggregate over matching `Post` objects."""
+  stddevSample: PostStddevSampleAggregateFilter
+
+  """Population standard deviation aggregate over matching `Post` objects."""
+  stddevPopulation: PostStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching `Post` objects."""
+  varianceSample: PostVarianceSampleAggregateFilter
+
+  """Population variance aggregate over matching `Post` objects."""
+  variancePopulation: PostVariancePopulationAggregateFilter
+}
+
+input PostSumAggregateFilter {
+  number: BigIntFilter
+}
+
+input PostDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  title: BigIntFilter
+  description: BigIntFilter
+  projectId: BigIntFilter
+  userId: BigIntFilter
+  statusTemplateId: BigIntFilter
+  statusUpdatedAt: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+  number: BigIntFilter
+}
+
+input PostMinAggregateFilter {
+  number: IntFilter
+}
+
+input PostMaxAggregateFilter {
+  number: IntFilter
+}
+
+input PostAverageAggregateFilter {
+  number: BigFloatFilter
+}
+
+"""
+A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’
+"""
+input BigFloatFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigFloat
+
+  """Not equal to the specified value."""
+  notEqualTo: BigFloat
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigFloat
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigFloat
+
+  """Included in the specified list."""
+  in: [BigFloat!]
+
+  """Not included in the specified list."""
+  notIn: [BigFloat!]
+
+  """Less than the specified value."""
+  lessThan: BigFloat
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigFloat
+
+  """Greater than the specified value."""
+  greaterThan: BigFloat
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigFloat
+}
+
+input PostStddevSampleAggregateFilter {
+  number: BigFloatFilter
+}
+
+input PostStddevPopulationAggregateFilter {
+  number: BigFloatFilter
+}
+
+input PostVarianceSampleAggregateFilter {
+  number: BigFloatFilter
+}
+
+input PostVariancePopulationAggregateFilter {
+  number: BigFloatFilter
+}
+
+"""
+A filter to be used against many `Vote` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyVoteFilter {
+  """
+  Every related `Vote` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VoteFilter
+
+  """
+  Some related `Vote` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VoteFilter
+
+  """
+  No related `Vote` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VoteFilter
+
+  """Aggregates across related `Vote` match the filter criteria."""
+  aggregates: VoteAggregatesFilter
+}
+
+"""
+A filter to be used against `Vote` object types. All fields are combined with a logical ‘and.’
+"""
+input VoteFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `postId` field."""
+  postId: UUIDFilter
+
+  """Filter by the object’s `userId` field."""
+  userId: UUIDFilter
+
+  """Filter by the object’s `voteType` field."""
+  voteType: VoteTypeFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `post` relation."""
+  post: PostFilter
+
+  """Filter by the object’s `user` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [VoteFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [VoteFilter!]
+
+  """Negates the expression."""
+  not: VoteFilter
+}
+
+"""
+A filter to be used against VoteType fields. All fields are combined with a logical ‘and.’
+"""
+input VoteTypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: VoteType
+
+  """Not equal to the specified value."""
+  notEqualTo: VoteType
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: VoteType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: VoteType
+
+  """Included in the specified list."""
+  in: [VoteType!]
+
+  """Not included in the specified list."""
+  notIn: [VoteType!]
+
+  """Less than the specified value."""
+  lessThan: VoteType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: VoteType
+
+  """Greater than the specified value."""
+  greaterThan: VoteType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: VoteType
+}
+
+enum VoteType {
+  up
+  down
+}
+
+"""A filter to be used against aggregates of `Vote` object types."""
+input VoteAggregatesFilter {
+  """
+  A filter that must pass for the relevant `Vote` object to be included within the aggregate.
+  """
+  filter: VoteFilter
+
+  """Distinct count aggregate over matching `Vote` objects."""
+  distinctCount: VoteDistinctCountAggregateFilter
+}
+
+input VoteDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  postId: BigIntFilter
+  userId: BigIntFilter
+  voteType: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+"""
+A filter to be used against many `Vote` object types. All fields are combined with a logical ‘and.’
+"""
+input PostToManyVoteFilter {
+  """
+  Every related `Vote` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VoteFilter
+
+  """
+  Some related `Vote` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VoteFilter
+
+  """
+  No related `Vote` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VoteFilter
+
+  """Aggregates across related `Vote` match the filter criteria."""
+  aggregates: VoteAggregatesFilter
+}
+
+"""
+A filter to be used against `Project` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `image` field."""
+  image: StringFilter
+
+  """Filter by the object’s `slug` field."""
+  slug: StringFilter
+
+  """Filter by the object’s `description` field."""
+  description: StringFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: UUIDFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `nextPostNumber` field."""
+  nextPostNumber: IntFilter
+
+  """Filter by the object’s `prefix` field."""
+  prefix: StringFilter
+
+  """Filter by the object’s `posts` relation."""
+  posts: ProjectToManyPostFilter
+
+  """Some related `posts` exist."""
+  postsExist: Boolean
+
+  """Filter by the object’s `projectStatusConfigs` relation."""
+  projectStatusConfigs: ProjectToManyProjectStatusConfigFilter
+
+  """Some related `projectStatusConfigs` exist."""
+  projectStatusConfigsExist: Boolean
+
+  """Filter by the object’s `projectLinks` relation."""
+  projectLinks: ProjectToManyProjectLinkFilter
+
+  """Some related `projectLinks` exist."""
+  projectLinksExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [ProjectFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProjectFilter!]
+
+  """Negates the expression."""
+  not: ProjectFilter
+}
+
+"""
+A filter to be used against many `Post` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyPostFilter {
+  """
+  Every related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PostFilter
+
+  """
+  Some related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PostFilter
+
+  """
+  No related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PostFilter
+
+  """Aggregates across related `Post` match the filter criteria."""
+  aggregates: PostAggregatesFilter
+}
+
+"""
+A filter to be used against many `ProjectStatusConfig` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyProjectStatusConfigFilter {
+  """
+  Every related `ProjectStatusConfig` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProjectStatusConfigFilter
+
+  """
+  Some related `ProjectStatusConfig` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProjectStatusConfigFilter
+
+  """
+  No related `ProjectStatusConfig` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProjectStatusConfigFilter
+
+  """
+  Aggregates across related `ProjectStatusConfig` match the filter criteria.
+  """
+  aggregates: ProjectStatusConfigAggregatesFilter
+}
+
+"""
+A filter to be used against `ProjectStatusConfig` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectStatusConfigFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `projectId` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s `statusTemplateId` field."""
+  statusTemplateId: UUIDFilter
+
+  """Filter by the object’s `customColor` field."""
+  customColor: StringFilter
+
+  """Filter by the object’s `customDescription` field."""
+  customDescription: StringFilter
+
+  """Filter by the object’s `isEnabled` field."""
+  isEnabled: BooleanFilter
+
+  """Filter by the object’s `isDefault` field."""
+  isDefault: BooleanFilter
+
+  """Filter by the object’s `sortOrder` field."""
+  sortOrder: IntFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `project` relation."""
+  project: ProjectFilter
+
+  """Filter by the object’s `statusTemplate` relation."""
+  statusTemplate: StatusTemplateFilter
+
+  """Checks for all expressions in this list."""
+  and: [ProjectStatusConfigFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProjectStatusConfigFilter!]
+
+  """Negates the expression."""
+  not: ProjectStatusConfigFilter
+}
+
+"""
+A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
+"""
+input BooleanFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Boolean
+
+  """Not equal to the specified value."""
+  notEqualTo: Boolean
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Boolean
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Boolean
+
+  """Included in the specified list."""
+  in: [Boolean!]
+
+  """Not included in the specified list."""
+  notIn: [Boolean!]
+
+  """Less than the specified value."""
+  lessThan: Boolean
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Boolean
+
+  """Greater than the specified value."""
+  greaterThan: Boolean
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Boolean
+}
+
+"""
+A filter to be used against `StatusTemplate` object types. All fields are combined with a logical ‘and.’
+"""
+input StatusTemplateFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: UUIDFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `displayName` field."""
+  displayName: StringFilter
+
+  """Filter by the object’s `color` field."""
+  color: StringFilter
+
+  """Filter by the object’s `description` field."""
+  description: StringFilter
+
+  """Filter by the object’s `sortOrder` field."""
+  sortOrder: IntFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `posts` relation."""
+  posts: StatusTemplateToManyPostFilter
+
+  """Some related `posts` exist."""
+  postsExist: Boolean
+
+  """Filter by the object’s `projectStatusConfigs` relation."""
+  projectStatusConfigs: StatusTemplateToManyProjectStatusConfigFilter
+
+  """Some related `projectStatusConfigs` exist."""
+  projectStatusConfigsExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [StatusTemplateFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [StatusTemplateFilter!]
+
+  """Negates the expression."""
+  not: StatusTemplateFilter
+}
+
+"""
+A filter to be used against many `Post` object types. All fields are combined with a logical ‘and.’
+"""
+input StatusTemplateToManyPostFilter {
+  """
+  Every related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PostFilter
+
+  """
+  Some related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PostFilter
+
+  """
+  No related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PostFilter
+
+  """Aggregates across related `Post` match the filter criteria."""
+  aggregates: PostAggregatesFilter
+}
+
+"""
+A filter to be used against many `ProjectStatusConfig` object types. All fields are combined with a logical ‘and.’
+"""
+input StatusTemplateToManyProjectStatusConfigFilter {
+  """
+  Every related `ProjectStatusConfig` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProjectStatusConfigFilter
+
+  """
+  Some related `ProjectStatusConfig` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProjectStatusConfigFilter
+
+  """
+  No related `ProjectStatusConfig` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProjectStatusConfigFilter
+
+  """
+  Aggregates across related `ProjectStatusConfig` match the filter criteria.
+  """
+  aggregates: ProjectStatusConfigAggregatesFilter
+}
+
+"""
+A filter to be used against aggregates of `ProjectStatusConfig` object types.
+"""
+input ProjectStatusConfigAggregatesFilter {
+  """
+  A filter that must pass for the relevant `ProjectStatusConfig` object to be included within the aggregate.
+  """
+  filter: ProjectStatusConfigFilter
+
+  """Sum aggregate over matching `ProjectStatusConfig` objects."""
+  sum: ProjectStatusConfigSumAggregateFilter
+
+  """Distinct count aggregate over matching `ProjectStatusConfig` objects."""
+  distinctCount: ProjectStatusConfigDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching `ProjectStatusConfig` objects."""
+  min: ProjectStatusConfigMinAggregateFilter
+
+  """Maximum aggregate over matching `ProjectStatusConfig` objects."""
+  max: ProjectStatusConfigMaxAggregateFilter
+
+  """Mean average aggregate over matching `ProjectStatusConfig` objects."""
+  average: ProjectStatusConfigAverageAggregateFilter
+
+  """
+  Sample standard deviation aggregate over matching `ProjectStatusConfig` objects.
+  """
+  stddevSample: ProjectStatusConfigStddevSampleAggregateFilter
+
+  """
+  Population standard deviation aggregate over matching `ProjectStatusConfig` objects.
+  """
+  stddevPopulation: ProjectStatusConfigStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching `ProjectStatusConfig` objects."""
+  varianceSample: ProjectStatusConfigVarianceSampleAggregateFilter
+
+  """
+  Population variance aggregate over matching `ProjectStatusConfig` objects.
+  """
+  variancePopulation: ProjectStatusConfigVariancePopulationAggregateFilter
+}
+
+input ProjectStatusConfigSumAggregateFilter {
+  sortOrder: BigIntFilter
+}
+
+input ProjectStatusConfigDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  projectId: BigIntFilter
+  statusTemplateId: BigIntFilter
+  customColor: BigIntFilter
+  customDescription: BigIntFilter
+  isEnabled: BigIntFilter
+  isDefault: BigIntFilter
+  sortOrder: BigIntFilter
+  createdAt: BigIntFilter
+}
+
+input ProjectStatusConfigMinAggregateFilter {
+  sortOrder: IntFilter
+}
+
+input ProjectStatusConfigMaxAggregateFilter {
+  sortOrder: IntFilter
+}
+
+input ProjectStatusConfigAverageAggregateFilter {
+  sortOrder: BigFloatFilter
+}
+
+input ProjectStatusConfigStddevSampleAggregateFilter {
+  sortOrder: BigFloatFilter
+}
+
+input ProjectStatusConfigStddevPopulationAggregateFilter {
+  sortOrder: BigFloatFilter
+}
+
+input ProjectStatusConfigVarianceSampleAggregateFilter {
+  sortOrder: BigFloatFilter
+}
+
+input ProjectStatusConfigVariancePopulationAggregateFilter {
+  sortOrder: BigFloatFilter
+}
+
+"""
+A filter to be used against many `ProjectLink` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyProjectLinkFilter {
+  """
+  Every related `ProjectLink` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProjectLinkFilter
+
+  """
+  Some related `ProjectLink` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProjectLinkFilter
+
+  """
+  No related `ProjectLink` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProjectLinkFilter
+
+  """Aggregates across related `ProjectLink` match the filter criteria."""
+  aggregates: ProjectLinkAggregatesFilter
+}
+
+"""
+A filter to be used against `ProjectLink` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectLinkFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `projectId` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s `url` field."""
+  url: StringFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `order` field."""
+  order: IntFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `project` relation."""
+  project: ProjectFilter
+
+  """Checks for all expressions in this list."""
+  and: [ProjectLinkFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProjectLinkFilter!]
+
+  """Negates the expression."""
+  not: ProjectLinkFilter
+}
+
+"""A filter to be used against aggregates of `ProjectLink` object types."""
+input ProjectLinkAggregatesFilter {
+  """
+  A filter that must pass for the relevant `ProjectLink` object to be included within the aggregate.
+  """
+  filter: ProjectLinkFilter
+
+  """Sum aggregate over matching `ProjectLink` objects."""
+  sum: ProjectLinkSumAggregateFilter
+
+  """Distinct count aggregate over matching `ProjectLink` objects."""
+  distinctCount: ProjectLinkDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching `ProjectLink` objects."""
+  min: ProjectLinkMinAggregateFilter
+
+  """Maximum aggregate over matching `ProjectLink` objects."""
+  max: ProjectLinkMaxAggregateFilter
+
+  """Mean average aggregate over matching `ProjectLink` objects."""
+  average: ProjectLinkAverageAggregateFilter
+
+  """
+  Sample standard deviation aggregate over matching `ProjectLink` objects.
+  """
+  stddevSample: ProjectLinkStddevSampleAggregateFilter
+
+  """
+  Population standard deviation aggregate over matching `ProjectLink` objects.
+  """
+  stddevPopulation: ProjectLinkStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching `ProjectLink` objects."""
+  varianceSample: ProjectLinkVarianceSampleAggregateFilter
+
+  """Population variance aggregate over matching `ProjectLink` objects."""
+  variancePopulation: ProjectLinkVariancePopulationAggregateFilter
+}
+
+input ProjectLinkSumAggregateFilter {
+  order: BigIntFilter
+}
+
+input ProjectLinkDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  projectId: BigIntFilter
+  url: BigIntFilter
+  title: BigIntFilter
+  order: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+input ProjectLinkMinAggregateFilter {
+  order: IntFilter
+}
+
+input ProjectLinkMaxAggregateFilter {
+  order: IntFilter
+}
+
+input ProjectLinkAverageAggregateFilter {
+  order: BigFloatFilter
+}
+
+input ProjectLinkStddevSampleAggregateFilter {
+  order: BigFloatFilter
+}
+
+input ProjectLinkStddevPopulationAggregateFilter {
+  order: BigFloatFilter
+}
+
+input ProjectLinkVarianceSampleAggregateFilter {
+  order: BigFloatFilter
+}
+
+input ProjectLinkVariancePopulationAggregateFilter {
+  order: BigFloatFilter
+}
+
+"""Methods to use when ordering `Post`."""
+enum PostOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  STATUS_TEMPLATE_ID_ASC
+  STATUS_TEMPLATE_ID_DESC
+  STATUS_UPDATED_AT_ASC
+  STATUS_UPDATED_AT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  COMMENTS_COUNT_ASC
+  COMMENTS_COUNT_DESC
+  COMMENTS_DISTINCT_COUNT_ROW_ID_ASC
+  COMMENTS_DISTINCT_COUNT_ROW_ID_DESC
+  COMMENTS_DISTINCT_COUNT_MESSAGE_ASC
+  COMMENTS_DISTINCT_COUNT_MESSAGE_DESC
+  COMMENTS_DISTINCT_COUNT_POST_ID_ASC
+  COMMENTS_DISTINCT_COUNT_POST_ID_DESC
+  COMMENTS_DISTINCT_COUNT_USER_ID_ASC
+  COMMENTS_DISTINCT_COUNT_USER_ID_DESC
+  COMMENTS_DISTINCT_COUNT_PARENT_ID_ASC
+  COMMENTS_DISTINCT_COUNT_PARENT_ID_DESC
+  COMMENTS_DISTINCT_COUNT_CREATED_AT_ASC
+  COMMENTS_DISTINCT_COUNT_CREATED_AT_DESC
+  COMMENTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  COMMENTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  VOTES_COUNT_ASC
+  VOTES_COUNT_DESC
+  VOTES_DISTINCT_COUNT_ROW_ID_ASC
+  VOTES_DISTINCT_COUNT_ROW_ID_DESC
+  VOTES_DISTINCT_COUNT_POST_ID_ASC
+  VOTES_DISTINCT_COUNT_POST_ID_DESC
+  VOTES_DISTINCT_COUNT_USER_ID_ASC
+  VOTES_DISTINCT_COUNT_USER_ID_DESC
+  VOTES_DISTINCT_COUNT_VOTE_TYPE_ASC
+  VOTES_DISTINCT_COUNT_VOTE_TYPE_DESC
+  VOTES_DISTINCT_COUNT_CREATED_AT_ASC
+  VOTES_DISTINCT_COUNT_CREATED_AT_DESC
+  VOTES_DISTINCT_COUNT_UPDATED_AT_ASC
+  VOTES_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of `ProjectStatusConfig` values."""
+type ProjectStatusConfigConnection {
+  """A list of `ProjectStatusConfig` objects."""
+  nodes: [ProjectStatusConfig]!
+
+  """
+  A list of edges which contains the `ProjectStatusConfig` and cursor to aid in pagination.
+  """
+  edges: [ProjectStatusConfigEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `ProjectStatusConfig` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectStatusConfigAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping `ProjectStatusConfig` for these aggregates.
+    """
+    groupBy: [ProjectStatusConfigGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectStatusConfigHavingInput
+  ): [ProjectStatusConfigAggregates!]
+}
+
+type ProjectStatusConfig {
+  rowId: UUID!
+  projectId: UUID!
+  statusTemplateId: UUID!
+  customColor: String
+  customDescription: String
+  isEnabled: Boolean
+  isDefault: Boolean
+  sortOrder: Int
+  createdAt: Datetime!
+
+  """
+  Reads a single `Project` that is related to this `ProjectStatusConfig`.
+  """
+  project: Project
+
+  """
+  Reads a single `StatusTemplate` that is related to this `ProjectStatusConfig`.
+  """
+  statusTemplate: StatusTemplate
+}
+
+type StatusTemplate {
+  rowId: UUID!
+  organizationId: UUID!
+  name: String!
+  displayName: String!
+  color: String
+  description: String
+  sortOrder: Int
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads and enables pagination through a set of `Post`."""
+  posts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection!
+
+  """Reads and enables pagination through a set of `ProjectStatusConfig`."""
+  projectStatusConfigs(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectStatusConfigCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectStatusConfigFilter
+
+    """The method to use when ordering `ProjectStatusConfig`."""
+    orderBy: [ProjectStatusConfigOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectStatusConfigConnection!
+}
+
+"""
+A condition to be used against `ProjectStatusConfig` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input ProjectStatusConfigCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `statusTemplateId` field."""
+  statusTemplateId: UUID
+
+  """Checks for equality with the object’s `customColor` field."""
+  customColor: String
+
+  """Checks for equality with the object’s `customDescription` field."""
+  customDescription: String
+
+  """Checks for equality with the object’s `isEnabled` field."""
+  isEnabled: Boolean
+
+  """Checks for equality with the object’s `isDefault` field."""
+  isDefault: Boolean
+
+  """Checks for equality with the object’s `sortOrder` field."""
+  sortOrder: Int
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+}
+
+"""Methods to use when ordering `ProjectStatusConfig`."""
+enum ProjectStatusConfigOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  STATUS_TEMPLATE_ID_ASC
+  STATUS_TEMPLATE_ID_DESC
+  CUSTOM_COLOR_ASC
+  CUSTOM_COLOR_DESC
+  CUSTOM_DESCRIPTION_ASC
+  CUSTOM_DESCRIPTION_DESC
+  IS_ENABLED_ASC
+  IS_ENABLED_DESC
+  IS_DEFAULT_ASC
+  IS_DEFAULT_DESC
+  SORT_ORDER_ASC
+  SORT_ORDER_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+}
+
+"""A `ProjectStatusConfig` edge in the connection."""
+type ProjectStatusConfigEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectStatusConfig` at the end of the edge."""
+  node: ProjectStatusConfig
+}
+
+type ProjectStatusConfigAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: ProjectStatusConfigSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectStatusConfigDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: ProjectStatusConfigMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: ProjectStatusConfigMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: ProjectStatusConfigAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: ProjectStatusConfigStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: ProjectStatusConfigStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: ProjectStatusConfigVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: ProjectStatusConfigVariancePopulationAggregates
+}
+
+type ProjectStatusConfigSumAggregates {
+  """Sum of sortOrder across the matching connection"""
+  sortOrder: BigInt!
+}
+
+type ProjectStatusConfigDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of statusTemplateId across the matching connection"""
+  statusTemplateId: BigInt
+
+  """Distinct count of customColor across the matching connection"""
+  customColor: BigInt
+
+  """Distinct count of customDescription across the matching connection"""
+  customDescription: BigInt
+
+  """Distinct count of isEnabled across the matching connection"""
+  isEnabled: BigInt
+
+  """Distinct count of isDefault across the matching connection"""
+  isDefault: BigInt
+
+  """Distinct count of sortOrder across the matching connection"""
+  sortOrder: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+type ProjectStatusConfigMinAggregates {
+  """Minimum of sortOrder across the matching connection"""
+  sortOrder: Int
+}
+
+type ProjectStatusConfigMaxAggregates {
+  """Maximum of sortOrder across the matching connection"""
+  sortOrder: Int
+}
+
+type ProjectStatusConfigAverageAggregates {
+  """Mean average of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type ProjectStatusConfigStddevSampleAggregates {
+  """Sample standard deviation of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type ProjectStatusConfigStddevPopulationAggregates {
+  """
+  Population standard deviation of sortOrder across the matching connection
+  """
+  sortOrder: BigFloat
+}
+
+type ProjectStatusConfigVarianceSampleAggregates {
+  """Sample variance of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type ProjectStatusConfigVariancePopulationAggregates {
+  """Population variance of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+"""
+Grouping methods for `ProjectStatusConfig` for usage during aggregation.
+"""
+enum ProjectStatusConfigGroupBy {
+  PROJECT_ID
+  STATUS_TEMPLATE_ID
+  CUSTOM_COLOR
+  CUSTOM_DESCRIPTION
+  IS_ENABLED
+  IS_DEFAULT
+  SORT_ORDER
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `ProjectStatusConfig` aggregates."""
+input ProjectStatusConfigHavingInput {
+  AND: [ProjectStatusConfigHavingInput!]
+  OR: [ProjectStatusConfigHavingInput!]
+  sum: ProjectStatusConfigHavingSumInput
+  distinctCount: ProjectStatusConfigHavingDistinctCountInput
+  min: ProjectStatusConfigHavingMinInput
+  max: ProjectStatusConfigHavingMaxInput
+  average: ProjectStatusConfigHavingAverageInput
+  stddevSample: ProjectStatusConfigHavingStddevSampleInput
+  stddevPopulation: ProjectStatusConfigHavingStddevPopulationInput
+  varianceSample: ProjectStatusConfigHavingVarianceSampleInput
+  variancePopulation: ProjectStatusConfigHavingVariancePopulationInput
+}
+
+input ProjectStatusConfigHavingSumInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingDistinctCountInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingMinInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingMaxInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingAverageInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingStddevSampleInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingStddevPopulationInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingVarianceSampleInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingVariancePopulationInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+"""A connection to a list of `ProjectLink` values."""
+type ProjectLinkConnection {
+  """A list of `ProjectLink` objects."""
+  nodes: [ProjectLink]!
+
+  """
+  A list of edges which contains the `ProjectLink` and cursor to aid in pagination.
+  """
+  edges: [ProjectLinkEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ProjectLink` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectLinkAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `ProjectLink` for these aggregates."""
+    groupBy: [ProjectLinkGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectLinkHavingInput
+  ): [ProjectLinkAggregates!]
+}
+
+type ProjectLink {
+  rowId: UUID!
+  projectId: UUID!
+  url: String!
+  title: String
+  order: Int!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Project` that is related to this `ProjectLink`."""
+  project: Project
+}
+
+"""A `ProjectLink` edge in the connection."""
+type ProjectLinkEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectLink` at the end of the edge."""
+  node: ProjectLink
+}
+
+type ProjectLinkAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: ProjectLinkSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectLinkDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: ProjectLinkMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: ProjectLinkMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: ProjectLinkAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: ProjectLinkStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: ProjectLinkStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: ProjectLinkVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: ProjectLinkVariancePopulationAggregates
+}
+
+type ProjectLinkSumAggregates {
+  """Sum of order across the matching connection"""
+  order: BigInt!
+}
+
+type ProjectLinkDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of url across the matching connection"""
+  url: BigInt
+
+  """Distinct count of title across the matching connection"""
+  title: BigInt
+
+  """Distinct count of order across the matching connection"""
+  order: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type ProjectLinkMinAggregates {
+  """Minimum of order across the matching connection"""
+  order: Int
+}
+
+type ProjectLinkMaxAggregates {
+  """Maximum of order across the matching connection"""
+  order: Int
+}
+
+type ProjectLinkAverageAggregates {
+  """Mean average of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkStddevSampleAggregates {
+  """Sample standard deviation of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkStddevPopulationAggregates {
+  """Population standard deviation of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkVarianceSampleAggregates {
+  """Sample variance of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkVariancePopulationAggregates {
+  """Population variance of order across the matching connection"""
+  order: BigFloat
+}
+
+"""Grouping methods for `ProjectLink` for usage during aggregation."""
+enum ProjectLinkGroupBy {
+  PROJECT_ID
+  URL
+  TITLE
+  ORDER
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `ProjectLink` aggregates."""
+input ProjectLinkHavingInput {
+  AND: [ProjectLinkHavingInput!]
+  OR: [ProjectLinkHavingInput!]
+  sum: ProjectLinkHavingSumInput
+  distinctCount: ProjectLinkHavingDistinctCountInput
+  min: ProjectLinkHavingMinInput
+  max: ProjectLinkHavingMaxInput
+  average: ProjectLinkHavingAverageInput
+  stddevSample: ProjectLinkHavingStddevSampleInput
+  stddevPopulation: ProjectLinkHavingStddevPopulationInput
+  varianceSample: ProjectLinkHavingVarianceSampleInput
+  variancePopulation: ProjectLinkHavingVariancePopulationInput
+}
+
+input ProjectLinkHavingSumInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingDistinctCountInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingMinInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingMaxInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingAverageInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingStddevSampleInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingStddevPopulationInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingVarianceSampleInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingVariancePopulationInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `ProjectLink` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input ProjectLinkCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `url` field."""
+  url: String
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `order` field."""
+  order: Int
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `ProjectLink`."""
+enum ProjectLinkOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  URL_ASC
+  URL_DESC
+  TITLE_ASC
+  TITLE_DESC
+  ORDER_ASC
+  ORDER_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+type User {
+  rowId: UUID!
+  identityProviderId: UUID!
+  username: String
+  email: String!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+  name: String!
+  avatarUrl: String
+
+  """Reads and enables pagination through a set of `Comment`."""
+  comments(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CommentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CommentFilter
+
+    """The method to use when ordering `Comment`."""
+    orderBy: [CommentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CommentConnection!
+
+  """Reads and enables pagination through a set of `Post`."""
+  posts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection!
+
+  """Reads and enables pagination through a set of `Vote`."""
+  votes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VoteCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VoteFilter
+
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VoteConnection!
+}
+
+"""A connection to a list of `Comment` values."""
+type CommentConnection {
+  """A list of `Comment` objects."""
+  nodes: [Comment]!
+
+  """
+  A list of edges which contains the `Comment` and cursor to aid in pagination.
+  """
+  edges: [CommentEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Comment` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: CommentAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `Comment` for these aggregates."""
+    groupBy: [CommentGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: CommentHavingInput
+  ): [CommentAggregates!]
+}
+
+"""A `Comment` edge in the connection."""
+type CommentEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Comment` at the end of the edge."""
+  node: Comment
+}
+
+type CommentAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: CommentDistinctCountAggregates
+}
+
+type CommentDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of message across the matching connection"""
+  message: BigInt
+
+  """Distinct count of postId across the matching connection"""
+  postId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of parentId across the matching connection"""
+  parentId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for `Comment` for usage during aggregation."""
+enum CommentGroupBy {
+  MESSAGE
+  POST_ID
+  USER_ID
+  PARENT_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `Comment` aggregates."""
+input CommentHavingInput {
+  AND: [CommentHavingInput!]
+  OR: [CommentHavingInput!]
+  sum: CommentHavingSumInput
+  distinctCount: CommentHavingDistinctCountInput
+  min: CommentHavingMinInput
+  max: CommentHavingMaxInput
+  average: CommentHavingAverageInput
+  stddevSample: CommentHavingStddevSampleInput
+  stddevPopulation: CommentHavingStddevPopulationInput
+  varianceSample: CommentHavingVarianceSampleInput
+  variancePopulation: CommentHavingVariancePopulationInput
+}
+
+input CommentHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input CommentHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input CommentHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input CommentHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input CommentHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input CommentHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input CommentHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input CommentHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input CommentHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `Comment` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input CommentCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `message` field."""
+  message: String
+
+  """Checks for equality with the object’s `postId` field."""
+  postId: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s `parentId` field."""
+  parentId: UUID
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `Comment`."""
+enum CommentOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  MESSAGE_ASC
+  MESSAGE_DESC
+  POST_ID_ASC
+  POST_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  PARENT_ID_ASC
+  PARENT_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  CHILD_COMMENTS_COUNT_ASC
+  CHILD_COMMENTS_COUNT_DESC
+  CHILD_COMMENTS_DISTINCT_COUNT_ROW_ID_ASC
+  CHILD_COMMENTS_DISTINCT_COUNT_ROW_ID_DESC
+  CHILD_COMMENTS_DISTINCT_COUNT_MESSAGE_ASC
+  CHILD_COMMENTS_DISTINCT_COUNT_MESSAGE_DESC
+  CHILD_COMMENTS_DISTINCT_COUNT_POST_ID_ASC
+  CHILD_COMMENTS_DISTINCT_COUNT_POST_ID_DESC
+  CHILD_COMMENTS_DISTINCT_COUNT_USER_ID_ASC
+  CHILD_COMMENTS_DISTINCT_COUNT_USER_ID_DESC
+  CHILD_COMMENTS_DISTINCT_COUNT_PARENT_ID_ASC
+  CHILD_COMMENTS_DISTINCT_COUNT_PARENT_ID_DESC
+  CHILD_COMMENTS_DISTINCT_COUNT_CREATED_AT_ASC
+  CHILD_COMMENTS_DISTINCT_COUNT_CREATED_AT_DESC
+  CHILD_COMMENTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  CHILD_COMMENTS_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of `Vote` values."""
+type VoteConnection {
+  """A list of `Vote` objects."""
+  nodes: [Vote]!
+
+  """
+  A list of edges which contains the `Vote` and cursor to aid in pagination.
+  """
+  edges: [VoteEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Vote` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: VoteAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `Vote` for these aggregates."""
+    groupBy: [VoteGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: VoteHavingInput
+  ): [VoteAggregates!]
+}
+
+type Vote {
+  rowId: UUID!
+  postId: UUID!
+  userId: UUID!
+  voteType: VoteType!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Post` that is related to this `Vote`."""
+  post: Post
+
+  """Reads a single `User` that is related to this `Vote`."""
+  user: User
+}
+
+"""A `Vote` edge in the connection."""
+type VoteEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Vote` at the end of the edge."""
+  node: Vote
+}
+
+type VoteAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: VoteDistinctCountAggregates
+}
+
+type VoteDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of postId across the matching connection"""
+  postId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of voteType across the matching connection"""
+  voteType: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for `Vote` for usage during aggregation."""
+enum VoteGroupBy {
+  POST_ID
+  USER_ID
+  VOTE_TYPE
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `Vote` aggregates."""
+input VoteHavingInput {
+  AND: [VoteHavingInput!]
+  OR: [VoteHavingInput!]
+  sum: VoteHavingSumInput
+  distinctCount: VoteHavingDistinctCountInput
+  min: VoteHavingMinInput
+  max: VoteHavingMaxInput
+  average: VoteHavingAverageInput
+  stddevSample: VoteHavingStddevSampleInput
+  stddevPopulation: VoteHavingStddevPopulationInput
+  varianceSample: VoteHavingVarianceSampleInput
+  variancePopulation: VoteHavingVariancePopulationInput
+}
+
+input VoteHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input VoteHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input VoteHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input VoteHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input VoteHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input VoteHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input VoteHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input VoteHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input VoteHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `Vote` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input VoteCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `postId` field."""
+  postId: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s `voteType` field."""
+  voteType: VoteType
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `Vote`."""
+enum VoteOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  POST_ID_ASC
+  POST_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+"""A connection to a list of `StatusTemplate` values."""
+type StatusTemplateConnection {
+  """A list of `StatusTemplate` objects."""
+  nodes: [StatusTemplate]!
+
+  """
+  A list of edges which contains the `StatusTemplate` and cursor to aid in pagination.
+  """
+  edges: [StatusTemplateEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `StatusTemplate` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: StatusTemplateAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `StatusTemplate` for these aggregates."""
+    groupBy: [StatusTemplateGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: StatusTemplateHavingInput
+  ): [StatusTemplateAggregates!]
+}
+
+"""A `StatusTemplate` edge in the connection."""
+type StatusTemplateEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `StatusTemplate` at the end of the edge."""
+  node: StatusTemplate
+}
+
+type StatusTemplateAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: StatusTemplateSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: StatusTemplateDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: StatusTemplateMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: StatusTemplateMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: StatusTemplateAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: StatusTemplateStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: StatusTemplateStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: StatusTemplateVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: StatusTemplateVariancePopulationAggregates
+}
+
+type StatusTemplateSumAggregates {
+  """Sum of sortOrder across the matching connection"""
+  sortOrder: BigInt!
+}
+
+type StatusTemplateDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of name across the matching connection"""
+  name: BigInt
+
+  """Distinct count of displayName across the matching connection"""
+  displayName: BigInt
+
+  """Distinct count of color across the matching connection"""
+  color: BigInt
+
+  """Distinct count of description across the matching connection"""
+  description: BigInt
+
+  """Distinct count of sortOrder across the matching connection"""
+  sortOrder: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type StatusTemplateMinAggregates {
+  """Minimum of sortOrder across the matching connection"""
+  sortOrder: Int
+}
+
+type StatusTemplateMaxAggregates {
+  """Maximum of sortOrder across the matching connection"""
+  sortOrder: Int
+}
+
+type StatusTemplateAverageAggregates {
+  """Mean average of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type StatusTemplateStddevSampleAggregates {
+  """Sample standard deviation of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type StatusTemplateStddevPopulationAggregates {
+  """
+  Population standard deviation of sortOrder across the matching connection
+  """
+  sortOrder: BigFloat
+}
+
+type StatusTemplateVarianceSampleAggregates {
+  """Sample variance of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type StatusTemplateVariancePopulationAggregates {
+  """Population variance of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+"""Grouping methods for `StatusTemplate` for usage during aggregation."""
+enum StatusTemplateGroupBy {
+  ORGANIZATION_ID
+  NAME
+  DISPLAY_NAME
+  COLOR
+  DESCRIPTION
+  SORT_ORDER
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `StatusTemplate` aggregates."""
+input StatusTemplateHavingInput {
+  AND: [StatusTemplateHavingInput!]
+  OR: [StatusTemplateHavingInput!]
+  sum: StatusTemplateHavingSumInput
+  distinctCount: StatusTemplateHavingDistinctCountInput
+  min: StatusTemplateHavingMinInput
+  max: StatusTemplateHavingMaxInput
+  average: StatusTemplateHavingAverageInput
+  stddevSample: StatusTemplateHavingStddevSampleInput
+  stddevPopulation: StatusTemplateHavingStddevPopulationInput
+  varianceSample: StatusTemplateHavingVarianceSampleInput
+  variancePopulation: StatusTemplateHavingVariancePopulationInput
+}
+
+input StatusTemplateHavingSumInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingDistinctCountInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingMinInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingMaxInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingAverageInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingStddevSampleInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingStddevPopulationInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingVarianceSampleInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingVariancePopulationInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `StatusTemplate` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input StatusTemplateCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: UUID
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `displayName` field."""
+  displayName: String
+
+  """Checks for equality with the object’s `color` field."""
+  color: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `sortOrder` field."""
+  sortOrder: Int
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `StatusTemplate`."""
+enum StatusTemplateOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  DISPLAY_NAME_ASC
+  DISPLAY_NAME_DESC
+  COLOR_ASC
+  COLOR_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  SORT_ORDER_ASC
+  SORT_ORDER_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  POSTS_COUNT_ASC
+  POSTS_COUNT_DESC
+  POSTS_SUM_NUMBER_ASC
+  POSTS_SUM_NUMBER_DESC
+  POSTS_DISTINCT_COUNT_ROW_ID_ASC
+  POSTS_DISTINCT_COUNT_ROW_ID_DESC
+  POSTS_DISTINCT_COUNT_TITLE_ASC
+  POSTS_DISTINCT_COUNT_TITLE_DESC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_ASC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_DESC
+  POSTS_DISTINCT_COUNT_USER_ID_ASC
+  POSTS_DISTINCT_COUNT_USER_ID_DESC
+  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_CREATED_AT_ASC
+  POSTS_DISTINCT_COUNT_CREATED_AT_DESC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_NUMBER_ASC
+  POSTS_DISTINCT_COUNT_NUMBER_DESC
+  POSTS_MIN_NUMBER_ASC
+  POSTS_MIN_NUMBER_DESC
+  POSTS_MAX_NUMBER_ASC
+  POSTS_MAX_NUMBER_DESC
+  POSTS_AVERAGE_NUMBER_ASC
+  POSTS_AVERAGE_NUMBER_DESC
+  POSTS_STDDEV_SAMPLE_NUMBER_ASC
+  POSTS_STDDEV_SAMPLE_NUMBER_DESC
+  POSTS_STDDEV_POPULATION_NUMBER_ASC
+  POSTS_STDDEV_POPULATION_NUMBER_DESC
+  POSTS_VARIANCE_SAMPLE_NUMBER_ASC
+  POSTS_VARIANCE_SAMPLE_NUMBER_DESC
+  POSTS_VARIANCE_POPULATION_NUMBER_ASC
+  POSTS_VARIANCE_POPULATION_NUMBER_DESC
+  PROJECT_STATUS_CONFIGS_COUNT_ASC
+  PROJECT_STATUS_CONFIGS_COUNT_DESC
+  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_DESC
+}
+
+"""A connection to a list of `User` values."""
+type UserConnection {
+  """A list of `User` objects."""
+  nodes: [User]!
+
+  """
+  A list of edges which contains the `User` and cursor to aid in pagination.
+  """
+  edges: [UserEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `User` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: UserAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `User` for these aggregates."""
+    groupBy: [UserGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: UserHavingInput
+  ): [UserAggregates!]
+}
+
+"""A `User` edge in the connection."""
+type UserEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `User` at the end of the edge."""
+  node: User
+}
+
+type UserAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: UserDistinctCountAggregates
+}
+
+type UserDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of identityProviderId across the matching connection"""
+  identityProviderId: BigInt
+
+  """Distinct count of username across the matching connection"""
+  username: BigInt
+
+  """Distinct count of email across the matching connection"""
+  email: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+
+  """Distinct count of name across the matching connection"""
+  name: BigInt
+
+  """Distinct count of avatarUrl across the matching connection"""
+  avatarUrl: BigInt
+}
+
+"""Grouping methods for `User` for usage during aggregation."""
+enum UserGroupBy {
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+  NAME
+  AVATAR_URL
+}
+
+"""Conditions for `User` aggregates."""
+input UserHavingInput {
+  AND: [UserHavingInput!]
+  OR: [UserHavingInput!]
+  sum: UserHavingSumInput
+  distinctCount: UserHavingDistinctCountInput
+  min: UserHavingMinInput
+  max: UserHavingMaxInput
+  average: UserHavingAverageInput
+  stddevSample: UserHavingStddevSampleInput
+  stddevPopulation: UserHavingStddevPopulationInput
+  varianceSample: UserHavingVarianceSampleInput
+  variancePopulation: UserHavingVariancePopulationInput
+}
+
+input UserHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `User` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input UserCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `identityProviderId` field."""
+  identityProviderId: UUID
+
+  """Checks for equality with the object’s `username` field."""
+  username: String
+
+  """Checks for equality with the object’s `email` field."""
+  email: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `avatarUrl` field."""
+  avatarUrl: String
+}
+
+"""Methods to use when ordering `User`."""
+enum UserOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  IDENTITY_PROVIDER_ID_ASC
+  IDENTITY_PROVIDER_ID_DESC
+  USERNAME_ASC
+  USERNAME_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  NAME_ASC
+  NAME_DESC
+  AVATAR_URL_ASC
+  AVATAR_URL_DESC
+  COMMENTS_COUNT_ASC
+  COMMENTS_COUNT_DESC
+  COMMENTS_DISTINCT_COUNT_ROW_ID_ASC
+  COMMENTS_DISTINCT_COUNT_ROW_ID_DESC
+  COMMENTS_DISTINCT_COUNT_MESSAGE_ASC
+  COMMENTS_DISTINCT_COUNT_MESSAGE_DESC
+  COMMENTS_DISTINCT_COUNT_POST_ID_ASC
+  COMMENTS_DISTINCT_COUNT_POST_ID_DESC
+  COMMENTS_DISTINCT_COUNT_USER_ID_ASC
+  COMMENTS_DISTINCT_COUNT_USER_ID_DESC
+  COMMENTS_DISTINCT_COUNT_PARENT_ID_ASC
+  COMMENTS_DISTINCT_COUNT_PARENT_ID_DESC
+  COMMENTS_DISTINCT_COUNT_CREATED_AT_ASC
+  COMMENTS_DISTINCT_COUNT_CREATED_AT_DESC
+  COMMENTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  COMMENTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  POSTS_COUNT_ASC
+  POSTS_COUNT_DESC
+  POSTS_SUM_NUMBER_ASC
+  POSTS_SUM_NUMBER_DESC
+  POSTS_DISTINCT_COUNT_ROW_ID_ASC
+  POSTS_DISTINCT_COUNT_ROW_ID_DESC
+  POSTS_DISTINCT_COUNT_TITLE_ASC
+  POSTS_DISTINCT_COUNT_TITLE_DESC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_ASC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_DESC
+  POSTS_DISTINCT_COUNT_USER_ID_ASC
+  POSTS_DISTINCT_COUNT_USER_ID_DESC
+  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_CREATED_AT_ASC
+  POSTS_DISTINCT_COUNT_CREATED_AT_DESC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_NUMBER_ASC
+  POSTS_DISTINCT_COUNT_NUMBER_DESC
+  POSTS_MIN_NUMBER_ASC
+  POSTS_MIN_NUMBER_DESC
+  POSTS_MAX_NUMBER_ASC
+  POSTS_MAX_NUMBER_DESC
+  POSTS_AVERAGE_NUMBER_ASC
+  POSTS_AVERAGE_NUMBER_DESC
+  POSTS_STDDEV_SAMPLE_NUMBER_ASC
+  POSTS_STDDEV_SAMPLE_NUMBER_DESC
+  POSTS_STDDEV_POPULATION_NUMBER_ASC
+  POSTS_STDDEV_POPULATION_NUMBER_DESC
+  POSTS_VARIANCE_SAMPLE_NUMBER_ASC
+  POSTS_VARIANCE_SAMPLE_NUMBER_DESC
+  POSTS_VARIANCE_POPULATION_NUMBER_ASC
+  POSTS_VARIANCE_POPULATION_NUMBER_DESC
+  VOTES_COUNT_ASC
+  VOTES_COUNT_DESC
+  VOTES_DISTINCT_COUNT_ROW_ID_ASC
+  VOTES_DISTINCT_COUNT_ROW_ID_DESC
+  VOTES_DISTINCT_COUNT_POST_ID_ASC
+  VOTES_DISTINCT_COUNT_POST_ID_DESC
+  VOTES_DISTINCT_COUNT_USER_ID_ASC
+  VOTES_DISTINCT_COUNT_USER_ID_DESC
+  VOTES_DISTINCT_COUNT_VOTE_TYPE_ASC
+  VOTES_DISTINCT_COUNT_VOTE_TYPE_DESC
+  VOTES_DISTINCT_COUNT_CREATED_AT_ASC
+  VOTES_DISTINCT_COUNT_CREATED_AT_DESC
+  VOTES_DISTINCT_COUNT_UPDATED_AT_ASC
+  VOTES_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of `Project` values."""
+type ProjectConnection {
+  """A list of `Project` objects."""
+  nodes: [Project]!
+
+  """
+  A list of edges which contains the `Project` and cursor to aid in pagination.
+  """
+  edges: [ProjectEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Project` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `Project` for these aggregates."""
+    groupBy: [ProjectGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectHavingInput
+  ): [ProjectAggregates!]
+}
+
+"""A `Project` edge in the connection."""
+type ProjectEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Project` at the end of the edge."""
+  node: Project
+}
+
+type ProjectAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: ProjectSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: ProjectMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: ProjectMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: ProjectAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: ProjectStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: ProjectStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: ProjectVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: ProjectVariancePopulationAggregates
+}
+
+type ProjectSumAggregates {
+  """Sum of nextPostNumber across the matching connection"""
+  nextPostNumber: BigInt!
+}
+
+type ProjectDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of name across the matching connection"""
+  name: BigInt
+
+  """Distinct count of image across the matching connection"""
+  image: BigInt
+
+  """Distinct count of slug across the matching connection"""
+  slug: BigInt
+
+  """Distinct count of description across the matching connection"""
+  description: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+
+  """Distinct count of nextPostNumber across the matching connection"""
+  nextPostNumber: BigInt
+
+  """Distinct count of prefix across the matching connection"""
+  prefix: BigInt
+}
+
+type ProjectMinAggregates {
+  """Minimum of nextPostNumber across the matching connection"""
+  nextPostNumber: Int
+}
+
+type ProjectMaxAggregates {
+  """Maximum of nextPostNumber across the matching connection"""
+  nextPostNumber: Int
+}
+
+type ProjectAverageAggregates {
+  """Mean average of nextPostNumber across the matching connection"""
+  nextPostNumber: BigFloat
+}
+
+type ProjectStddevSampleAggregates {
+  """
+  Sample standard deviation of nextPostNumber across the matching connection
+  """
+  nextPostNumber: BigFloat
+}
+
+type ProjectStddevPopulationAggregates {
+  """
+  Population standard deviation of nextPostNumber across the matching connection
+  """
+  nextPostNumber: BigFloat
+}
+
+type ProjectVarianceSampleAggregates {
+  """Sample variance of nextPostNumber across the matching connection"""
+  nextPostNumber: BigFloat
+}
+
+type ProjectVariancePopulationAggregates {
+  """Population variance of nextPostNumber across the matching connection"""
+  nextPostNumber: BigFloat
+}
+
+"""Grouping methods for `Project` for usage during aggregation."""
+enum ProjectGroupBy {
+  NAME
+  IMAGE
+  SLUG
+  DESCRIPTION
+  ORGANIZATION_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+  NEXT_POST_NUMBER
+  PREFIX
+}
+
+"""Conditions for `Project` aggregates."""
+input ProjectHavingInput {
+  AND: [ProjectHavingInput!]
+  OR: [ProjectHavingInput!]
+  sum: ProjectHavingSumInput
+  distinctCount: ProjectHavingDistinctCountInput
+  min: ProjectHavingMinInput
+  max: ProjectHavingMaxInput
+  average: ProjectHavingAverageInput
+  stddevSample: ProjectHavingStddevSampleInput
+  stddevPopulation: ProjectHavingStddevPopulationInput
+  varianceSample: ProjectHavingVarianceSampleInput
+  variancePopulation: ProjectHavingVariancePopulationInput
+}
+
+input ProjectHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  nextPostNumber: HavingIntFilter
+}
+
+input ProjectHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  nextPostNumber: HavingIntFilter
+}
+
+input ProjectHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  nextPostNumber: HavingIntFilter
+}
+
+input ProjectHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  nextPostNumber: HavingIntFilter
+}
+
+input ProjectHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  nextPostNumber: HavingIntFilter
+}
+
+input ProjectHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  nextPostNumber: HavingIntFilter
+}
+
+input ProjectHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  nextPostNumber: HavingIntFilter
+}
+
+input ProjectHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  nextPostNumber: HavingIntFilter
+}
+
+input ProjectHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+  nextPostNumber: HavingIntFilter
+}
+
+"""
+A condition to be used against `Project` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ProjectCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `image` field."""
+  image: String
+
+  """Checks for equality with the object’s `slug` field."""
+  slug: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: UUID
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s `nextPostNumber` field."""
+  nextPostNumber: Int
+
+  """Checks for equality with the object’s `prefix` field."""
+  prefix: String
+}
+
+"""Methods to use when ordering `Project`."""
+enum ProjectOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  IMAGE_ASC
+  IMAGE_DESC
+  SLUG_ASC
+  SLUG_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  NEXT_POST_NUMBER_ASC
+  NEXT_POST_NUMBER_DESC
+  PREFIX_ASC
+  PREFIX_DESC
+  POSTS_COUNT_ASC
+  POSTS_COUNT_DESC
+  POSTS_SUM_NUMBER_ASC
+  POSTS_SUM_NUMBER_DESC
+  POSTS_DISTINCT_COUNT_ROW_ID_ASC
+  POSTS_DISTINCT_COUNT_ROW_ID_DESC
+  POSTS_DISTINCT_COUNT_TITLE_ASC
+  POSTS_DISTINCT_COUNT_TITLE_DESC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_ASC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_DESC
+  POSTS_DISTINCT_COUNT_USER_ID_ASC
+  POSTS_DISTINCT_COUNT_USER_ID_DESC
+  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_CREATED_AT_ASC
+  POSTS_DISTINCT_COUNT_CREATED_AT_DESC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_NUMBER_ASC
+  POSTS_DISTINCT_COUNT_NUMBER_DESC
+  POSTS_MIN_NUMBER_ASC
+  POSTS_MIN_NUMBER_DESC
+  POSTS_MAX_NUMBER_ASC
+  POSTS_MAX_NUMBER_DESC
+  POSTS_AVERAGE_NUMBER_ASC
+  POSTS_AVERAGE_NUMBER_DESC
+  POSTS_STDDEV_SAMPLE_NUMBER_ASC
+  POSTS_STDDEV_SAMPLE_NUMBER_DESC
+  POSTS_STDDEV_POPULATION_NUMBER_ASC
+  POSTS_STDDEV_POPULATION_NUMBER_DESC
+  POSTS_VARIANCE_SAMPLE_NUMBER_ASC
+  POSTS_VARIANCE_SAMPLE_NUMBER_DESC
+  POSTS_VARIANCE_POPULATION_NUMBER_ASC
+  POSTS_VARIANCE_POPULATION_NUMBER_DESC
+  PROJECT_STATUS_CONFIGS_COUNT_ASC
+  PROJECT_STATUS_CONFIGS_COUNT_DESC
+  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_DESC
+  PROJECT_LINKS_COUNT_ASC
+  PROJECT_LINKS_COUNT_DESC
+  PROJECT_LINKS_SUM_ORDER_ASC
+  PROJECT_LINKS_SUM_ORDER_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_ROW_ID_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_ROW_ID_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_PROJECT_ID_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_PROJECT_ID_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_URL_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_URL_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_TITLE_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_TITLE_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_ORDER_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_ORDER_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_UPDATED_AT_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_UPDATED_AT_DESC
+  PROJECT_LINKS_MIN_ORDER_ASC
+  PROJECT_LINKS_MIN_ORDER_DESC
+  PROJECT_LINKS_MAX_ORDER_ASC
+  PROJECT_LINKS_MAX_ORDER_DESC
+  PROJECT_LINKS_AVERAGE_ORDER_ASC
+  PROJECT_LINKS_AVERAGE_ORDER_DESC
+  PROJECT_LINKS_STDDEV_SAMPLE_ORDER_ASC
+  PROJECT_LINKS_STDDEV_SAMPLE_ORDER_DESC
+  PROJECT_LINKS_STDDEV_POPULATION_ORDER_ASC
+  PROJECT_LINKS_STDDEV_POPULATION_ORDER_DESC
+  PROJECT_LINKS_VARIANCE_SAMPLE_ORDER_ASC
+  PROJECT_LINKS_VARIANCE_SAMPLE_ORDER_DESC
+  PROJECT_LINKS_VARIANCE_POPULATION_ORDER_ASC
+  PROJECT_LINKS_VARIANCE_POPULATION_ORDER_DESC
+}
+
+"""
+The root mutation type which contains root level fields which mutate data.
+"""
+type Mutation {
+  """Creates a single `Comment`."""
+  createComment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCommentInput!
+  ): CreateCommentPayload
+
+  """Creates a single `Vote`."""
+  createVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVoteInput!
+  ): CreateVotePayload
+
+  """Creates a single `ProjectLink`."""
+  createProjectLink(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectLinkInput!
+  ): CreateProjectLinkPayload
+
+  """Creates a single `StatusTemplate`."""
+  createStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateStatusTemplateInput!
+  ): CreateStatusTemplatePayload
+
+  """Creates a single `User`."""
+  createUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserInput!
+  ): CreateUserPayload
+
+  """Creates a single `ProjectStatusConfig`."""
+  createProjectStatusConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectStatusConfigInput!
+  ): CreateProjectStatusConfigPayload
+
+  """Creates a single `Post`."""
+  createPost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePostInput!
+  ): CreatePostPayload
+
+  """Creates a single `Project`."""
+  createProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectInput!
+  ): CreateProjectPayload
+
+  """Updates a single `Comment` using a unique key and a patch."""
+  updateComment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCommentInput!
+  ): UpdateCommentPayload
+
+  """Updates a single `Vote` using a unique key and a patch."""
+  updateVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVoteInput!
+  ): UpdateVotePayload
+
+  """Updates a single `ProjectLink` using a unique key and a patch."""
+  updateProjectLink(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLinkInput!
+  ): UpdateProjectLinkPayload
+
+  """Updates a single `StatusTemplate` using a unique key and a patch."""
+  updateStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateStatusTemplateInput!
+  ): UpdateStatusTemplatePayload
+
+  """Updates a single `User` using a unique key and a patch."""
+  updateUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserInput!
+  ): UpdateUserPayload
+
+  """Updates a single `ProjectStatusConfig` using a unique key and a patch."""
+  updateProjectStatusConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectStatusConfigInput!
+  ): UpdateProjectStatusConfigPayload
+
+  """Updates a single `Post` using a unique key and a patch."""
+  updatePost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostInput!
+  ): UpdatePostPayload
+
+  """Updates a single `Project` using a unique key and a patch."""
+  updateProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectInput!
+  ): UpdateProjectPayload
+
+  """Deletes a single `Comment` using a unique key."""
+  deleteComment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCommentInput!
+  ): DeleteCommentPayload
+
+  """Deletes a single `Vote` using a unique key."""
+  deleteVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVoteInput!
+  ): DeleteVotePayload
+
+  """Deletes a single `ProjectLink` using a unique key."""
+  deleteProjectLink(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLinkInput!
+  ): DeleteProjectLinkPayload
+
+  """Deletes a single `StatusTemplate` using a unique key."""
+  deleteStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteStatusTemplateInput!
+  ): DeleteStatusTemplatePayload
+
+  """Deletes a single `User` using a unique key."""
+  deleteUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserInput!
+  ): DeleteUserPayload
+
+  """Deletes a single `ProjectStatusConfig` using a unique key."""
+  deleteProjectStatusConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectStatusConfigInput!
+  ): DeleteProjectStatusConfigPayload
+
+  """Deletes a single `Post` using a unique key."""
+  deletePost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostInput!
+  ): DeletePostPayload
+
+  """Deletes a single `Project` using a unique key."""
+  deleteProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectInput!
+  ): DeleteProjectPayload
+}
+
+"""The output of our create `Comment` mutation."""
+type CreateCommentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Comment` that was created by this mutation."""
+  comment: Comment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Comment`. May be used by Relay 1."""
+  commentEdge(
+    """The method to use when ordering `Comment`."""
+    orderBy: [CommentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CommentEdge
+}
+
+"""All input for the create `Comment` mutation."""
+input CreateCommentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Comment` to be created by this mutation."""
+  comment: CommentInput!
+}
+
+"""An input for mutations affecting `Comment`"""
+input CommentInput {
+  rowId: UUID
+  message: String
+  postId: UUID!
+  userId: UUID!
+  parentId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `Vote` mutation."""
+type CreateVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was created by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the create `Vote` mutation."""
+input CreateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Vote` to be created by this mutation."""
+  vote: VoteInput!
+}
+
+"""An input for mutations affecting `Vote`"""
+input VoteInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  voteType: VoteType!
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `ProjectLink` mutation."""
+type CreateProjectLinkPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectLink` that was created by this mutation."""
+  projectLink: ProjectLink
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectLink`. May be used by Relay 1."""
+  projectLinkEdge(
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLinkEdge
+}
+
+"""All input for the create `ProjectLink` mutation."""
+input CreateProjectLinkInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProjectLink` to be created by this mutation."""
+  projectLink: ProjectLinkInput!
+}
+
+"""An input for mutations affecting `ProjectLink`"""
+input ProjectLinkInput {
+  rowId: UUID
+  projectId: UUID!
+  url: String!
+  title: String
+  order: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `StatusTemplate` mutation."""
+type CreateStatusTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` that was created by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `StatusTemplate`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the create `StatusTemplate` mutation."""
+input CreateStatusTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` to be created by this mutation."""
+  statusTemplate: StatusTemplateInput!
+}
+
+"""An input for mutations affecting `StatusTemplate`"""
+input StatusTemplateInput {
+  rowId: UUID
+  organizationId: UUID!
+  name: String!
+  displayName: String!
+  color: String
+  description: String
+  sortOrder: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `User` mutation."""
+type CreateUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `User` that was created by this mutation."""
+  user: User
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `User`. May be used by Relay 1."""
+  userEdge(
+    """The method to use when ordering `User`."""
+    orderBy: [UserOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserEdge
+}
+
+"""All input for the create `User` mutation."""
+input CreateUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `User` to be created by this mutation."""
+  user: UserInput!
+}
+
+"""An input for mutations affecting `User`"""
+input UserInput {
+  rowId: UUID
+  identityProviderId: UUID!
+  username: String
+  email: String!
+  createdAt: Datetime
+  updatedAt: Datetime
+  name: String!
+  avatarUrl: String
+}
+
+"""The output of our create `ProjectStatusConfig` mutation."""
+type CreateProjectStatusConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectStatusConfig` that was created by this mutation."""
+  projectStatusConfig: ProjectStatusConfig
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectStatusConfig`. May be used by Relay 1."""
+  projectStatusConfigEdge(
+    """The method to use when ordering `ProjectStatusConfig`."""
+    orderBy: [ProjectStatusConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectStatusConfigEdge
+}
+
+"""All input for the create `ProjectStatusConfig` mutation."""
+input CreateProjectStatusConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProjectStatusConfig` to be created by this mutation."""
+  projectStatusConfig: ProjectStatusConfigInput!
+}
+
+"""An input for mutations affecting `ProjectStatusConfig`"""
+input ProjectStatusConfigInput {
+  rowId: UUID
+  projectId: UUID!
+  statusTemplateId: UUID!
+  customColor: String
+  customDescription: String
+  isEnabled: Boolean
+  isDefault: Boolean
+  sortOrder: Int
+  createdAt: Datetime
+}
+
+"""The output of our create `Post` mutation."""
+type CreatePostPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Post` that was created by this mutation."""
+  post: Post
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Post`. May be used by Relay 1."""
+  postEdge(
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostEdge
+}
+
+"""All input for the create `Post` mutation."""
+input CreatePostInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Post` to be created by this mutation."""
+  post: PostInput!
+}
+
+"""An input for mutations affecting `Post`"""
+input PostInput {
+  rowId: UUID
+  title: String
+  description: String
+  projectId: UUID!
+  userId: UUID!
+  statusTemplateId: UUID
+  statusUpdatedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+  number: Int!
+}
+
+"""The output of our create `Project` mutation."""
+type CreateProjectPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Project` that was created by this mutation."""
+  project: Project
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Project`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the create `Project` mutation."""
+input CreateProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Project` to be created by this mutation."""
+  project: ProjectInput!
+}
+
+"""An input for mutations affecting `Project`"""
+input ProjectInput {
+  rowId: UUID
+  name: String!
+  image: String
+  slug: String!
+  description: String
+  organizationId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+  nextPostNumber: Int
+  prefix: String
+}
+
+"""The output of our update `Comment` mutation."""
+type UpdateCommentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Comment` that was updated by this mutation."""
+  comment: Comment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Comment`. May be used by Relay 1."""
+  commentEdge(
+    """The method to use when ordering `Comment`."""
+    orderBy: [CommentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CommentEdge
+}
+
+"""All input for the `updateComment` mutation."""
+input UpdateCommentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Comment` being updated.
+  """
+  patch: CommentPatch!
+}
+
+"""
+Represents an update to a `Comment`. Fields that are set will be updated.
+"""
+input CommentPatch {
+  rowId: UUID
+  message: String
+  postId: UUID
+  userId: UUID
+  parentId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our update `Vote` mutation."""
+type UpdateVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was updated by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the `updateVote` mutation."""
+input UpdateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Vote` being updated.
+  """
+  patch: VotePatch!
+}
+
+"""Represents an update to a `Vote`. Fields that are set will be updated."""
+input VotePatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  voteType: VoteType
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our update `ProjectLink` mutation."""
+type UpdateProjectLinkPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectLink` that was updated by this mutation."""
+  projectLink: ProjectLink
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectLink`. May be used by Relay 1."""
+  projectLinkEdge(
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLinkEdge
+}
+
+"""All input for the `updateProjectLink` mutation."""
+input UpdateProjectLinkInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ProjectLink` being updated.
+  """
+  patch: ProjectLinkPatch!
+}
+
+"""
+Represents an update to a `ProjectLink`. Fields that are set will be updated.
+"""
+input ProjectLinkPatch {
+  rowId: UUID
+  projectId: UUID
+  url: String
+  title: String
+  order: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our update `StatusTemplate` mutation."""
+type UpdateStatusTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` that was updated by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `StatusTemplate`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the `updateStatusTemplate` mutation."""
+input UpdateStatusTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `StatusTemplate` being updated.
+  """
+  patch: StatusTemplatePatch!
+}
+
+"""
+Represents an update to a `StatusTemplate`. Fields that are set will be updated.
+"""
+input StatusTemplatePatch {
+  rowId: UUID
+  organizationId: UUID
+  name: String
+  displayName: String
+  color: String
+  description: String
+  sortOrder: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our update `User` mutation."""
+type UpdateUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `User` that was updated by this mutation."""
+  user: User
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `User`. May be used by Relay 1."""
+  userEdge(
+    """The method to use when ordering `User`."""
+    orderBy: [UserOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserEdge
+}
+
+"""All input for the `updateUser` mutation."""
+input UpdateUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `User` being updated.
+  """
+  patch: UserPatch!
+}
+
+"""Represents an update to a `User`. Fields that are set will be updated."""
+input UserPatch {
+  rowId: UUID
+  identityProviderId: UUID
+  username: String
+  email: String
+  createdAt: Datetime
+  updatedAt: Datetime
+  name: String
+  avatarUrl: String
+}
+
+"""The output of our update `ProjectStatusConfig` mutation."""
+type UpdateProjectStatusConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectStatusConfig` that was updated by this mutation."""
+  projectStatusConfig: ProjectStatusConfig
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectStatusConfig`. May be used by Relay 1."""
+  projectStatusConfigEdge(
+    """The method to use when ordering `ProjectStatusConfig`."""
+    orderBy: [ProjectStatusConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectStatusConfigEdge
+}
+
+"""All input for the `updateProjectStatusConfig` mutation."""
+input UpdateProjectStatusConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ProjectStatusConfig` being updated.
+  """
+  patch: ProjectStatusConfigPatch!
+}
+
+"""
+Represents an update to a `ProjectStatusConfig`. Fields that are set will be updated.
+"""
+input ProjectStatusConfigPatch {
+  rowId: UUID
+  projectId: UUID
+  statusTemplateId: UUID
+  customColor: String
+  customDescription: String
+  isEnabled: Boolean
+  isDefault: Boolean
+  sortOrder: Int
+  createdAt: Datetime
+}
+
+"""The output of our update `Post` mutation."""
+type UpdatePostPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Post` that was updated by this mutation."""
+  post: Post
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Post`. May be used by Relay 1."""
+  postEdge(
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostEdge
+}
+
+"""All input for the `updatePost` mutation."""
+input UpdatePostInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Post` being updated.
+  """
+  patch: PostPatch!
+}
+
+"""Represents an update to a `Post`. Fields that are set will be updated."""
+input PostPatch {
+  rowId: UUID
+  title: String
+  description: String
+  projectId: UUID
+  userId: UUID
+  statusTemplateId: UUID
+  statusUpdatedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+  number: Int
+}
+
+"""The output of our update `Project` mutation."""
+type UpdateProjectPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Project` that was updated by this mutation."""
+  project: Project
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Project`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the `updateProject` mutation."""
+input UpdateProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Project` being updated.
+  """
+  patch: ProjectPatch!
+}
+
+"""
+Represents an update to a `Project`. Fields that are set will be updated.
+"""
+input ProjectPatch {
+  rowId: UUID
+  name: String
+  image: String
+  slug: String
+  description: String
+  organizationId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  nextPostNumber: Int
+  prefix: String
+}
+
+"""The output of our delete `Comment` mutation."""
+type DeleteCommentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Comment` that was deleted by this mutation."""
+  comment: Comment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Comment`. May be used by Relay 1."""
+  commentEdge(
+    """The method to use when ordering `Comment`."""
+    orderBy: [CommentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CommentEdge
+}
+
+"""All input for the `deleteComment` mutation."""
+input DeleteCommentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Vote` mutation."""
+type DeleteVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was deleted by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the `deleteVote` mutation."""
+input DeleteVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `ProjectLink` mutation."""
+type DeleteProjectLinkPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectLink` that was deleted by this mutation."""
+  projectLink: ProjectLink
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectLink`. May be used by Relay 1."""
+  projectLinkEdge(
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLinkEdge
+}
+
+"""All input for the `deleteProjectLink` mutation."""
+input DeleteProjectLinkInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `StatusTemplate` mutation."""
+type DeleteStatusTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` that was deleted by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `StatusTemplate`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the `deleteStatusTemplate` mutation."""
+input DeleteStatusTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `User` mutation."""
+type DeleteUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `User` that was deleted by this mutation."""
+  user: User
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `User`. May be used by Relay 1."""
+  userEdge(
+    """The method to use when ordering `User`."""
+    orderBy: [UserOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserEdge
+}
+
+"""All input for the `deleteUser` mutation."""
+input DeleteUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `ProjectStatusConfig` mutation."""
+type DeleteProjectStatusConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectStatusConfig` that was deleted by this mutation."""
+  projectStatusConfig: ProjectStatusConfig
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectStatusConfig`. May be used by Relay 1."""
+  projectStatusConfigEdge(
+    """The method to use when ordering `ProjectStatusConfig`."""
+    orderBy: [ProjectStatusConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectStatusConfigEdge
+}
+
+"""All input for the `deleteProjectStatusConfig` mutation."""
+input DeleteProjectStatusConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Post` mutation."""
+type DeletePostPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Post` that was deleted by this mutation."""
+  post: Post
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Post`. May be used by Relay 1."""
+  postEdge(
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostEdge
+}
+
+"""All input for the `deletePost` mutation."""
+input DeletePostInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Project` mutation."""
+type DeleteProjectPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Project` that was deleted by this mutation."""
+  project: Project
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Project`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the `deleteProject` mutation."""
+input DeleteProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The currently authenticated user."""
+type Observer {
+  rowId: UUID!
+  identityProviderId: UUID!
+  username: String
+  name: String!
+  email: String!
+}
