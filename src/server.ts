@@ -1,7 +1,9 @@
 import { cors } from "@elysiajs/cors";
 import { yoga } from "@elysiajs/graphql-yoga";
+import { useOpenTelemetry } from "@envelop/opentelemetry";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
+import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
 import { Elysia } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
@@ -13,6 +15,7 @@ import {
   CORS_ALLOWED_ORIGINS,
   PORT,
   isDevEnv,
+  isProdEnv,
 } from "lib/config/env.config";
 import entitlementsWebhook from "lib/entitlements/webhooks";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
@@ -103,6 +106,13 @@ async function startServer(): Promise<void> {
           // organizations plugin must run after authentication to access observer
           organizationsPlugin,
           useMoreDetailedErrors(),
+          // disable GraphQL schema introspection in production to mitigate reverse engineering
+          isProdEnv && useDisableIntrospection(),
+          isProdEnv &&
+            useOpenTelemetry({
+              variables: true,
+              result: false, // Disable full result logging to reduce serialization overhead
+            }),
           // parser and validation caches recommended for Grafast (https://grafast.org/grafast/servers#envelop)
           useParserCache(),
           useValidationCache(),
