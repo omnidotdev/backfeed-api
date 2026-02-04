@@ -1,6 +1,7 @@
 import { cors } from "@elysiajs/cors";
 import { yoga } from "@elysiajs/graphql-yoga";
 import { useOpenTelemetry } from "@envelop/opentelemetry";
+import { rateLimit } from "elysia-rate-limit";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
@@ -84,7 +85,19 @@ async function startServer(): Promise<void> {
       },
     }),
   })
+    .onAfterHandle(({ set }) => {
+      set.headers["X-Content-Type-Options"] = "nosniff";
+      set.headers["X-Frame-Options"] = "DENY";
+      set.headers["X-XSS-Protection"] = "1; mode=block";
+      set.headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    })
     .use(maintenanceMiddleware)
+    .use(
+      rateLimit({
+        max: 100,
+        duration: 60_000,
+      }),
+    )
     .use(
       cors({
         origin: CORS_ALLOWED_ORIGINS!.split(","),
@@ -129,6 +142,15 @@ async function startServer(): Promise<void> {
   console.log(
     `🧘 ${appConfig.name} GraphQL Yoga API running at ${app.server?.url}graphql`,
   );
+
+  const shutdown = async (signal: string) => {
+    console.log(`[Server] Received ${signal}, shutting down...`);
+    app.stop();
+    process.exit(0);
+  };
+
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("SIGINT", () => shutdown("SIGINT"));
 }
 
 // Start the server
