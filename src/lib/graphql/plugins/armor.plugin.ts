@@ -1,31 +1,14 @@
-import { EnvelopArmor } from "@escape.tech/graphql-armor";
+import { createArmorPlugins } from "@omnidotdev/providers/graphql";
+
 import { GRAPHQL_MAX_COMPLEXITY_COST, isProdEnv } from "lib/config/env.config";
 
 /**
- * GraphQL Armor security plugin.
+ * GraphQL Armor security plugins.
  * @see https://github.com/escape-technologies/graphql-armor
  */
-const armor = new EnvelopArmor({
-  // https://escape.tech/graphql-armor/docs/plugins/block-field-suggestions
-  blockFieldSuggestion: {
-    enabled: isProdEnv,
-  },
-  // https://escape.tech/graphql-armor/docs/plugins/max-depth
-  maxDepth: {
-    enabled: true,
-    n: 10,
-  },
-  // https://escape.tech/graphql-armor/docs/plugins/cost-limit
-  costLimit: {
-    enabled: true,
-    maxCost: +GRAPHQL_MAX_COMPLEXITY_COST!,
-    objectCost: 2,
-    scalarCost: 1,
-    depthCostFactor: 1.5,
-    ignoreIntrospection: true,
-  },
+const armorPlugin = createArmorPlugins({
+  maxCost: +GRAPHQL_MAX_COMPLEXITY_COST!,
+  blockFieldSuggestions: isProdEnv,
 });
-
-const { plugins: armorPlugin } = armor.protect();
 
 export default armorPlugin;

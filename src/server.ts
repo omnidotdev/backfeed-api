@@ -1,11 +1,11 @@
 import { cors } from "@elysiajs/cors";
 import { yoga } from "@elysiajs/graphql-yoga";
 import { useOpenTelemetry } from "@envelop/opentelemetry";
-import { rateLimit } from "elysia-rate-limit";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
 import { Elysia } from "elysia";
+import { rateLimit } from "elysia-rate-limit";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
 import authzRoutes from "lib/authz/routes";

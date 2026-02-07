@@ -1,21 +1,16 @@
 /**
- * Organization claim structure matching the IDP's JWT claims.
+ * Organization claim types - re-exported from @omnidotdev/providers.
  */
-export interface OrganizationClaim {
-  id: string;
-  slug: string;
-  type: "personal" | "team";
-  roles: string[];
-  teams: Array<{ id: string; name: string }>;
-}
+
+export type { OrganizationClaim } from "@omnidotdev/providers";
 
 /**
  * Get the default organization for a user.
  * Priority: personal org first, then oldest team org.
  */
 export function getDefaultOrganization(
-  organizations: OrganizationClaim[],
-): OrganizationClaim | null {
+  organizations: import("@omnidotdev/providers").OrganizationClaim[],
+): import("@omnidotdev/providers").OrganizationClaim | null {
   if (organizations.length === 0) return null;
 
   // Personal org always takes priority

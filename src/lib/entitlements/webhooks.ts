@@ -2,8 +2,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { Elysia, t } from "elysia";
 import { BILLING_WEBHOOK_SECRET, isSelfHosted } from "lib/config/env.config";
-
-import { invalidateCache } from "./cache";
+import { invalidateCache } from "lib/entitlements";
 
 interface EntitlementWebhookPayload {
   eventType: string;
