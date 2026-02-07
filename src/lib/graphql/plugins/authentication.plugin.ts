@@ -8,7 +8,6 @@ import {
   isIntrospectionQuery,
   validateClaims,
 } from "@omnidotdev/providers/graphql";
-
 import { AUTH_BASE_URL, isDevEnv, protectRoutes } from "lib/config/env.config";
 import { users } from "lib/db/schema";
 

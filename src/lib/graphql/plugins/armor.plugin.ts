@@ -1,5 +1,4 @@
 import { createArmorPlugins } from "@omnidotdev/providers/graphql";
-
 import { GRAPHQL_MAX_COMPLEXITY_COST, isProdEnv } from "lib/config/env.config";
 
 /**
