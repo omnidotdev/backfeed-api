@@ -36,7 +36,7 @@
     "@graphql-yoga/plugin-disable-introspection": "^2.19.0",
     "@omnidotdev/providers": "github:omnidotdev/providers",
     "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/auto-instrumentations-node": "^0.68.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.69.0",
     "@opentelemetry/exporter-logs-otlp-http": "^0.210.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.210.0",
     "@opentelemetry/resources": "^2.4.0",
