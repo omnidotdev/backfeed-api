@@ -1,12 +1,7 @@
 import { EXPORTABLE } from "graphile-export";
+import { deletePostFromIndex, indexPost, isSearchEnabled } from "lib/search";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
-
-import {
-  deletePostFromIndex,
-  indexPost,
-  isSearchEnabled,
-} from "lib/search";
 
 import type { Step } from "postgraphile/grafast";
 import type { PlanWrapperFn } from "postgraphile/utils";

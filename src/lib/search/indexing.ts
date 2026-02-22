@@ -53,9 +53,7 @@ export async function indexProject(project: SelectProject): Promise<void> {
 /**
  * Remove a project from the search index.
  */
-export async function deleteProjectFromIndex(
-  projectId: string,
-): Promise<void> {
+export async function deleteProjectFromIndex(projectId: string): Promise<void> {
   if (!search) return;
 
   try {
