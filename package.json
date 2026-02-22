@@ -35,7 +35,7 @@
     "@graphile/simplify-inflection": "^8.0.0-rc.2",
     "@graphql-yoga/plugin-disable-introspection": "^2.19.0",
     "@omnidotdev/providers": "github:omnidotdev/providers",
-    "@omnidotdev/search": "file:../../../search",
+    "@omnidotdev/search": "github:omnidotdev/search",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.68.0",
     "@opentelemetry/exporter-logs-otlp-http": "^0.210.0",
