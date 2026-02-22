@@ -1,5 +1,4 @@
 import { OmniSearch, indexes } from "@omnidotdev/search";
-
 import {
   MEILISEARCH_MASTER_KEY,
   MEILISEARCH_URL,
