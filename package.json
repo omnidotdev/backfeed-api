@@ -37,7 +37,7 @@
     "@omnidotdev/providers": "github:omnidotdev/providers",
     "@omnidotdev/search": "github:omnidotdev/search",
     "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/auto-instrumentations-node": "^0.68.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.70.0",
     "@opentelemetry/exporter-logs-otlp-http": "^0.210.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.210.0",
     "@opentelemetry/resources": "^2.4.0",
