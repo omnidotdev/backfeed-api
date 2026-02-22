@@ -27,6 +27,7 @@ import {
 } from "lib/graphql/plugins";
 import idpWebhook from "lib/idp/webhooks";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
+import { initializeSearchIndexes, search } from "lib/search";
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
@@ -134,6 +135,13 @@ async function startServer(): Promise<void> {
       }),
     )
     .listen(PORT);
+
+  // Initialize search indexes if search is enabled
+  if (search) {
+    initializeSearchIndexes().catch((err) => {
+      console.error("[Search] Failed to initialize indexes:", err);
+    });
+  }
 
   console.log(
     `🦊 ${appConfig.name} Elysia server running at ${app.server?.url.toString().slice(0, -1)}`,

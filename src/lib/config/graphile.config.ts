@@ -14,6 +14,10 @@ import {
   VotePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import {
+  PostSearchPlugin,
+  ProjectSearchPlugin,
+} from "lib/graphql/plugins/search";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
@@ -54,6 +58,9 @@ const preset: GraphileConfig.Preset = {
     SmartTagPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
+    // Search indexing plugins
+    ProjectSearchPlugin,
+    PostSearchPlugin,
   ],
   grafserv: {
     graphiql: false,
