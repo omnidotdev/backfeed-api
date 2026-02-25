@@ -23,6 +23,8 @@ export const {
   // Vortex (durable event sync)
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
+  /** Vortex event streaming API key */
+  VORTEX_API_KEY,
   // Auth webhook
   AUTH_WEBHOOK_SECRET,
   // Feature flags
