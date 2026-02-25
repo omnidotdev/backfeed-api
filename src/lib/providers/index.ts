@@ -9,11 +9,14 @@ import {
   createAuthzProvider,
   createBillingProvider,
   createEventsProvider,
+  createFlagProvider,
 } from "@omnidotdev/providers";
 import {
   AUTHZ_API_URL,
   BILLING_BASE_URL,
   BILLING_SERVICE_API_KEY,
+  FLAGS_API_HOST,
+  FLAGS_CLIENT_KEY,
   VORTEX_API_KEY,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
@@ -39,6 +42,17 @@ export const events = createEventsProvider(
         baseUrl: VORTEX_API_URL,
         apiKey: VORTEX_API_KEY,
         source: "omni.backfeed",
+      }
+    : {},
+);
+
+export const flags = createFlagProvider(
+  FLAGS_API_HOST
+    ? {
+        provider: "unleash",
+        url: FLAGS_API_HOST,
+        apiKey: FLAGS_CLIENT_KEY!,
+        appName: "backfeed-api",
       }
     : {},
 );

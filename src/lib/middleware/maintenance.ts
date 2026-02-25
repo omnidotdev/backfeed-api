@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
-import { isMaintenanceMode } from "lib/flags";
+
+import { flags } from "lib/providers";
 
 /**
  * Maintenance mode middleware.
@@ -13,7 +14,7 @@ export const maintenanceMiddleware = new Elysia({ name: "maintenance" }).derive(
     // Allow health checks through
     if (url.pathname === "/health") return {};
 
-    if (await isMaintenanceMode()) {
+    if (await flags.isEnabled("backfeed-api-maintenance-mode")) {
       set.status = 503;
       set.headers["Retry-After"] = "300";
       throw new Error("Service temporarily unavailable for maintenance");
