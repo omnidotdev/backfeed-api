@@ -1,5 +1,4 @@
 import { Elysia } from "elysia";
-
 import { flags } from "lib/providers";
 
 /**
