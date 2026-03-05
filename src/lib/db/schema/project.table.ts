@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
   index,
   integer,
   pgTable,
@@ -36,6 +37,7 @@ export const projects = pgTable(
     organizationId: text("organization_id").notNull(),
     // Counter for auto-incrementing post numbers within this project
     nextPostNumber: integer("next_post_number").notNull().default(1),
+    isPublic: boolean("is_public").notNull().default(true),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

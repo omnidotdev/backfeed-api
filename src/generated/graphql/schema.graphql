@@ -520,6 +520,7 @@ type Project {
   updatedAt: Datetime!
   nextPostNumber: Int!
   prefix: String
+  isPublic: Boolean!
 
   """Reads and enables pagination through a set of `Post`."""
   posts(
@@ -1863,6 +1864,9 @@ input ProjectFilter {
 
   """Filter by the object’s `prefix` field."""
   prefix: StringFilter
+
+  """Filter by the object’s `isPublic` field."""
+  isPublic: BooleanFilter
 
   """Filter by the object’s `posts` relation."""
   posts: ProjectToManyPostFilter
@@ -4413,6 +4417,9 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of prefix across the matching connection"""
   prefix: BigInt
+
+  """Distinct count of isPublic across the matching connection"""
+  isPublic: BigInt
 }
 
 type ProjectMinAggregates {
@@ -4573,6 +4580,9 @@ input ProjectCondition {
 
   """Checks for equality with the object’s `prefix` field."""
   prefix: String
+
+  """Checks for equality with the object’s `isPublic` field."""
+  isPublic: Boolean
 }
 
 """Methods to use when ordering `Project`."""
@@ -5281,6 +5291,7 @@ input ProjectInput {
   updatedAt: Datetime
   nextPostNumber: Int
   prefix: String
+  isPublic: Boolean
 }
 
 """The output of our update `Comment` mutation."""
@@ -5693,6 +5704,7 @@ input ProjectPatch {
   updatedAt: Datetime
   nextPostNumber: Int
   prefix: String
+  isPublic: Boolean
 }
 
 """The output of our delete `Comment` mutation."""

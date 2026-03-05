@@ -71,6 +71,13 @@
       "when": 1737590400000,
       "tag": "0009_post_number_trigger",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1772677115263,
+      "tag": "0010_slippery_tigra",
+      "breakpoints": true
     }
   ]
 }
