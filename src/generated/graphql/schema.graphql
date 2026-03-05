@@ -429,7 +429,7 @@ type Post {
   statusUpdatedAt: Datetime!
   createdAt: Datetime!
   updatedAt: Datetime!
-  number: Int
+  number: Int!
 
   """Reads a single `Project` that is related to this `Post`."""
   project: Project
@@ -1897,6 +1897,48 @@ input ProjectFilter {
 }
 
 """
+A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
+"""
+input BooleanFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Boolean
+
+  """Not equal to the specified value."""
+  notEqualTo: Boolean
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Boolean
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Boolean
+
+  """Included in the specified list."""
+  in: [Boolean!]
+
+  """Not included in the specified list."""
+  notIn: [Boolean!]
+
+  """Less than the specified value."""
+  lessThan: Boolean
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Boolean
+
+  """Greater than the specified value."""
+  greaterThan: Boolean
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Boolean
+}
+
+"""
 A filter to be used against many `Post` object types. All fields are combined with a logical ‘and.’
 """
 input ProjectToManyPostFilter {
@@ -1989,48 +2031,6 @@ input ProjectStatusConfigFilter {
 
   """Negates the expression."""
   not: ProjectStatusConfigFilter
-}
-
-"""
-A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
-"""
-input BooleanFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Boolean
-
-  """Not equal to the specified value."""
-  notEqualTo: Boolean
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Boolean
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Boolean
-
-  """Included in the specified list."""
-  in: [Boolean!]
-
-  """Not included in the specified list."""
-  notIn: [Boolean!]
-
-  """Less than the specified value."""
-  lessThan: Boolean
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Boolean
-
-  """Greater than the specified value."""
-  greaterThan: Boolean
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Boolean
 }
 
 """
@@ -4476,6 +4476,7 @@ enum ProjectGroupBy {
   UPDATED_AT_TRUNCATED_TO_DAY
   NEXT_POST_NUMBER
   PREFIX
+  IS_PUBLIC
 }
 
 """Conditions for `Project` aggregates."""
@@ -4610,6 +4611,8 @@ enum ProjectOrderBy {
   NEXT_POST_NUMBER_DESC
   PREFIX_ASC
   PREFIX_DESC
+  IS_PUBLIC_ASC
+  IS_PUBLIC_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
   POSTS_SUM_NUMBER_ASC
@@ -5241,7 +5244,7 @@ input PostInput {
   statusUpdatedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  number: Int
+  number: Int!
 }
 
 """The output of our create `Project` mutation."""
@@ -5975,7 +5978,7 @@ input DeleteProjectInput {
 type Observer {
   rowId: UUID!
   identityProviderId: UUID!
-  username: String
   name: String!
   email: String!
+  username: String
 }

@@ -24,6 +24,15 @@ import {
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
+import {
+  deletePostFromIndex,
+  deleteProjectFromIndex,
+  indexPost,
+  indexProject,
+  isSearchEnabled,
+  search,
+} from "lib/search";
+import { backfeedIndexes } from "lib/search/client";
 import { makeSchema } from "postgraphile";
 import { context, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
@@ -151,6 +160,15 @@ const generateGraphqlSchema = async () => {
       },
       "lib/auth/organizations": { getDefaultOrganization },
       "lib/idp/validateOrg": { validateOrgExists },
+      "lib/search": {
+        deletePostFromIndex,
+        deleteProjectFromIndex,
+        indexPost,
+        indexProject,
+        isSearchEnabled,
+        search,
+      },
+      "lib/search/client": { backfeedIndexes },
     },
   });
 
