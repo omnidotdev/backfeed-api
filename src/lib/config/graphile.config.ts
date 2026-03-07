@@ -14,6 +14,7 @@ import {
   VotePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import { EventEmissionPlugin } from "lib/graphql/plugins/events";
 import {
   PostSearchPlugin,
   ProjectSearchPlugin,
@@ -58,6 +59,8 @@ const preset: GraphileConfig.Preset = {
     SmartTagPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
+    // Event emission plugin
+    EventEmissionPlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     PostSearchPlugin,
