@@ -34,7 +34,7 @@
     "@graphile/pg-aggregates": "^0.2.0-rc.1",
     "@graphile/simplify-inflection": "^8.0.0-rc.2",
     "@graphql-yoga/plugin-disable-introspection": "^2.19.0",
-    "@omnidotdev/providers": "github:omnidotdev/providers#316498f",
+    "@omnidotdev/providers": "github:omnidotdev/providers#be77de4",
     "@omnidotdev/search": "github:omnidotdev/search",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.68.0",
