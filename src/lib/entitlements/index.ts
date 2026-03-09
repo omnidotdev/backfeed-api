@@ -16,15 +16,15 @@ import type { EntitlementsResponse } from "@omnidotdev/providers";
 const APP_ID = "backfeed";
 
 /** Tier type */
-type Tier = "free" | "basic" | "team" | "enterprise";
+type Tier = "free" | "pro" | "team" | "enterprise";
 
 /** Default limits by feature key and tier */
 const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
-  max_projects: { free: 1, basic: 3, team: -1, enterprise: -1 },
-  max_feedback_users: { free: 15, basic: -1, team: -1, enterprise: -1 },
-  max_comments_per_post: { free: 100, basic: -1, team: -1, enterprise: -1 },
-  max_members: { free: 3, basic: 10, team: -1, enterprise: -1 },
-  max_admins: { free: 1, basic: 3, team: -1, enterprise: -1 },
+  max_projects: { free: 2, pro: 10, team: -1, enterprise: -1 },
+  max_feedback_users: { free: -1, pro: -1, team: -1, enterprise: -1 },
+  max_comments_per_post: { free: 50, pro: -1, team: -1, enterprise: -1 },
+  max_members: { free: 5, pro: 15, team: -1, enterprise: -1 },
+  max_admins: { free: 1, pro: 3, team: -1, enterprise: -1 },
 };
 
 /**

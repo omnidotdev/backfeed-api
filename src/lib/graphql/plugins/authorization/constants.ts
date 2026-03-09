@@ -21,6 +21,8 @@ export const FEATURE_KEYS = {
   MAX_PROJECTS: "max_projects",
   MAX_FEEDBACK_USERS: "max_feedback_users",
   MAX_COMMENTS_PER_POST: "max_comments_per_post",
+  MAX_MEMBERS: "max_members",
+  MAX_ADMINS: "max_admins",
 } as const;
 
 /**
