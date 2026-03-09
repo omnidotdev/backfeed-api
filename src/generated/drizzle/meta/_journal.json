@@ -78,6 +78,13 @@
       "when": 1772677115263,
       "tag": "0010_slippery_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1773027341245,
+      "tag": "0011_drop_unused_tier_enum",
+      "breakpoints": true
     }
   ]
 }
