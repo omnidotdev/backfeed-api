@@ -18,6 +18,8 @@ const APP_ID = "backfeed";
 /** Tier type */
 type Tier = "free" | "pro" | "team" | "enterprise";
 
+// FALLBACK ONLY — source of truth is Omni API plan_feature table (kind="operational")
+// Keep in sync: run `bun sync:limits` in aether-api after updating API seed data
 /** Default limits by feature key and tier */
 const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
   max_projects: { free: 2, pro: 10, team: -1, enterprise: -1 },
