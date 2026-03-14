@@ -18,16 +18,13 @@ const APP_ID = "backfeed";
 /** Tier type */
 type Tier = "free" | "pro" | "team" | "enterprise";
 
-// FALLBACK ONLY — source of truth is Omni API plan_feature table (kind="operational")
-// Keep in sync: run `bun sync:limits` in aether-api after updating API seed data
-/** Default limits by feature key and tier */
-const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
-  max_projects: { free: 2, pro: 10, team: -1, enterprise: -1 },
-  max_feedback_users: { free: -1, pro: -1, team: -1, enterprise: -1 },
-  max_comments_per_post: { free: 50, pro: -1, team: -1, enterprise: -1 },
-  max_members: { free: 5, pro: 15, team: -1, enterprise: -1 },
-  max_admins: { free: 1, pro: 3, team: -1, enterprise: -1 },
-};
+/** @knipignore Used by plugins */
+export class EntitlementsUnavailableError extends Error {
+  constructor(message: string) {
+    super(`Entitlements service unavailable: ${message}`);
+    this.name = "EntitlementsUnavailableError";
+  }
+}
 
 /**
  * Fetch entitlements for an organization from the billing provider.
@@ -60,7 +57,13 @@ export async function isWithinLimit(
 
   const entitlements = await getOrganizationEntitlements(entity.organizationId);
 
-  return checkLimit(entitlements, limitKey, currentCount, DEFAULT_LIMITS);
+  if (!entitlements) {
+    throw new EntitlementsUnavailableError(
+      "could not fetch entitlements for backfeed",
+    );
+  }
+
+  return checkLimit(entitlements, limitKey, currentCount);
 }
 
 /**
@@ -74,7 +77,13 @@ export async function checkOrganizationLimit(
 ): Promise<boolean> {
   const entitlements = await getOrganizationEntitlements(organizationId);
 
-  return checkLimit(entitlements, limitKey, currentCount, DEFAULT_LIMITS);
+  if (!entitlements) {
+    throw new EntitlementsUnavailableError(
+      "could not fetch entitlements for backfeed",
+    );
+  }
+
+  return checkLimit(entitlements, limitKey, currentCount);
 }
 
 /**
