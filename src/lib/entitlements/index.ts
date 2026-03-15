@@ -15,6 +15,18 @@ import type { EntitlementsResponse } from "@omnidotdev/providers";
 /** Backfeed app ID for entitlements */
 const APP_ID = "backfeed";
 
+/**
+ * Default free-tier limits applied when no billing account exists.
+ * Prevents hard failures for orgs that haven't been provisioned in Aether.
+ */
+const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
+  max_projects: { free: 1 },
+  max_feedback_users: { free: 15 },
+  max_comments_per_post: { free: 100 },
+  max_members: { free: 5 },
+  max_admins: { free: 1 },
+};
+
 /** Tier type */
 type Tier = "free" | "pro" | "team" | "enterprise";
 
@@ -57,13 +69,7 @@ export async function isWithinLimit(
 
   const entitlements = await getOrganizationEntitlements(entity.organizationId);
 
-  if (!entitlements) {
-    throw new EntitlementsUnavailableError(
-      "could not fetch entitlements for backfeed",
-    );
-  }
-
-  return checkLimit(entitlements, limitKey, currentCount);
+  return checkLimit(entitlements, limitKey, currentCount, DEFAULT_LIMITS);
 }
 
 /**
@@ -77,13 +83,7 @@ export async function checkOrganizationLimit(
 ): Promise<boolean> {
   const entitlements = await getOrganizationEntitlements(organizationId);
 
-  if (!entitlements) {
-    throw new EntitlementsUnavailableError(
-      "could not fetch entitlements for backfeed",
-    );
-  }
-
-  return checkLimit(entitlements, limitKey, currentCount);
+  return checkLimit(entitlements, limitKey, currentCount, DEFAULT_LIMITS);
 }
 
 /**
