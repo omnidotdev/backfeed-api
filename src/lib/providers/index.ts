@@ -14,6 +14,7 @@ import {
 import {
   AUTHZ_API_URL,
   AUTHZ_ENABLED,
+  WARDEN_SERVICE_KEY,
   BILLING_BASE_URL,
   BILLING_SERVICE_API_KEY,
   FLAGS_API_HOST,
@@ -27,6 +28,7 @@ export const authz =
   AUTHZ_ENABLED === "true" && AUTHZ_API_URL
     ? createAuthzProvider({
         apiUrl: AUTHZ_API_URL,
+        serviceKey: WARDEN_SERVICE_KEY,
         vortexUrl: VORTEX_API_URL,
         vortexWebhookSecret: VORTEX_AUTHZ_WEBHOOK_SECRET,
         source: "backfeed",

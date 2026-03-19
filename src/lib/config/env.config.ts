@@ -20,6 +20,7 @@ export const {
   // AuthZ (PDP)
   AUTHZ_ENABLED,
   AUTHZ_API_URL,
+  WARDEN_SERVICE_KEY,
   // Vortex (durable event sync)
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
