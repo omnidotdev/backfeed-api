@@ -14,6 +14,7 @@ import {
   VotePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import { DefaultStatusTemplatesPlugin } from "lib/graphql/plugins/defaults";
 import { EventEmissionPlugin } from "lib/graphql/plugins/events";
 import {
   PostSearchPlugin,
@@ -61,6 +62,8 @@ const preset: GraphileConfig.Preset = {
     AuthzSyncPlugin,
     // Event emission plugin
     EventEmissionPlugin,
+    // Default resource seeding plugins
+    DefaultStatusTemplatesPlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     PostSearchPlugin,

@@ -18,6 +18,7 @@ import {
   writeTuples,
 } from "lib/authz";
 import preset from "lib/config/graphile.config";
+import { statusTemplates } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
 import {
   FEATURE_KEYS,
@@ -154,6 +155,7 @@ const generateGraphqlSchema = async () => {
         isAuthzEnabled,
         writeTuples,
       },
+      "lib/db/schema": { statusTemplates },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "lib/graphql/plugins/authorization/constants": {
         FEATURE_KEYS,
