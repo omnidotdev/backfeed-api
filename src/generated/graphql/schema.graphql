@@ -20,12 +20,6 @@ type Query implements Node {
   """Get a single `Comment`."""
   comment(rowId: UUID!): Comment
 
-  """Get a single `Vote`."""
-  vote(rowId: UUID!): Vote
-
-  """Get a single `Vote`."""
-  voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
-
   """Get a single `ProjectLink`."""
   projectLink(rowId: UUID!): ProjectLink
 
@@ -34,6 +28,12 @@ type Query implements Node {
 
   """Get a single `StatusTemplate`."""
   statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
+
+  """Get a single `Vote`."""
+  vote(rowId: UUID!): Vote
+
+  """Get a single `Vote`."""
+  voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
 
   """Get a single `User`."""
   user(rowId: UUID!): User
@@ -98,40 +98,6 @@ type Query implements Node {
     """The method to use when ordering `Comment`."""
     orderBy: [CommentOrderBy!] = [PRIMARY_KEY_ASC]
   ): CommentConnection
-
-  """Reads and enables pagination through a set of `Vote`."""
-  votes(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: VoteCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: VoteFilter
-
-    """The method to use when ordering `Vote`."""
-    orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
-  ): VoteConnection
 
   """Reads and enables pagination through a set of `ProjectLink`."""
   projectLinks(
@@ -200,6 +166,40 @@ type Query implements Node {
     """The method to use when ordering `StatusTemplate`."""
     orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
   ): StatusTemplateConnection
+
+  """Reads and enables pagination through a set of `Vote`."""
+  votes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VoteCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VoteFilter
+
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VoteConnection
 
   """Reads and enables pagination through a set of `User`."""
   users(
@@ -429,7 +429,7 @@ type Post {
   statusUpdatedAt: Datetime!
   createdAt: Datetime!
   updatedAt: Datetime!
-  number: Int!
+  number: Int
 
   """Reads a single `Project` that is related to this `Post`."""
   project: Project
@@ -4733,14 +4733,6 @@ type Mutation {
     input: CreateCommentInput!
   ): CreateCommentPayload
 
-  """Creates a single `Vote`."""
-  createVote(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateVoteInput!
-  ): CreateVotePayload
-
   """Creates a single `ProjectLink`."""
   createProjectLink(
     """
@@ -4756,6 +4748,14 @@ type Mutation {
     """
     input: CreateStatusTemplateInput!
   ): CreateStatusTemplatePayload
+
+  """Creates a single `Vote`."""
+  createVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVoteInput!
+  ): CreateVotePayload
 
   """Creates a single `User`."""
   createUser(
@@ -4797,14 +4797,6 @@ type Mutation {
     input: UpdateCommentInput!
   ): UpdateCommentPayload
 
-  """Updates a single `Vote` using a unique key and a patch."""
-  updateVote(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateVoteInput!
-  ): UpdateVotePayload
-
   """Updates a single `ProjectLink` using a unique key and a patch."""
   updateProjectLink(
     """
@@ -4820,6 +4812,14 @@ type Mutation {
     """
     input: UpdateStatusTemplateInput!
   ): UpdateStatusTemplatePayload
+
+  """Updates a single `Vote` using a unique key and a patch."""
+  updateVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVoteInput!
+  ): UpdateVotePayload
 
   """Updates a single `User` using a unique key and a patch."""
   updateUser(
@@ -4861,14 +4861,6 @@ type Mutation {
     input: DeleteCommentInput!
   ): DeleteCommentPayload
 
-  """Deletes a single `Vote` using a unique key."""
-  deleteVote(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteVoteInput!
-  ): DeleteVotePayload
-
   """Deletes a single `ProjectLink` using a unique key."""
   deleteProjectLink(
     """
@@ -4884,6 +4876,14 @@ type Mutation {
     """
     input: DeleteStatusTemplateInput!
   ): DeleteStatusTemplatePayload
+
+  """Deletes a single `Vote` using a unique key."""
+  deleteVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVoteInput!
+  ): DeleteVotePayload
 
   """Deletes a single `User` using a unique key."""
   deleteUser(
@@ -4960,51 +4960,6 @@ input CommentInput {
   postId: UUID!
   userId: UUID!
   parentId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our create `Vote` mutation."""
-type CreateVotePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Vote` that was created by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Vote`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering `Vote`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the create `Vote` mutation."""
-input CreateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Vote` to be created by this mutation."""
-  vote: VoteInput!
-}
-
-"""An input for mutations affecting `Vote`"""
-input VoteInput {
-  rowId: UUID
-  postId: UUID!
-  userId: UUID!
-  voteType: VoteType!
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -5099,6 +5054,51 @@ input StatusTemplateInput {
   color: String
   description: String
   sortOrder: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `Vote` mutation."""
+type CreateVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was created by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the create `Vote` mutation."""
+input CreateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Vote` to be created by this mutation."""
+  vote: VoteInput!
+}
+
+"""An input for mutations affecting `Vote`"""
+input VoteInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  voteType: VoteType!
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -5244,7 +5244,7 @@ input PostInput {
   statusUpdatedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  number: Int!
+  number: Int
 }
 
 """The output of our create `Project` mutation."""
@@ -5344,54 +5344,6 @@ input CommentPatch {
   postId: UUID
   userId: UUID
   parentId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our update `Vote` mutation."""
-type UpdateVotePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Vote` that was updated by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Vote`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering `Vote`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the `updateVote` mutation."""
-input UpdateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Vote` being updated.
-  """
-  patch: VotePatch!
-}
-
-"""Represents an update to a `Vote`. Fields that are set will be updated."""
-input VotePatch {
-  rowId: UUID
-  postId: UUID
-  userId: UUID
-  voteType: VoteType
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -5496,6 +5448,54 @@ input StatusTemplatePatch {
   color: String
   description: String
   sortOrder: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our update `Vote` mutation."""
+type UpdateVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was updated by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the `updateVote` mutation."""
+input UpdateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Vote` being updated.
+  """
+  patch: VotePatch!
+}
+
+"""Represents an update to a `Vote`. Fields that are set will be updated."""
+input VotePatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  voteType: VoteType
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -5743,39 +5743,6 @@ input DeleteCommentInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Vote` mutation."""
-type DeleteVotePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Vote` that was deleted by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Vote`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering `Vote`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the `deleteVote` mutation."""
-input DeleteVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `ProjectLink` mutation."""
 type DeleteProjectLinkPayload {
   """
@@ -5834,6 +5801,39 @@ type DeleteStatusTemplatePayload {
 
 """All input for the `deleteStatusTemplate` mutation."""
 input DeleteStatusTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Vote` mutation."""
+type DeleteVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was deleted by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the `deleteVote` mutation."""
+input DeleteVoteInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

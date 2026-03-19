@@ -13,8 +13,6 @@ const knipConfig: KnipConfig = {
     "src/lib/db/db.ts",
     "src/lib/config/env.config.ts",
     "src/lib/authz/**",
-    // Provider instances consumed at runtime by server and routes
-    "src/lib/providers/**",
     // Instrumentation loaded via --import flag at runtime
     "src/instrumentation.ts",
   ],

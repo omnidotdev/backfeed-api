@@ -13,6 +13,7 @@ import {
 } from "@omnidotdev/providers";
 import {
   AUTHZ_API_URL,
+  AUTHZ_ENABLED,
   BILLING_BASE_URL,
   BILLING_SERVICE_API_KEY,
   FLAGS_API_HOST,
@@ -22,18 +23,23 @@ import {
   VORTEX_AUTHZ_WEBHOOK_SECRET,
 } from "lib/config/env.config";
 
-export const authz = createAuthzProvider({
-  apiUrl: AUTHZ_API_URL,
-  vortexUrl: VORTEX_API_URL,
-  vortexWebhookSecret: VORTEX_AUTHZ_WEBHOOK_SECRET,
-  source: "backfeed",
-});
+export const authz =
+  AUTHZ_ENABLED === "true" && AUTHZ_API_URL
+    ? createAuthzProvider({
+        apiUrl: AUTHZ_API_URL,
+        vortexUrl: VORTEX_API_URL,
+        vortexWebhookSecret: VORTEX_AUTHZ_WEBHOOK_SECRET,
+        source: "backfeed",
+      })
+    : undefined;
 
-export const billing = createBillingProvider({
-  baseUrl: BILLING_BASE_URL,
-  serviceApiKey: BILLING_SERVICE_API_KEY,
-  appId: "backfeed",
-});
+export const billing = BILLING_BASE_URL
+  ? createBillingProvider({
+      baseUrl: BILLING_BASE_URL,
+      serviceApiKey: BILLING_SERVICE_API_KEY,
+      appId: "backfeed",
+    })
+  : undefined;
 
 export const events = createEventsProvider(
   VORTEX_API_URL && VORTEX_API_KEY

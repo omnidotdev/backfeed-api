@@ -37,7 +37,7 @@ export async function checkPermission(
 ): Promise<boolean> {
   if (!isAuthzEnabled()) return true;
 
-  return authz.checkPermission(
+  return authz!.checkPermission(
     userId,
     resourceType,
     resourceId,
@@ -57,10 +57,10 @@ export async function checkPermissionsBatch(
     return checks.map((check) => ({ ...check, allowed: true }));
   }
 
-  if (!authz.checkPermissionsBatch) {
+  if (!authz!.checkPermissionsBatch) {
     const results: PermissionCheckResult[] = [];
     for (const check of checks) {
-      const allowed = await authz.checkPermission(
+      const allowed = await authz!.checkPermission(
         check.userId,
         check.resourceType,
         check.resourceId,
@@ -72,7 +72,7 @@ export async function checkPermissionsBatch(
     return results;
   }
 
-  return authz.checkPermissionsBatch(checks, requestCache);
+  return authz!.checkPermissionsBatch(checks, requestCache);
 }
 
 /**
@@ -83,9 +83,9 @@ export async function writeTuples(
   tuples: Array<{ user: string; relation: string; object: string }>,
 ): Promise<void> {
   if (!isAuthzEnabled()) return;
-  if (!authz.writeTuples) return;
+  if (!authz!.writeTuples) return;
 
-  await authz.writeTuples(tuples);
+  await authz!.writeTuples(tuples);
 }
 
 /**
@@ -96,9 +96,9 @@ export async function deleteTuples(
   tuples: Array<{ user: string; relation: string; object: string }>,
 ): Promise<void> {
   if (!isAuthzEnabled()) return;
-  if (!authz.deleteTuples) return;
+  if (!authz!.deleteTuples) return;
 
-  await authz.deleteTuples(tuples);
+  await authz!.deleteTuples(tuples);
 }
 
 /**
@@ -117,12 +117,12 @@ export function buildPermissionCacheKey(
  * Invalidate cached permissions matching a pattern.
  */
 export function invalidatePermissionCache(pattern: string): void {
-  authz.invalidateCache?.(pattern);
+  authz?.invalidateCache?.(pattern);
 }
 
 /**
  * Clear all cached permissions.
  */
 export function clearPermissionCache(): void {
-  authz.clearCache?.();
+  authz?.clearCache?.();
 }
