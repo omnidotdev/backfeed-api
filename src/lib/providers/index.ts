@@ -14,7 +14,6 @@ import {
 import {
   AUTHZ_API_URL,
   AUTHZ_ENABLED,
-  WARDEN_SERVICE_KEY,
   BILLING_BASE_URL,
   BILLING_SERVICE_API_KEY,
   FLAGS_API_HOST,
@@ -22,6 +21,7 @@ import {
   VORTEX_API_KEY,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
+  WARDEN_SERVICE_KEY,
 } from "lib/config/env.config";
 
 export const authz =
