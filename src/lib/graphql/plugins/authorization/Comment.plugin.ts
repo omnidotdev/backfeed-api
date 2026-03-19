@@ -83,7 +83,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (comment.userId !== observer.id) {
               // Check admin permission via PDP on organization
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "organization",
                 comment.post.project.organizationId,
                 "admin",

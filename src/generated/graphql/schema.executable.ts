@@ -2616,7 +2616,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
       if (!project) throw Error("Project not found");
       organizationId = project.organizationId;
     }
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -2692,7 +2692,7 @@ const planWrapper5 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     let organizationId;
     organizationId = input.organizationId;
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -2832,7 +2832,7 @@ const planWrapper9 = (plan, _, fieldArgs) => {
       if (!project) throw Error("Project not found");
       organizationId = project.organizationId;
     }
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -3044,7 +3044,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     let organizationId;
     organizationId = input.organizationId;
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
     {
       const projectCount = await db.query.projects.findMany({
         where(table, {
@@ -3214,7 +3214,7 @@ const planWrapper18 = (plan, _, fieldArgs) => {
       });
       if (!comment) throw Error("Comment not found");
       if (comment.userId !== observer.id) {
-        if (!(await checkPermission(observer.id, "organization", comment.post.project.organizationId, "admin"))) throw Error("Unauthorized");
+        if (!(await checkPermission(observer.identityProviderId, "organization", comment.post.project.organizationId, "admin"))) throw Error("Unauthorized");
       }
     }
   });
@@ -3314,7 +3314,7 @@ const planWrapper20 = (plan, _, fieldArgs) => {
       if (!link) throw Error("Project link not found");
       organizationId = link.project.organizationId;
     }
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -3401,7 +3401,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
       if (!statusTemplate) throw Error("Status template not found");
       organizationId = statusTemplate.organizationId;
     }
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -3591,7 +3591,7 @@ const planWrapper27 = (plan, _, fieldArgs) => {
       if (!config) throw Error("Project status config not found");
       organizationId = config.project.organizationId;
     }
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -3679,7 +3679,7 @@ const planWrapper29 = (plan, _, fieldArgs) => {
       });
       if (!post) throw Error("Post not found");
       if (observer.id !== post.userId) {
-        if (!(await checkPermission(observer.id, "organization", post.project.organizationId, "admin"))) throw Error("Insufficient permissions");
+        if (!(await checkPermission(observer.identityProviderId, "organization", post.project.organizationId, "admin"))) throw Error("Insufficient permissions");
       }
     }
   });
@@ -3786,7 +3786,7 @@ const planWrapper32 = (plan, _, fieldArgs) => {
       if (!project) throw Error("Project not found");
       organizationId = project.organizationId;
     }
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -3891,7 +3891,7 @@ const planWrapper35 = (plan, _, fieldArgs) => {
       });
       if (!comment) throw Error("Comment not found");
       if (comment.userId !== observer.id) {
-        if (!(await checkPermission(observer.id, "organization", comment.post.project.organizationId, "admin"))) throw Error("Unauthorized");
+        if (!(await checkPermission(observer.identityProviderId, "organization", comment.post.project.organizationId, "admin"))) throw Error("Unauthorized");
       }
     }
   });
@@ -3988,7 +3988,7 @@ const planWrapper37 = (plan, _, fieldArgs) => {
       if (!link) throw Error("Project link not found");
       organizationId = link.project.organizationId;
     }
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4075,7 +4075,7 @@ const planWrapper39 = (plan, _, fieldArgs) => {
       if (!statusTemplate) throw Error("Status template not found");
       organizationId = statusTemplate.organizationId;
     }
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4248,7 +4248,7 @@ const planWrapper44 = (plan, _, fieldArgs) => {
       if (!config) throw Error("Project status config not found");
       organizationId = config.project.organizationId;
     }
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
@@ -4336,7 +4336,7 @@ const planWrapper46 = (plan, _, fieldArgs) => {
       });
       if (!post) throw Error("Post not found");
       if (observer.id !== post.userId) {
-        if (!(await checkPermission(observer.id, "organization", post.project.organizationId, "admin"))) throw Error("Insufficient permissions");
+        if (!(await checkPermission(observer.identityProviderId, "organization", post.project.organizationId, "admin"))) throw Error("Insufficient permissions");
       }
     }
   });
@@ -4451,7 +4451,7 @@ const planWrapper49 = (plan, _, fieldArgs) => {
       if (!project) throw Error("Project not found");
       organizationId = project.organizationId;
     }
-    if (!(await checkPermission(observer.id, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
   });
   return plan();
 };
