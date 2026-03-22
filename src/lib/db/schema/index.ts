@@ -6,3 +6,4 @@ export * from "./projectStatusConfig.table";
 export * from "./statusTemplate.table";
 export * from "./user.table";
 export * from "./vote.table";
+export * from "./wardenSyncQueue.table";

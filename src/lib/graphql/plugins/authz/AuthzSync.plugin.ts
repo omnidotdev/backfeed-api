@@ -42,20 +42,13 @@ const syncCreateProject = (): PlanWrapperFn =>
             return;
           }
 
-          try {
-            await writeTuples([
-              {
-                user: `organization:${organizationId}`,
-                relation: "organization",
-                object: `project:${projectId}`,
-              },
-            ]);
-          } catch (error) {
-            console.error(
-              "[AuthZ Sync] Failed to sync project creation:",
-              error,
-            );
-          }
+          await writeTuples([
+            {
+              user: `organization:${organizationId}`,
+              relation: "organization",
+              object: `project:${projectId}`,
+            },
+          ]);
         });
 
         return $result;
@@ -87,20 +80,13 @@ const syncDeleteProject = (): PlanWrapperFn =>
 
             if (!project) return;
 
-            try {
-              await deleteTuples([
-                {
-                  user: `organization:${project.organizationId}`,
-                  relation: "organization",
-                  object: `project:${projectId}`,
-                },
-              ]);
-            } catch (error) {
-              console.error(
-                "[AuthZ Sync] Failed to sync project deletion:",
-                error,
-              );
-            }
+            await deleteTuples([
+              {
+                user: `organization:${project.organizationId}`,
+                relation: "organization",
+                object: `project:${projectId}`,
+              },
+            ]);
           },
         );
 

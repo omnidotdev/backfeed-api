@@ -23,8 +23,8 @@ const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
   max_projects: { free: 1 },
   max_feedback_users: { free: 15 },
   max_comments_per_post: { free: 100 },
-  max_members: { free: 5 },
-  max_admins: { free: 1 },
+  max_members: { free: 5, pro: -1, team: -1 },
+  max_admins: { free: 1, pro: 3, team: -1 },
 };
 
 /** Tier type */

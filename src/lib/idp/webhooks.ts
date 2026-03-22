@@ -12,6 +12,8 @@ import { Elysia, t } from "elysia";
 import { AUTH_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { projects, statusTemplates, users } from "lib/db/schema";
+import { checkOrganizationLimit } from "lib/entitlements";
+import { getOrgMemberCounts } from "lib/idp/members";
 
 interface OrganizationDeletedPayload {
   eventType: "organization.deleted";
@@ -27,7 +29,28 @@ interface UserDeletedPayload {
   timestamp: string;
 }
 
-type IdpWebhookPayload = OrganizationDeletedPayload | UserDeletedPayload;
+interface MemberAddedPayload {
+  eventType: "member.added";
+  organizationId: string;
+  userId: string;
+  role: string;
+  timestamp: string;
+}
+
+interface MemberRoleChangedPayload {
+  eventType: "member.role_changed";
+  organizationId: string;
+  userId: string;
+  previousRole: string;
+  newRole: string;
+  timestamp: string;
+}
+
+type IdpWebhookPayload =
+  | OrganizationDeletedPayload
+  | UserDeletedPayload
+  | MemberAddedPayload
+  | MemberRoleChangedPayload;
 
 /**
  * Verify HMAC-SHA256 signature from IDP.
@@ -106,6 +129,22 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
         case "user.deleted":
           await handleUserDeleted(body);
           break;
+        case "member.added": {
+          const allowed = await handleMemberAdded(body);
+          if (!allowed) {
+            set.status = 403;
+            return { error: "Maximum number of members reached" };
+          }
+          break;
+        }
+        case "member.role_changed": {
+          const allowed = await handleMemberRoleChanged(body);
+          if (!allowed) {
+            set.status = 403;
+            return { error: "Maximum number of admins reached" };
+          }
+          break;
+        }
         default:
           console.warn(`Unknown IDP event type: ${eventType}`);
       }
@@ -186,6 +225,65 @@ async function handleUserDeleted(payload: UserDeletedPayload): Promise<void> {
     console.error(`Failed to delete user for IDP user ${userId}:`, err);
     throw err;
   }
+}
+
+/**
+ * Handle member added event.
+ * Check max_members entitlement limit before allowing the addition.
+ * Fails open if IDP is unavailable.
+ */
+async function handleMemberAdded(
+  payload: MemberAddedPayload,
+): Promise<boolean> {
+  const { organizationId } = payload;
+  const counts = await getOrgMemberCounts(organizationId);
+
+  if (!counts) return true;
+
+  const allowed = await checkOrganizationLimit(
+    organizationId,
+    "max_members",
+    counts.totalMembers,
+  );
+
+  if (!allowed) {
+    console.warn(
+      `[Entitlements] Organization ${organizationId} exceeded max_members limit (current: ${counts.totalMembers})`,
+    );
+  }
+
+  return allowed;
+}
+
+/**
+ * Handle member role changed event.
+ * Check max_admins entitlement limit when promoting to admin.
+ * Fails open if IDP is unavailable.
+ */
+async function handleMemberRoleChanged(
+  payload: MemberRoleChangedPayload,
+): Promise<boolean> {
+  const { organizationId, newRole } = payload;
+
+  if (newRole !== "admin") return true;
+
+  const counts = await getOrgMemberCounts(organizationId);
+
+  if (!counts) return true;
+
+  const allowed = await checkOrganizationLimit(
+    organizationId,
+    "max_admins",
+    counts.totalAdmins,
+  );
+
+  if (!allowed) {
+    console.warn(
+      `[Entitlements] Organization ${organizationId} exceeded max_admins limit (current: ${counts.totalAdmins})`,
+    );
+  }
+
+  return allowed;
 }
 
 export default idpWebhook;

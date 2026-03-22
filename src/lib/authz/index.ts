@@ -8,12 +8,19 @@
 import { AUTHZ_API_URL, AUTHZ_ENABLED } from "lib/config/env.config";
 import { authz } from "lib/providers";
 
+import { enqueueWardenSync } from "./syncQueue";
+
 import type {
   PermissionCheck,
   PermissionCheckResult,
 } from "@omnidotdev/providers";
 
 export { default as authzRoutes } from "./routes";
+export {
+  enqueueWardenSync,
+  startWardenSyncPoller,
+  stopWardenSyncPoller,
+} from "./syncQueue";
 export * from "./types";
 
 /**
@@ -77,6 +84,7 @@ export async function checkPermissionsBatch(
 
 /**
  * Write tuples to the authorization store.
+ * Enqueues for retry on failure to prevent silent tuple loss.
  * Exported for graphile-export EXPORTABLE compatibility.
  */
 export async function writeTuples(
@@ -85,11 +93,17 @@ export async function writeTuples(
   if (!isAuthzEnabled()) return;
   if (!authz!.writeTuples) return;
 
-  await authz!.writeTuples(tuples);
+  try {
+    await authz!.writeTuples(tuples);
+  } catch (error) {
+    console.error("[AuthZ] Tuple write failed, enqueuing for retry:", error);
+    await enqueueWardenSync("write", tuples, error);
+  }
 }
 
 /**
  * Delete tuples from the authorization store.
+ * Enqueues for retry on failure to prevent silent tuple loss.
  * Exported for graphile-export EXPORTABLE compatibility.
  */
 export async function deleteTuples(
@@ -98,7 +112,12 @@ export async function deleteTuples(
   if (!isAuthzEnabled()) return;
   if (!authz!.deleteTuples) return;
 
-  await authz!.deleteTuples(tuples);
+  try {
+    await authz!.deleteTuples(tuples);
+  } catch (error) {
+    console.error("[AuthZ] Tuple delete failed, enqueuing for retry:", error);
+    await enqueueWardenSync("delete", tuples, error);
+  }
 }
 
 /**
