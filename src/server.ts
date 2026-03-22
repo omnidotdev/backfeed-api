@@ -8,6 +8,7 @@ import { Elysia } from "elysia";
 import { rateLimit } from "elysia-rate-limit";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast, useMoreDetailedErrors } from "grafast/envelop";
+import { startWardenSyncPoller, stopWardenSyncPoller } from "lib/authz";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
@@ -143,6 +144,9 @@ async function startServer(): Promise<void> {
     });
   }
 
+  // Start the Warden sync queue poller for retrying failed authz tuple operations
+  startWardenSyncPoller();
+
   console.log(
     `🦊 ${appConfig.name} Elysia server running at ${app.server?.url.toString().slice(0, -1)}`,
   );
@@ -153,6 +157,7 @@ async function startServer(): Promise<void> {
 
   const shutdown = async (signal: string) => {
     console.log(`[Server] Received ${signal}, shutting down...`);
+    stopWardenSyncPoller();
     app.stop();
     process.exit(0);
   };
