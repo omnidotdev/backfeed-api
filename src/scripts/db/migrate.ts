@@ -20,9 +20,11 @@ const pool = new Pool({ connectionString: DATABASE_URL });
 try {
   const db = drizzle({ client: pool, casing: "snake_case" });
 
-  console.log("[Migrate] Applying migrations...");
+  // biome-ignore lint/suspicious/noConsole: migration status logging
+  console.info("[Migrate] Applying migrations...");
   await migrate(db, { migrationsFolder: "src/generated/drizzle" });
-  console.log("[Migrate] Migrations applied successfully");
+  // biome-ignore lint/suspicious/noConsole: migration status logging
+  console.info("[Migrate] Migrations applied successfully");
 } catch (err) {
   console.error("[Migrate] Migration failed:", err);
   process.exit(1);
