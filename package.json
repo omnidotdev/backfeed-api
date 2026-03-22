@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "GRAPHILE_ENV=development NODE_ENV=development bun run --env-file .env.local --env-file .env.development --hot src/server.ts",
     "build": "bun build --target node --outdir build src/server.ts src/instrumentation.ts",
-    "start": "NODE_ENV=production GRAPHILE_ENV=production bun drizzle-kit migrate --config src/lib/config/drizzle.config.ts && NODE_ENV=production GRAPHILE_ENV=production bun run --import ./build/instrumentation.js build/server.js",
+    "start": "NODE_ENV=production GRAPHILE_ENV=production bun run src/scripts/db/migrate.ts && NODE_ENV=production GRAPHILE_ENV=production bun run --import ./build/instrumentation.js build/server.js",
     "lint": "biome lint",
     "format": "biome format --write",
     "check": "biome check",

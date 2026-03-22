@@ -74,6 +74,8 @@ async function processQueueRecord(
 ): Promise<void> {
   const tuples = record.payload as TupleKey[];
 
+  if (!authz) return;
+
   try {
     if (record.operation === "write") {
       await authz.writeTuples?.(tuples);

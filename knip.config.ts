@@ -17,6 +17,8 @@ const knipConfig: KnipConfig = {
     "src/instrumentation.ts",
   ],
   ignoreDependencies: [
+    // Used by db:* scripts (knip doesn't resolve binaries in all script entries)
+    "drizzle-kit",
     // OpenTelemetry deps used by instrumentation.ts (loaded via --import)
     "@opentelemetry/auto-instrumentations-node",
     "@opentelemetry/exporter-logs-otlp-http",
