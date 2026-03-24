@@ -37,6 +37,7 @@ export const authz =
 
 export const billing = BILLING_BASE_URL
   ? createBillingProvider({
+      provider: "aether",
       baseUrl: BILLING_BASE_URL,
       serviceApiKey: BILLING_SERVICE_API_KEY,
       appId: "backfeed",
