@@ -16,7 +16,6 @@ export const {
   BILLING_BASE_URL,
   BILLING_SERVICE_API_KEY,
   BILLING_WEBHOOK_SECRET,
-  SELF_HOSTED,
   // AuthZ (PDP)
   AUTHZ_ENABLED,
   AUTHZ_API_URL,
@@ -40,7 +39,7 @@ export const {
 export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
 export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
-export const isSelfHosted = SELF_HOSTED === "true";
+export const hasBilling = !!BILLING_BASE_URL;
 
 /** Whether search indexing is enabled */
 export const isSearchEnabled =
