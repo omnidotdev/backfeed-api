@@ -6,7 +6,7 @@ WORKDIR /app
 # Build
 FROM base AS builder
 COPY package.json bun.lock ./
-RUN bun install
+RUN bun install --frozen-lockfile
 COPY . .
 RUN bun run build
 RUN bun run src/scripts/cacheSchemaHash.ts

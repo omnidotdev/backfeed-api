@@ -2,7 +2,10 @@ node_modules
 .git
 .env*
 !.env.local.template
+dist
 build
+.output
+target
 *.log
 .turbo
 coverage
