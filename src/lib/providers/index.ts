@@ -21,14 +21,14 @@ import {
   VORTEX_API_KEY,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
-  WARDEN_SERVICE_KEY,
+  AUTHZ_SERVICE_KEY,
 } from "lib/config/env.config";
 
 export const authz =
   AUTHZ_ENABLED === "true" && AUTHZ_API_URL
     ? createAuthzProvider({
         apiUrl: AUTHZ_API_URL,
-        serviceKey: WARDEN_SERVICE_KEY,
+        serviceKey: AUTHZ_SERVICE_KEY,
         vortexUrl: VORTEX_API_URL,
         vortexWebhookSecret: VORTEX_AUTHZ_WEBHOOK_SECRET,
         source: "backfeed",

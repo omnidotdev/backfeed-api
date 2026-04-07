@@ -54,5 +54,4 @@ if (!VORTEX_API_URL)
   console.warn("VORTEX_API_URL not set, event streaming disabled");
 if (!FLAGS_API_HOST)
   console.warn("FLAGS_API_HOST not set, feature flags disabled");
-if (!MEILISEARCH_URL)
-  console.warn("MEILISEARCH_URL not set, search disabled");
+if (!MEILISEARCH_URL) console.warn("MEILISEARCH_URL not set, search disabled");
