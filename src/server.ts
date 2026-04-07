@@ -93,6 +93,7 @@ async function startServer(): Promise<void> {
       set.headers["X-XSS-Protection"] = "1; mode=block";
       set.headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
     })
+    .get("/health", () => ({ status: "ok" }))
     .use(maintenanceMiddleware)
     .use(
       rateLimit({
