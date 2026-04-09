@@ -17,7 +17,7 @@ export const {
   BILLING_SERVICE_API_KEY,
   BILLING_WEBHOOK_SECRET,
   // AuthZ (PDP)
-  AUTHZ_ENABLED,
+
   AUTHZ_API_URL,
   AUTHZ_SERVICE_KEY,
   // Vortex (durable event sync)

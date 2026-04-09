@@ -13,7 +13,6 @@ import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
   AUTHZ_API_URL,
-  AUTHZ_ENABLED,
   CORS_ALLOWED_ORIGINS,
   PORT,
   isDevEnv,
@@ -40,7 +39,7 @@ const HEALTH_CHECK_TIMEOUT_MS = 5000;
  * Fails startup if authz is enabled but PDP is unavailable.
  */
 async function verifyPdpHealth(): Promise<void> {
-  if (AUTHZ_ENABLED !== "true" || !AUTHZ_API_URL) {
+  if (!AUTHZ_API_URL) {
     console.log("[AuthZ] Disabled or not configured, skipping health check");
     return;
   }
