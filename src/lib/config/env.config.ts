@@ -33,7 +33,6 @@ export const {
   // Meilisearch (unified search)
   MEILISEARCH_URL,
   MEILISEARCH_MASTER_KEY,
-  SEARCH_ENABLED,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
@@ -42,8 +41,7 @@ export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
 export const hasBilling = !!BILLING_BASE_URL;
 
 /** Whether search indexing is enabled */
-export const isSearchEnabled =
-  SEARCH_ENABLED === "true" && !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;
+export const isSearchEnabled = !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;
 
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
