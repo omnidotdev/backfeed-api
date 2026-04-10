@@ -1,5 +1,6 @@
 {
   "name": "@omnidotdev/backfeed-api",
+  "version": "0.0.0",
   "private": true,
   "main": "build/server.js",
   "scripts": {
