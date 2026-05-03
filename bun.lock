@@ -15,7 +15,7 @@
         "@graphile/pg-aggregates": "^0.2.0-rc.1",
         "@graphile/simplify-inflection": "^8.0.0-rc.2",
         "@graphql-yoga/plugin-disable-introspection": "^2.19.0",
-        "@omnidotdev/providers": "github:omnidotdev/providers#97a4ace",
+        "@omnidotdev/providers": "github:omnidotdev/providers#c0e4024",
         "@omnidotdev/search": "github:omnidotdev/search",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/auto-instrumentations-node": "^0.68.0",
@@ -287,7 +287,7 @@
 
     "@npmcli/redact": ["@npmcli/redact@4.0.0", "", {}, "sha512-gOBg5YHMfZy+TfHArfVogwgfBeQnKbbGo3pSUyK/gSI0AVu+pEiDVcKlQb0D8Mg1LNRZILZ6XG8I5dJ4KuAd9Q=="],
 
-    "@omnidotdev/providers": ["@omnidotdev/providers@github:omnidotdev/providers#97a4ace", { "dependencies": { "ajv": "^8.18.0", "jose": "^6.1.3" }, "peerDependencies": { "@aws-sdk/client-s3": ">=3.0.0", "@aws-sdk/s3-request-presigner": ">=3.0.0", "@envelop/types": ">=5.0.0", "@escape.tech/graphql-armor": ">=3.0.0", "@iggy.rs/sdk": ">=1.0.0", "@tanstack/query-core": ">=5.0.0", "ajv": ">=8.0.0", "graphile-export": ">=1.0.0-rc.0", "postgraphile": ">=5.0.0-rc.0", "react": ">=19.0.0", "resend": ">=4.0.0", "unleash-client": ">=6.0.0" }, "optionalPeers": ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner", "@envelop/types", "@escape.tech/graphql-armor", "@iggy.rs/sdk", "@tanstack/query-core", "ajv", "graphile-export", "postgraphile", "react", "resend", "unleash-client"] }, "omnidotdev-providers-97a4ace", "sha512-bRd2sm8PT3J8ceRTVDFTpCSSEreZOJWQlvAcWtcKCbmh4z85j0bQTPTDu2Dveel6WYRt1InzzK7AN67/Gf8ZLA=="],
+    "@omnidotdev/providers": ["@omnidotdev/providers@github:omnidotdev/providers#c0e4024", { "dependencies": { "ajv": "^8.18.0", "jose": "^6.1.3" }, "peerDependencies": { "@aws-sdk/client-s3": ">=3.0.0", "@aws-sdk/s3-request-presigner": ">=3.0.0", "@envelop/types": ">=5.0.0", "@escape.tech/graphql-armor": ">=3.0.0", "@iggy.rs/sdk": ">=1.0.0", "@tanstack/query-core": ">=5.0.0", "ajv": ">=8.0.0", "graphile-export": ">=1.0.0-rc.0", "postgraphile": ">=5.0.0-rc.0", "react": ">=19.0.0", "resend": ">=4.0.0", "unleash-client": ">=6.0.0" }, "optionalPeers": ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner", "@envelop/types", "@escape.tech/graphql-armor", "@iggy.rs/sdk", "@tanstack/query-core", "ajv", "graphile-export", "postgraphile", "react", "resend", "unleash-client"] }, "omnidotdev-providers-c0e4024", "sha512-JtpKOyxsMG7MW4WS0t3e/hyHQMviXz9Z1eHTuf2hV7BBYBqs03qd91cv7lw4vqyXYZe8XrPfFii/2DrnoGoIqg=="],
 
     "@omnidotdev/search": ["@omnidotdev/search@github:omnidotdev/search#02bb5c1", { "dependencies": { "meilisearch": "^0.48.0" } }, "omnidotdev-search-02bb5c1", "sha512-1jp7JTCsDy8Ac0qG2kLVK6J/2HDraJhsNVObkBsS/Lobt222cU15uao93PSNpgzOZ014kmI5Gfu/GpcQq8vjuw=="],
 
