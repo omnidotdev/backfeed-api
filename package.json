@@ -68,7 +68,7 @@
     "@types/pg": "^8.16.0",
     "drizzle-kit": "^0.31.8",
     "husky": "^9.1.7",
-    "knip": "^5.80.2",
+    "knip": "^6.0.0",
     "replace-in-file": "^8.4.0",
     "typescript": "^5.9.3"
   },
