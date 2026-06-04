@@ -54,3 +54,25 @@ export const isSignalType = (value: unknown): value is SignalType =>
 export const isSignalStatus = (value: unknown): value is SignalStatus =>
   typeof value === "string" &&
   (SIGNAL_STATUSES as readonly string[]).includes(value);
+
+/**
+ * Validate the parts of a signal input that carry constrained free-text values
+ * (`source`, `type`, `status`). A valid source is required; type and status are
+ * optional (the DB defaults status to "pending"), but must be valid when present.
+ * Throws a descriptive error on the first invalid field.
+ */
+export const assertValidSignalInput = (input: {
+  source?: unknown;
+  type?: unknown;
+  status?: unknown;
+}): void => {
+  if (!isSignalSource(input.source)) {
+    throw new Error(`Invalid signal source: ${String(input.source)}`);
+  }
+  if (input.type != null && !isSignalType(input.type)) {
+    throw new Error(`Invalid signal type: ${String(input.type)}`);
+  }
+  if (input.status != null && !isSignalStatus(input.status)) {
+    throw new Error(`Invalid signal status: ${String(input.status)}`);
+  }
+};
