@@ -27,7 +27,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 
 const emitProjectCreated = (): PlanWrapperFn =>
   EXPORTABLE(
-    (context, sideEffect, events): PlanWrapperFn =>
+    (_context, sideEffect, events): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
         const $input = fieldArgs.getRaw(["input", "project"]);

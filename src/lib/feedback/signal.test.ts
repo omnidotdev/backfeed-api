@@ -1,0 +1,73 @@
+import { describe, expect, test } from "bun:test";
+
+import {
+  DEFAULT_SIGNAL_SOURCE,
+  DEFAULT_SIGNAL_STATUS,
+  SIGNAL_SOURCES,
+  SIGNAL_STATUSES,
+  SIGNAL_TYPES,
+  isSignalSource,
+  isSignalStatus,
+  isSignalType,
+} from "./signal";
+
+import type { SignalSource, SignalStatus, SignalType } from "./signal";
+
+describe("signal source validation", () => {
+  test("accepts every known source", () => {
+    for (const source of SIGNAL_SOURCES) {
+      expect(isSignalSource(source)).toBe(true);
+    }
+  });
+
+  test("rejects unknown sources and non-strings", () => {
+    expect(isSignalSource("carrier_pigeon")).toBe(false);
+    expect(isSignalSource("")).toBe(false);
+    expect(isSignalSource(undefined)).toBe(false);
+    expect(isSignalSource(42)).toBe(false);
+  });
+
+  test("default source is a valid source", () => {
+    expect(isSignalSource(DEFAULT_SIGNAL_SOURCE)).toBe(true);
+    expect(DEFAULT_SIGNAL_SOURCE).toBe("widget");
+  });
+
+  test("typed literals are assignable to the exported unions", () => {
+    const source: SignalSource = "widget";
+    const type: SignalType = "feedback";
+    const status: SignalStatus = "pending";
+    expect(isSignalSource(source)).toBe(true);
+    expect(isSignalType(type)).toBe(true);
+    expect(isSignalStatus(status)).toBe(true);
+  });
+});
+
+describe("signal type validation", () => {
+  test("accepts every known type", () => {
+    for (const type of SIGNAL_TYPES) {
+      expect(isSignalType(type)).toBe(true);
+    }
+  });
+
+  test("rejects unknown types", () => {
+    expect(isSignalType("complaint")).toBe(false);
+    expect(isSignalType(null)).toBe(false);
+  });
+});
+
+describe("signal status validation", () => {
+  test("accepts every known status", () => {
+    for (const status of SIGNAL_STATUSES) {
+      expect(isSignalStatus(status)).toBe(true);
+    }
+  });
+
+  test("rejects unknown statuses", () => {
+    expect(isSignalStatus("archived")).toBe(false);
+  });
+
+  test("default status is pending and valid", () => {
+    expect(DEFAULT_SIGNAL_STATUS).toBe("pending");
+    expect(isSignalStatus(DEFAULT_SIGNAL_STATUS)).toBe(true);
+  });
+});

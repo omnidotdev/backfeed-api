@@ -148,7 +148,7 @@ const spec_comment = {
     }
   },
   extensions: {
-    oid: "66551",
+    oid: "270503",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -240,7 +240,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "66864",
+    oid: "300307",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -350,7 +350,7 @@ const spec_statusTemplate = {
     }
   },
   extensions: {
-    oid: "66664",
+    oid: "270616",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -368,7 +368,7 @@ const voteTypeCodec = enumCodec({
   values: ["up", "down"],
   description: undefined,
   extensions: {
-    oid: "66534",
+    oid: "270486",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -446,7 +446,7 @@ const spec_vote = {
     }
   },
   extensions: {
-    oid: "66704",
+    oid: "270656",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -546,7 +546,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "66683",
+    oid: "270635",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -654,7 +654,7 @@ const spec_projectStatusConfig = {
     }
   },
   extensions: {
-    oid: "66647",
+    oid: "270599",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -665,6 +665,109 @@ const spec_projectStatusConfig = {
   executor: executor
 };
 const projectStatusConfigCodec = recordCodec(spec_projectStatusConfig);
+const wardenSyncQueueIdentifier = sql.identifier("public", "warden_sync_queue");
+const spec_wardenSyncQueue = {
+  name: "wardenSyncQueue",
+  identifier: wardenSyncQueueIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    operation: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    payload: {
+      codec: TYPES.jsonb,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    attempts: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    max_attempts: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    last_error: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    next_retry_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "706846",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "warden_sync_queue"
+    }
+  },
+  executor: executor
+};
+const wardenSyncQueueCodec = recordCodec(spec_wardenSyncQueue);
 const postIdentifier = sql.identifier("public", "post");
 const spec_post = {
   name: "post",
@@ -764,6 +867,17 @@ const spec_post = {
     },
     number: {
       codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    source: {
+      codec: TYPES.text,
+      hasDefault: true,
       extensions: {
         __proto__: null,
         canSelect: true,
@@ -773,7 +887,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "66597",
+    oid: "270549",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -904,7 +1018,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "66614",
+    oid: "270566",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -915,6 +1029,162 @@ const spec_project = {
   executor: executor
 };
 const projectCodec = recordCodec(spec_project);
+const signalIdentifier = sql.identifier("public", "signal");
+const spec_signal = {
+  name: "signal",
+  identifier: signalIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    user_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    source: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    type: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    raw_content: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    source_metadata: {
+      codec: TYPES.jsonb,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    post_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    sentiment: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    ai_tags: {
+      codec: TYPES.jsonb,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "706866",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "signal"
+    }
+  },
+  executor: executor
+};
+const signalCodec = recordCodec(spec_signal);
 const commentUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -1101,6 +1371,10 @@ const project_status_config_resourceOptionsConfig = {
   },
   uniques: project_status_configUniques
 };
+const warden_sync_queueUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
 const postUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -1163,6 +1437,29 @@ const project_resourceOptionsConfig = {
   },
   uniques: projectUniques
 };
+const signalUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const signal_resourceOptionsConfig = {
+  executor: executor,
+  name: "signal",
+  identifier: "main.public.signal",
+  from: signalIdentifier,
+  codec: signalCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "signal"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: signalUniques
+};
 const registryConfig = {
   pgExecutors: {
     __proto__: null,
@@ -1182,9 +1479,12 @@ const registryConfig = {
     user: userCodec,
     projectStatusConfig: projectStatusConfigCodec,
     bool: TYPES.boolean,
+    wardenSyncQueue: wardenSyncQueueCodec,
+    jsonb: TYPES.jsonb,
     post: postCodec,
     project: projectCodec,
-    varchar: TYPES.varchar
+    varchar: TYPES.varchar,
+    signal: signalCodec
   },
   pgResources: {
     __proto__: null,
@@ -1194,8 +1494,28 @@ const registryConfig = {
     vote: vote_resourceOptionsConfig,
     user: user_resourceOptionsConfig,
     project_status_config: project_status_config_resourceOptionsConfig,
+    warden_sync_queue: {
+      executor: executor,
+      name: "warden_sync_queue",
+      identifier: "main.public.warden_sync_queue",
+      from: wardenSyncQueueIdentifier,
+      codec: wardenSyncQueueCodec,
+      extensions: {
+        pg: {
+          serviceName: "main",
+          schemaName: "public",
+          name: "warden_sync_queue"
+        },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        canDelete: true
+      },
+      uniques: warden_sync_queueUniques
+    },
     post: post_resourceOptionsConfig,
-    project: project_resourceOptionsConfig
+    project: project_resourceOptionsConfig,
+    signal: signal_resourceOptionsConfig
   },
   pgRelations: {
     __proto__: null,
@@ -1266,6 +1586,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["post_id"],
         isReferencee: true
+      },
+      signalsByTheirPostId: {
+        localCodec: postCodec,
+        remoteResourceOptions: signal_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["post_id"],
+        isReferencee: true
       }
     },
     project: {
@@ -1287,6 +1614,13 @@ const registryConfig = {
       projectLinksByTheirProjectId: {
         localCodec: projectCodec,
         remoteResourceOptions: project_link_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["project_id"],
+        isReferencee: true
+      },
+      signalsByTheirProjectId: {
+        localCodec: projectCodec,
+        remoteResourceOptions: signal_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["project_id"],
         isReferencee: true
@@ -1315,6 +1649,30 @@ const registryConfig = {
         localCodec: projectStatusConfigCodec,
         remoteResourceOptions: status_template_resourceOptionsConfig,
         localAttributes: ["status_template_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    signal: {
+      __proto__: null,
+      postByMyPostId: {
+        localCodec: signalCodec,
+        remoteResourceOptions: post_resourceOptionsConfig,
+        localAttributes: ["post_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      projectByMyProjectId: {
+        localCodec: signalCodec,
+        remoteResourceOptions: project_resourceOptionsConfig,
+        localAttributes: ["project_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      userByMyUserId: {
+        localCodec: signalCodec,
+        remoteResourceOptions: user_resourceOptionsConfig,
+        localAttributes: ["user_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -1358,6 +1716,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["user_id"],
         isReferencee: true
+      },
+      signalsByTheirUserId: {
+        localCodec: userCodec,
+        remoteResourceOptions: signal_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["user_id"],
+        isReferencee: true
       }
     },
     vote: {
@@ -1386,8 +1751,10 @@ const resource_status_templatePgResource = registry.pgResources["status_template
 const resource_votePgResource = registry.pgResources["vote"];
 const resource_userPgResource = registry.pgResources["user"];
 const resource_project_status_configPgResource = registry.pgResources["project_status_config"];
+const resource_warden_sync_queuePgResource = registry.pgResources["warden_sync_queue"];
 const resource_postPgResource = registry.pgResources["post"];
 const resource_projectPgResource = registry.pgResources["project"];
+const resource_signalPgResource = registry.pgResources["signal"];
 function applyFirstArg(_, $connection, arg) {
   $connection.setFirst(arg.getRaw());
 }
@@ -1608,6 +1975,9 @@ function PostDistinctCountAggregates_createdAtPlan($pgSelectSingle) {
 function PostDistinctCountAggregates_updatedAtPlan($pgSelectSingle) {
   return pgAggregatesPlanAggregateAttribute(TYPES.timestamptz, "updated_at", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
 }
+function PostDistinctCountAggregates_sourcePlan($pgSelectSingle) {
+  return pgAggregatesPlanAggregateAttribute(TYPES.text, "source", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+}
 const pgAggregateSpec_min = {
   id: "min",
   humanLabel: "minimum",
@@ -1782,6 +2152,9 @@ function PostGroupBy_UPDATED_AT_TRUNCATED_TO_HOURApply(qb) {
 function PostGroupBy_UPDATED_AT_TRUNCATED_TO_DAYApply(qb) {
   applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_day, "updated_at", TYPES.timestamptz, qb);
 }
+function PostGroupBy_SOURCEApply($pgSelect) {
+  applyGroupByAttribute("source", TYPES.text, $pgSelect);
+}
 function pgAggregatesApplyAnd($where) {
   return $where;
 }
@@ -1821,6 +2194,7 @@ const PostCondition_userIdApply = ($condition, val) => applyAttributeCondition("
 const PostCondition_statusTemplateIdApply = ($condition, val) => applyAttributeCondition("status_template_id", TYPES.uuid, $condition, val);
 const PostCondition_createdAtApply = ($condition, val) => applyAttributeCondition("created_at", TYPES.timestamptz, $condition, val);
 const PostCondition_updatedAtApply = ($condition, val) => applyAttributeCondition("updated_at", TYPES.timestamptz, $condition, val);
+const PostCondition_sourceApply = ($condition, val) => applyAttributeCondition("source", TYPES.text, $condition, val);
 const pgConnectionFilterApplyAttribute = (fieldName, attributeName, attribute, queryBuilder, value) => {
   if (value === void 0) return;
   if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
@@ -2256,6 +2630,9 @@ function PostDistinctCountAggregateFilter_projectIdApply($parent, input) {
 function PostDistinctCountAggregateFilter_statusTemplateIdApply($parent, input) {
   return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "status_template_id", TYPES.bigint, TYPES.uuid, $parent, input);
 }
+function PostDistinctCountAggregateFilter_sourceApply($parent, input) {
+  return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "source", TYPES.bigint, TYPES.text, $parent, input);
+}
 const PostOrderBy_ROW_ID_ASCApply = queryBuilder => {
   queryBuilder.orderBy({
     attribute: "id",
@@ -2356,6 +2733,18 @@ const PostOrderBy_UPDATED_AT_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
+const PostOrderBy_SOURCE_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "source",
+    direction: "ASC"
+  });
+};
+const PostOrderBy_SOURCE_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "source",
+    direction: "DESC"
+  });
+};
 const pgAggregatesApplyOrderByTotalCount = (direction, relation, table, $select) => {
   const foreignTableAlias = $select.alias,
     conditions = [],
@@ -2395,6 +2784,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   });
 };
 const relation2 = registry.pgRelations["post"]["votesByTheirPostId"];
+const relation3 = registry.pgRelations["post"]["signalsByTheirPostId"];
 const ProjectStatusConfig_sortOrderPlan = $record => {
   return $record.get("sort_order");
 };
@@ -2441,6 +2831,19 @@ function ProjectStatusConfigVariancePopulationAggregates_sortOrderPlan($pgSelect
 function ProjectStatusConfigGroupBy_SORT_ORDERApply($pgSelect) {
   applyGroupByAttribute("sort_order", TYPES.int, $pgSelect);
 }
+const ProjectLinkOrderBy_PROJECT_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "project_id",
+    direction: "ASC"
+  });
+};
+const ProjectLinkOrderBy_PROJECT_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "project_id",
+    direction: "DESC"
+  });
+};
+const JSONSerialize = value => value;
 function CommentDistinctCountAggregates_postIdPlan($pgSelectSingle) {
   return pgAggregatesPlanAggregateAttribute(TYPES.uuid, "post_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
 }
@@ -2448,7 +2851,31 @@ function CommentGroupBy_POST_IDApply($pgSelect) {
   applyGroupByAttribute("post_id", TYPES.uuid, $pgSelect);
 }
 const CommentCondition_postIdApply = ($condition, val) => applyAttributeCondition("post_id", TYPES.uuid, $condition, val);
-const relation3 = registry.pgRelations["comment"]["commentsByTheirParentId"];
+const CommentOrderBy_POST_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "post_id",
+    direction: "ASC"
+  });
+};
+const CommentOrderBy_POST_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "post_id",
+    direction: "DESC"
+  });
+};
+const relation4 = registry.pgRelations["comment"]["commentsByTheirParentId"];
+const SignalOrderBy_ORGANIZATION_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "organization_id",
+    direction: "ASC"
+  });
+};
+const SignalOrderBy_ORGANIZATION_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "organization_id",
+    direction: "DESC"
+  });
+};
 function StatusTemplateDistinctCountAggregates_organizationIdPlan($pgSelectSingle) {
   return pgAggregatesPlanAggregateAttribute(TYPES.uuid, "organization_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
 }
@@ -2475,14 +2902,16 @@ const StatusTemplateOrderBy_NAME_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
-const relation4 = registry.pgRelations["statusTemplate"]["postsByTheirStatusTemplateId"];
-const relation5 = registry.pgRelations["statusTemplate"]["projectStatusConfigsByTheirStatusTemplateId"];
-const relation6 = registry.pgRelations["user"]["commentsByTheirUserId"];
-const relation7 = registry.pgRelations["user"]["postsByTheirUserId"];
-const relation8 = registry.pgRelations["user"]["votesByTheirUserId"];
-const relation9 = registry.pgRelations["project"]["postsByTheirProjectId"];
-const relation10 = registry.pgRelations["project"]["projectStatusConfigsByTheirProjectId"];
-const relation11 = registry.pgRelations["project"]["projectLinksByTheirProjectId"];
+const relation5 = registry.pgRelations["statusTemplate"]["postsByTheirStatusTemplateId"];
+const relation6 = registry.pgRelations["statusTemplate"]["projectStatusConfigsByTheirStatusTemplateId"];
+const relation7 = registry.pgRelations["user"]["commentsByTheirUserId"];
+const relation8 = registry.pgRelations["user"]["postsByTheirUserId"];
+const relation9 = registry.pgRelations["user"]["votesByTheirUserId"];
+const relation10 = registry.pgRelations["user"]["signalsByTheirUserId"];
+const relation11 = registry.pgRelations["project"]["postsByTheirProjectId"];
+const relation12 = registry.pgRelations["project"]["projectStatusConfigsByTheirProjectId"];
+const relation13 = registry.pgRelations["project"]["projectLinksByTheirProjectId"];
+const relation14 = registry.pgRelations["project"]["signalsByTheirProjectId"];
 function oldPlan2(_, args) {
   const $insert = pgInsertSingle(resource_commentPgResource);
   args.apply($insert);
@@ -3093,15 +3522,11 @@ const planWrapper15 = (plan, _, fieldArgs) => {
       console.error("[AuthZ Sync] Project ID not found in result");
       return;
     }
-    try {
-      await writeTuples([{
-        user: `organization:${organizationId}`,
-        relation: "organization",
-        object: `project:${projectId}`
-      }]);
-    } catch (error) {
-      console.error("[AuthZ Sync] Failed to sync project creation:", error);
-    }
+    await writeTuples([{
+      user: `organization:${organizationId}`,
+      relation: "organization",
+      object: `project:${projectId}`
+    }]);
   });
   return $result;
 };
@@ -4571,15 +4996,11 @@ const planWrapper51 = (plan, _, fieldArgs) => {
       }
     });
     if (!project) return;
-    try {
-      await deleteTuples([{
-        user: `organization:${project.organizationId}`,
-        relation: "organization",
-        object: `project:${projectId}`
-      }]);
-    } catch (error) {
-      console.error("[AuthZ Sync] Failed to sync project deletion:", error);
-    }
+    await deleteTuples([{
+      user: `organization:${project.organizationId}`,
+      relation: "organization",
+      object: `project:${projectId}`
+    }]);
   });
   return $result;
 };
@@ -4780,12 +5201,34 @@ function ProjectStatusConfigInput_isEnabledApply(obj, val, info) {
 function ProjectStatusConfigInput_isDefaultApply(obj, val, info) {
   obj.set("is_default", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_warden_sync_queuePgResource, warden_sync_queueUniques[0].attributes, $mutation, fieldArgs);
+function WardenSyncQueueInput_operationApply(obj, val, info) {
+  obj.set("operation", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function WardenSyncQueueInput_payloadApply(obj, val, info) {
+  obj.set("payload", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function WardenSyncQueueInput_attemptsApply(obj, val, info) {
+  obj.set("attempts", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function WardenSyncQueueInput_maxAttemptsApply(obj, val, info) {
+  obj.set("max_attempts", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function WardenSyncQueueInput_lastErrorApply(obj, val, info) {
+  obj.set("last_error", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function WardenSyncQueueInput_nextRetryAtApply(obj, val, info) {
+  obj.set("next_retry_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreatePostPayload_postEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_postPgResource, postUniques[0].attributes, $mutation, fieldArgs);
 function PostInput_statusUpdatedAtApply(obj, val, info) {
   obj.set("status_updated_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function PostInput_numberApply(obj, val, info) {
   obj.set("number", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PostInput_sourceApply(obj, val, info) {
+  obj.set("source", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateProjectPayload_projectEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_projectPgResource, projectUniques[0].attributes, $mutation, fieldArgs);
 function ProjectInput_imageApply(obj, val, info) {
@@ -4802,6 +5245,25 @@ function ProjectInput_prefixApply(obj, val, info) {
 }
 function ProjectInput_isPublicApply(obj, val, info) {
   obj.set("is_public", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateSignalPayload_signalEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_signalPgResource, signalUniques[0].attributes, $mutation, fieldArgs);
+function SignalInput_typeApply(obj, val, info) {
+  obj.set("type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function SignalInput_rawContentApply(obj, val, info) {
+  obj.set("raw_content", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function SignalInput_sourceMetadataApply(obj, val, info) {
+  obj.set("source_metadata", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function SignalInput_statusApply(obj, val, info) {
+  obj.set("status", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function SignalInput_sentimentApply(obj, val, info) {
+  obj.set("sentiment", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function SignalInput_aiTagsApply(obj, val, info) {
+  obj.set("ai_tags", bakedInputRuntime(info.schema, info.field.type, val));
 }
 export const typeDefs = /* GraphQL */`"""The root query type which gives access points into the data universe."""
 type Query implements Node {
@@ -4858,6 +5320,9 @@ type Query implements Node {
   """Get a single \`ProjectStatusConfig\`."""
   projectStatusConfigByProjectIdAndStatusTemplateId(projectId: UUID!, statusTemplateId: UUID!): ProjectStatusConfig
 
+  """Get a single \`WardenSyncQueue\`."""
+  wardenSyncQueue(rowId: UUID!): WardenSyncQueue
+
   """Get a single \`Post\`."""
   post(rowId: UUID!): Post
 
@@ -4869,6 +5334,9 @@ type Query implements Node {
 
   """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
+
+  """Get a single \`Signal\`."""
+  signal(rowId: UUID!): Signal
 
   """Reads and enables pagination through a set of \`Comment\`."""
   comments(
@@ -5074,6 +5542,40 @@ type Query implements Node {
     orderBy: [ProjectStatusConfigOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectStatusConfigConnection
 
+  """Reads and enables pagination through a set of \`WardenSyncQueue\`."""
+  wardenSyncQueues(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: WardenSyncQueueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: WardenSyncQueueFilter
+
+    """The method to use when ordering \`WardenSyncQueue\`."""
+    orderBy: [WardenSyncQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): WardenSyncQueueConnection
+
   """Reads and enables pagination through a set of \`Post\`."""
   posts(
     """Only read the first \`n\` values of the set."""
@@ -5141,6 +5643,40 @@ type Query implements Node {
     """The method to use when ordering \`Project\`."""
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
+
+  """Reads and enables pagination through a set of \`Signal\`."""
+  signals(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SignalCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SignalFilter
+
+    """The method to use when ordering \`Signal\`."""
+    orderBy: [SignalOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SignalConnection
 
   """
   Returns the currently authenticated user (observer).
@@ -5234,7 +5770,8 @@ type Post {
   statusUpdatedAt: Datetime!
   createdAt: Datetime!
   updatedAt: Datetime!
-  number: Int
+  number: Int!
+  source: String
 
   """Reads a single \`Project\` that is related to this \`Post\`."""
   project: Project
@@ -5312,6 +5849,40 @@ type Post {
     """The method to use when ordering \`Vote\`."""
     orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
   ): VoteConnection!
+
+  """Reads and enables pagination through a set of \`Signal\`."""
+  signals(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SignalCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SignalFilter
+
+    """The method to use when ordering \`Signal\`."""
+    orderBy: [SignalOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SignalConnection!
 }
 
 type Project {
@@ -5428,6 +5999,40 @@ type Project {
     """The method to use when ordering \`ProjectLink\`."""
     orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLinkConnection!
+
+  """Reads and enables pagination through a set of \`Signal\`."""
+  signals(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SignalCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SignalFilter
+
+    """The method to use when ordering \`Signal\`."""
+    orderBy: [SignalOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SignalConnection!
 }
 
 """A connection to a list of \`Post\` values."""
@@ -5581,6 +6186,9 @@ type PostDistinctCountAggregates {
 
   """Distinct count of number across the matching connection"""
   number: BigInt
+
+  """Distinct count of source across the matching connection"""
+  source: BigInt
 }
 
 type PostMinAggregates {
@@ -5640,6 +6248,7 @@ enum PostGroupBy {
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
   NUMBER
+  SOURCE
 }
 
 """Conditions for \`Post\` aggregates."""
@@ -5771,6 +6380,9 @@ input PostCondition {
 
   """Checks for equality with the object’s \`number\` field."""
   number: Int
+
+  """Checks for equality with the object’s \`source\` field."""
+  source: String
 }
 
 """
@@ -5807,6 +6419,9 @@ input PostFilter {
   """Filter by the object’s \`number\` field."""
   number: IntFilter
 
+  """Filter by the object’s \`source\` field."""
+  source: StringFilter
+
   """Filter by the object’s \`comments\` relation."""
   comments: PostToManyCommentFilter
 
@@ -5818,6 +6433,12 @@ input PostFilter {
 
   """Some related \`votes\` exist."""
   votesExist: Boolean
+
+  """Filter by the object’s \`signals\` relation."""
+  signals: PostToManySignalFilter
+
+  """Some related \`signals\` exist."""
+  signalsExist: Boolean
 
   """Filter by the object’s \`project\` relation."""
   project: ProjectFilter
@@ -6307,6 +6928,12 @@ input UserFilter {
   """Some related \`votes\` exist."""
   votesExist: Boolean
 
+  """Filter by the object’s \`signals\` relation."""
+  signals: UserToManySignalFilter
+
+  """Some related \`signals\` exist."""
+  signalsExist: Boolean
+
   """Checks for all expressions in this list."""
   and: [UserFilter!]
 
@@ -6413,6 +7040,7 @@ input PostDistinctCountAggregateFilter {
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
   number: BigIntFilter
+  source: BigIntFilter
 }
 
 input PostMinAggregateFilter {
@@ -6614,26 +7242,94 @@ input VoteDistinctCountAggregateFilter {
 }
 
 """
-A filter to be used against many \`Vote\` object types. All fields are combined with a logical ‘and.’
+A filter to be used against many \`Signal\` object types. All fields are combined with a logical ‘and.’
 """
-input PostToManyVoteFilter {
+input UserToManySignalFilter {
   """
-  Every related \`Vote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  Every related \`Signal\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  every: VoteFilter
+  every: SignalFilter
 
   """
-  Some related \`Vote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  Some related \`Signal\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  some: VoteFilter
+  some: SignalFilter
 
   """
-  No related \`Vote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  No related \`Signal\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  none: VoteFilter
+  none: SignalFilter
 
-  """Aggregates across related \`Vote\` match the filter criteria."""
-  aggregates: VoteAggregatesFilter
+  """Aggregates across related \`Signal\` match the filter criteria."""
+  aggregates: SignalAggregatesFilter
+}
+
+"""
+A filter to be used against \`Signal\` object types. All fields are combined with a logical ‘and.’
+"""
+input SignalFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`organizationId\` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s \`projectId\` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s \`userId\` field."""
+  userId: UUIDFilter
+
+  """Filter by the object’s \`source\` field."""
+  source: StringFilter
+
+  """Filter by the object’s \`type\` field."""
+  type: StringFilter
+
+  """Filter by the object’s \`rawContent\` field."""
+  rawContent: StringFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`postId\` field."""
+  postId: UUIDFilter
+
+  """Filter by the object’s \`sentiment\` field."""
+  sentiment: StringFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s \`post\` relation."""
+  post: PostFilter
+
+  """A related \`post\` exists."""
+  postExists: Boolean
+
+  """Filter by the object’s \`project\` relation."""
+  project: ProjectFilter
+
+  """A related \`project\` exists."""
+  projectExists: Boolean
+
+  """Filter by the object’s \`user\` relation."""
+  user: UserFilter
+
+  """A related \`user\` exists."""
+  userExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [SignalFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [SignalFilter!]
+
+  """Negates the expression."""
+  not: SignalFilter
 }
 
 """
@@ -6690,6 +7386,12 @@ input ProjectFilter {
 
   """Some related \`projectLinks\` exist."""
   projectLinksExist: Boolean
+
+  """Filter by the object’s \`signals\` relation."""
+  signals: ProjectToManySignalFilter
+
+  """Some related \`signals\` exist."""
+  signalsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [ProjectFilter!]
@@ -7168,6 +7870,103 @@ input ProjectLinkVariancePopulationAggregateFilter {
   order: BigFloatFilter
 }
 
+"""
+A filter to be used against many \`Signal\` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManySignalFilter {
+  """
+  Every related \`Signal\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: SignalFilter
+
+  """
+  Some related \`Signal\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: SignalFilter
+
+  """
+  No related \`Signal\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: SignalFilter
+
+  """Aggregates across related \`Signal\` match the filter criteria."""
+  aggregates: SignalAggregatesFilter
+}
+
+"""A filter to be used against aggregates of \`Signal\` object types."""
+input SignalAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`Signal\` object to be included within the aggregate.
+  """
+  filter: SignalFilter
+
+  """Distinct count aggregate over matching \`Signal\` objects."""
+  distinctCount: SignalDistinctCountAggregateFilter
+}
+
+input SignalDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  organizationId: BigIntFilter
+  projectId: BigIntFilter
+  userId: BigIntFilter
+  source: BigIntFilter
+  type: BigIntFilter
+  rawContent: BigIntFilter
+  sourceMetadata: BigIntFilter
+  status: BigIntFilter
+  postId: BigIntFilter
+  sentiment: BigIntFilter
+  aiTags: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+"""
+A filter to be used against many \`Vote\` object types. All fields are combined with a logical ‘and.’
+"""
+input PostToManyVoteFilter {
+  """
+  Every related \`Vote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VoteFilter
+
+  """
+  Some related \`Vote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VoteFilter
+
+  """
+  No related \`Vote\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VoteFilter
+
+  """Aggregates across related \`Vote\` match the filter criteria."""
+  aggregates: VoteAggregatesFilter
+}
+
+"""
+A filter to be used against many \`Signal\` object types. All fields are combined with a logical ‘and.’
+"""
+input PostToManySignalFilter {
+  """
+  Every related \`Signal\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: SignalFilter
+
+  """
+  Some related \`Signal\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: SignalFilter
+
+  """
+  No related \`Signal\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: SignalFilter
+
+  """Aggregates across related \`Signal\` match the filter criteria."""
+  aggregates: SignalAggregatesFilter
+}
+
 """Methods to use when ordering \`Post\`."""
 enum PostOrderBy {
   NATURAL
@@ -7193,6 +7992,8 @@ enum PostOrderBy {
   UPDATED_AT_DESC
   NUMBER_ASC
   NUMBER_DESC
+  SOURCE_ASC
+  SOURCE_DESC
   COMMENTS_COUNT_ASC
   COMMENTS_COUNT_DESC
   COMMENTS_DISTINCT_COUNT_ROW_ID_ASC
@@ -7223,6 +8024,36 @@ enum PostOrderBy {
   VOTES_DISTINCT_COUNT_CREATED_AT_DESC
   VOTES_DISTINCT_COUNT_UPDATED_AT_ASC
   VOTES_DISTINCT_COUNT_UPDATED_AT_DESC
+  SIGNALS_COUNT_ASC
+  SIGNALS_COUNT_DESC
+  SIGNALS_DISTINCT_COUNT_ROW_ID_ASC
+  SIGNALS_DISTINCT_COUNT_ROW_ID_DESC
+  SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  SIGNALS_DISTINCT_COUNT_PROJECT_ID_ASC
+  SIGNALS_DISTINCT_COUNT_PROJECT_ID_DESC
+  SIGNALS_DISTINCT_COUNT_USER_ID_ASC
+  SIGNALS_DISTINCT_COUNT_USER_ID_DESC
+  SIGNALS_DISTINCT_COUNT_SOURCE_ASC
+  SIGNALS_DISTINCT_COUNT_SOURCE_DESC
+  SIGNALS_DISTINCT_COUNT_TYPE_ASC
+  SIGNALS_DISTINCT_COUNT_TYPE_DESC
+  SIGNALS_DISTINCT_COUNT_RAW_CONTENT_ASC
+  SIGNALS_DISTINCT_COUNT_RAW_CONTENT_DESC
+  SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_ASC
+  SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_DESC
+  SIGNALS_DISTINCT_COUNT_STATUS_ASC
+  SIGNALS_DISTINCT_COUNT_STATUS_DESC
+  SIGNALS_DISTINCT_COUNT_POST_ID_ASC
+  SIGNALS_DISTINCT_COUNT_POST_ID_DESC
+  SIGNALS_DISTINCT_COUNT_SENTIMENT_ASC
+  SIGNALS_DISTINCT_COUNT_SENTIMENT_DESC
+  SIGNALS_DISTINCT_COUNT_AI_TAGS_ASC
+  SIGNALS_DISTINCT_COUNT_AI_TAGS_DESC
+  SIGNALS_DISTINCT_COUNT_CREATED_AT_ASC
+  SIGNALS_DISTINCT_COUNT_CREATED_AT_DESC
+  SIGNALS_DISTINCT_COUNT_UPDATED_AT_ASC
+  SIGNALS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of \`ProjectStatusConfig\` values."""
@@ -7925,6 +8756,70 @@ enum ProjectLinkOrderBy {
   UPDATED_AT_DESC
 }
 
+"""A connection to a list of \`Signal\` values."""
+type SignalConnection {
+  """A list of \`Signal\` objects."""
+  nodes: [Signal]!
+
+  """
+  A list of edges which contains the \`Signal\` and cursor to aid in pagination.
+  """
+  edges: [SignalEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Signal\` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: SignalAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`Signal\` for these aggregates."""
+    groupBy: [SignalGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: SignalHavingInput
+  ): [SignalAggregates!]
+}
+
+type Signal {
+  rowId: UUID!
+  organizationId: String!
+  projectId: UUID
+  userId: UUID
+  source: String!
+  type: String
+  rawContent: String!
+  sourceMetadata: JSON
+  status: String!
+  postId: UUID
+  sentiment: String
+  aiTags: JSON
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single \`Post\` that is related to this \`Signal\`."""
+  post: Post
+
+  """Reads a single \`Project\` that is related to this \`Signal\`."""
+  project: Project
+
+  """Reads a single \`User\` that is related to this \`Signal\`."""
+  user: User
+}
+
+"""
+Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
 type User {
   rowId: UUID!
   identityProviderId: UUID!
@@ -8036,6 +8931,40 @@ type User {
     """The method to use when ordering \`Vote\`."""
     orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
   ): VoteConnection!
+
+  """Reads and enables pagination through a set of \`Signal\`."""
+  signals(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SignalCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SignalFilter
+
+    """The method to use when ordering \`Signal\`."""
+    orderBy: [SignalOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SignalConnection!
 }
 
 """A connection to a list of \`Comment\` values."""
@@ -8448,6 +9377,232 @@ enum VoteOrderBy {
   UPDATED_AT_DESC
 }
 
+"""
+A condition to be used against \`Signal\` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input SignalCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`organizationId\` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s \`projectId\` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s \`userId\` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s \`source\` field."""
+  source: String
+
+  """Checks for equality with the object’s \`type\` field."""
+  type: String
+
+  """Checks for equality with the object’s \`rawContent\` field."""
+  rawContent: String
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+
+  """Checks for equality with the object’s \`postId\` field."""
+  postId: UUID
+
+  """Checks for equality with the object’s \`sentiment\` field."""
+  sentiment: String
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering \`Signal\`."""
+enum SignalOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  SOURCE_ASC
+  SOURCE_DESC
+  TYPE_ASC
+  TYPE_DESC
+  RAW_CONTENT_ASC
+  RAW_CONTENT_DESC
+  STATUS_ASC
+  STATUS_DESC
+  POST_ID_ASC
+  POST_ID_DESC
+  SENTIMENT_ASC
+  SENTIMENT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+"""A \`Signal\` edge in the connection."""
+type SignalEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Signal\` at the end of the edge."""
+  node: Signal
+}
+
+type SignalAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: SignalDistinctCountAggregates
+}
+
+type SignalDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of source across the matching connection"""
+  source: BigInt
+
+  """Distinct count of type across the matching connection"""
+  type: BigInt
+
+  """Distinct count of rawContent across the matching connection"""
+  rawContent: BigInt
+
+  """Distinct count of sourceMetadata across the matching connection"""
+  sourceMetadata: BigInt
+
+  """Distinct count of status across the matching connection"""
+  status: BigInt
+
+  """Distinct count of postId across the matching connection"""
+  postId: BigInt
+
+  """Distinct count of sentiment across the matching connection"""
+  sentiment: BigInt
+
+  """Distinct count of aiTags across the matching connection"""
+  aiTags: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for \`Signal\` for usage during aggregation."""
+enum SignalGroupBy {
+  ORGANIZATION_ID
+  PROJECT_ID
+  USER_ID
+  SOURCE
+  TYPE
+  RAW_CONTENT
+  SOURCE_METADATA
+  STATUS
+  POST_ID
+  SENTIMENT
+  AI_TAGS
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`Signal\` aggregates."""
+input SignalHavingInput {
+  AND: [SignalHavingInput!]
+  OR: [SignalHavingInput!]
+  sum: SignalHavingSumInput
+  distinctCount: SignalHavingDistinctCountInput
+  min: SignalHavingMinInput
+  max: SignalHavingMaxInput
+  average: SignalHavingAverageInput
+  stddevSample: SignalHavingStddevSampleInput
+  stddevPopulation: SignalHavingStddevPopulationInput
+  varianceSample: SignalHavingVarianceSampleInput
+  variancePopulation: SignalHavingVariancePopulationInput
+}
+
+input SignalHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+type WardenSyncQueue {
+  rowId: UUID!
+  operation: String!
+  payload: JSON!
+  attempts: Int!
+  maxAttempts: Int!
+  lastError: String
+  nextRetryAt: Datetime!
+  createdAt: Datetime!
+}
+
 """A connection to a list of \`StatusTemplate\` values."""
 type StatusTemplateConnection {
   """A list of \`StatusTemplate\` objects."""
@@ -8775,6 +9930,8 @@ enum StatusTemplateOrderBy {
   POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
   POSTS_DISTINCT_COUNT_NUMBER_ASC
   POSTS_DISTINCT_COUNT_NUMBER_DESC
+  POSTS_DISTINCT_COUNT_SOURCE_ASC
+  POSTS_DISTINCT_COUNT_SOURCE_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -9066,6 +10223,8 @@ enum UserOrderBy {
   POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
   POSTS_DISTINCT_COUNT_NUMBER_ASC
   POSTS_DISTINCT_COUNT_NUMBER_DESC
+  POSTS_DISTINCT_COUNT_SOURCE_ASC
+  POSTS_DISTINCT_COUNT_SOURCE_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -9094,6 +10253,403 @@ enum UserOrderBy {
   VOTES_DISTINCT_COUNT_CREATED_AT_DESC
   VOTES_DISTINCT_COUNT_UPDATED_AT_ASC
   VOTES_DISTINCT_COUNT_UPDATED_AT_DESC
+  SIGNALS_COUNT_ASC
+  SIGNALS_COUNT_DESC
+  SIGNALS_DISTINCT_COUNT_ROW_ID_ASC
+  SIGNALS_DISTINCT_COUNT_ROW_ID_DESC
+  SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  SIGNALS_DISTINCT_COUNT_PROJECT_ID_ASC
+  SIGNALS_DISTINCT_COUNT_PROJECT_ID_DESC
+  SIGNALS_DISTINCT_COUNT_USER_ID_ASC
+  SIGNALS_DISTINCT_COUNT_USER_ID_DESC
+  SIGNALS_DISTINCT_COUNT_SOURCE_ASC
+  SIGNALS_DISTINCT_COUNT_SOURCE_DESC
+  SIGNALS_DISTINCT_COUNT_TYPE_ASC
+  SIGNALS_DISTINCT_COUNT_TYPE_DESC
+  SIGNALS_DISTINCT_COUNT_RAW_CONTENT_ASC
+  SIGNALS_DISTINCT_COUNT_RAW_CONTENT_DESC
+  SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_ASC
+  SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_DESC
+  SIGNALS_DISTINCT_COUNT_STATUS_ASC
+  SIGNALS_DISTINCT_COUNT_STATUS_DESC
+  SIGNALS_DISTINCT_COUNT_POST_ID_ASC
+  SIGNALS_DISTINCT_COUNT_POST_ID_DESC
+  SIGNALS_DISTINCT_COUNT_SENTIMENT_ASC
+  SIGNALS_DISTINCT_COUNT_SENTIMENT_DESC
+  SIGNALS_DISTINCT_COUNT_AI_TAGS_ASC
+  SIGNALS_DISTINCT_COUNT_AI_TAGS_DESC
+  SIGNALS_DISTINCT_COUNT_CREATED_AT_ASC
+  SIGNALS_DISTINCT_COUNT_CREATED_AT_DESC
+  SIGNALS_DISTINCT_COUNT_UPDATED_AT_ASC
+  SIGNALS_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of \`WardenSyncQueue\` values."""
+type WardenSyncQueueConnection {
+  """A list of \`WardenSyncQueue\` objects."""
+  nodes: [WardenSyncQueue]!
+
+  """
+  A list of edges which contains the \`WardenSyncQueue\` and cursor to aid in pagination.
+  """
+  edges: [WardenSyncQueueEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`WardenSyncQueue\` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: WardenSyncQueueAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping \`WardenSyncQueue\` for these aggregates.
+    """
+    groupBy: [WardenSyncQueueGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: WardenSyncQueueHavingInput
+  ): [WardenSyncQueueAggregates!]
+}
+
+"""A \`WardenSyncQueue\` edge in the connection."""
+type WardenSyncQueueEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`WardenSyncQueue\` at the end of the edge."""
+  node: WardenSyncQueue
+}
+
+type WardenSyncQueueAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: WardenSyncQueueSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: WardenSyncQueueDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: WardenSyncQueueMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: WardenSyncQueueMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: WardenSyncQueueAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: WardenSyncQueueStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: WardenSyncQueueStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: WardenSyncQueueVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: WardenSyncQueueVariancePopulationAggregates
+}
+
+type WardenSyncQueueSumAggregates {
+  """Sum of attempts across the matching connection"""
+  attempts: BigInt!
+
+  """Sum of maxAttempts across the matching connection"""
+  maxAttempts: BigInt!
+}
+
+type WardenSyncQueueDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of operation across the matching connection"""
+  operation: BigInt
+
+  """Distinct count of payload across the matching connection"""
+  payload: BigInt
+
+  """Distinct count of attempts across the matching connection"""
+  attempts: BigInt
+
+  """Distinct count of maxAttempts across the matching connection"""
+  maxAttempts: BigInt
+
+  """Distinct count of lastError across the matching connection"""
+  lastError: BigInt
+
+  """Distinct count of nextRetryAt across the matching connection"""
+  nextRetryAt: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+type WardenSyncQueueMinAggregates {
+  """Minimum of attempts across the matching connection"""
+  attempts: Int
+
+  """Minimum of maxAttempts across the matching connection"""
+  maxAttempts: Int
+}
+
+type WardenSyncQueueMaxAggregates {
+  """Maximum of attempts across the matching connection"""
+  attempts: Int
+
+  """Maximum of maxAttempts across the matching connection"""
+  maxAttempts: Int
+}
+
+type WardenSyncQueueAverageAggregates {
+  """Mean average of attempts across the matching connection"""
+  attempts: BigFloat
+
+  """Mean average of maxAttempts across the matching connection"""
+  maxAttempts: BigFloat
+}
+
+type WardenSyncQueueStddevSampleAggregates {
+  """Sample standard deviation of attempts across the matching connection"""
+  attempts: BigFloat
+
+  """
+  Sample standard deviation of maxAttempts across the matching connection
+  """
+  maxAttempts: BigFloat
+}
+
+type WardenSyncQueueStddevPopulationAggregates {
+  """
+  Population standard deviation of attempts across the matching connection
+  """
+  attempts: BigFloat
+
+  """
+  Population standard deviation of maxAttempts across the matching connection
+  """
+  maxAttempts: BigFloat
+}
+
+type WardenSyncQueueVarianceSampleAggregates {
+  """Sample variance of attempts across the matching connection"""
+  attempts: BigFloat
+
+  """Sample variance of maxAttempts across the matching connection"""
+  maxAttempts: BigFloat
+}
+
+type WardenSyncQueueVariancePopulationAggregates {
+  """Population variance of attempts across the matching connection"""
+  attempts: BigFloat
+
+  """Population variance of maxAttempts across the matching connection"""
+  maxAttempts: BigFloat
+}
+
+"""Grouping methods for \`WardenSyncQueue\` for usage during aggregation."""
+enum WardenSyncQueueGroupBy {
+  OPERATION
+  PAYLOAD
+  ATTEMPTS
+  MAX_ATTEMPTS
+  LAST_ERROR
+  NEXT_RETRY_AT
+  NEXT_RETRY_AT_TRUNCATED_TO_HOUR
+  NEXT_RETRY_AT_TRUNCATED_TO_DAY
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`WardenSyncQueue\` aggregates."""
+input WardenSyncQueueHavingInput {
+  AND: [WardenSyncQueueHavingInput!]
+  OR: [WardenSyncQueueHavingInput!]
+  sum: WardenSyncQueueHavingSumInput
+  distinctCount: WardenSyncQueueHavingDistinctCountInput
+  min: WardenSyncQueueHavingMinInput
+  max: WardenSyncQueueHavingMaxInput
+  average: WardenSyncQueueHavingAverageInput
+  stddevSample: WardenSyncQueueHavingStddevSampleInput
+  stddevPopulation: WardenSyncQueueHavingStddevPopulationInput
+  varianceSample: WardenSyncQueueHavingVarianceSampleInput
+  variancePopulation: WardenSyncQueueHavingVariancePopulationInput
+}
+
+input WardenSyncQueueHavingSumInput {
+  attempts: HavingIntFilter
+  maxAttempts: HavingIntFilter
+  nextRetryAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input WardenSyncQueueHavingDistinctCountInput {
+  attempts: HavingIntFilter
+  maxAttempts: HavingIntFilter
+  nextRetryAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input WardenSyncQueueHavingMinInput {
+  attempts: HavingIntFilter
+  maxAttempts: HavingIntFilter
+  nextRetryAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input WardenSyncQueueHavingMaxInput {
+  attempts: HavingIntFilter
+  maxAttempts: HavingIntFilter
+  nextRetryAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input WardenSyncQueueHavingAverageInput {
+  attempts: HavingIntFilter
+  maxAttempts: HavingIntFilter
+  nextRetryAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input WardenSyncQueueHavingStddevSampleInput {
+  attempts: HavingIntFilter
+  maxAttempts: HavingIntFilter
+  nextRetryAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input WardenSyncQueueHavingStddevPopulationInput {
+  attempts: HavingIntFilter
+  maxAttempts: HavingIntFilter
+  nextRetryAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input WardenSyncQueueHavingVarianceSampleInput {
+  attempts: HavingIntFilter
+  maxAttempts: HavingIntFilter
+  nextRetryAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input WardenSyncQueueHavingVariancePopulationInput {
+  attempts: HavingIntFilter
+  maxAttempts: HavingIntFilter
+  nextRetryAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against \`WardenSyncQueue\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input WardenSyncQueueCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`operation\` field."""
+  operation: String
+
+  """Checks for equality with the object’s \`attempts\` field."""
+  attempts: Int
+
+  """Checks for equality with the object’s \`maxAttempts\` field."""
+  maxAttempts: Int
+
+  """Checks for equality with the object’s \`lastError\` field."""
+  lastError: String
+
+  """Checks for equality with the object’s \`nextRetryAt\` field."""
+  nextRetryAt: Datetime
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+}
+
+"""
+A filter to be used against \`WardenSyncQueue\` object types. All fields are combined with a logical ‘and.’
+"""
+input WardenSyncQueueFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`operation\` field."""
+  operation: StringFilter
+
+  """Filter by the object’s \`attempts\` field."""
+  attempts: IntFilter
+
+  """Filter by the object’s \`maxAttempts\` field."""
+  maxAttempts: IntFilter
+
+  """Filter by the object’s \`lastError\` field."""
+  lastError: StringFilter
+
+  """Filter by the object’s \`nextRetryAt\` field."""
+  nextRetryAt: DatetimeFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Checks for all expressions in this list."""
+  and: [WardenSyncQueueFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [WardenSyncQueueFilter!]
+
+  """Negates the expression."""
+  not: WardenSyncQueueFilter
+}
+
+"""Methods to use when ordering \`WardenSyncQueue\`."""
+enum WardenSyncQueueOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  OPERATION_ASC
+  OPERATION_DESC
+  ATTEMPTS_ASC
+  ATTEMPTS_DESC
+  MAX_ATTEMPTS_ASC
+  MAX_ATTEMPTS_DESC
+  LAST_ERROR_ASC
+  LAST_ERROR_DESC
+  NEXT_RETRY_AT_ASC
+  NEXT_RETRY_AT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
 }
 
 """A connection to a list of \`Project\` values."""
@@ -9442,6 +10998,8 @@ enum ProjectOrderBy {
   POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
   POSTS_DISTINCT_COUNT_NUMBER_ASC
   POSTS_DISTINCT_COUNT_NUMBER_DESC
+  POSTS_DISTINCT_COUNT_SOURCE_ASC
+  POSTS_DISTINCT_COUNT_SOURCE_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -9524,6 +11082,36 @@ enum ProjectOrderBy {
   PROJECT_LINKS_VARIANCE_SAMPLE_ORDER_DESC
   PROJECT_LINKS_VARIANCE_POPULATION_ORDER_ASC
   PROJECT_LINKS_VARIANCE_POPULATION_ORDER_DESC
+  SIGNALS_COUNT_ASC
+  SIGNALS_COUNT_DESC
+  SIGNALS_DISTINCT_COUNT_ROW_ID_ASC
+  SIGNALS_DISTINCT_COUNT_ROW_ID_DESC
+  SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  SIGNALS_DISTINCT_COUNT_PROJECT_ID_ASC
+  SIGNALS_DISTINCT_COUNT_PROJECT_ID_DESC
+  SIGNALS_DISTINCT_COUNT_USER_ID_ASC
+  SIGNALS_DISTINCT_COUNT_USER_ID_DESC
+  SIGNALS_DISTINCT_COUNT_SOURCE_ASC
+  SIGNALS_DISTINCT_COUNT_SOURCE_DESC
+  SIGNALS_DISTINCT_COUNT_TYPE_ASC
+  SIGNALS_DISTINCT_COUNT_TYPE_DESC
+  SIGNALS_DISTINCT_COUNT_RAW_CONTENT_ASC
+  SIGNALS_DISTINCT_COUNT_RAW_CONTENT_DESC
+  SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_ASC
+  SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_DESC
+  SIGNALS_DISTINCT_COUNT_STATUS_ASC
+  SIGNALS_DISTINCT_COUNT_STATUS_DESC
+  SIGNALS_DISTINCT_COUNT_POST_ID_ASC
+  SIGNALS_DISTINCT_COUNT_POST_ID_DESC
+  SIGNALS_DISTINCT_COUNT_SENTIMENT_ASC
+  SIGNALS_DISTINCT_COUNT_SENTIMENT_DESC
+  SIGNALS_DISTINCT_COUNT_AI_TAGS_ASC
+  SIGNALS_DISTINCT_COUNT_AI_TAGS_DESC
+  SIGNALS_DISTINCT_COUNT_CREATED_AT_ASC
+  SIGNALS_DISTINCT_COUNT_CREATED_AT_DESC
+  SIGNALS_DISTINCT_COUNT_UPDATED_AT_ASC
+  SIGNALS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """
@@ -9578,6 +11166,14 @@ type Mutation {
     input: CreateProjectStatusConfigInput!
   ): CreateProjectStatusConfigPayload
 
+  """Creates a single \`WardenSyncQueue\`."""
+  createWardenSyncQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateWardenSyncQueueInput!
+  ): CreateWardenSyncQueuePayload
+
   """Creates a single \`Post\`."""
   createPost(
     """
@@ -9593,6 +11189,14 @@ type Mutation {
     """
     input: CreateProjectInput!
   ): CreateProjectPayload
+
+  """Creates a single \`Signal\`."""
+  createSignal(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSignalInput!
+  ): CreateSignalPayload
 
   """Updates a single \`Comment\` using a unique key and a patch."""
   updateComment(
@@ -9642,6 +11246,14 @@ type Mutation {
     input: UpdateProjectStatusConfigInput!
   ): UpdateProjectStatusConfigPayload
 
+  """Updates a single \`WardenSyncQueue\` using a unique key and a patch."""
+  updateWardenSyncQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateWardenSyncQueueInput!
+  ): UpdateWardenSyncQueuePayload
+
   """Updates a single \`Post\` using a unique key and a patch."""
   updatePost(
     """
@@ -9657,6 +11269,14 @@ type Mutation {
     """
     input: UpdateProjectInput!
   ): UpdateProjectPayload
+
+  """Updates a single \`Signal\` using a unique key and a patch."""
+  updateSignal(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSignalInput!
+  ): UpdateSignalPayload
 
   """Deletes a single \`Comment\` using a unique key."""
   deleteComment(
@@ -9706,6 +11326,14 @@ type Mutation {
     input: DeleteProjectStatusConfigInput!
   ): DeleteProjectStatusConfigPayload
 
+  """Deletes a single \`WardenSyncQueue\` using a unique key."""
+  deleteWardenSyncQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteWardenSyncQueueInput!
+  ): DeleteWardenSyncQueuePayload
+
   """Deletes a single \`Post\` using a unique key."""
   deletePost(
     """
@@ -9721,6 +11349,14 @@ type Mutation {
     """
     input: DeleteProjectInput!
   ): DeleteProjectPayload
+
+  """Deletes a single \`Signal\` using a unique key."""
+  deleteSignal(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSignalInput!
+  ): DeleteSignalPayload
 }
 
 """The output of our create \`Comment\` mutation."""
@@ -10003,6 +11639,53 @@ input ProjectStatusConfigInput {
   createdAt: Datetime
 }
 
+"""The output of our create \`WardenSyncQueue\` mutation."""
+type CreateWardenSyncQueuePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`WardenSyncQueue\` that was created by this mutation."""
+  wardenSyncQueue: WardenSyncQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`WardenSyncQueue\`. May be used by Relay 1."""
+  wardenSyncQueueEdge(
+    """The method to use when ordering \`WardenSyncQueue\`."""
+    orderBy: [WardenSyncQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): WardenSyncQueueEdge
+}
+
+"""All input for the create \`WardenSyncQueue\` mutation."""
+input CreateWardenSyncQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`WardenSyncQueue\` to be created by this mutation."""
+  wardenSyncQueue: WardenSyncQueueInput!
+}
+
+"""An input for mutations affecting \`WardenSyncQueue\`"""
+input WardenSyncQueueInput {
+  rowId: UUID
+  operation: String!
+  payload: JSON!
+  attempts: Int
+  maxAttempts: Int
+  lastError: String
+  nextRetryAt: Datetime
+  createdAt: Datetime
+}
+
 """The output of our create \`Post\` mutation."""
 type CreatePostPayload {
   """
@@ -10049,7 +11732,8 @@ input PostInput {
   statusUpdatedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  number: Int
+  number: Int!
+  source: String
 }
 
 """The output of our create \`Project\` mutation."""
@@ -10100,6 +11784,59 @@ input ProjectInput {
   nextPostNumber: Int
   prefix: String
   isPublic: Boolean
+}
+
+"""The output of our create \`Signal\` mutation."""
+type CreateSignalPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Signal\` that was created by this mutation."""
+  signal: Signal
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Signal\`. May be used by Relay 1."""
+  signalEdge(
+    """The method to use when ordering \`Signal\`."""
+    orderBy: [SignalOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalEdge
+}
+
+"""All input for the create \`Signal\` mutation."""
+input CreateSignalInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Signal\` to be created by this mutation."""
+  signal: SignalInput!
+}
+
+"""An input for mutations affecting \`Signal\`"""
+input SignalInput {
+  rowId: UUID
+  organizationId: String!
+  projectId: UUID
+  userId: UUID
+  source: String!
+  type: String
+  rawContent: String!
+  sourceMetadata: JSON
+  status: String
+  postId: UUID
+  sentiment: String
+  aiTags: JSON
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our update \`Comment\` mutation."""
@@ -10408,6 +12145,58 @@ input ProjectStatusConfigPatch {
   createdAt: Datetime
 }
 
+"""The output of our update \`WardenSyncQueue\` mutation."""
+type UpdateWardenSyncQueuePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`WardenSyncQueue\` that was updated by this mutation."""
+  wardenSyncQueue: WardenSyncQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`WardenSyncQueue\`. May be used by Relay 1."""
+  wardenSyncQueueEdge(
+    """The method to use when ordering \`WardenSyncQueue\`."""
+    orderBy: [WardenSyncQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): WardenSyncQueueEdge
+}
+
+"""All input for the \`updateWardenSyncQueue\` mutation."""
+input UpdateWardenSyncQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`WardenSyncQueue\` being updated.
+  """
+  patch: WardenSyncQueuePatch!
+}
+
+"""
+Represents an update to a \`WardenSyncQueue\`. Fields that are set will be updated.
+"""
+input WardenSyncQueuePatch {
+  rowId: UUID
+  operation: String
+  payload: JSON
+  attempts: Int
+  maxAttempts: Int
+  lastError: String
+  nextRetryAt: Datetime
+  createdAt: Datetime
+}
+
 """The output of our update \`Post\` mutation."""
 type UpdatePostPayload {
   """
@@ -10458,6 +12247,7 @@ input PostPatch {
   createdAt: Datetime
   updatedAt: Datetime
   number: Int
+  source: String
 }
 
 """The output of our update \`Project\` mutation."""
@@ -10513,6 +12303,64 @@ input ProjectPatch {
   nextPostNumber: Int
   prefix: String
   isPublic: Boolean
+}
+
+"""The output of our update \`Signal\` mutation."""
+type UpdateSignalPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Signal\` that was updated by this mutation."""
+  signal: Signal
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Signal\`. May be used by Relay 1."""
+  signalEdge(
+    """The method to use when ordering \`Signal\`."""
+    orderBy: [SignalOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalEdge
+}
+
+"""All input for the \`updateSignal\` mutation."""
+input UpdateSignalInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Signal\` being updated.
+  """
+  patch: SignalPatch!
+}
+
+"""
+Represents an update to a \`Signal\`. Fields that are set will be updated.
+"""
+input SignalPatch {
+  rowId: UUID
+  organizationId: String
+  projectId: UUID
+  userId: UUID
+  source: String
+  type: String
+  rawContent: String
+  sourceMetadata: JSON
+  status: String
+  postId: UUID
+  sentiment: String
+  aiTags: JSON
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our delete \`Comment\` mutation."""
@@ -10713,6 +12561,39 @@ input DeleteProjectStatusConfigInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`WardenSyncQueue\` mutation."""
+type DeleteWardenSyncQueuePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`WardenSyncQueue\` that was deleted by this mutation."""
+  wardenSyncQueue: WardenSyncQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`WardenSyncQueue\`. May be used by Relay 1."""
+  wardenSyncQueueEdge(
+    """The method to use when ordering \`WardenSyncQueue\`."""
+    orderBy: [WardenSyncQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): WardenSyncQueueEdge
+}
+
+"""All input for the \`deleteWardenSyncQueue\` mutation."""
+input DeleteWardenSyncQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`Post\` mutation."""
 type DeletePostPayload {
   """
@@ -10771,6 +12652,39 @@ type DeleteProjectPayload {
 
 """All input for the \`deleteProject\` mutation."""
 input DeleteProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Signal\` mutation."""
+type DeleteSignalPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Signal\` that was deleted by this mutation."""
+  signal: Signal
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Signal\`. May be used by Relay 1."""
+  signalEdge(
+    """The method to use when ordering \`Signal\`."""
+    orderBy: [SignalOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalEdge
+}
+
+"""All input for the \`deleteSignal\` mutation."""
+input DeleteSignalInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10952,6 +12866,28 @@ export const objects = {
       query() {
         return rootValue();
       },
+      signal(_$root, {
+        $rowId
+      }) {
+        return resource_signalPgResource.get({
+          id: $rowId
+        });
+      },
+      signals: {
+        plan() {
+          return connection(resource_signalPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_commentsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       statusTemplate(_$root, {
         $rowId
       }) {
@@ -11045,6 +12981,28 @@ export const objects = {
       votes: {
         plan() {
           return connection(resource_votePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_commentsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      wardenSyncQueue(_$root, {
+        $rowId
+      }) {
+        return resource_warden_sync_queuePgResource.get({
+          id: $rowId
+        });
+      },
+      wardenSyncQueues: {
+        plan() {
+          return connection(resource_warden_sync_queuePgResource.find());
         },
         args: {
           first: applyFirstArg,
@@ -11177,6 +13135,18 @@ ${String(oldPlan9)}`);
           input: applyInputToInsert
         }
       },
+      createSignal: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_signalPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createStatusTemplate: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
@@ -11241,6 +13211,18 @@ ${String(oldPlan7)}`);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createWardenSyncQueue: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_warden_sync_queuePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
         },
         args: {
           input: applyInputToInsert
@@ -11361,6 +13343,20 @@ ${String(oldPlan45)}`);
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteSignal: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_signalPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteStatusTemplate: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
@@ -11425,6 +13421,20 @@ ${String(oldPlan42)}`);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteWardenSyncQueue: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_warden_sync_queuePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
         },
         args: {
           input: applyInputToUpdateOrDelete
@@ -11545,6 +13555,20 @@ ${String(oldPlan28)}`);
           input: applyInputToUpdateOrDelete
         }
       },
+      updateSignal: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_signalPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateStatusTemplate: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
@@ -11609,6 +13633,20 @@ ${String(oldPlan25)}`);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateWardenSyncQueue: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_warden_sync_queuePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
         },
         args: {
           input: applyInputToUpdateOrDelete
@@ -11740,6 +13778,15 @@ ${String(oldPlan25)}`);
       query: queryPlan
     }
   },
+  CreateSignalPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      signal: planCreatePayloadResult,
+      signalEdge: CreateSignalPayload_signalEdgePlan
+    }
+  },
   CreateStatusTemplatePayload: {
     assertStep: assertStep,
     plans: {
@@ -11765,6 +13812,15 @@ ${String(oldPlan25)}`);
       query: queryPlan,
       vote: planCreatePayloadResult,
       voteEdge: CreateVotePayload_voteEdgePlan
+    }
+  },
+  CreateWardenSyncQueuePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      wardenSyncQueue: planCreatePayloadResult,
+      wardenSyncQueueEdge: CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan
     }
   },
   DeleteCommentPayload: {
@@ -11812,6 +13868,15 @@ ${String(oldPlan25)}`);
       query: queryPlan
     }
   },
+  DeleteSignalPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      signal: planCreatePayloadResult,
+      signalEdge: CreateSignalPayload_signalEdgePlan
+    }
+  },
   DeleteStatusTemplatePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -11839,6 +13904,15 @@ ${String(oldPlan25)}`);
       voteEdge: CreateVotePayload_voteEdgePlan
     }
   },
+  DeleteWardenSyncQueuePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      wardenSyncQueue: planCreatePayloadResult,
+      wardenSyncQueueEdge: CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan
+    }
+  },
   Post: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -11864,6 +13938,24 @@ ${String(oldPlan25)}`);
       project: Post_projectPlan,
       projectId: Post_projectIdPlan,
       rowId: Comment_rowIdPlan,
+      signals: {
+        plan($record) {
+          const $records = resource_signalPgResource.find({
+            post_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_commentsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       statusTemplate: Post_statusTemplatePlan,
       statusTemplateId: Post_statusTemplateIdPlan,
       statusUpdatedAt($record) {
@@ -11942,6 +14034,7 @@ ${String(oldPlan25)}`);
       },
       projectId: PostDistinctCountAggregates_projectIdPlan,
       rowId: PostDistinctCountAggregates_rowIdPlan,
+      source: PostDistinctCountAggregates_sourcePlan,
       statusTemplateId: PostDistinctCountAggregates_statusTemplateIdPlan,
       statusUpdatedAt($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.timestamptz, "status_updated_at", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
@@ -12066,6 +14159,24 @@ ${String(oldPlan25)}`);
         }
       },
       rowId: Comment_rowIdPlan,
+      signals: {
+        plan($record) {
+          const $records = resource_signalPgResource.find({
+            project_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_commentsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       updatedAt: Comment_updatedAtPlan
     },
     planType($specifier) {
@@ -12418,6 +14529,88 @@ ${String(oldPlan25)}`);
       }
     }
   },
+  Signal: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      aiTags($record) {
+        return $record.get("ai_tags");
+      },
+      createdAt: Comment_createdAtPlan,
+      organizationId: Project_organizationIdPlan,
+      post: Comment_postPlan,
+      postId: Comment_postIdPlan,
+      project: Post_projectPlan,
+      projectId: Post_projectIdPlan,
+      rawContent($record) {
+        return $record.get("raw_content");
+      },
+      rowId: Comment_rowIdPlan,
+      sourceMetadata($record) {
+        return $record.get("source_metadata");
+      },
+      updatedAt: Comment_updatedAtPlan,
+      user: Comment_userPlan,
+      userId: Comment_userIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of signalUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_signalPgResource.get(spec);
+    }
+  },
+  SignalAggregates: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      distinctCount: pgAggregatesPlanAggregates,
+      keys: PostAggregates_keysPlan
+    }
+  },
+  SignalConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      aggregates: pgAggregatesCloneSubplanWithoutPaginationSingle,
+      groupedAggregates: {
+        plan: pgAggregateCloneSubplanWithoutPaginationAsAggregate,
+        args: {
+          groupBy: pgAggregatesApplyGroupedAggregate,
+          having: pgAggregatesApplyConditionsToGroupedAggregates
+        }
+      },
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  SignalDistinctCountAggregates: {
+    plans: {
+      aiTags($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "ai_tags", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      createdAt: PostDistinctCountAggregates_createdAtPlan,
+      organizationId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "organization_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      postId: CommentDistinctCountAggregates_postIdPlan,
+      projectId: PostDistinctCountAggregates_projectIdPlan,
+      rawContent($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "raw_content", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      rowId: PostDistinctCountAggregates_rowIdPlan,
+      sentiment($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "sentiment", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      source: PostDistinctCountAggregates_sourcePlan,
+      sourceMetadata($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "source_metadata", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      status($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "status", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      type($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "type", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      updatedAt: PostDistinctCountAggregates_updatedAtPlan,
+      userId: PostDistinctCountAggregates_userIdPlan
+    }
+  },
   StatusTemplate: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -12603,6 +14796,15 @@ ${String(oldPlan25)}`);
       query: queryPlan
     }
   },
+  UpdateSignalPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      signal: planCreatePayloadResult,
+      signalEdge: CreateSignalPayload_signalEdgePlan
+    }
+  },
   UpdateStatusTemplatePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -12628,6 +14830,15 @@ ${String(oldPlan25)}`);
       query: queryPlan,
       vote: planCreatePayloadResult,
       voteEdge: CreateVotePayload_voteEdgePlan
+    }
+  },
+  UpdateWardenSyncQueuePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      wardenSyncQueue: planCreatePayloadResult,
+      wardenSyncQueueEdge: CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan
     }
   },
   User: {
@@ -12677,6 +14888,24 @@ ${String(oldPlan25)}`);
         }
       },
       rowId: Comment_rowIdPlan,
+      signals: {
+        plan($record) {
+          const $records = resource_signalPgResource.find({
+            user_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_commentsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       updatedAt: Comment_updatedAtPlan,
       votes: {
         plan($record) {
@@ -12794,6 +15023,160 @@ ${String(oldPlan25)}`);
       userId: PostDistinctCountAggregates_userIdPlan,
       voteType($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(voteTypeCodec, "vote_type", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      }
+    }
+  },
+  WardenSyncQueue: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      createdAt: Comment_createdAtPlan,
+      lastError($record) {
+        return $record.get("last_error");
+      },
+      maxAttempts($record) {
+        return $record.get("max_attempts");
+      },
+      nextRetryAt($record) {
+        return $record.get("next_retry_at");
+      },
+      rowId: Comment_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of warden_sync_queueUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_warden_sync_queuePgResource.get(spec);
+    }
+  },
+  WardenSyncQueueAggregates: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      average: pgAggregatesPlanAggregates,
+      distinctCount: pgAggregatesPlanAggregates,
+      keys: PostAggregates_keysPlan,
+      max: pgAggregatesPlanAggregates,
+      min: pgAggregatesPlanAggregates,
+      stddevPopulation: pgAggregatesPlanAggregates,
+      stddevSample: pgAggregatesPlanAggregates,
+      sum: pgAggregatesPlanAggregates,
+      variancePopulation: pgAggregatesPlanAggregates,
+      varianceSample: pgAggregatesPlanAggregates
+    }
+  },
+  WardenSyncQueueAverageAggregates: {
+    plans: {
+      attempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.numeric, pgAggregateSpec_average, $pgSelectSingle);
+      },
+      maxAttempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_average, $pgSelectSingle);
+      }
+    }
+  },
+  WardenSyncQueueConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      aggregates: pgAggregatesCloneSubplanWithoutPaginationSingle,
+      groupedAggregates: {
+        plan: pgAggregateCloneSubplanWithoutPaginationAsAggregate,
+        args: {
+          groupBy: pgAggregatesApplyGroupedAggregate,
+          having: pgAggregatesApplyConditionsToGroupedAggregates
+        }
+      },
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  WardenSyncQueueDistinctCountAggregates: {
+    plans: {
+      attempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      createdAt: PostDistinctCountAggregates_createdAtPlan,
+      lastError($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "last_error", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      maxAttempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      nextRetryAt($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.timestamptz, "next_retry_at", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      operation($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "operation", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      payload($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "payload", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      rowId: PostDistinctCountAggregates_rowIdPlan
+    }
+  },
+  WardenSyncQueueMaxAggregates: {
+    plans: {
+      attempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.int, pgAggregateSpec_max, $pgSelectSingle);
+      },
+      maxAttempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.int, pgAggregateSpec_max, $pgSelectSingle);
+      }
+    }
+  },
+  WardenSyncQueueMinAggregates: {
+    plans: {
+      attempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.int, pgAggregateSpec_min, $pgSelectSingle);
+      },
+      maxAttempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.int, pgAggregateSpec_min, $pgSelectSingle);
+      }
+    }
+  },
+  WardenSyncQueueStddevPopulationAggregates: {
+    plans: {
+      attempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.numeric, pgAggregateSpec_stddevPopulation, $pgSelectSingle);
+      },
+      maxAttempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_stddevPopulation, $pgSelectSingle);
+      }
+    }
+  },
+  WardenSyncQueueStddevSampleAggregates: {
+    plans: {
+      attempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.numeric, pgAggregateSpec_stddevSample, $pgSelectSingle);
+      },
+      maxAttempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_stddevSample, $pgSelectSingle);
+      }
+    }
+  },
+  WardenSyncQueueSumAggregates: {
+    plans: {
+      attempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.bigint, pgAggregateSpec_sum, $pgSelectSingle);
+      },
+      maxAttempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.bigint, pgAggregateSpec_sum, $pgSelectSingle);
+      }
+    }
+  },
+  WardenSyncQueueVariancePopulationAggregates: {
+    plans: {
+      attempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.numeric, pgAggregateSpec_variancePopulation, $pgSelectSingle);
+      },
+      maxAttempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_variancePopulation, $pgSelectSingle);
+      }
+    }
+  },
+  WardenSyncQueueVarianceSampleAggregates: {
+    plans: {
+      attempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
+      },
+      maxAttempts($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
       }
     }
   }
@@ -13125,6 +15508,12 @@ export const inputObjects = {
       projectStatusConfig: applyCreateFields
     }
   },
+  CreateSignalInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      signal: applyCreateFields
+    }
+  },
   CreateStatusTemplateInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -13141,6 +15530,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       vote: applyCreateFields
+    }
+  },
+  CreateWardenSyncQueueInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      wardenSyncQueue: applyCreateFields
     }
   },
   DatetimeFilter: {
@@ -13183,6 +15578,11 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteSignalInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteStatusTemplateInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -13194,6 +15594,11 @@ export const inputObjects = {
     }
   },
   DeleteVoteInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteWardenSyncQueueInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -13287,6 +15692,7 @@ export const inputObjects = {
       },
       projectId: PostCondition_projectIdApply,
       rowId: PostCondition_rowIdApply,
+      source: PostCondition_sourceApply,
       statusTemplateId: PostCondition_statusTemplateIdApply,
       statusUpdatedAt($condition, val) {
         return applyAttributeCondition("status_updated_at", TYPES.timestamptz, $condition, val);
@@ -13307,6 +15713,7 @@ export const inputObjects = {
       },
       projectId: PostDistinctCountAggregateFilter_projectIdApply,
       rowId: CommentDistinctCountAggregateFilter_rowIdApply,
+      source: PostDistinctCountAggregateFilter_sourceApply,
       statusTemplateId: PostDistinctCountAggregateFilter_statusTemplateIdApply,
       statusUpdatedAt($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "status_updated_at", TYPES.bigint, TYPES.timestamptz, $parent, input);
@@ -13362,6 +15769,33 @@ export const inputObjects = {
       },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_post.attributes.id, queryBuilder, value);
+      },
+      signals($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: signalIdentifier,
+          alias: resource_signalPgResource.name,
+          localAttributes: registryConfig.pgRelations.post.signalsByTheirPostId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.post.signalsByTheirPostId.remoteAttributes
+        };
+        return $rel;
+      },
+      signalsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: signalIdentifier,
+          alias: resource_signalPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.post.signalsByTheirPostId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.post.signalsByTheirPostId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      source(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("source", "source", spec_post.attributes.source, queryBuilder, value);
       },
       statusTemplate($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_status_templatePgResource, statusTemplateIdentifier, registryConfig.pgRelations.post.statusTemplateByMyStatusTemplateId.localAttributes, registryConfig.pgRelations.post.statusTemplateByMyStatusTemplateId.remoteAttributes, $where, value);
@@ -13580,6 +16014,7 @@ export const inputObjects = {
       number: PostInput_numberApply,
       projectId: ProjectLinkInput_projectIdApply,
       rowId: CommentInput_rowIdApply,
+      source: PostInput_sourceApply,
       statusTemplateId: ProjectStatusConfigInput_statusTemplateIdApply,
       statusUpdatedAt: PostInput_statusUpdatedAtApply,
       title: ProjectLinkInput_titleApply,
@@ -13609,6 +16044,7 @@ export const inputObjects = {
       number: PostInput_numberApply,
       projectId: ProjectLinkInput_projectIdApply,
       rowId: CommentInput_rowIdApply,
+      source: PostInput_sourceApply,
       statusTemplateId: ProjectStatusConfigInput_statusTemplateIdApply,
       statusUpdatedAt: PostInput_statusUpdatedAtApply,
       title: ProjectLinkInput_titleApply,
@@ -13638,6 +16074,14 @@ export const inputObjects = {
     }
   },
   PostToManyCommentFilter: {
+    plans: {
+      aggregates: PostToManyCommentFilter_aggregatesApply,
+      every: PostToManyCommentFilter_everyApply,
+      none: PostToManyCommentFilter_noneApply,
+      some: PostToManyCommentFilter_someApply
+    }
+  },
+  PostToManySignalFilter: {
     plans: {
       aggregates: PostToManyCommentFilter_aggregatesApply,
       every: PostToManyCommentFilter_everyApply,
@@ -13795,6 +16239,30 @@ export const inputObjects = {
       },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_project.attributes.id, queryBuilder, value);
+      },
+      signals($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: signalIdentifier,
+          alias: resource_signalPgResource.name,
+          localAttributes: registryConfig.pgRelations.project.signalsByTheirProjectId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.project.signalsByTheirProjectId.remoteAttributes
+        };
+        return $rel;
+      },
+      signalsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: signalIdentifier,
+          alias: resource_signalPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.project.signalsByTheirProjectId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.project.signalsByTheirProjectId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       },
       slug(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("slug", "slug", spec_project.attributes.slug, queryBuilder, value);
@@ -14566,6 +17034,282 @@ export const inputObjects = {
       some: PostToManyCommentFilter_someApply
     }
   },
+  ProjectToManySignalFilter: {
+    plans: {
+      aggregates: PostToManyCommentFilter_aggregatesApply,
+      every: PostToManyCommentFilter_everyApply,
+      none: PostToManyCommentFilter_noneApply,
+      some: PostToManyCommentFilter_someApply
+    }
+  },
+  SignalAggregatesFilter: {
+    plans: {
+      distinctCount: CommentAggregatesFilter_distinctCountApply,
+      filter: filterApply
+    }
+  },
+  SignalCondition: {
+    plans: {
+      createdAt: PostCondition_createdAtApply,
+      organizationId($condition, val) {
+        return applyAttributeCondition("organization_id", TYPES.text, $condition, val);
+      },
+      postId: CommentCondition_postIdApply,
+      projectId: PostCondition_projectIdApply,
+      rawContent($condition, val) {
+        return applyAttributeCondition("raw_content", TYPES.text, $condition, val);
+      },
+      rowId: PostCondition_rowIdApply,
+      sentiment($condition, val) {
+        return applyAttributeCondition("sentiment", TYPES.text, $condition, val);
+      },
+      source: PostCondition_sourceApply,
+      status($condition, val) {
+        return applyAttributeCondition("status", TYPES.text, $condition, val);
+      },
+      type($condition, val) {
+        return applyAttributeCondition("type", TYPES.text, $condition, val);
+      },
+      updatedAt: PostCondition_updatedAtApply,
+      userId: PostCondition_userIdApply
+    }
+  },
+  SignalDistinctCountAggregateFilter: {
+    plans: {
+      aiTags($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "ai_tags", TYPES.bigint, TYPES.jsonb, $parent, input);
+      },
+      createdAt: CommentDistinctCountAggregateFilter_createdAtApply,
+      organizationId($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "organization_id", TYPES.bigint, TYPES.text, $parent, input);
+      },
+      postId: CommentDistinctCountAggregateFilter_postIdApply,
+      projectId: PostDistinctCountAggregateFilter_projectIdApply,
+      rawContent($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "raw_content", TYPES.bigint, TYPES.text, $parent, input);
+      },
+      rowId: CommentDistinctCountAggregateFilter_rowIdApply,
+      sentiment($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "sentiment", TYPES.bigint, TYPES.text, $parent, input);
+      },
+      source: PostDistinctCountAggregateFilter_sourceApply,
+      sourceMetadata($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "source_metadata", TYPES.bigint, TYPES.jsonb, $parent, input);
+      },
+      status($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "status", TYPES.bigint, TYPES.text, $parent, input);
+      },
+      type($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "type", TYPES.bigint, TYPES.text, $parent, input);
+      },
+      updatedAt: CommentDistinctCountAggregateFilter_updatedAtApply,
+      userId: CommentDistinctCountAggregateFilter_userIdApply
+    }
+  },
+  SignalFilter: {
+    plans: {
+      and: PostFilter_andApply,
+      createdAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("createdAt", "created_at", spec_signal.attributes.created_at, queryBuilder, value);
+      },
+      not: PostFilter_notApply,
+      or: PostFilter_orApply,
+      organizationId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("organizationId", "organization_id", spec_signal.attributes.organization_id, queryBuilder, value);
+      },
+      post($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_postPgResource, postIdentifier, registryConfig.pgRelations.signal.postByMyPostId.localAttributes, registryConfig.pgRelations.signal.postByMyPostId.remoteAttributes, $where, value);
+      },
+      postExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_postPgResource, postIdentifier, registryConfig.pgRelations.signal.postByMyPostId.localAttributes, registryConfig.pgRelations.signal.postByMyPostId.remoteAttributes, $where, value);
+      },
+      postId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("postId", "post_id", spec_signal.attributes.post_id, queryBuilder, value);
+      },
+      project($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.signal.projectByMyProjectId.localAttributes, registryConfig.pgRelations.signal.projectByMyProjectId.remoteAttributes, $where, value);
+      },
+      projectExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.signal.projectByMyProjectId.localAttributes, registryConfig.pgRelations.signal.projectByMyProjectId.remoteAttributes, $where, value);
+      },
+      projectId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("projectId", "project_id", spec_signal.attributes.project_id, queryBuilder, value);
+      },
+      rawContent(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rawContent", "raw_content", spec_signal.attributes.raw_content, queryBuilder, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_signal.attributes.id, queryBuilder, value);
+      },
+      sentiment(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("sentiment", "sentiment", spec_signal.attributes.sentiment, queryBuilder, value);
+      },
+      source(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("source", "source", spec_signal.attributes.source, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_signal.attributes.status, queryBuilder, value);
+      },
+      type(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("type", "type", spec_signal.attributes.type, queryBuilder, value);
+      },
+      updatedAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("updatedAt", "updated_at", spec_signal.attributes.updated_at, queryBuilder, value);
+      },
+      user($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_userPgResource, userIdentifier, registryConfig.pgRelations.signal.userByMyUserId.localAttributes, registryConfig.pgRelations.signal.userByMyUserId.remoteAttributes, $where, value);
+      },
+      userExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_userPgResource, userIdentifier, registryConfig.pgRelations.signal.userByMyUserId.localAttributes, registryConfig.pgRelations.signal.userByMyUserId.remoteAttributes, $where, value);
+      },
+      userId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("userId", "user_id", spec_signal.attributes.user_id, queryBuilder, value);
+      }
+    }
+  },
+  SignalHavingAverageInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_signal.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_signal.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  SignalHavingDistinctCountInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_signal.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_signal.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  SignalHavingInput: {
+    plans: {
+      AND: pgAggregatesApplyAnd,
+      average: pgAggregatesPlanAggregatesField,
+      distinctCount: pgAggregatesPlanAggregatesField,
+      max: pgAggregatesPlanAggregatesField,
+      min: pgAggregatesPlanAggregatesField,
+      OR: PostHavingInput_ORApply,
+      stddevPopulation: pgAggregatesPlanAggregatesField,
+      stddevSample: pgAggregatesPlanAggregatesField,
+      sum: pgAggregatesPlanAggregatesField,
+      variancePopulation: pgAggregatesPlanAggregatesField,
+      varianceSample: pgAggregatesPlanAggregatesField
+    }
+  },
+  SignalHavingMaxInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_signal.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_signal.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  SignalHavingMinInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_signal.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_signal.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  SignalHavingStddevPopulationInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_signal.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_signal.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  SignalHavingStddevSampleInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_signal.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_signal.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  SignalHavingSumInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_signal.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_signal.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  SignalHavingVariancePopulationInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_signal.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_signal.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  SignalHavingVarianceSampleInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_signal.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_signal.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  SignalInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      aiTags: SignalInput_aiTagsApply,
+      createdAt: CommentInput_createdAtApply,
+      organizationId: StatusTemplateInput_organizationIdApply,
+      postId: CommentInput_postIdApply,
+      projectId: ProjectLinkInput_projectIdApply,
+      rawContent: SignalInput_rawContentApply,
+      rowId: CommentInput_rowIdApply,
+      sentiment: SignalInput_sentimentApply,
+      source: PostInput_sourceApply,
+      sourceMetadata: SignalInput_sourceMetadataApply,
+      status: SignalInput_statusApply,
+      type: SignalInput_typeApply,
+      updatedAt: CommentInput_updatedAtApply,
+      userId: CommentInput_userIdApply
+    }
+  },
+  SignalPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      aiTags: SignalInput_aiTagsApply,
+      createdAt: CommentInput_createdAtApply,
+      organizationId: StatusTemplateInput_organizationIdApply,
+      postId: CommentInput_postIdApply,
+      projectId: ProjectLinkInput_projectIdApply,
+      rawContent: SignalInput_rawContentApply,
+      rowId: CommentInput_rowIdApply,
+      sentiment: SignalInput_sentimentApply,
+      source: PostInput_sourceApply,
+      sourceMetadata: SignalInput_sourceMetadataApply,
+      status: SignalInput_statusApply,
+      type: SignalInput_typeApply,
+      updatedAt: CommentInput_updatedAtApply,
+      userId: CommentInput_userIdApply
+    }
+  },
   StatusTemplateCondition: {
     plans: {
       color($condition, val) {
@@ -14964,6 +17708,12 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateSignalInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateStatusTemplateInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -14977,6 +17727,12 @@ export const inputObjects = {
     }
   },
   UpdateVoteInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateWardenSyncQueueInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -15072,6 +17828,30 @@ export const inputObjects = {
       },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_user.attributes.id, queryBuilder, value);
+      },
+      signals($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: signalIdentifier,
+          alias: resource_signalPgResource.name,
+          localAttributes: registryConfig.pgRelations.user.signalsByTheirUserId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.user.signalsByTheirUserId.remoteAttributes
+        };
+        return $rel;
+      },
+      signalsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: signalIdentifier,
+          alias: resource_signalPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.user.signalsByTheirUserId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.user.signalsByTheirUserId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       },
       updatedAt(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("updatedAt", "updated_at", spec_user.attributes.updated_at, queryBuilder, value);
@@ -15245,6 +18025,14 @@ export const inputObjects = {
     }
   },
   UserToManyPostFilter: {
+    plans: {
+      aggregates: PostToManyCommentFilter_aggregatesApply,
+      every: PostToManyCommentFilter_everyApply,
+      none: PostToManyCommentFilter_noneApply,
+      some: PostToManyCommentFilter_someApply
+    }
+  },
+  UserToManySignalFilter: {
     plans: {
       aggregates: PostToManyCommentFilter_aggregatesApply,
       every: PostToManyCommentFilter_everyApply,
@@ -15477,6 +18265,240 @@ export const inputObjects = {
       notEqualTo: pgAggregatesApply_notEqualTo,
       notIn: pgAggregatesApply_notIn
     }
+  },
+  WardenSyncQueueCondition: {
+    plans: {
+      attempts($condition, val) {
+        return applyAttributeCondition("attempts", TYPES.int, $condition, val);
+      },
+      createdAt: PostCondition_createdAtApply,
+      lastError($condition, val) {
+        return applyAttributeCondition("last_error", TYPES.text, $condition, val);
+      },
+      maxAttempts($condition, val) {
+        return applyAttributeCondition("max_attempts", TYPES.int, $condition, val);
+      },
+      nextRetryAt($condition, val) {
+        return applyAttributeCondition("next_retry_at", TYPES.timestamptz, $condition, val);
+      },
+      operation($condition, val) {
+        return applyAttributeCondition("operation", TYPES.text, $condition, val);
+      },
+      rowId: PostCondition_rowIdApply
+    }
+  },
+  WardenSyncQueueFilter: {
+    plans: {
+      and: PostFilter_andApply,
+      attempts(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("attempts", "attempts", spec_wardenSyncQueue.attributes.attempts, queryBuilder, value);
+      },
+      createdAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("createdAt", "created_at", spec_wardenSyncQueue.attributes.created_at, queryBuilder, value);
+      },
+      lastError(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("lastError", "last_error", spec_wardenSyncQueue.attributes.last_error, queryBuilder, value);
+      },
+      maxAttempts(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("maxAttempts", "max_attempts", spec_wardenSyncQueue.attributes.max_attempts, queryBuilder, value);
+      },
+      nextRetryAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("nextRetryAt", "next_retry_at", spec_wardenSyncQueue.attributes.next_retry_at, queryBuilder, value);
+      },
+      not: PostFilter_notApply,
+      operation(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("operation", "operation", spec_wardenSyncQueue.attributes.operation, queryBuilder, value);
+      },
+      or: PostFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_wardenSyncQueue.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  WardenSyncQueueHavingAverageInput: {
+    plans: {
+      attempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
+      },
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
+      },
+      maxAttempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
+      },
+      nextRetryAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
+      }
+    }
+  },
+  WardenSyncQueueHavingDistinctCountInput: {
+    plans: {
+      attempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
+      },
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
+      },
+      maxAttempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
+      },
+      nextRetryAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
+      }
+    }
+  },
+  WardenSyncQueueHavingInput: {
+    plans: {
+      AND: pgAggregatesApplyAnd,
+      average: pgAggregatesPlanAggregatesField,
+      distinctCount: pgAggregatesPlanAggregatesField,
+      max: pgAggregatesPlanAggregatesField,
+      min: pgAggregatesPlanAggregatesField,
+      OR: PostHavingInput_ORApply,
+      stddevPopulation: pgAggregatesPlanAggregatesField,
+      stddevSample: pgAggregatesPlanAggregatesField,
+      sum: pgAggregatesPlanAggregatesField,
+      variancePopulation: pgAggregatesPlanAggregatesField,
+      varianceSample: pgAggregatesPlanAggregatesField
+    }
+  },
+  WardenSyncQueueHavingMaxInput: {
+    plans: {
+      attempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
+      },
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
+      },
+      maxAttempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
+      },
+      nextRetryAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
+      }
+    }
+  },
+  WardenSyncQueueHavingMinInput: {
+    plans: {
+      attempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
+      },
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
+      },
+      maxAttempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
+      },
+      nextRetryAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
+      }
+    }
+  },
+  WardenSyncQueueHavingStddevPopulationInput: {
+    plans: {
+      attempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
+      },
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
+      },
+      maxAttempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
+      },
+      nextRetryAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
+      }
+    }
+  },
+  WardenSyncQueueHavingStddevSampleInput: {
+    plans: {
+      attempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
+      },
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
+      },
+      maxAttempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
+      },
+      nextRetryAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
+      }
+    }
+  },
+  WardenSyncQueueHavingSumInput: {
+    plans: {
+      attempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
+      },
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
+      },
+      maxAttempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
+      },
+      nextRetryAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
+      }
+    }
+  },
+  WardenSyncQueueHavingVariancePopulationInput: {
+    plans: {
+      attempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
+      },
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
+      },
+      maxAttempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
+      },
+      nextRetryAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
+      }
+    }
+  },
+  WardenSyncQueueHavingVarianceSampleInput: {
+    plans: {
+      attempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
+      },
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
+      },
+      maxAttempts($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
+      },
+      nextRetryAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
+      }
+    }
+  },
+  WardenSyncQueueInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      attempts: WardenSyncQueueInput_attemptsApply,
+      createdAt: CommentInput_createdAtApply,
+      lastError: WardenSyncQueueInput_lastErrorApply,
+      maxAttempts: WardenSyncQueueInput_maxAttemptsApply,
+      nextRetryAt: WardenSyncQueueInput_nextRetryAtApply,
+      operation: WardenSyncQueueInput_operationApply,
+      payload: WardenSyncQueueInput_payloadApply,
+      rowId: CommentInput_rowIdApply
+    }
+  },
+  WardenSyncQueuePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      attempts: WardenSyncQueueInput_attemptsApply,
+      createdAt: CommentInput_createdAtApply,
+      lastError: WardenSyncQueueInput_lastErrorApply,
+      maxAttempts: WardenSyncQueueInput_maxAttemptsApply,
+      nextRetryAt: WardenSyncQueueInput_nextRetryAtApply,
+      operation: WardenSyncQueueInput_operationApply,
+      payload: WardenSyncQueueInput_payloadApply,
+      rowId: CommentInput_rowIdApply
+    }
   }
 };
 export const scalars = {
@@ -15512,6 +18534,42 @@ export const scalars = {
       throw new GraphQLError(`Datetime can only parse string values (kind='${ast.kind}')`);
     }
   },
+  JSON: {
+    serialize: JSONSerialize,
+    parseValue: JSONSerialize,
+    parseLiteral: (() => {
+      const parseLiteralToObject = (ast, variables) => {
+        switch (ast.kind) {
+          case Kind.STRING:
+          case Kind.BOOLEAN:
+            return ast.value;
+          case Kind.INT:
+          case Kind.FLOAT:
+            return parseFloat(ast.value);
+          case Kind.OBJECT:
+            {
+              const value = Object.create(null);
+              ast.fields.forEach(field => {
+                value[field.name.value] = parseLiteralToObject(field.value, variables);
+              });
+              return value;
+            }
+          case Kind.LIST:
+            return ast.values.map(n => parseLiteralToObject(n, variables));
+          case Kind.NULL:
+            return null;
+          case Kind.VARIABLE:
+            {
+              const name = ast.name.value;
+              return variables ? variables[name] : void 0;
+            }
+          default:
+            return;
+        }
+      };
+      return parseLiteralToObject;
+    })()
+  },
   UUID: {
     serialize: toString,
     parseValue(value) {
@@ -15545,52 +18603,52 @@ export const enums = {
   CommentOrderBy: {
     values: {
       CHILD_COMMENTS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.created_at, "created_at", "ASC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.created_at, "created_at", "ASC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.created_at, "created_at", "DESC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.created_at, "created_at", "DESC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_MESSAGE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.message, "message", "ASC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.message, "message", "ASC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_MESSAGE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.message, "message", "DESC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.message, "message", "DESC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_PARENT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.parent_id, "parent_id", "ASC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.parent_id, "parent_id", "ASC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_PARENT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.parent_id, "parent_id", "DESC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.parent_id, "parent_id", "DESC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_POST_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.post_id, "post_id", "ASC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.post_id, "post_id", "ASC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_POST_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.post_id, "post_id", "DESC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.post_id, "post_id", "DESC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.id, "id", "ASC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.id, "id", "ASC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.id, "id", "DESC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.id, "id", "DESC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.updated_at, "updated_at", "ASC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.updated_at, "updated_at", "ASC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.updated_at, "updated_at", "DESC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.updated_at, "updated_at", "DESC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.user_id, "user_id", "ASC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.user_id, "user_id", "ASC", relation4, resource_commentPgResource, $select);
       },
       CHILD_COMMENTS_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.user_id, "user_id", "DESC", relation3, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.user_id, "user_id", "DESC", relation4, resource_commentPgResource, $select);
       },
       CREATED_AT_ASC: PostOrderBy_CREATED_AT_ASCApply,
       CREATED_AT_DESC: PostOrderBy_CREATED_AT_DESCApply,
@@ -15618,18 +18676,8 @@ export const enums = {
           direction: "DESC"
         });
       },
-      POST_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "post_id",
-          direction: "ASC"
-        });
-      },
-      POST_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "post_id",
-          direction: "DESC"
-        });
-      },
+      POST_ID_ASC: CommentOrderBy_POST_ID_ASCApply,
+      POST_ID_DESC: CommentOrderBy_POST_ID_DESCApply,
       PRIMARY_KEY_ASC(queryBuilder) {
         commentUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
@@ -15666,6 +18714,7 @@ export const enums = {
         applyGroupByAttribute("number", TYPES.int, $pgSelect);
       },
       PROJECT_ID: PostGroupBy_PROJECT_IDApply,
+      SOURCE: PostGroupBy_SOURCEApply,
       STATUS_TEMPLATE_ID: PostGroupBy_STATUS_TEMPLATE_IDApply,
       STATUS_UPDATED_AT($pgSelect) {
         applyGroupByAttribute("status_updated_at", TYPES.timestamptz, $pgSelect);
@@ -15771,6 +18820,98 @@ export const enums = {
       PROJECT_ID_DESC: PostOrderBy_PROJECT_ID_DESCApply,
       ROW_ID_ASC: PostOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply,
+      SIGNALS_COUNT_ASC($select) {
+        pgAggregatesApplyOrderByTotalCount("ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_COUNT_DESC($select) {
+        pgAggregatesApplyOrderByTotalCount("DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_AI_TAGS_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.ai_tags, "ai_tags", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_AI_TAGS_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.ai_tags, "ai_tags", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.created_at, "created_at", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.created_at, "created_at", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.organization_id, "organization_id", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.organization_id, "organization_id", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_POST_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.post_id, "post_id", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_POST_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.post_id, "post_id", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.project_id, "project_id", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.project_id, "project_id", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_RAW_CONTENT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.raw_content, "raw_content", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_RAW_CONTENT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.raw_content, "raw_content", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ROW_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.id, "id", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ROW_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.id, "id", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SENTIMENT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.sentiment, "sentiment", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SENTIMENT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.sentiment, "sentiment", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source, "source", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source, "source", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source_metadata, "source_metadata", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source_metadata, "source_metadata", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_STATUS_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.status, "status", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_STATUS_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.status, "status", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_TYPE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.type, "type", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_TYPE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.type, "type", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.updated_at, "updated_at", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.updated_at, "updated_at", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_USER_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.user_id, "user_id", "ASC", relation3, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_USER_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.user_id, "user_id", "DESC", relation3, resource_signalPgResource, $select);
+      },
+      SOURCE_ASC: PostOrderBy_SOURCE_ASCApply,
+      SOURCE_DESC: PostOrderBy_SOURCE_DESCApply,
       STATUS_TEMPLATE_ID_ASC: PostOrderBy_STATUS_TEMPLATE_ID_ASCApply,
       STATUS_TEMPLATE_ID_DESC: PostOrderBy_STATUS_TEMPLATE_ID_DESCApply,
       STATUS_UPDATED_AT_ASC(queryBuilder) {
@@ -15915,18 +19056,8 @@ export const enums = {
         });
         queryBuilder.setOrderIsUnique();
       },
-      PROJECT_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "project_id",
-          direction: "ASC"
-        });
-      },
-      PROJECT_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "project_id",
-          direction: "DESC"
-        });
-      },
+      PROJECT_ID_ASC: ProjectLinkOrderBy_PROJECT_ID_ASCApply,
+      PROJECT_ID_DESC: ProjectLinkOrderBy_PROJECT_ID_DESCApply,
       ROW_ID_ASC: PostOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply,
       TITLE_ASC: PostOrderBy_TITLE_ASCApply,
@@ -15991,131 +19122,127 @@ export const enums = {
           direction: "DESC"
         });
       },
-      ORGANIZATION_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "organization_id",
-          direction: "ASC"
-        });
-      },
-      ORGANIZATION_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "organization_id",
-          direction: "DESC"
-        });
-      },
+      ORGANIZATION_ID_ASC: SignalOrderBy_ORGANIZATION_ID_ASCApply,
+      ORGANIZATION_ID_DESC: SignalOrderBy_ORGANIZATION_ID_DESCApply,
       POSTS_AVERAGE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_AVERAGE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation11, resource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SOURCE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "ASC", relation11, resource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SOURCE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_TITLE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_TITLE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_MAX_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_MAX_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_MIN_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_MIN_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_STDDEV_POPULATION_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_STDDEV_POPULATION_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_STDDEV_SAMPLE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_STDDEV_SAMPLE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_SUM_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_SUM_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_POPULATION_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_POPULATION_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "DESC", relation11, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_SAMPLE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "ASC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "ASC", relation11, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_SAMPLE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "DESC", relation9, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "DESC", relation11, resource_postPgResource, $select);
       },
       PREFIX_ASC(queryBuilder) {
         queryBuilder.orderBy({
@@ -16148,211 +19275,301 @@ export const enums = {
         queryBuilder.setOrderIsUnique();
       },
       PROJECT_LINKS_AVERAGE_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectLink.attributes.order, "order", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectLink.attributes.order, "order", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_AVERAGE_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectLink.attributes.order, "order", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectLink.attributes.order, "order", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.created_at, "created_at", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.created_at, "created_at", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.created_at, "created_at", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.created_at, "created_at", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.order, "order", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.order, "order", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.order, "order", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.order, "order", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.project_id, "project_id", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.project_id, "project_id", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.project_id, "project_id", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.project_id, "project_id", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.id, "id", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.id, "id", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.id, "id", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.id, "id", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_TITLE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.title, "title", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.title, "title", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_TITLE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.title, "title", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.title, "title", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.updated_at, "updated_at", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.updated_at, "updated_at", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.updated_at, "updated_at", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.updated_at, "updated_at", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_URL_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.url, "url", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.url, "url", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_DISTINCT_COUNT_URL_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.url, "url", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectLink.attributes.url, "url", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_MAX_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectLink.attributes.order, "order", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectLink.attributes.order, "order", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_MAX_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectLink.attributes.order, "order", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectLink.attributes.order, "order", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_MIN_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectLink.attributes.order, "order", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectLink.attributes.order, "order", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_MIN_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectLink.attributes.order, "order", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectLink.attributes.order, "order", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_STDDEV_POPULATION_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectLink.attributes.order, "order", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectLink.attributes.order, "order", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_STDDEV_POPULATION_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectLink.attributes.order, "order", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectLink.attributes.order, "order", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_STDDEV_SAMPLE_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectLink.attributes.order, "order", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectLink.attributes.order, "order", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_STDDEV_SAMPLE_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectLink.attributes.order, "order", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectLink.attributes.order, "order", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_SUM_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectLink.attributes.order, "order", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectLink.attributes.order, "order", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_SUM_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectLink.attributes.order, "order", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectLink.attributes.order, "order", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_VARIANCE_POPULATION_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectLink.attributes.order, "order", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectLink.attributes.order, "order", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_VARIANCE_POPULATION_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectLink.attributes.order, "order", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectLink.attributes.order, "order", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_VARIANCE_SAMPLE_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectLink.attributes.order, "order", "ASC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectLink.attributes.order, "order", "ASC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_LINKS_VARIANCE_SAMPLE_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectLink.attributes.order, "order", "DESC", relation11, resource_project_linkPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectLink.attributes.order, "order", "DESC", relation13, resource_project_linkPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.created_at, "created_at", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.created_at, "created_at", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.created_at, "created_at", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.created_at, "created_at", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_color, "custom_color", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_color, "custom_color", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_color, "custom_color", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_color, "custom_color", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_description, "custom_description", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_description, "custom_description", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_description, "custom_description", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_description, "custom_description", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_default, "is_default", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_default, "is_default", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_default, "is_default", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_default, "is_default", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_enabled, "is_enabled", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_enabled, "is_enabled", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_enabled, "is_enabled", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_enabled, "is_enabled", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.project_id, "project_id", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.project_id, "project_id", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.project_id, "project_id", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.project_id, "project_id", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.id, "id", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.id, "id", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.id, "id", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.id, "id", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.status_template_id, "status_template_id", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.status_template_id, "status_template_id", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.status_template_id, "status_template_id", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.status_template_id, "status_template_id", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation12, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation10, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation12, resource_project_status_configPgResource, $select);
       },
       ROW_ID_ASC: PostOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply,
+      SIGNALS_COUNT_ASC($select) {
+        pgAggregatesApplyOrderByTotalCount("ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_COUNT_DESC($select) {
+        pgAggregatesApplyOrderByTotalCount("DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_AI_TAGS_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.ai_tags, "ai_tags", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_AI_TAGS_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.ai_tags, "ai_tags", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.created_at, "created_at", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.created_at, "created_at", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.organization_id, "organization_id", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.organization_id, "organization_id", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_POST_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.post_id, "post_id", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_POST_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.post_id, "post_id", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.project_id, "project_id", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.project_id, "project_id", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_RAW_CONTENT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.raw_content, "raw_content", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_RAW_CONTENT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.raw_content, "raw_content", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ROW_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.id, "id", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ROW_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.id, "id", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SENTIMENT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.sentiment, "sentiment", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SENTIMENT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.sentiment, "sentiment", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source, "source", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source, "source", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source_metadata, "source_metadata", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source_metadata, "source_metadata", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_STATUS_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.status, "status", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_STATUS_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.status, "status", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_TYPE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.type, "type", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_TYPE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.type, "type", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.updated_at, "updated_at", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.updated_at, "updated_at", "DESC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_USER_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.user_id, "user_id", "ASC", relation14, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_USER_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.user_id, "user_id", "DESC", relation14, resource_signalPgResource, $select);
+      },
       SLUG_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "slug",
@@ -16473,6 +19690,127 @@ export const enums = {
       STATUS_TEMPLATE_ID_DESC: PostOrderBy_STATUS_TEMPLATE_ID_DESCApply
     }
   },
+  SignalGroupBy: {
+    values: {
+      AI_TAGS($pgSelect) {
+        applyGroupByAttribute("ai_tags", TYPES.jsonb, $pgSelect);
+      },
+      CREATED_AT: PostGroupBy_CREATED_ATApply,
+      CREATED_AT_TRUNCATED_TO_DAY: PostGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
+      CREATED_AT_TRUNCATED_TO_HOUR: PostGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
+      ORGANIZATION_ID($pgSelect) {
+        applyGroupByAttribute("organization_id", TYPES.text, $pgSelect);
+      },
+      POST_ID: CommentGroupBy_POST_IDApply,
+      PROJECT_ID: PostGroupBy_PROJECT_IDApply,
+      RAW_CONTENT($pgSelect) {
+        applyGroupByAttribute("raw_content", TYPES.text, $pgSelect);
+      },
+      SENTIMENT($pgSelect) {
+        applyGroupByAttribute("sentiment", TYPES.text, $pgSelect);
+      },
+      SOURCE: PostGroupBy_SOURCEApply,
+      SOURCE_METADATA($pgSelect) {
+        applyGroupByAttribute("source_metadata", TYPES.jsonb, $pgSelect);
+      },
+      STATUS($pgSelect) {
+        applyGroupByAttribute("status", TYPES.text, $pgSelect);
+      },
+      TYPE($pgSelect) {
+        applyGroupByAttribute("type", TYPES.text, $pgSelect);
+      },
+      UPDATED_AT: PostGroupBy_UPDATED_ATApply,
+      UPDATED_AT_TRUNCATED_TO_DAY: PostGroupBy_UPDATED_AT_TRUNCATED_TO_DAYApply,
+      UPDATED_AT_TRUNCATED_TO_HOUR: PostGroupBy_UPDATED_AT_TRUNCATED_TO_HOURApply,
+      USER_ID: PostGroupBy_USER_IDApply
+    }
+  },
+  SignalOrderBy: {
+    values: {
+      CREATED_AT_ASC: PostOrderBy_CREATED_AT_ASCApply,
+      CREATED_AT_DESC: PostOrderBy_CREATED_AT_DESCApply,
+      ORGANIZATION_ID_ASC: SignalOrderBy_ORGANIZATION_ID_ASCApply,
+      ORGANIZATION_ID_DESC: SignalOrderBy_ORGANIZATION_ID_DESCApply,
+      POST_ID_ASC: CommentOrderBy_POST_ID_ASCApply,
+      POST_ID_DESC: CommentOrderBy_POST_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        signalUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        signalUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PROJECT_ID_ASC: ProjectLinkOrderBy_PROJECT_ID_ASCApply,
+      PROJECT_ID_DESC: ProjectLinkOrderBy_PROJECT_ID_DESCApply,
+      RAW_CONTENT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "raw_content",
+          direction: "ASC"
+        });
+      },
+      RAW_CONTENT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "raw_content",
+          direction: "DESC"
+        });
+      },
+      ROW_ID_ASC: PostOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply,
+      SENTIMENT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "sentiment",
+          direction: "ASC"
+        });
+      },
+      SENTIMENT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "sentiment",
+          direction: "DESC"
+        });
+      },
+      SOURCE_ASC: PostOrderBy_SOURCE_ASCApply,
+      SOURCE_DESC: PostOrderBy_SOURCE_DESCApply,
+      STATUS_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "status",
+          direction: "ASC"
+        });
+      },
+      STATUS_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "status",
+          direction: "DESC"
+        });
+      },
+      TYPE_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "type",
+          direction: "ASC"
+        });
+      },
+      TYPE_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "type",
+          direction: "DESC"
+        });
+      },
+      UPDATED_AT_ASC: PostOrderBy_UPDATED_AT_ASCApply,
+      UPDATED_AT_DESC: PostOrderBy_UPDATED_AT_DESCApply,
+      USER_ID_ASC: PostOrderBy_USER_ID_ASCApply,
+      USER_ID_DESC: PostOrderBy_USER_ID_DESCApply
+    }
+  },
   StatusTemplateGroupBy: {
     values: {
       COLOR($pgSelect) {
@@ -16540,118 +19878,124 @@ export const enums = {
         queryBuilder.setOrderIsUnique();
       },
       POSTS_AVERAGE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_AVERAGE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation5, resource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SOURCE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "ASC", relation5, resource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SOURCE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_TITLE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_TITLE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_MAX_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_MAX_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_MIN_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_MIN_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_STDDEV_POPULATION_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_STDDEV_POPULATION_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_STDDEV_SAMPLE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_STDDEV_SAMPLE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_SUM_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_SUM_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_POPULATION_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_POPULATION_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "DESC", relation5, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_SAMPLE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "ASC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "ASC", relation5, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_SAMPLE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "DESC", relation4, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "DESC", relation5, resource_postPgResource, $select);
       },
       PRIMARY_KEY_ASC(queryBuilder) {
         status_templateUniques[0].attributes.forEach(attributeName => {
@@ -16672,112 +20016,112 @@ export const enums = {
         queryBuilder.setOrderIsUnique();
       },
       PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.created_at, "created_at", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.created_at, "created_at", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.created_at, "created_at", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.created_at, "created_at", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_color, "custom_color", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_color, "custom_color", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_color, "custom_color", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_color, "custom_color", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_description, "custom_description", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_description, "custom_description", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_description, "custom_description", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.custom_description, "custom_description", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_default, "is_default", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_default, "is_default", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_default, "is_default", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_default, "is_default", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_enabled, "is_enabled", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_enabled, "is_enabled", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_enabled, "is_enabled", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.is_enabled, "is_enabled", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.project_id, "project_id", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.project_id, "project_id", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.project_id, "project_id", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.project_id, "project_id", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.id, "id", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.id, "id", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.id, "id", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.id, "id", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.status_template_id, "status_template_id", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.status_template_id, "status_template_id", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.status_template_id, "status_template_id", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectStatusConfig.attributes.status_template_id, "status_template_id", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "ASC", relation6, resource_project_status_configPgResource, $select);
       },
       PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation5, resource_project_status_configPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_projectStatusConfig.attributes.sort_order, "sort_order", "DESC", relation6, resource_project_status_configPgResource, $select);
       },
       ROW_ID_ASC: PostOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply,
@@ -16816,52 +20160,52 @@ export const enums = {
         });
       },
       COMMENTS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.created_at, "created_at", "ASC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.created_at, "created_at", "ASC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.created_at, "created_at", "DESC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.created_at, "created_at", "DESC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_MESSAGE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.message, "message", "ASC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.message, "message", "ASC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_MESSAGE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.message, "message", "DESC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.message, "message", "DESC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_PARENT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.parent_id, "parent_id", "ASC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.parent_id, "parent_id", "ASC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_PARENT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.parent_id, "parent_id", "DESC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.parent_id, "parent_id", "DESC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_POST_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.post_id, "post_id", "ASC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.post_id, "post_id", "ASC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_POST_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.post_id, "post_id", "DESC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.post_id, "post_id", "DESC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.id, "id", "ASC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.id, "id", "ASC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.id, "id", "DESC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.id, "id", "DESC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.updated_at, "updated_at", "ASC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.updated_at, "updated_at", "ASC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.updated_at, "updated_at", "DESC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.updated_at, "updated_at", "DESC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.user_id, "user_id", "ASC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.user_id, "user_id", "ASC", relation7, resource_commentPgResource, $select);
       },
       COMMENTS_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.user_id, "user_id", "DESC", relation6, resource_commentPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_comment.attributes.user_id, "user_id", "DESC", relation7, resource_commentPgResource, $select);
       },
       CREATED_AT_ASC: PostOrderBy_CREATED_AT_ASCApply,
       CREATED_AT_DESC: PostOrderBy_CREATED_AT_DESCApply,
@@ -16896,118 +20240,124 @@ export const enums = {
       NAME_ASC: StatusTemplateOrderBy_NAME_ASCApply,
       NAME_DESC: StatusTemplateOrderBy_NAME_DESCApply,
       POSTS_AVERAGE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_AVERAGE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_post.attributes.number, "number", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.project_id, "project_id", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation8, resource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SOURCE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "ASC", relation8, resource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SOURCE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_template_id, "status_template_id", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_TITLE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_TITLE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.user_id, "user_id", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_MAX_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_MAX_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_post.attributes.number, "number", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_MIN_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_MIN_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_post.attributes.number, "number", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_STDDEV_POPULATION_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_STDDEV_POPULATION_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_STDDEV_SAMPLE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_STDDEV_SAMPLE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_SUM_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_SUM_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_post.attributes.number, "number", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_POPULATION_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_POPULATION_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", "DESC", relation8, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_SAMPLE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "ASC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "ASC", relation8, resource_postPgResource, $select);
       },
       POSTS_VARIANCE_SAMPLE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "DESC", relation7, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", "DESC", relation8, resource_postPgResource, $select);
       },
       PRIMARY_KEY_ASC(queryBuilder) {
         userUniques[0].attributes.forEach(attributeName => {
@@ -17029,6 +20379,96 @@ export const enums = {
       },
       ROW_ID_ASC: PostOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply,
+      SIGNALS_COUNT_ASC($select) {
+        pgAggregatesApplyOrderByTotalCount("ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_COUNT_DESC($select) {
+        pgAggregatesApplyOrderByTotalCount("DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_AI_TAGS_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.ai_tags, "ai_tags", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_AI_TAGS_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.ai_tags, "ai_tags", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.created_at, "created_at", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.created_at, "created_at", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.organization_id, "organization_id", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.organization_id, "organization_id", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_POST_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.post_id, "post_id", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_POST_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.post_id, "post_id", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.project_id, "project_id", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.project_id, "project_id", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_RAW_CONTENT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.raw_content, "raw_content", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_RAW_CONTENT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.raw_content, "raw_content", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ROW_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.id, "id", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_ROW_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.id, "id", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SENTIMENT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.sentiment, "sentiment", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SENTIMENT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.sentiment, "sentiment", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source, "source", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source, "source", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source_metadata, "source_metadata", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_SOURCE_METADATA_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.source_metadata, "source_metadata", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_STATUS_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.status, "status", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_STATUS_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.status, "status", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_TYPE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.type, "type", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_TYPE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.type, "type", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.updated_at, "updated_at", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.updated_at, "updated_at", "DESC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_USER_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.user_id, "user_id", "ASC", relation10, resource_signalPgResource, $select);
+      },
+      SIGNALS_DISTINCT_COUNT_USER_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_signal.attributes.user_id, "user_id", "DESC", relation10, resource_signalPgResource, $select);
+      },
       UPDATED_AT_ASC: PostOrderBy_UPDATED_AT_ASCApply,
       UPDATED_AT_DESC: PostOrderBy_UPDATED_AT_DESCApply,
       USERNAME_ASC(queryBuilder) {
@@ -17046,46 +20486,46 @@ export const enums = {
         queryBuilder.setOrderIsUnique();
       },
       VOTES_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation9, resource_votePgResource, $select);
       },
       VOTES_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.created_at, "created_at", "ASC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.created_at, "created_at", "ASC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.created_at, "created_at", "DESC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.created_at, "created_at", "DESC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_POST_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.post_id, "post_id", "ASC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.post_id, "post_id", "ASC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_POST_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.post_id, "post_id", "DESC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.post_id, "post_id", "DESC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.id, "id", "ASC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.id, "id", "ASC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.id, "id", "DESC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.id, "id", "DESC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.updated_at, "updated_at", "ASC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.updated_at, "updated_at", "ASC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.updated_at, "updated_at", "DESC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.updated_at, "updated_at", "DESC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.user_id, "user_id", "ASC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.user_id, "user_id", "ASC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.user_id, "user_id", "DESC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.user_id, "user_id", "DESC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_VOTE_TYPE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.vote_type, "vote_type", "ASC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.vote_type, "vote_type", "ASC", relation9, resource_votePgResource, $select);
       },
       VOTES_DISTINCT_COUNT_VOTE_TYPE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.vote_type, "vote_type", "DESC", relation8, resource_votePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.vote_type, "vote_type", "DESC", relation9, resource_votePgResource, $select);
       }
     }
   },
@@ -17146,6 +20586,123 @@ export const enums = {
       UPDATED_AT_DESC: PostOrderBy_UPDATED_AT_DESCApply,
       USER_ID_ASC: PostOrderBy_USER_ID_ASCApply,
       USER_ID_DESC: PostOrderBy_USER_ID_DESCApply
+    }
+  },
+  WardenSyncQueueGroupBy: {
+    values: {
+      ATTEMPTS($pgSelect) {
+        applyGroupByAttribute("attempts", TYPES.int, $pgSelect);
+      },
+      CREATED_AT: PostGroupBy_CREATED_ATApply,
+      CREATED_AT_TRUNCATED_TO_DAY: PostGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
+      CREATED_AT_TRUNCATED_TO_HOUR: PostGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
+      LAST_ERROR($pgSelect) {
+        applyGroupByAttribute("last_error", TYPES.text, $pgSelect);
+      },
+      MAX_ATTEMPTS($pgSelect) {
+        applyGroupByAttribute("max_attempts", TYPES.int, $pgSelect);
+      },
+      NEXT_RETRY_AT($pgSelect) {
+        applyGroupByAttribute("next_retry_at", TYPES.timestamptz, $pgSelect);
+      },
+      NEXT_RETRY_AT_TRUNCATED_TO_DAY(qb) {
+        applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_day, "next_retry_at", TYPES.timestamptz, qb);
+      },
+      NEXT_RETRY_AT_TRUNCATED_TO_HOUR(qb) {
+        applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_hour, "next_retry_at", TYPES.timestamptz, qb);
+      },
+      OPERATION($pgSelect) {
+        applyGroupByAttribute("operation", TYPES.text, $pgSelect);
+      },
+      PAYLOAD($pgSelect) {
+        applyGroupByAttribute("payload", TYPES.jsonb, $pgSelect);
+      }
+    }
+  },
+  WardenSyncQueueOrderBy: {
+    values: {
+      ATTEMPTS_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "attempts",
+          direction: "ASC"
+        });
+      },
+      ATTEMPTS_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "attempts",
+          direction: "DESC"
+        });
+      },
+      CREATED_AT_ASC: PostOrderBy_CREATED_AT_ASCApply,
+      CREATED_AT_DESC: PostOrderBy_CREATED_AT_DESCApply,
+      LAST_ERROR_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "last_error",
+          direction: "ASC"
+        });
+      },
+      LAST_ERROR_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "last_error",
+          direction: "DESC"
+        });
+      },
+      MAX_ATTEMPTS_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "max_attempts",
+          direction: "ASC"
+        });
+      },
+      MAX_ATTEMPTS_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "max_attempts",
+          direction: "DESC"
+        });
+      },
+      NEXT_RETRY_AT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "next_retry_at",
+          direction: "ASC"
+        });
+      },
+      NEXT_RETRY_AT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "next_retry_at",
+          direction: "DESC"
+        });
+      },
+      OPERATION_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "operation",
+          direction: "ASC"
+        });
+      },
+      OPERATION_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "operation",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        warden_sync_queueUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        warden_sync_queueUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: PostOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply
     }
   }
 };
