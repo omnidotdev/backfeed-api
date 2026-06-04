@@ -124,15 +124,28 @@ describe("buildPostProvenanceSignal", () => {
     description: "It would be easier on the eyes.",
   };
 
-  test("produces a published widget feedback signal linked to the post", () => {
+  test("produces a published widget signal linked to the post", () => {
     const signal = buildPostProvenanceSignal(base);
     expect(signal.source).toBe("widget");
-    expect(signal.type).toBe("feedback");
     expect(signal.status).toBe("published");
     expect(signal.postId).toBe("post-1");
     expect(signal.projectId).toBe("proj-1");
     expect(signal.organizationId).toBe("org-1");
     expect(signal.userId).toBe("user-1");
+  });
+
+  test("triages the content into type and sentiment", () => {
+    const feature = buildPostProvenanceSignal(base);
+    expect(feature.type).toBe("feedback");
+    expect(feature.sentiment).toBe("neutral");
+
+    const bug = buildPostProvenanceSignal({
+      ...base,
+      title: "App crashes on save",
+      description: "It is broken and I hate it",
+    });
+    expect(bug.type).toBe("bug");
+    expect(bug.sentiment).toBe("negative");
   });
 
   test("combines title and description into rawContent", () => {
