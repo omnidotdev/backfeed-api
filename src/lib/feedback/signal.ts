@@ -5,6 +5,8 @@
  * truth for that validation.
  */
 
+import { heuristicTriage } from "./triage";
+
 import type { InsertSignal } from "lib/db/schema";
 
 /** Where a signal originated. */
@@ -91,13 +93,21 @@ export const buildPostProvenanceSignal = (post: {
   userId?: string | null;
   title?: string | null;
   description?: string | null;
-}): InsertSignal => ({
-  source: DEFAULT_SIGNAL_SOURCE,
-  type: "feedback",
-  status: "published",
-  organizationId: post.organizationId,
-  projectId: post.projectId,
-  userId: post.userId ?? null,
-  postId: post.postId,
-  rawContent: [post.title, post.description].filter(Boolean).join("\n\n"),
-});
+}): InsertSignal => {
+  const rawContent = [post.title, post.description]
+    .filter(Boolean)
+    .join("\n\n");
+  const { type, sentiment } = heuristicTriage(rawContent);
+
+  return {
+    source: DEFAULT_SIGNAL_SOURCE,
+    type,
+    status: "published",
+    organizationId: post.organizationId,
+    projectId: post.projectId,
+    userId: post.userId ?? null,
+    postId: post.postId,
+    rawContent,
+    sentiment,
+  };
+};
