@@ -16,51 +16,58 @@ import { wrapPlans } from "postgraphile/utils";
 import type { InsertProject, InsertStatusTemplate } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 
-const DEFAULT_STATUS_TEMPLATES: Omit<InsertStatusTemplate, "organizationId">[] =
-  [
-    {
-      name: "open",
-      displayName: "Open",
-      color: "#3b82f6",
-      description: "New and awaiting review",
-      sortOrder: 0,
-    },
-    {
-      name: "under_review",
-      displayName: "Under Review",
-      color: "#f59e0b",
-      description: "Being evaluated by the team",
-      sortOrder: 1,
-    },
-    {
-      name: "planned",
-      displayName: "Planned",
-      color: "#8b5cf6",
-      description: "Scheduled for implementation",
-      sortOrder: 2,
-    },
-    {
-      name: "in_progress",
-      displayName: "In Progress",
-      color: "#10b981",
-      description: "Currently being worked on",
-      sortOrder: 3,
-    },
-    {
-      name: "completed",
-      displayName: "Completed",
-      color: "#22c55e",
-      description: "Done",
-      sortOrder: 4,
-    },
-    {
-      name: "closed",
-      displayName: "Closed",
-      color: "#6b7280",
-      description: "Will not be implemented",
-      sortOrder: 5,
-    },
-  ];
+/**
+ * Default status templates seeded for every organization.
+ *
+ * @knipignore also consumed by the backfill script in the knip-ignored scripts dir
+ */
+export const DEFAULT_STATUS_TEMPLATES: Omit<
+  InsertStatusTemplate,
+  "organizationId"
+>[] = [
+  {
+    name: "open",
+    displayName: "Open",
+    color: "#3b82f6",
+    description: "New and awaiting review",
+    sortOrder: 0,
+  },
+  {
+    name: "under_review",
+    displayName: "Under Review",
+    color: "#f59e0b",
+    description: "Being evaluated by the team",
+    sortOrder: 1,
+  },
+  {
+    name: "planned",
+    displayName: "Planned",
+    color: "#8b5cf6",
+    description: "Scheduled for implementation",
+    sortOrder: 2,
+  },
+  {
+    name: "in_progress",
+    displayName: "In Progress",
+    color: "#10b981",
+    description: "Currently being worked on",
+    sortOrder: 3,
+  },
+  {
+    name: "completed",
+    displayName: "Completed",
+    color: "#22c55e",
+    description: "Done",
+    sortOrder: 4,
+  },
+  {
+    name: "closed",
+    displayName: "Closed",
+    color: "#6b7280",
+    description: "Will not be implemented",
+    sortOrder: 5,
+  },
+];
 
 const createDefaultStatusTemplates = (): PlanWrapperFn =>
   EXPORTABLE(
