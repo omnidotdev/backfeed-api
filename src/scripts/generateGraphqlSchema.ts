@@ -18,8 +18,9 @@ import {
   writeTuples,
 } from "lib/authz";
 import preset from "lib/config/graphile.config";
-import { statusTemplates } from "lib/db/schema";
+import { signals, statusTemplates } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
+import { buildPostProvenanceSignal } from "lib/feedback/signal";
 import {
   FEATURE_KEYS,
   billingBypassOrgIds,
@@ -155,7 +156,8 @@ const generateGraphqlSchema = async () => {
         isAuthzEnabled,
         writeTuples,
       },
-      "lib/db/schema": { statusTemplates },
+      "lib/db/schema": { signals, statusTemplates },
+      "lib/feedback/signal": { buildPostProvenanceSignal },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "lib/graphql/plugins/authorization/constants": {
         FEATURE_KEYS,

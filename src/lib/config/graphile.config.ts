@@ -17,6 +17,7 @@ import {
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
 import { DefaultStatusTemplatesPlugin } from "lib/graphql/plugins/defaults";
 import { EventEmissionPlugin } from "lib/graphql/plugins/events";
+import { PostSignalProvenancePlugin } from "lib/graphql/plugins/feedback";
 import {
   PostSearchPlugin,
   ProjectSearchPlugin,
@@ -66,6 +67,8 @@ const preset: GraphileConfig.Preset = {
     EventEmissionPlugin,
     // Default resource seeding plugins
     DefaultStatusTemplatesPlugin,
+    // Signal provenance plugin (records a signal per created post)
+    PostSignalProvenancePlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     PostSearchPlugin,
