@@ -5,6 +5,9 @@ import type { KnipConfig } from "knip";
  * @see https://knip.dev/overview/configuration
  */
 const knipConfig: KnipConfig = {
+  // Test files are entry points (the suite is run via `bun test`, which knip
+  // does not auto-detect), so their imports count as used
+  entry: ["src/**/*.test.ts"],
   ignore: [
     // ODK code generation config
     "odk.config.ts",
