@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+
 import { cors } from "@elysiajs/cors";
 import { yoga } from "@elysiajs/graphql-yoga";
 import { useOpenTelemetry } from "@envelop/opentelemetry";
@@ -30,7 +31,13 @@ import idpWebhook from "lib/idp/webhooks";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
 import { initializeSearchIndexes, search } from "lib/search";
 
-const commit = (() => { try { return readFileSync("/app/.git-sha", "utf-8").trim(); } catch { return "unknown"; } })();
+const commit = (() => {
+  try {
+    return readFileSync("/app/.git-sha", "utf-8").trim();
+  } catch {
+    return "unknown";
+  }
+})();
 
 // TODO run on Bun runtime instead of Node, track https://github.com/oven-sh/bun/issues/11785
 
