@@ -5,6 +5,8 @@
  * truth for that validation.
  */
 
+import type { InsertSignal } from "lib/db/schema";
+
 /** Where a signal originated. */
 export const SIGNAL_SOURCES = [
   "widget",
@@ -76,3 +78,26 @@ export const assertValidSignalInput = (input: {
     throw new Error(`Invalid signal status: ${String(input.status)}`);
   }
 };
+
+/**
+ * Build a provenance signal for a post created directly in the app. Every
+ * app-created post is also recorded as a published "widget" feedback signal so
+ * the signal table is the unified record of all feedback inputs.
+ */
+export const buildPostProvenanceSignal = (post: {
+  postId: string;
+  projectId: string;
+  organizationId: string;
+  userId?: string | null;
+  title?: string | null;
+  description?: string | null;
+}): InsertSignal => ({
+  source: DEFAULT_SIGNAL_SOURCE,
+  type: "feedback",
+  status: "published",
+  organizationId: post.organizationId,
+  projectId: post.projectId,
+  userId: post.userId ?? null,
+  postId: post.postId,
+  rawContent: [post.title, post.description].filter(Boolean).join("\n\n"),
+});

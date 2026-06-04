@@ -7,6 +7,7 @@ import {
   SIGNAL_STATUSES,
   SIGNAL_TYPES,
   assertValidSignalInput,
+  buildPostProvenanceSignal,
   isSignalSource,
   isSignalStatus,
   isSignalType,
@@ -110,5 +111,44 @@ describe("assertValidSignalInput", () => {
       assertValidSignalInput({ source: "web", status: "archived" }),
     ).toThrow(/status/i);
     expect(() => assertValidSignalInput({ source: "web" })).not.toThrow();
+  });
+});
+
+describe("buildPostProvenanceSignal", () => {
+  const base = {
+    postId: "post-1",
+    projectId: "proj-1",
+    organizationId: "org-1",
+    userId: "user-1",
+    title: "Add dark mode",
+    description: "It would be easier on the eyes.",
+  };
+
+  test("produces a published widget feedback signal linked to the post", () => {
+    const signal = buildPostProvenanceSignal(base);
+    expect(signal.source).toBe("widget");
+    expect(signal.type).toBe("feedback");
+    expect(signal.status).toBe("published");
+    expect(signal.postId).toBe("post-1");
+    expect(signal.projectId).toBe("proj-1");
+    expect(signal.organizationId).toBe("org-1");
+    expect(signal.userId).toBe("user-1");
+  });
+
+  test("combines title and description into rawContent", () => {
+    const signal = buildPostProvenanceSignal(base);
+    expect(signal.rawContent).toBe(
+      "Add dark mode\n\nIt would be easier on the eyes.",
+    );
+  });
+
+  test("falls back to just the title when description is absent", () => {
+    const signal = buildPostProvenanceSignal({ ...base, description: null });
+    expect(signal.rawContent).toBe("Add dark mode");
+  });
+
+  test("tolerates a missing user", () => {
+    const signal = buildPostProvenanceSignal({ ...base, userId: null });
+    expect(signal.userId).toBeNull();
   });
 });
