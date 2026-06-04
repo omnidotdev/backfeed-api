@@ -12,6 +12,7 @@ import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { comments } from "./comment.table";
 import { projects } from "./project.table";
+import { signals } from "./signal.table";
 import { statusTemplates } from "./statusTemplate.table";
 import { users } from "./user.table";
 import { votes } from "./vote.table";
@@ -42,6 +43,8 @@ export const posts = pgTable(
     statusTemplateId: uuid().references(() => statusTemplates.id, {
       onDelete: "set null",
     }),
+    // Origin of the post: "widget" (typed into the app) or an ingested signal source
+    source: text().default("widget"),
     statusUpdatedAt: generateDefaultDate(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
@@ -73,6 +76,7 @@ export const postRelations = relations(posts, ({ many, one }) => ({
   }),
   comments: many(comments),
   votes: many(votes),
+  signals: many(signals),
 }));
 
 /**
