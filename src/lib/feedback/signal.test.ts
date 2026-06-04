@@ -6,6 +6,7 @@ import {
   SIGNAL_SOURCES,
   SIGNAL_STATUSES,
   SIGNAL_TYPES,
+  assertValidSignalInput,
   isSignalSource,
   isSignalStatus,
   isSignalType,
@@ -69,5 +70,45 @@ describe("signal status validation", () => {
   test("default status is pending and valid", () => {
     expect(DEFAULT_SIGNAL_STATUS).toBe("pending");
     expect(isSignalStatus(DEFAULT_SIGNAL_STATUS)).toBe(true);
+  });
+});
+
+describe("assertValidSignalInput", () => {
+  test("accepts a fully valid input", () => {
+    expect(() =>
+      assertValidSignalInput({
+        source: "widget",
+        type: "feedback",
+        status: "pending",
+      }),
+    ).not.toThrow();
+  });
+
+  test("accepts minimal input with only a source", () => {
+    expect(() => assertValidSignalInput({ source: "email" })).not.toThrow();
+  });
+
+  test("throws when source is missing", () => {
+    expect(() => assertValidSignalInput({})).toThrow(/source/i);
+  });
+
+  test("throws on an invalid source", () => {
+    expect(() => assertValidSignalInput({ source: "carrier_pigeon" })).toThrow(
+      /source/i,
+    );
+  });
+
+  test("throws on an invalid type but allows an absent one", () => {
+    expect(() =>
+      assertValidSignalInput({ source: "web", type: "complaint" }),
+    ).toThrow(/type/i);
+    expect(() => assertValidSignalInput({ source: "web" })).not.toThrow();
+  });
+
+  test("throws on an invalid status but allows an absent one", () => {
+    expect(() =>
+      assertValidSignalInput({ source: "web", status: "archived" }),
+    ).toThrow(/status/i);
+    expect(() => assertValidSignalInput({ source: "web" })).not.toThrow();
   });
 });

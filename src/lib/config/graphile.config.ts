@@ -8,6 +8,7 @@ import {
   ProjectLinkPlugin,
   ProjectPlugin,
   ProjectStatusConfigPlugin,
+  SignalPlugin,
   SmartTagPlugin,
   StatusTemplatePlugin,
   UserPlugin,
@@ -57,6 +58,7 @@ const preset: GraphileConfig.Preset = {
     StatusTemplatePlugin,
     VotePlugin,
     CommentPlugin,
+    SignalPlugin,
     SmartTagPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
