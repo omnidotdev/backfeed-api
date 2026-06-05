@@ -13,7 +13,14 @@ import { AUTH_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { projects, statusTemplates, users } from "lib/db/schema";
 import { checkOrganizationLimit } from "lib/entitlements";
+import { DEFAULT_STATUS_TEMPLATES } from "lib/graphql/plugins/defaults/DefaultStatusTemplates.plugin";
 import { getOrgMemberCounts } from "lib/idp/members";
+
+interface OrganizationCreatedPayload {
+  eventType: "organization.created";
+  organizationId: string;
+  timestamp: string;
+}
 
 interface OrganizationDeletedPayload {
   eventType: "organization.deleted";
@@ -47,6 +54,7 @@ interface MemberRoleChangedPayload {
 }
 
 type IdpWebhookPayload =
+  | OrganizationCreatedPayload
   | OrganizationDeletedPayload
   | UserDeletedPayload
   | MemberAddedPayload
@@ -123,6 +131,9 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
       );
 
       switch (body.eventType) {
+        case "organization.created":
+          await ensureDefaultStatusTemplates(body.organizationId);
+          break;
         case "organization.deleted":
           await handleOrganizationDeleted(body);
           break;
@@ -164,6 +175,36 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
     }),
   },
 );
+
+/**
+ * Idempotently seed an organization's default status templates.
+ *
+ * Mirrors the DefaultStatusTemplatesPlugin insert (same `ON CONFLICT DO NOTHING`
+ * on the `(organizationId, name)` unique constraint) so it is safe to call
+ * repeatedly and from multiple lifecycle hooks. Errors are logged, never thrown.
+ */
+async function ensureDefaultStatusTemplates(
+  organizationId: string,
+): Promise<void> {
+  try {
+    await dbPool
+      .insert(statusTemplates)
+      .values(
+        DEFAULT_STATUS_TEMPLATES.map((template) => ({
+          ...template,
+          organizationId,
+        })),
+      )
+      .onConflictDoNothing({
+        target: [statusTemplates.organizationId, statusTemplates.name],
+      });
+  } catch (err) {
+    console.error(
+      `Failed to seed status templates for org ${organizationId}:`,
+      err,
+    );
+  }
+}
 
 /**
  * Handle organization deleted event.
@@ -236,6 +277,13 @@ async function handleMemberAdded(
   payload: MemberAddedPayload,
 ): Promise<boolean> {
   const { organizationId } = payload;
+
+  // Redundant seeding path: the org-level default status templates are normally
+  // created on `createProject`, but that side effect can silently fail. Seeding
+  // here too (idempotent) ensures every org that gains a member has templates,
+  // so feedback never lands without a status. See ensureDefaultStatusTemplates.
+  await ensureDefaultStatusTemplates(organizationId);
+
   const counts = await getOrgMemberCounts(organizationId);
 
   if (!counts) return true;
