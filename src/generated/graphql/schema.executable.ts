@@ -870,7 +870,9 @@ const spec_post = {
       codec: TYPES.int,
       notNull: true,
       extensions: {
-        __proto__: null,
+        tags: {
+          behavior: "-attribute:insert -attribute:update"
+        },
         canSelect: true,
         canInsert: true,
         canUpdate: true
@@ -5302,9 +5304,6 @@ function WardenSyncQueueInput_nextRetryAtApply(obj, val, info) {
 const CreatePostPayload_postEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_postPgResource, postUniques[0].attributes, $mutation, fieldArgs);
 function PostInput_statusUpdatedAtApply(obj, val, info) {
   obj.set("status_updated_at", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function PostInput_numberApply(obj, val, info) {
-  obj.set("number", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function PostInput_sourceApply(obj, val, info) {
   obj.set("source", bakedInputRuntime(info.schema, info.field.type, val));
@@ -11811,7 +11810,6 @@ input PostInput {
   statusUpdatedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  number: Int!
   source: String
 }
 
@@ -12325,7 +12323,6 @@ input PostPatch {
   statusUpdatedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  number: Int
   source: String
 }
 
@@ -16101,7 +16098,6 @@ export const inputObjects = {
     plans: {
       createdAt: CommentInput_createdAtApply,
       description: StatusTemplateInput_descriptionApply,
-      number: PostInput_numberApply,
       projectId: ProjectLinkInput_projectIdApply,
       rowId: CommentInput_rowIdApply,
       source: PostInput_sourceApply,
@@ -16131,7 +16127,6 @@ export const inputObjects = {
     plans: {
       createdAt: CommentInput_createdAtApply,
       description: StatusTemplateInput_descriptionApply,
-      number: PostInput_numberApply,
       projectId: ProjectLinkInput_projectIdApply,
       rowId: CommentInput_rowIdApply,
       source: PostInput_sourceApply,

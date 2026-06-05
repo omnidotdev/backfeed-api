@@ -6465,7 +6465,6 @@ input PostInput {
   statusUpdatedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  number: Int!
   source: String
 }
 
@@ -6979,7 +6978,6 @@ input PostPatch {
   statusUpdatedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  number: Int
   source: String
 }
 
