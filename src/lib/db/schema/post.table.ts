@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
+import { attachments } from "./attachment.table";
 import { comments } from "./comment.table";
 import { projects } from "./project.table";
 import { signals } from "./signal.table";
@@ -77,6 +78,7 @@ export const postRelations = relations(posts, ({ many, one }) => ({
   comments: many(comments),
   votes: many(votes),
   signals: many(signals),
+  attachments: many(attachments),
 }));
 
 /**

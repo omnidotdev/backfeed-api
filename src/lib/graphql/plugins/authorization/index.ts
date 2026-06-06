@@ -1,3 +1,4 @@
+export { default as AttachmentPlugin } from "./Attachment.plugin";
 export { default as CommentPlugin } from "./Comment.plugin";
 export { default as PostPlugin } from "./Post.plugin";
 export { default as PrimaryKeyMutationsOnlyPlugin } from "./PrimaryKeyMutationsOnly.plugin";

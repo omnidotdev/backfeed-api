@@ -2,6 +2,7 @@ import { PgAggregatesPreset } from "@graphile/pg-aggregates";
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
 import { observerPlugin } from "lib/graphql/plugins";
 import {
+  AttachmentPlugin,
   CommentPlugin,
   PostPlugin,
   PrimaryKeyMutationsOnlyPlugin,
@@ -59,6 +60,7 @@ const preset: GraphileConfig.Preset = {
     StatusTemplatePlugin,
     VotePlugin,
     CommentPlugin,
+    AttachmentPlugin,
     SignalPlugin,
     SmartTagPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)

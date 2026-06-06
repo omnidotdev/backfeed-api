@@ -33,6 +33,14 @@ export const {
   // Meilisearch (unified search)
   MEILISEARCH_URL,
   MEILISEARCH_MASTER_KEY,
+  // Object storage (feedback attachments)
+  S3_BUCKET,
+  S3_REGION,
+  S3_ENDPOINT,
+  S3_ACCESS_KEY_ID,
+  S3_SECRET_ACCESS_KEY,
+  /** Override base URL for public object URLs (e.g. a CDN in front of the bucket) */
+  S3_PUBLIC_BASE_URL,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
@@ -42,6 +50,9 @@ export const hasBilling = !!BILLING_BASE_URL;
 
 /** Whether search indexing is enabled */
 export const isSearchEnabled = !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;
+
+/** Whether object storage (real attachment uploads) is configured */
+export const isStorageEnabled = !!S3_BUCKET;
 
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
@@ -53,3 +64,7 @@ if (!VORTEX_API_URL)
 if (!FLAGS_API_HOST)
   console.warn("FLAGS_API_HOST not set, feature flags disabled");
 if (!MEILISEARCH_URL) console.warn("MEILISEARCH_URL not set, search disabled");
+if (!S3_BUCKET)
+  console.warn(
+    "S3_BUCKET not set, attachment uploads use the noop storage provider (files are not persisted)",
+  );

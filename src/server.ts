@@ -28,6 +28,7 @@ import {
   organizationsPlugin,
 } from "lib/graphql/plugins";
 import idpWebhook from "lib/idp/webhooks";
+import attachmentUploadRoutes from "lib/media/upload.route";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
 import { initializeSearchIndexes, search } from "lib/search";
 
@@ -119,6 +120,7 @@ async function startServer(): Promise<void> {
     .use(authzRoutes)
     .use(entitlementsWebhook)
     .use(idpWebhook)
+    .use(attachmentUploadRoutes)
     .use(
       yoga({
         schema,
