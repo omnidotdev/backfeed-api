@@ -9220,6 +9220,11 @@ type Query implements Node {
   Returns null if not authenticated.
   """
   observer: Observer
+
+  """
+  Posts similar to a draft, to surface possible duplicates at submit time.
+  """
+  similarPosts(projectId: UUID!, content: String!): [SimilarPost!]!
 }
 
 """
@@ -9531,4 +9536,11 @@ type PromoteSignalToPostPayload {
   description: String
   source: String
   projectId: UUID!
+}
+
+type SimilarPost {
+  id: UUID!
+  number: Int
+  title: String
+  score: Float!
 }

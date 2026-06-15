@@ -6,6 +6,7 @@ import { GraphQLError, Kind } from "graphql";
 import { checkPermission, deleteTuples, isAuthzEnabled, writeTuples } from "lib/authz";
 import { signals, statusTemplates } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
+import { findSimilarPosts } from "lib/feedback/dedupe";
 import { embeddingProvider } from "lib/feedback/embedding";
 import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
 import { markPostShipped } from "lib/feedback/shipped";
@@ -15265,6 +15266,11 @@ type Query implements Node {
   Returns null if not authenticated.
   """
   observer: Observer
+
+  """
+  Posts similar to a draft, to surface possible duplicates at submit time.
+  """
+  similarPosts(projectId: UUID!, content: String!): [SimilarPost!]!
 }
 
 """
@@ -15576,6 +15582,13 @@ type PromoteSignalToPostPayload {
   description: String
   source: String
   projectId: UUID!
+}
+
+type SimilarPost {
+  id: UUID!
+  number: Int
+  title: String
+  score: Float!
 }`;
 export const objects = {
   Query: {
@@ -15814,6 +15827,15 @@ export const objects = {
           filter: Comment_childCommentsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
+      },
+      similarPosts(_$root, fieldArgs) {
+        const $projectId = fieldArgs.getRaw("projectId"),
+          $content = fieldArgs.getRaw("content"),
+          $db = context().get("db");
+        return lambda([$projectId, $content, $db], async values => {
+          const [projectId, content, db] = values;
+          return findSimilarPosts(db, projectId, content);
+        }, !1);
       },
       statusTemplate(_$root, {
         $rowId

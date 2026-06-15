@@ -7,7 +7,7 @@ import { Pool } from "pg";
 import * as schema from "../db/schema";
 import { posts, projects, signalClusters, users } from "../db/schema";
 import { assignCluster } from "./cluster";
-import { findDuplicate } from "./dedupe";
+import { findDuplicate, findSimilarPosts } from "./dedupe";
 
 import type { dbPool } from "../db/db";
 
@@ -152,6 +152,31 @@ describe.skipIf(!DATABASE_URL)("feedback brain (db integration)", () => {
       });
 
       expect(match).toBeNull();
+    });
+  });
+
+  describe("findSimilarPosts", () => {
+    test("surfaces lexically similar posts for a draft", async () => {
+      const projectId = await makeProject("similar");
+      await db.insert(posts).values([
+        { projectId, userId, title: "Add dark mode to settings" },
+        { projectId, userId, title: "Export data as CSV" },
+      ]);
+
+      const matches = await findSimilarPosts(
+        db,
+        projectId,
+        "please add a dark mode setting",
+      );
+
+      expect(matches.length).toBeGreaterThan(0);
+      expect(matches[0].title).toBe("Add dark mode to settings");
+      expect(matches[0].number).not.toBeNull();
+    });
+
+    test("returns nothing for empty content", async () => {
+      const projectId = await makeProject("similar-empty");
+      expect(await findSimilarPosts(db, projectId, "  ")).toEqual([]);
     });
   });
 

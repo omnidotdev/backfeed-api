@@ -22,6 +22,7 @@ import { EXPORTABLE } from "graphile-export";
 import { GraphQLError } from "graphql";
 import { checkPermission } from "lib/authz";
 import { signals } from "lib/db/schema";
+import { findSimilarPosts } from "lib/feedback/dedupe";
 import { embeddingProvider } from "lib/feedback/embedding";
 import {
   ingestSignal as ingestSignalRecord,
@@ -64,14 +65,50 @@ const SignalIngestionPlugin = makeExtendSchemaPlugin(() => ({
       projectId: UUID!
     }
 
+    type SimilarPost {
+      id: UUID!
+      number: Int
+      title: String
+      score: Float!
+    }
+
     extend type Mutation {
       ingestSignal(input: IngestSignalInput!): IngestSignalPayload
       promoteSignalToPost(
         input: PromoteSignalToPostInput!
       ): PromoteSignalToPostPayload
     }
+
+    extend type Query {
+      """
+      Posts similar to a draft, to surface possible duplicates at submit time.
+      """
+      similarPosts(projectId: UUID!, content: String!): [SimilarPost!]!
+    }
   `,
   plans: {
+    Query: {
+      similarPosts: EXPORTABLE(
+        (context, findSimilarPosts, lambda) =>
+          // biome-ignore lint/suspicious/noExplicitAny: Grafast plan signature
+          function plan(_$root: any, fieldArgs: any) {
+            const $projectId = fieldArgs.getRaw("projectId");
+            const $content = fieldArgs.getRaw("content");
+            const $db = context().get("db");
+
+            return lambda(
+              [$projectId, $content, $db],
+              // biome-ignore lint/suspicious/noExplicitAny: Grafast lambda values
+              async (values: any) => {
+                const [projectId, content, db] = values;
+                return findSimilarPosts(db, projectId, content);
+              },
+              false,
+            );
+          },
+        [context, findSimilarPosts, lambda],
+      ),
+    },
     Mutation: {
       ingestSignal: EXPORTABLE(
         (

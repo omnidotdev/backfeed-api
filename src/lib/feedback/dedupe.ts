@@ -104,3 +104,53 @@ export const findDuplicate = async (
   `);
   return toMatch(result.rows, "lexical");
 };
+
+export interface SimilarPost {
+  id: string;
+  number: number | null;
+  title: string | null;
+  score: number;
+}
+
+/** Minimum similarity to surface a post as a possible duplicate to the user. */
+const SIMILAR_POST_THRESHOLD = 0.15;
+
+/**
+ * Find posts similar to a draft, to surface possible duplicates at submit time
+ * ("is this a duplicate of #12?"). Lexical (pg_trgm) similarity over title +
+ * description; returns the top matches above a low "show" threshold, looser than
+ * the auto-merge/flag thresholds (this is advisory, not an action).
+ */
+export const findSimilarPosts = async (
+  db: Db,
+  projectId: string,
+  content: string,
+  limit = 5,
+): Promise<SimilarPost[]> => {
+  if (!content.trim()) return [];
+
+  const result = await db.execute(sql`
+    SELECT id, number, title,
+      similarity(
+        coalesce(title, '') || ' ' || coalesce(description, ''),
+        ${content}
+      ) AS score
+    FROM ${posts}
+    WHERE project_id = ${projectId}
+      AND duplicate_of_id IS NULL
+    ORDER BY score DESC
+    LIMIT ${limit}
+  `);
+
+  return (
+    result.rows
+      // biome-ignore lint/suspicious/noExplicitAny: raw pg rows
+      .map((row: any) => ({
+        id: row.id as string,
+        number: row.number as number | null,
+        title: row.title as string | null,
+        score: Number(row.score),
+      }))
+      .filter((post) => post.score >= SIMILAR_POST_THRESHOLD)
+  );
+};
