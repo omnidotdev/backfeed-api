@@ -41,6 +41,11 @@ export const {
   S3_SECRET_ACCESS_KEY,
   /** Override base URL for public object URLs (e.g. a CDN in front of the bucket) */
   S3_PUBLIC_BASE_URL,
+  // Embeddings (semantic dedupe + clustering). OpenAI-compatible /embeddings API;
+  // when unset, the brain falls back to lexical (pg_trgm) dedupe and clustering is off.
+  EMBEDDING_API_URL,
+  EMBEDDING_API_KEY,
+  EMBEDDING_MODEL,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
@@ -53,6 +58,9 @@ export const isSearchEnabled = !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;
 
 /** Whether object storage (real attachment uploads) is configured */
 export const isStorageEnabled = !!S3_BUCKET;
+
+/** Whether a semantic embedding provider is configured (else lexical fallback) */
+export const isEmbeddingEnabled = !!EMBEDDING_API_URL;
 
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
@@ -67,4 +75,8 @@ if (!MEILISEARCH_URL) console.warn("MEILISEARCH_URL not set, search disabled");
 if (!S3_BUCKET)
   console.warn(
     "S3_BUCKET not set, attachment uploads use the noop storage provider (files are not persisted)",
+  );
+if (!EMBEDDING_API_URL)
+  console.warn(
+    "EMBEDDING_API_URL not set, semantic dedupe/clustering disabled (lexical fallback)",
   );

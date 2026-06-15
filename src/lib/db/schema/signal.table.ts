@@ -6,11 +6,14 @@ import {
   text,
   uniqueIndex,
   uuid,
+  vector,
 } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { EMBEDDING_DIMENSIONS } from "lib/db/vector";
 
 import { posts } from "./post.table";
 import { projects } from "./project.table";
+import { signalClusters } from "./signalCluster.table";
 import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -52,6 +55,12 @@ export const signals = pgTable(
     // AI triage outputs (populated in a later phase; null while triage is disabled)
     sentiment: text(),
     aiTags: jsonb(),
+    // Semantic embedding of rawContent (null until an embedding provider is configured)
+    embedding: vector({ dimensions: EMBEDDING_DIMENSIONS }),
+    // Theme assignment (null until clustering runs, which needs embeddings)
+    clusterId: uuid().references(() => signalClusters.id, {
+      onDelete: "set null",
+    }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
@@ -63,6 +72,7 @@ export const signals = pgTable(
     index().on(table.postId),
     index().on(table.status),
     index().on(table.source),
+    index().on(table.clusterId),
   ],
 );
 
@@ -81,6 +91,10 @@ export const signalRelations = relations(signals, ({ one }) => ({
   post: one(posts, {
     fields: [signals.postId],
     references: [posts.id],
+  }),
+  cluster: one(signalClusters, {
+    fields: [signals.clusterId],
+    references: [signalClusters.id],
   }),
 }));
 

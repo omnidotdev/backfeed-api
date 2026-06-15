@@ -22,6 +22,7 @@ import { EXPORTABLE } from "graphile-export";
 import { GraphQLError } from "graphql";
 import { checkPermission } from "lib/authz";
 import { signals } from "lib/db/schema";
+import { embeddingProvider } from "lib/feedback/embedding";
 import {
   ingestSignal as ingestSignalRecord,
   promoteSignalToPost as promoteSignalRecord,
@@ -73,7 +74,14 @@ const SignalIngestionPlugin = makeExtendSchemaPlugin(() => ({
   plans: {
     Mutation: {
       ingestSignal: EXPORTABLE(
-        (GraphQLError, checkPermission, context, ingestSignalRecord, lambda) =>
+        (
+          GraphQLError,
+          checkPermission,
+          context,
+          embeddingProvider,
+          ingestSignalRecord,
+          lambda,
+        ) =>
           // biome-ignore lint/suspicious/noExplicitAny: Grafast plan signature
           function plan(_$root: any, fieldArgs: any) {
             const $input = fieldArgs.get("input");
@@ -98,12 +106,23 @@ const SignalIngestionPlugin = makeExtendSchemaPlugin(() => ({
                   throw new GraphQLError("Insufficient permissions");
                 }
 
-                return ingestSignalRecord(db, input);
+                // Embed when a provider is configured (null -> lexical fallback)
+                const embedding = await embeddingProvider.embed(
+                  input.rawContent,
+                );
+                return ingestSignalRecord(db, { ...input, embedding });
               },
               false,
             );
           },
-        [GraphQLError, checkPermission, context, ingestSignalRecord, lambda],
+        [
+          GraphQLError,
+          checkPermission,
+          context,
+          embeddingProvider,
+          ingestSignalRecord,
+          lambda,
+        ],
       ),
 
       promoteSignalToPost: EXPORTABLE(
@@ -150,39 +169,43 @@ const SignalIngestionPlugin = makeExtendSchemaPlugin(() => ({
                   throw new GraphQLError("Insufficient permissions");
                 }
 
-                const post = await promoteSignalRecord(db, {
+                const { post, merged } = await promoteSignalRecord(db, {
                   signalId: input.signalId,
                   userId: observer.id,
                   title: input.title,
                 });
 
-                // Best-effort side effects (eventual consistency, never fatal)
-                if (isSearchEnabled) {
+                // On merge the canonical post already exists (and was indexed +
+                // emitted when first created), so only fire side effects for a
+                // newly created post. Best-effort, never fatal.
+                if (!merged) {
+                  if (isSearchEnabled) {
+                    try {
+                      await indexPost(post, signal.organizationId);
+                    } catch (error) {
+                      console.error(
+                        "[Signal Promote] Failed to index post:",
+                        error,
+                      );
+                    }
+                  }
                   try {
-                    await indexPost(post, signal.organizationId);
+                    await events.emit({
+                      type: "backfeed.post.created",
+                      data: {
+                        postId: post.id,
+                        projectId: post.projectId,
+                        organizationId: signal.organizationId,
+                      },
+                      organizationId: signal.organizationId,
+                      subject: post.id,
+                    });
                   } catch (error) {
                     console.error(
-                      "[Signal Promote] Failed to index post:",
+                      "[Signal Promote] Failed to emit post.created:",
                       error,
                     );
                   }
-                }
-                try {
-                  await events.emit({
-                    type: "backfeed.post.created",
-                    data: {
-                      postId: post.id,
-                      projectId: post.projectId,
-                      organizationId: signal.organizationId,
-                    },
-                    organizationId: signal.organizationId,
-                    subject: post.id,
-                  });
-                } catch (error) {
-                  console.error(
-                    "[Signal Promote] Failed to emit post.created:",
-                    error,
-                  );
                 }
 
                 return post;

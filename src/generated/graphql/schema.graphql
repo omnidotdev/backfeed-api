@@ -85,6 +85,16 @@ type Post {
   updatedAt: Datetime!
   number: Int!
   source: String
+  sentiment: String
+  aiTags: JSON
+  duplicateOfId: UUID
+  clusterId: UUID
+
+  """Reads a single `SignalCluster` that is related to this `Post`."""
+  cluster: SignalCluster
+
+  """Reads a single `Post` that is related to this `Post`."""
+  duplicateOf: Post
 
   """Reads a single `Project` that is related to this `Post`."""
   project: Project
@@ -128,6 +138,40 @@ type Post {
     """The method to use when ordering `Comment`."""
     orderBy: [CommentOrderBy!] = [PRIMARY_KEY_ASC]
   ): CommentConnection!
+
+  """Reads and enables pagination through a set of `Post`."""
+  postsByDuplicateOfId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection!
 
   """Reads and enables pagination through a set of `Vote`."""
   votes(
@@ -230,6 +274,92 @@ type Post {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentConnection!
+}
+
+"""
+Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type SignalCluster {
+  rowId: UUID!
+  projectId: UUID!
+  label: String
+  summary: String
+  memberCount: Int!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Project` that is related to this `SignalCluster`."""
+  project: Project
+
+  """Reads and enables pagination through a set of `Post`."""
+  postsByClusterId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection!
+
+  """Reads and enables pagination through a set of `Signal`."""
+  signalsByClusterId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SignalCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SignalFilter
+
+    """The method to use when ordering `Signal`."""
+    orderBy: [SignalOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SignalConnection!
 }
 
 type Project {
@@ -380,6 +510,40 @@ type Project {
     """The method to use when ordering `Signal`."""
     orderBy: [SignalOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalConnection!
+
+  """Reads and enables pagination through a set of `SignalCluster`."""
+  signalClusters(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SignalClusterCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SignalClusterFilter
+
+    """The method to use when ordering `SignalCluster`."""
+    orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SignalClusterConnection!
 }
 
 """A connection to a list of `Post` values."""
@@ -536,6 +700,18 @@ type PostDistinctCountAggregates {
 
   """Distinct count of source across the matching connection"""
   source: BigInt
+
+  """Distinct count of sentiment across the matching connection"""
+  sentiment: BigInt
+
+  """Distinct count of aiTags across the matching connection"""
+  aiTags: BigInt
+
+  """Distinct count of duplicateOfId across the matching connection"""
+  duplicateOfId: BigInt
+
+  """Distinct count of clusterId across the matching connection"""
+  clusterId: BigInt
 }
 
 type PostMinAggregates {
@@ -596,6 +772,10 @@ enum PostGroupBy {
   UPDATED_AT_TRUNCATED_TO_DAY
   NUMBER
   SOURCE
+  SENTIMENT
+  AI_TAGS
+  DUPLICATE_OF_ID
+  CLUSTER_ID
 }
 
 """Conditions for `Post` aggregates."""
@@ -730,6 +910,15 @@ input PostCondition {
 
   """Checks for equality with the object’s `source` field."""
   source: String
+
+  """Checks for equality with the object’s `sentiment` field."""
+  sentiment: String
+
+  """Checks for equality with the object’s `duplicateOfId` field."""
+  duplicateOfId: UUID
+
+  """Checks for equality with the object’s `clusterId` field."""
+  clusterId: UUID
 }
 
 """
@@ -769,11 +958,26 @@ input PostFilter {
   """Filter by the object’s `source` field."""
   source: StringFilter
 
+  """Filter by the object’s `sentiment` field."""
+  sentiment: StringFilter
+
+  """Filter by the object’s `duplicateOfId` field."""
+  duplicateOfId: UUIDFilter
+
+  """Filter by the object’s `clusterId` field."""
+  clusterId: UUIDFilter
+
   """Filter by the object’s `comments` relation."""
   comments: PostToManyCommentFilter
 
   """Some related `comments` exist."""
   commentsExist: Boolean
+
+  """Filter by the object’s `postsByDuplicateOfId` relation."""
+  postsByDuplicateOfId: PostToManyPostFilter
+
+  """Some related `postsByDuplicateOfId` exist."""
+  postsByDuplicateOfIdExist: Boolean
 
   """Filter by the object’s `votes` relation."""
   votes: PostToManyVoteFilter
@@ -792,6 +996,18 @@ input PostFilter {
 
   """Some related `attachments` exist."""
   attachmentsExist: Boolean
+
+  """Filter by the object’s `cluster` relation."""
+  cluster: SignalClusterFilter
+
+  """A related `cluster` exists."""
+  clusterExists: Boolean
+
+  """Filter by the object’s `duplicateOf` relation."""
+  duplicateOf: PostFilter
+
+  """A related `duplicateOf` exists."""
+  duplicateOfExists: Boolean
 
   """Filter by the object’s `project` relation."""
   project: ProjectFilter
@@ -1400,6 +1616,10 @@ input PostDistinctCountAggregateFilter {
   updatedAt: BigIntFilter
   number: BigIntFilter
   source: BigIntFilter
+  sentiment: BigIntFilter
+  aiTags: BigIntFilter
+  duplicateOfId: BigIntFilter
+  clusterId: BigIntFilter
 }
 
 input PostMinAggregateFilter {
@@ -1663,6 +1883,15 @@ input SignalFilter {
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s `clusterId` field."""
+  clusterId: UUIDFilter
+
+  """Filter by the object’s `cluster` relation."""
+  cluster: SignalClusterFilter
+
+  """A related `cluster` exists."""
+  clusterExists: Boolean
+
   """Filter by the object’s `post` relation."""
   post: PostFilter
 
@@ -1689,6 +1918,131 @@ input SignalFilter {
 
   """Negates the expression."""
   not: SignalFilter
+}
+
+"""
+A filter to be used against `SignalCluster` object types. All fields are combined with a logical ‘and.’
+"""
+input SignalClusterFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `projectId` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s `label` field."""
+  label: StringFilter
+
+  """Filter by the object’s `summary` field."""
+  summary: StringFilter
+
+  """Filter by the object’s `memberCount` field."""
+  memberCount: IntFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `postsByClusterId` relation."""
+  postsByClusterId: SignalClusterToManyPostFilter
+
+  """Some related `postsByClusterId` exist."""
+  postsByClusterIdExist: Boolean
+
+  """Filter by the object’s `signalsByClusterId` relation."""
+  signalsByClusterId: SignalClusterToManySignalFilter
+
+  """Some related `signalsByClusterId` exist."""
+  signalsByClusterIdExist: Boolean
+
+  """Filter by the object’s `project` relation."""
+  project: ProjectFilter
+
+  """Checks for all expressions in this list."""
+  and: [SignalClusterFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [SignalClusterFilter!]
+
+  """Negates the expression."""
+  not: SignalClusterFilter
+}
+
+"""
+A filter to be used against many `Post` object types. All fields are combined with a logical ‘and.’
+"""
+input SignalClusterToManyPostFilter {
+  """
+  Every related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PostFilter
+
+  """
+  Some related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PostFilter
+
+  """
+  No related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PostFilter
+
+  """Aggregates across related `Post` match the filter criteria."""
+  aggregates: PostAggregatesFilter
+}
+
+"""
+A filter to be used against many `Signal` object types. All fields are combined with a logical ‘and.’
+"""
+input SignalClusterToManySignalFilter {
+  """
+  Every related `Signal` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: SignalFilter
+
+  """
+  Some related `Signal` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: SignalFilter
+
+  """
+  No related `Signal` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: SignalFilter
+
+  """Aggregates across related `Signal` match the filter criteria."""
+  aggregates: SignalAggregatesFilter
+}
+
+"""A filter to be used against aggregates of `Signal` object types."""
+input SignalAggregatesFilter {
+  """
+  A filter that must pass for the relevant `Signal` object to be included within the aggregate.
+  """
+  filter: SignalFilter
+
+  """Distinct count aggregate over matching `Signal` objects."""
+  distinctCount: SignalDistinctCountAggregateFilter
+}
+
+input SignalDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  organizationId: BigIntFilter
+  projectId: BigIntFilter
+  userId: BigIntFilter
+  source: BigIntFilter
+  type: BigIntFilter
+  rawContent: BigIntFilter
+  sourceMetadata: BigIntFilter
+  status: BigIntFilter
+  postId: BigIntFilter
+  sentiment: BigIntFilter
+  aiTags: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+  clusterId: BigIntFilter
 }
 
 """
@@ -1751,6 +2105,12 @@ input ProjectFilter {
 
   """Some related `signals` exist."""
   signalsExist: Boolean
+
+  """Filter by the object’s `signalClusters` relation."""
+  signalClusters: ProjectToManySignalClusterFilter
+
+  """Some related `signalClusters` exist."""
+  signalClustersExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [ProjectFilter!]
@@ -2252,32 +2612,110 @@ input ProjectToManySignalFilter {
   aggregates: SignalAggregatesFilter
 }
 
-"""A filter to be used against aggregates of `Signal` object types."""
-input SignalAggregatesFilter {
+"""
+A filter to be used against many `SignalCluster` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManySignalClusterFilter {
   """
-  A filter that must pass for the relevant `Signal` object to be included within the aggregate.
+  Every related `SignalCluster` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  filter: SignalFilter
+  every: SignalClusterFilter
 
-  """Distinct count aggregate over matching `Signal` objects."""
-  distinctCount: SignalDistinctCountAggregateFilter
+  """
+  Some related `SignalCluster` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: SignalClusterFilter
+
+  """
+  No related `SignalCluster` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: SignalClusterFilter
+
+  """Aggregates across related `SignalCluster` match the filter criteria."""
+  aggregates: SignalClusterAggregatesFilter
 }
 
-input SignalDistinctCountAggregateFilter {
+"""
+A filter to be used against aggregates of `SignalCluster` object types.
+"""
+input SignalClusterAggregatesFilter {
+  """
+  A filter that must pass for the relevant `SignalCluster` object to be included within the aggregate.
+  """
+  filter: SignalClusterFilter
+
+  """Sum aggregate over matching `SignalCluster` objects."""
+  sum: SignalClusterSumAggregateFilter
+
+  """Distinct count aggregate over matching `SignalCluster` objects."""
+  distinctCount: SignalClusterDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching `SignalCluster` objects."""
+  min: SignalClusterMinAggregateFilter
+
+  """Maximum aggregate over matching `SignalCluster` objects."""
+  max: SignalClusterMaxAggregateFilter
+
+  """Mean average aggregate over matching `SignalCluster` objects."""
+  average: SignalClusterAverageAggregateFilter
+
+  """
+  Sample standard deviation aggregate over matching `SignalCluster` objects.
+  """
+  stddevSample: SignalClusterStddevSampleAggregateFilter
+
+  """
+  Population standard deviation aggregate over matching `SignalCluster` objects.
+  """
+  stddevPopulation: SignalClusterStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching `SignalCluster` objects."""
+  varianceSample: SignalClusterVarianceSampleAggregateFilter
+
+  """Population variance aggregate over matching `SignalCluster` objects."""
+  variancePopulation: SignalClusterVariancePopulationAggregateFilter
+}
+
+input SignalClusterSumAggregateFilter {
+  memberCount: BigIntFilter
+}
+
+input SignalClusterDistinctCountAggregateFilter {
   rowId: BigIntFilter
-  organizationId: BigIntFilter
   projectId: BigIntFilter
-  userId: BigIntFilter
-  source: BigIntFilter
-  type: BigIntFilter
-  rawContent: BigIntFilter
-  sourceMetadata: BigIntFilter
-  status: BigIntFilter
-  postId: BigIntFilter
-  sentiment: BigIntFilter
-  aiTags: BigIntFilter
+  label: BigIntFilter
+  summary: BigIntFilter
+  memberCount: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+}
+
+input SignalClusterMinAggregateFilter {
+  memberCount: IntFilter
+}
+
+input SignalClusterMaxAggregateFilter {
+  memberCount: IntFilter
+}
+
+input SignalClusterAverageAggregateFilter {
+  memberCount: BigFloatFilter
+}
+
+input SignalClusterStddevSampleAggregateFilter {
+  memberCount: BigFloatFilter
+}
+
+input SignalClusterStddevPopulationAggregateFilter {
+  memberCount: BigFloatFilter
+}
+
+input SignalClusterVarianceSampleAggregateFilter {
+  memberCount: BigFloatFilter
+}
+
+input SignalClusterVariancePopulationAggregateFilter {
+  memberCount: BigFloatFilter
 }
 
 """
@@ -2458,6 +2896,29 @@ input AttachmentVariancePopulationAggregateFilter {
 }
 
 """
+A filter to be used against many `Post` object types. All fields are combined with a logical ‘and.’
+"""
+input PostToManyPostFilter {
+  """
+  Every related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PostFilter
+
+  """
+  Some related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PostFilter
+
+  """
+  No related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PostFilter
+
+  """Aggregates across related `Post` match the filter criteria."""
+  aggregates: PostAggregatesFilter
+}
+
+"""
 A filter to be used against many `Vote` object types. All fields are combined with a logical ‘and.’
 """
 input PostToManyVoteFilter {
@@ -2553,6 +3014,12 @@ enum PostOrderBy {
   NUMBER_DESC
   SOURCE_ASC
   SOURCE_DESC
+  SENTIMENT_ASC
+  SENTIMENT_DESC
+  DUPLICATE_OF_ID_ASC
+  DUPLICATE_OF_ID_DESC
+  CLUSTER_ID_ASC
+  CLUSTER_ID_DESC
   COMMENTS_COUNT_ASC
   COMMENTS_COUNT_DESC
   COMMENTS_DISTINCT_COUNT_ROW_ID_ASC
@@ -2569,6 +3036,54 @@ enum PostOrderBy {
   COMMENTS_DISTINCT_COUNT_CREATED_AT_DESC
   COMMENTS_DISTINCT_COUNT_UPDATED_AT_ASC
   COMMENTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  POSTS_BY_DUPLICATE_OF_ID_COUNT_ASC
+  POSTS_BY_DUPLICATE_OF_ID_COUNT_DESC
+  POSTS_BY_DUPLICATE_OF_ID_SUM_NUMBER_ASC
+  POSTS_BY_DUPLICATE_OF_ID_SUM_NUMBER_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_ROW_ID_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_ROW_ID_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_TITLE_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_TITLE_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_DESCRIPTION_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_DESCRIPTION_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_PROJECT_ID_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_PROJECT_ID_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_USER_ID_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_USER_ID_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_UPDATED_AT_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_UPDATED_AT_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_NUMBER_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_NUMBER_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SOURCE_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SOURCE_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SENTIMENT_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SENTIMENT_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_AI_TAGS_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_AI_TAGS_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_DUPLICATE_OF_ID_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_CLUSTER_ID_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_BY_DUPLICATE_OF_ID_MIN_NUMBER_ASC
+  POSTS_BY_DUPLICATE_OF_ID_MIN_NUMBER_DESC
+  POSTS_BY_DUPLICATE_OF_ID_MAX_NUMBER_ASC
+  POSTS_BY_DUPLICATE_OF_ID_MAX_NUMBER_DESC
+  POSTS_BY_DUPLICATE_OF_ID_AVERAGE_NUMBER_ASC
+  POSTS_BY_DUPLICATE_OF_ID_AVERAGE_NUMBER_DESC
+  POSTS_BY_DUPLICATE_OF_ID_STDDEV_SAMPLE_NUMBER_ASC
+  POSTS_BY_DUPLICATE_OF_ID_STDDEV_SAMPLE_NUMBER_DESC
+  POSTS_BY_DUPLICATE_OF_ID_STDDEV_POPULATION_NUMBER_ASC
+  POSTS_BY_DUPLICATE_OF_ID_STDDEV_POPULATION_NUMBER_DESC
+  POSTS_BY_DUPLICATE_OF_ID_VARIANCE_SAMPLE_NUMBER_ASC
+  POSTS_BY_DUPLICATE_OF_ID_VARIANCE_SAMPLE_NUMBER_DESC
+  POSTS_BY_DUPLICATE_OF_ID_VARIANCE_POPULATION_NUMBER_ASC
+  POSTS_BY_DUPLICATE_OF_ID_VARIANCE_POPULATION_NUMBER_DESC
   VOTES_COUNT_ASC
   VOTES_COUNT_DESC
   VOTES_DISTINCT_COUNT_ROW_ID_ASC
@@ -2613,6 +3128,8 @@ enum PostOrderBy {
   SIGNALS_DISTINCT_COUNT_CREATED_AT_DESC
   SIGNALS_DISTINCT_COUNT_UPDATED_AT_ASC
   SIGNALS_DISTINCT_COUNT_UPDATED_AT_DESC
+  SIGNALS_DISTINCT_COUNT_CLUSTER_ID_ASC
+  SIGNALS_DISTINCT_COUNT_CLUSTER_ID_DESC
   ATTACHMENTS_COUNT_ASC
   ATTACHMENTS_COUNT_DESC
   ATTACHMENTS_SUM_FILE_SIZE_ASC
@@ -3435,6 +3952,10 @@ type Signal {
   aiTags: JSON
   createdAt: Datetime!
   updatedAt: Datetime!
+  clusterId: UUID
+
+  """Reads a single `SignalCluster` that is related to this `Signal`."""
+  cluster: SignalCluster
 
   """Reads a single `Post` that is related to this `Signal`."""
   post: Post
@@ -3445,11 +3966,6 @@ type Signal {
   """Reads a single `User` that is related to this `Signal`."""
   user: User
 }
-
-"""
-Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
 
 type User {
   rowId: UUID!
@@ -4081,6 +4597,9 @@ input SignalCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
+
+  """Checks for equality with the object’s `clusterId` field."""
+  clusterId: UUID
 }
 
 """Methods to use when ordering `Signal`."""
@@ -4112,6 +4631,8 @@ enum SignalOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  CLUSTER_ID_ASC
+  CLUSTER_ID_DESC
 }
 
 """A connection to a list of `Attachment` values."""
@@ -4572,6 +5093,9 @@ type SignalDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
+
+  """Distinct count of clusterId across the matching connection"""
+  clusterId: BigInt
 }
 
 """Grouping methods for `Signal` for usage during aggregation."""
@@ -4593,6 +5117,7 @@ enum SignalGroupBy {
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
+  CLUSTER_ID
 }
 
 """Conditions for `Signal` aggregates."""
@@ -4653,6 +5178,375 @@ input SignalHavingVarianceSampleInput {
 input SignalHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+}
+
+"""A connection to a list of `SignalCluster` values."""
+type SignalClusterConnection {
+  """A list of `SignalCluster` objects."""
+  nodes: [SignalCluster]!
+
+  """
+  A list of edges which contains the `SignalCluster` and cursor to aid in pagination.
+  """
+  edges: [SignalClusterEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `SignalCluster` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: SignalClusterAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `SignalCluster` for these aggregates."""
+    groupBy: [SignalClusterGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: SignalClusterHavingInput
+  ): [SignalClusterAggregates!]
+}
+
+"""A `SignalCluster` edge in the connection."""
+type SignalClusterEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `SignalCluster` at the end of the edge."""
+  node: SignalCluster
+}
+
+type SignalClusterAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: SignalClusterSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: SignalClusterDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: SignalClusterMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: SignalClusterMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: SignalClusterAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: SignalClusterStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: SignalClusterStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: SignalClusterVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: SignalClusterVariancePopulationAggregates
+}
+
+type SignalClusterSumAggregates {
+  """Sum of memberCount across the matching connection"""
+  memberCount: BigInt!
+}
+
+type SignalClusterDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of label across the matching connection"""
+  label: BigInt
+
+  """Distinct count of summary across the matching connection"""
+  summary: BigInt
+
+  """Distinct count of memberCount across the matching connection"""
+  memberCount: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type SignalClusterMinAggregates {
+  """Minimum of memberCount across the matching connection"""
+  memberCount: Int
+}
+
+type SignalClusterMaxAggregates {
+  """Maximum of memberCount across the matching connection"""
+  memberCount: Int
+}
+
+type SignalClusterAverageAggregates {
+  """Mean average of memberCount across the matching connection"""
+  memberCount: BigFloat
+}
+
+type SignalClusterStddevSampleAggregates {
+  """
+  Sample standard deviation of memberCount across the matching connection
+  """
+  memberCount: BigFloat
+}
+
+type SignalClusterStddevPopulationAggregates {
+  """
+  Population standard deviation of memberCount across the matching connection
+  """
+  memberCount: BigFloat
+}
+
+type SignalClusterVarianceSampleAggregates {
+  """Sample variance of memberCount across the matching connection"""
+  memberCount: BigFloat
+}
+
+type SignalClusterVariancePopulationAggregates {
+  """Population variance of memberCount across the matching connection"""
+  memberCount: BigFloat
+}
+
+"""Grouping methods for `SignalCluster` for usage during aggregation."""
+enum SignalClusterGroupBy {
+  PROJECT_ID
+  LABEL
+  SUMMARY
+  MEMBER_COUNT
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `SignalCluster` aggregates."""
+input SignalClusterHavingInput {
+  AND: [SignalClusterHavingInput!]
+  OR: [SignalClusterHavingInput!]
+  sum: SignalClusterHavingSumInput
+  distinctCount: SignalClusterHavingDistinctCountInput
+  min: SignalClusterHavingMinInput
+  max: SignalClusterHavingMaxInput
+  average: SignalClusterHavingAverageInput
+  stddevSample: SignalClusterHavingStddevSampleInput
+  stddevPopulation: SignalClusterHavingStddevPopulationInput
+  varianceSample: SignalClusterHavingVarianceSampleInput
+  variancePopulation: SignalClusterHavingVariancePopulationInput
+}
+
+input SignalClusterHavingSumInput {
+  memberCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalClusterHavingDistinctCountInput {
+  memberCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalClusterHavingMinInput {
+  memberCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalClusterHavingMaxInput {
+  memberCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalClusterHavingAverageInput {
+  memberCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalClusterHavingStddevSampleInput {
+  memberCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalClusterHavingStddevPopulationInput {
+  memberCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalClusterHavingVarianceSampleInput {
+  memberCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalClusterHavingVariancePopulationInput {
+  memberCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `SignalCluster` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input SignalClusterCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `label` field."""
+  label: String
+
+  """Checks for equality with the object’s `summary` field."""
+  summary: String
+
+  """Checks for equality with the object’s `memberCount` field."""
+  memberCount: Int
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `SignalCluster`."""
+enum SignalClusterOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  LABEL_ASC
+  LABEL_DESC
+  SUMMARY_ASC
+  SUMMARY_DESC
+  MEMBER_COUNT_ASC
+  MEMBER_COUNT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  POSTS_BY_CLUSTER_ID_COUNT_ASC
+  POSTS_BY_CLUSTER_ID_COUNT_DESC
+  POSTS_BY_CLUSTER_ID_SUM_NUMBER_ASC
+  POSTS_BY_CLUSTER_ID_SUM_NUMBER_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_ROW_ID_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_ROW_ID_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_TITLE_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_TITLE_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_DESCRIPTION_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_DESCRIPTION_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_PROJECT_ID_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_PROJECT_ID_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_USER_ID_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_USER_ID_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_UPDATED_AT_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_UPDATED_AT_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_NUMBER_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_NUMBER_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SOURCE_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SOURCE_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SENTIMENT_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SENTIMENT_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_AI_TAGS_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_AI_TAGS_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_DUPLICATE_OF_ID_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_CLUSTER_ID_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_BY_CLUSTER_ID_MIN_NUMBER_ASC
+  POSTS_BY_CLUSTER_ID_MIN_NUMBER_DESC
+  POSTS_BY_CLUSTER_ID_MAX_NUMBER_ASC
+  POSTS_BY_CLUSTER_ID_MAX_NUMBER_DESC
+  POSTS_BY_CLUSTER_ID_AVERAGE_NUMBER_ASC
+  POSTS_BY_CLUSTER_ID_AVERAGE_NUMBER_DESC
+  POSTS_BY_CLUSTER_ID_STDDEV_SAMPLE_NUMBER_ASC
+  POSTS_BY_CLUSTER_ID_STDDEV_SAMPLE_NUMBER_DESC
+  POSTS_BY_CLUSTER_ID_STDDEV_POPULATION_NUMBER_ASC
+  POSTS_BY_CLUSTER_ID_STDDEV_POPULATION_NUMBER_DESC
+  POSTS_BY_CLUSTER_ID_VARIANCE_SAMPLE_NUMBER_ASC
+  POSTS_BY_CLUSTER_ID_VARIANCE_SAMPLE_NUMBER_DESC
+  POSTS_BY_CLUSTER_ID_VARIANCE_POPULATION_NUMBER_ASC
+  POSTS_BY_CLUSTER_ID_VARIANCE_POPULATION_NUMBER_DESC
+  SIGNALS_BY_CLUSTER_ID_COUNT_ASC
+  SIGNALS_BY_CLUSTER_ID_COUNT_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_ROW_ID_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_ROW_ID_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_PROJECT_ID_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_PROJECT_ID_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_USER_ID_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_USER_ID_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_SOURCE_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_SOURCE_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_TYPE_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_TYPE_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_RAW_CONTENT_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_RAW_CONTENT_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_SOURCE_METADATA_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_SOURCE_METADATA_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_STATUS_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_STATUS_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_POST_ID_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_POST_ID_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_SENTIMENT_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_SENTIMENT_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_AI_TAGS_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_AI_TAGS_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_UPDATED_AT_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_UPDATED_AT_DESC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_CLUSTER_ID_ASC
+  SIGNALS_BY_CLUSTER_ID_DISTINCT_COUNT_CLUSTER_ID_DESC
 }
 
 type WardenSyncQueue {
@@ -4995,6 +5889,14 @@ enum StatusTemplateOrderBy {
   POSTS_DISTINCT_COUNT_NUMBER_DESC
   POSTS_DISTINCT_COUNT_SOURCE_ASC
   POSTS_DISTINCT_COUNT_SOURCE_DESC
+  POSTS_DISTINCT_COUNT_SENTIMENT_ASC
+  POSTS_DISTINCT_COUNT_SENTIMENT_DESC
+  POSTS_DISTINCT_COUNT_AI_TAGS_ASC
+  POSTS_DISTINCT_COUNT_AI_TAGS_DESC
+  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_ASC
+  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
+  POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
+  POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -5288,6 +6190,14 @@ enum UserOrderBy {
   POSTS_DISTINCT_COUNT_NUMBER_DESC
   POSTS_DISTINCT_COUNT_SOURCE_ASC
   POSTS_DISTINCT_COUNT_SOURCE_DESC
+  POSTS_DISTINCT_COUNT_SENTIMENT_ASC
+  POSTS_DISTINCT_COUNT_SENTIMENT_DESC
+  POSTS_DISTINCT_COUNT_AI_TAGS_ASC
+  POSTS_DISTINCT_COUNT_AI_TAGS_DESC
+  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_ASC
+  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
+  POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
+  POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -5346,6 +6256,8 @@ enum UserOrderBy {
   SIGNALS_DISTINCT_COUNT_CREATED_AT_DESC
   SIGNALS_DISTINCT_COUNT_UPDATED_AT_ASC
   SIGNALS_DISTINCT_COUNT_UPDATED_AT_DESC
+  SIGNALS_DISTINCT_COUNT_CLUSTER_ID_ASC
+  SIGNALS_DISTINCT_COUNT_CLUSTER_ID_DESC
   ATTACHMENTS_COUNT_ASC
   ATTACHMENTS_COUNT_DESC
   ATTACHMENTS_SUM_FILE_SIZE_ASC
@@ -6135,6 +7047,14 @@ enum ProjectOrderBy {
   POSTS_DISTINCT_COUNT_NUMBER_DESC
   POSTS_DISTINCT_COUNT_SOURCE_ASC
   POSTS_DISTINCT_COUNT_SOURCE_DESC
+  POSTS_DISTINCT_COUNT_SENTIMENT_ASC
+  POSTS_DISTINCT_COUNT_SENTIMENT_DESC
+  POSTS_DISTINCT_COUNT_AI_TAGS_ASC
+  POSTS_DISTINCT_COUNT_AI_TAGS_DESC
+  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_ASC
+  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
+  POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
+  POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -6247,6 +7167,40 @@ enum ProjectOrderBy {
   SIGNALS_DISTINCT_COUNT_CREATED_AT_DESC
   SIGNALS_DISTINCT_COUNT_UPDATED_AT_ASC
   SIGNALS_DISTINCT_COUNT_UPDATED_AT_DESC
+  SIGNALS_DISTINCT_COUNT_CLUSTER_ID_ASC
+  SIGNALS_DISTINCT_COUNT_CLUSTER_ID_DESC
+  SIGNAL_CLUSTERS_COUNT_ASC
+  SIGNAL_CLUSTERS_COUNT_DESC
+  SIGNAL_CLUSTERS_SUM_MEMBER_COUNT_ASC
+  SIGNAL_CLUSTERS_SUM_MEMBER_COUNT_DESC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_ROW_ID_ASC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_ROW_ID_DESC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_PROJECT_ID_ASC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_PROJECT_ID_DESC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_LABEL_ASC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_LABEL_DESC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_SUMMARY_ASC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_SUMMARY_DESC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_MEMBER_COUNT_ASC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_MEMBER_COUNT_DESC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_CREATED_AT_ASC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_CREATED_AT_DESC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_UPDATED_AT_ASC
+  SIGNAL_CLUSTERS_DISTINCT_COUNT_UPDATED_AT_DESC
+  SIGNAL_CLUSTERS_MIN_MEMBER_COUNT_ASC
+  SIGNAL_CLUSTERS_MIN_MEMBER_COUNT_DESC
+  SIGNAL_CLUSTERS_MAX_MEMBER_COUNT_ASC
+  SIGNAL_CLUSTERS_MAX_MEMBER_COUNT_DESC
+  SIGNAL_CLUSTERS_AVERAGE_MEMBER_COUNT_ASC
+  SIGNAL_CLUSTERS_AVERAGE_MEMBER_COUNT_DESC
+  SIGNAL_CLUSTERS_STDDEV_SAMPLE_MEMBER_COUNT_ASC
+  SIGNAL_CLUSTERS_STDDEV_SAMPLE_MEMBER_COUNT_DESC
+  SIGNAL_CLUSTERS_STDDEV_POPULATION_MEMBER_COUNT_ASC
+  SIGNAL_CLUSTERS_STDDEV_POPULATION_MEMBER_COUNT_DESC
+  SIGNAL_CLUSTERS_VARIANCE_SAMPLE_MEMBER_COUNT_ASC
+  SIGNAL_CLUSTERS_VARIANCE_SAMPLE_MEMBER_COUNT_DESC
+  SIGNAL_CLUSTERS_VARIANCE_POPULATION_MEMBER_COUNT_ASC
+  SIGNAL_CLUSTERS_VARIANCE_POPULATION_MEMBER_COUNT_DESC
 }
 
 """The output of our create `Comment` mutation."""
@@ -6529,6 +7483,52 @@ input ProjectStatusConfigInput {
   createdAt: Datetime
 }
 
+"""The output of our create `SignalCluster` mutation."""
+type CreateSignalClusterPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SignalCluster` that was created by this mutation."""
+  signalCluster: SignalCluster
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SignalCluster`. May be used by Relay 1."""
+  signalClusterEdge(
+    """The method to use when ordering `SignalCluster`."""
+    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalClusterEdge
+}
+
+"""All input for the create `SignalCluster` mutation."""
+input CreateSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `SignalCluster` to be created by this mutation."""
+  signalCluster: SignalClusterInput!
+}
+
+"""An input for mutations affecting `SignalCluster`"""
+input SignalClusterInput {
+  rowId: UUID
+  projectId: UUID!
+  label: String
+  summary: String
+  memberCount: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `Attachment` mutation."""
 type CreateAttachmentPayload {
   """
@@ -6626,55 +7626,6 @@ input WardenSyncQueueInput {
   createdAt: Datetime
 }
 
-"""The output of our create `Post` mutation."""
-type CreatePostPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Post` that was created by this mutation."""
-  post: Post
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Post`. May be used by Relay 1."""
-  postEdge(
-    """The method to use when ordering `Post`."""
-    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PostEdge
-}
-
-"""All input for the create `Post` mutation."""
-input CreatePostInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Post` to be created by this mutation."""
-  post: PostInput!
-}
-
-"""An input for mutations affecting `Post`"""
-input PostInput {
-  rowId: UUID
-  title: String
-  description: String
-  projectId: UUID!
-  userId: UUID!
-  statusTemplateId: UUID
-  statusUpdatedAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-  source: String
-}
-
 """The output of our create `Project` mutation."""
 type CreateProjectPayload {
   """
@@ -6723,6 +7674,59 @@ input ProjectInput {
   nextPostNumber: Int
   prefix: String
   isPublic: Boolean
+}
+
+"""The output of our create `Post` mutation."""
+type CreatePostPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Post` that was created by this mutation."""
+  post: Post
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Post`. May be used by Relay 1."""
+  postEdge(
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostEdge
+}
+
+"""All input for the create `Post` mutation."""
+input CreatePostInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Post` to be created by this mutation."""
+  post: PostInput!
+}
+
+"""An input for mutations affecting `Post`"""
+input PostInput {
+  rowId: UUID
+  title: String
+  description: String
+  projectId: UUID!
+  userId: UUID!
+  statusTemplateId: UUID
+  statusUpdatedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+  source: String
+  sentiment: String
+  aiTags: JSON
+  duplicateOfId: UUID
+  clusterId: UUID
 }
 
 """The output of our update `Comment` mutation."""
@@ -7031,6 +8035,57 @@ input ProjectStatusConfigPatch {
   createdAt: Datetime
 }
 
+"""The output of our update `SignalCluster` mutation."""
+type UpdateSignalClusterPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SignalCluster` that was updated by this mutation."""
+  signalCluster: SignalCluster
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SignalCluster`. May be used by Relay 1."""
+  signalClusterEdge(
+    """The method to use when ordering `SignalCluster`."""
+    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalClusterEdge
+}
+
+"""All input for the `updateSignalCluster` mutation."""
+input UpdateSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `SignalCluster` being updated.
+  """
+  patch: SignalClusterPatch!
+}
+
+"""
+Represents an update to a `SignalCluster`. Fields that are set will be updated.
+"""
+input SignalClusterPatch {
+  rowId: UUID
+  projectId: UUID
+  label: String
+  summary: String
+  memberCount: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our update `Attachment` mutation."""
 type UpdateAttachmentPayload {
   """
@@ -7138,58 +8193,6 @@ input WardenSyncQueuePatch {
   createdAt: Datetime
 }
 
-"""The output of our update `Post` mutation."""
-type UpdatePostPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Post` that was updated by this mutation."""
-  post: Post
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Post`. May be used by Relay 1."""
-  postEdge(
-    """The method to use when ordering `Post`."""
-    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PostEdge
-}
-
-"""All input for the `updatePost` mutation."""
-input UpdatePostInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Post` being updated.
-  """
-  patch: PostPatch!
-}
-
-"""Represents an update to a `Post`. Fields that are set will be updated."""
-input PostPatch {
-  rowId: UUID
-  title: String
-  description: String
-  projectId: UUID
-  userId: UUID
-  statusTemplateId: UUID
-  statusUpdatedAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-  source: String
-}
-
 """The output of our update `Project` mutation."""
 type UpdateProjectPayload {
   """
@@ -7243,6 +8246,62 @@ input ProjectPatch {
   nextPostNumber: Int
   prefix: String
   isPublic: Boolean
+}
+
+"""The output of our update `Post` mutation."""
+type UpdatePostPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Post` that was updated by this mutation."""
+  post: Post
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Post`. May be used by Relay 1."""
+  postEdge(
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostEdge
+}
+
+"""All input for the `updatePost` mutation."""
+input UpdatePostInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Post` being updated.
+  """
+  patch: PostPatch!
+}
+
+"""Represents an update to a `Post`. Fields that are set will be updated."""
+input PostPatch {
+  rowId: UUID
+  title: String
+  description: String
+  projectId: UUID
+  userId: UUID
+  statusTemplateId: UUID
+  statusUpdatedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+  source: String
+  sentiment: String
+  aiTags: JSON
+  duplicateOfId: UUID
+  clusterId: UUID
 }
 
 """The output of our delete `Comment` mutation."""
@@ -7443,6 +8502,39 @@ input DeleteProjectStatusConfigInput {
   rowId: UUID!
 }
 
+"""The output of our delete `SignalCluster` mutation."""
+type DeleteSignalClusterPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SignalCluster` that was deleted by this mutation."""
+  signalCluster: SignalCluster
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SignalCluster`. May be used by Relay 1."""
+  signalClusterEdge(
+    """The method to use when ordering `SignalCluster`."""
+    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalClusterEdge
+}
+
+"""All input for the `deleteSignalCluster` mutation."""
+input DeleteSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `Attachment` mutation."""
 type DeleteAttachmentPayload {
   """
@@ -7509,39 +8601,6 @@ input DeleteWardenSyncQueueInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Post` mutation."""
-type DeletePostPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Post` that was deleted by this mutation."""
-  post: Post
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Post`. May be used by Relay 1."""
-  postEdge(
-    """The method to use when ordering `Post`."""
-    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PostEdge
-}
-
-"""All input for the `deletePost` mutation."""
-input DeletePostInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `Project` mutation."""
 type DeleteProjectPayload {
   """
@@ -7567,6 +8626,39 @@ type DeleteProjectPayload {
 
 """All input for the `deleteProject` mutation."""
 input DeleteProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Post` mutation."""
+type DeletePostPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Post` that was deleted by this mutation."""
+  post: Post
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Post`. May be used by Relay 1."""
+  postEdge(
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostEdge
+}
+
+"""All input for the `deletePost` mutation."""
+input DeletePostInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -7639,23 +8731,26 @@ type Query implements Node {
   """Get a single `ProjectStatusConfig`."""
   projectStatusConfigByProjectIdAndStatusTemplateId(projectId: UUID!, statusTemplateId: UUID!): ProjectStatusConfig
 
+  """Get a single `SignalCluster`."""
+  signalCluster(rowId: UUID!): SignalCluster
+
   """Get a single `Attachment`."""
   attachment(rowId: UUID!): Attachment
 
   """Get a single `WardenSyncQueue`."""
   wardenSyncQueue(rowId: UUID!): WardenSyncQueue
 
-  """Get a single `Post`."""
-  post(rowId: UUID!): Post
-
-  """Get a single `Post`."""
-  postByProjectIdAndNumber(projectId: UUID!, number: Int!): Post
-
   """Get a single `Project`."""
   project(rowId: UUID!): Project
 
   """Get a single `Project`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
+
+  """Get a single `Post`."""
+  post(rowId: UUID!): Post
+
+  """Get a single `Post`."""
+  postByProjectIdAndNumber(projectId: UUID!, number: Int!): Post
 
   """Get a single `Signal`."""
   signal(rowId: UUID!): Signal
@@ -7864,6 +8959,40 @@ type Query implements Node {
     orderBy: [ProjectStatusConfigOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectStatusConfigConnection
 
+  """Reads and enables pagination through a set of `SignalCluster`."""
+  signalClusters(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SignalClusterCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SignalClusterFilter
+
+    """The method to use when ordering `SignalCluster`."""
+    orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SignalClusterConnection
+
   """Reads and enables pagination through a set of `Attachment`."""
   attachments(
     """Only read the first `n` values of the set."""
@@ -7932,40 +9061,6 @@ type Query implements Node {
     orderBy: [WardenSyncQueueOrderBy!] = [PRIMARY_KEY_ASC]
   ): WardenSyncQueueConnection
 
-  """Reads and enables pagination through a set of `Post`."""
-  posts(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: PostFilter
-
-    """The method to use when ordering `Post`."""
-    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostConnection
-
   """Reads and enables pagination through a set of `Project`."""
   projects(
     """Only read the first `n` values of the set."""
@@ -7999,6 +9094,40 @@ type Query implements Node {
     """The method to use when ordering `Project`."""
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
+
+  """Reads and enables pagination through a set of `Post`."""
+  posts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection
 
   """Reads and enables pagination through a set of `Signal`."""
   signals(
@@ -8093,6 +9222,14 @@ type Mutation {
     input: CreateProjectStatusConfigInput!
   ): CreateProjectStatusConfigPayload
 
+  """Creates a single `SignalCluster`."""
+  createSignalCluster(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSignalClusterInput!
+  ): CreateSignalClusterPayload
+
   """Creates a single `Attachment`."""
   createAttachment(
     """
@@ -8109,14 +9246,6 @@ type Mutation {
     input: CreateWardenSyncQueueInput!
   ): CreateWardenSyncQueuePayload
 
-  """Creates a single `Post`."""
-  createPost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePostInput!
-  ): CreatePostPayload
-
   """Creates a single `Project`."""
   createProject(
     """
@@ -8124,6 +9253,14 @@ type Mutation {
     """
     input: CreateProjectInput!
   ): CreateProjectPayload
+
+  """Creates a single `Post`."""
+  createPost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePostInput!
+  ): CreatePostPayload
 
   """Updates a single `Comment` using a unique key and a patch."""
   updateComment(
@@ -8173,6 +9310,14 @@ type Mutation {
     input: UpdateProjectStatusConfigInput!
   ): UpdateProjectStatusConfigPayload
 
+  """Updates a single `SignalCluster` using a unique key and a patch."""
+  updateSignalCluster(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSignalClusterInput!
+  ): UpdateSignalClusterPayload
+
   """Updates a single `Attachment` using a unique key and a patch."""
   updateAttachment(
     """
@@ -8189,14 +9334,6 @@ type Mutation {
     input: UpdateWardenSyncQueueInput!
   ): UpdateWardenSyncQueuePayload
 
-  """Updates a single `Post` using a unique key and a patch."""
-  updatePost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePostInput!
-  ): UpdatePostPayload
-
   """Updates a single `Project` using a unique key and a patch."""
   updateProject(
     """
@@ -8204,6 +9341,14 @@ type Mutation {
     """
     input: UpdateProjectInput!
   ): UpdateProjectPayload
+
+  """Updates a single `Post` using a unique key and a patch."""
+  updatePost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostInput!
+  ): UpdatePostPayload
 
   """Deletes a single `Comment` using a unique key."""
   deleteComment(
@@ -8253,6 +9398,14 @@ type Mutation {
     input: DeleteProjectStatusConfigInput!
   ): DeleteProjectStatusConfigPayload
 
+  """Deletes a single `SignalCluster` using a unique key."""
+  deleteSignalCluster(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSignalClusterInput!
+  ): DeleteSignalClusterPayload
+
   """Deletes a single `Attachment` using a unique key."""
   deleteAttachment(
     """
@@ -8269,14 +9422,6 @@ type Mutation {
     input: DeleteWardenSyncQueueInput!
   ): DeleteWardenSyncQueuePayload
 
-  """Deletes a single `Post` using a unique key."""
-  deletePost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePostInput!
-  ): DeletePostPayload
-
   """Deletes a single `Project` using a unique key."""
   deleteProject(
     """
@@ -8284,6 +9429,14 @@ type Mutation {
     """
     input: DeleteProjectInput!
   ): DeleteProjectPayload
+
+  """Deletes a single `Post` using a unique key."""
+  deletePost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostInput!
+  ): DeletePostPayload
   ingestSignal(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.

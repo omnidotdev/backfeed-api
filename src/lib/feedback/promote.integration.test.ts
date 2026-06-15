@@ -52,8 +52,10 @@ describe.skipIf(!DATABASE_URL)("signal promotion (db integration)", () => {
   });
 
   afterAll(async () => {
-    // Deleting the project cascades to its posts and signals
-    await db.delete(projects).where(eq(projects.id, projectId));
+    // Deleting projects cascades to their posts, signals, and clusters
+    await db
+      .delete(projects)
+      .where(eq(projects.organizationId, organizationId));
     await db.delete(users).where(eq(users.id, userId));
     await pool.end();
   });
@@ -82,11 +84,12 @@ describe.skipIf(!DATABASE_URL)("signal promotion (db integration)", () => {
       rawContent: "Please add dark mode\n\nIt would be easier on the eyes.",
     });
 
-    const post = await promoteSignalToPost(db, {
+    const { post, merged } = await promoteSignalToPost(db, {
       signalId: signal.id,
       userId,
     });
 
+    expect(merged).toBe(false);
     expect(post.id).toBeDefined();
     expect(post.title).toBe("Please add dark mode");
     expect(post.description).toBe("It would be easier on the eyes.");
@@ -136,12 +139,48 @@ describe.skipIf(!DATABASE_URL)("signal promotion (db integration)", () => {
       rawContent: "Authored signal",
     });
 
-    const post = await promoteSignalToPost(db, {
+    const { post } = await promoteSignalToPost(db, {
       signalId: signal.id,
       userId: crypto.randomUUID(),
     });
 
     // signal already carried an author, so the promoter id is not used
     expect(post.userId).toBe(userId);
+  });
+
+  test("merges a near-duplicate signal into the canonical post", async () => {
+    const [project] = await db
+      .insert(projects)
+      .values({ organizationId, name: "merge", slug: `merge-${runId}` })
+      .returning();
+    const content = "The export button does nothing when clicked";
+
+    const first = await ingestSignal(db, {
+      organizationId,
+      projectId: project.id,
+      source: "email",
+      rawContent: content,
+    });
+    const a = await promoteSignalToPost(db, { signalId: first.id, userId });
+    expect(a.merged).toBe(false);
+
+    const second = await ingestSignal(db, {
+      organizationId,
+      projectId: project.id,
+      source: "email",
+      rawContent: content,
+    });
+    const b = await promoteSignalToPost(db, { signalId: second.id, userId });
+
+    // identical content lexically merges into the first post; no new post created
+    expect(b.merged).toBe(true);
+    expect(b.post.id).toBe(a.post.id);
+
+    const [linked] = await db
+      .select()
+      .from(signals)
+      .where(eq(signals.id, second.id));
+    expect(linked.status).toBe("merged");
+    expect(linked.postId).toBe(a.post.id);
   });
 });

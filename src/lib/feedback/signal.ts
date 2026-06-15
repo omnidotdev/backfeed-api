@@ -125,6 +125,7 @@ export const buildIngestedSignal = (input: {
   projectId?: string | null;
   userId?: string | null;
   sourceMetadata?: unknown;
+  embedding?: number[] | null;
 }): InsertSignal => {
   assertValidSignalInput({ source: input.source });
   const { type, sentiment } = heuristicTriage(input.rawContent);
@@ -139,6 +140,7 @@ export const buildIngestedSignal = (input: {
     rawContent: input.rawContent,
     sentiment,
     sourceMetadata: input.sourceMetadata ?? null,
+    embedding: input.embedding ?? null,
   };
 };
 

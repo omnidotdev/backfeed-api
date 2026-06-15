@@ -1,0 +1,106 @@
+/**
+ * Near-duplicate detection for incoming feedback.
+ *
+ * Two strategies behind one entry point:
+ * - semantic (pgvector cosine) when an embedding is available
+ * - lexical (pg_trgm trigram similarity) as the zero-config fallback
+ *
+ * The two score scales differ, so each has its own thresholds. `findDuplicate`
+ * returns the best actionable match (merge or flag) within a project, or `null`
+ * when the nearest candidate is merely novel.
+ */
+
+import { sql } from "drizzle-orm";
+import { posts } from "lib/db/schema";
+
+import type { dbPool } from "lib/db/db";
+
+type Db = typeof dbPool;
+
+/** Similarity strategy used to score a candidate. */
+type DedupeStrategy = "embedding" | "lexical";
+
+/** Outcome for a scored candidate. */
+type DuplicateVerdict = "merge" | "flag" | "novel";
+
+/**
+ * Score thresholds per strategy. Embedding cosine similarity is far stricter
+ * than trigram similarity, so the cutoffs differ. `merge` auto-links a duplicate;
+ * `flag` records a possible duplicate for a human; below `flag` is novel.
+ */
+export const DEDUPE_THRESHOLDS = {
+  embedding: { merge: 0.92, flag: 0.82 },
+  lexical: { merge: 0.7, flag: 0.45 },
+} as const;
+
+interface DuplicateMatch {
+  postId: string;
+  score: number;
+  strategy: DedupeStrategy;
+  verdict: Exclude<DuplicateVerdict, "novel">;
+}
+
+/** Classify a similarity score against a strategy's thresholds. */
+export const classifyDuplicate = (
+  score: number,
+  strategy: DedupeStrategy,
+): DuplicateVerdict => {
+  const thresholds = DEDUPE_THRESHOLDS[strategy];
+  if (score >= thresholds.merge) return "merge";
+  if (score >= thresholds.flag) return "flag";
+  return "novel";
+};
+
+const toMatch = (
+  // biome-ignore lint/suspicious/noExplicitAny: raw pg result rows
+  rows: any[],
+  strategy: DedupeStrategy,
+): DuplicateMatch | null => {
+  const row = rows[0];
+  if (!row?.id || row.score == null) return null;
+
+  const score = Number(row.score);
+  const verdict = classifyDuplicate(score, strategy);
+  if (verdict === "novel") return null;
+
+  return { postId: row.id as string, score, strategy, verdict };
+};
+
+/**
+ * Find the best near-duplicate post for incoming content within a project.
+ * Uses semantic cosine similarity when an embedding is supplied, otherwise
+ * lexical trigram similarity. Canonical (non-duplicate) posts only.
+ */
+export const findDuplicate = async (
+  db: Db,
+  projectId: string,
+  input: { content: string; embedding?: number[] | null },
+): Promise<DuplicateMatch | null> => {
+  if (input.embedding && input.embedding.length > 0) {
+    const vec = `[${input.embedding.join(",")}]`;
+    const result = await db.execute(sql`
+      SELECT id, 1 - (embedding <=> ${vec}::vector) AS score
+      FROM ${posts}
+      WHERE project_id = ${projectId}
+        AND embedding IS NOT NULL
+        AND duplicate_of_id IS NULL
+      ORDER BY embedding <=> ${vec}::vector ASC
+      LIMIT 1
+    `);
+    return toMatch(result.rows, "embedding");
+  }
+
+  const result = await db.execute(sql`
+    SELECT id,
+      similarity(
+        coalesce(title, '') || ' ' || coalesce(description, ''),
+        ${input.content}
+      ) AS score
+    FROM ${posts}
+    WHERE project_id = ${projectId}
+      AND duplicate_of_id IS NULL
+    ORDER BY score DESC
+    LIMIT 1
+  `);
+  return toMatch(result.rows, "lexical");
+};

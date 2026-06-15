@@ -1,17 +1,22 @@
 /**
  * Signal ingestion and promotion (the brain -> board bridge).
  *
- * `ingestSignal` captures external input as a triaged, pending signal.
- * `promoteSignalToPost` turns a routed pending signal into a public board post
- * and links the signal to it. These are the controlled write paths behind the
- * `ingestSignal`/`promoteSignalToPost` GraphQL mutations; the raw auto-CRUD
- * signal mutations are disabled so triage and the no-auto-publish guardrail
- * cannot be bypassed.
+ * `ingestSignal` captures external input as a triaged, pending signal (with an
+ * embedding when one is supplied). `promoteSignalToPost` turns a routed pending
+ * signal into a public board post: it first checks for a near-duplicate and
+ * either merges into the canonical post or creates a new one (flagging a
+ * possible duplicate), carries triage onto the post, and assigns a theme cluster.
+ *
+ * These are the controlled write paths behind the `ingestSignal` /
+ * `promoteSignalToPost` GraphQL mutations; the raw auto-CRUD signal mutations are
+ * disabled so triage and the no-auto-publish guardrail cannot be bypassed.
  */
 
 import { eq } from "drizzle-orm";
 import { posts, signals } from "lib/db/schema";
 
+import { assignCluster } from "./cluster";
+import { findDuplicate } from "./dedupe";
 import {
   assertSignalPromotable,
   buildIngestedSignal,
@@ -34,6 +39,7 @@ export const ingestSignal = async (
     projectId?: string | null;
     userId?: string | null;
     sourceMetadata?: unknown;
+    embedding?: number[] | null;
   },
 ): Promise<SelectSignal> => {
   const [signal] = await db
@@ -43,10 +49,23 @@ export const ingestSignal = async (
   return signal;
 };
 
+/** Result of a promotion: the resulting post, and whether it was an existing one. */
+interface PromotionResult {
+  post: SelectPost;
+  /** True when the signal merged into an existing duplicate rather than creating a post. */
+  merged: boolean;
+}
+
 /**
- * Promote a pending signal to a public post and link it. The post is attributed
- * to the signal's original author when present, otherwise to the promoting
- * admin. Throws if the signal is missing or not promotable.
+ * Promote a pending signal to a public post and link it.
+ *
+ * Dedupe first: a high-confidence duplicate merges the signal into the existing
+ * canonical post (no new post); a medium-confidence match still creates a post
+ * but records `duplicateOfId`. Otherwise a novel post is created. The post
+ * carries the signal's triage (sentiment/aiTags) and embedding and is assigned a
+ * theme cluster. The post is attributed to the signal's original author when
+ * present, otherwise to the promoting admin. Throws if the signal is missing or
+ * not promotable.
  */
 export const promoteSignalToPost = async (
   db: Db,
@@ -55,7 +74,7 @@ export const promoteSignalToPost = async (
     userId,
     title,
   }: { signalId: string; userId: string; title?: string | null },
-): Promise<SelectPost> => {
+): Promise<PromotionResult> => {
   const [signal] = await db
     .select()
     .from(signals)
@@ -64,26 +83,54 @@ export const promoteSignalToPost = async (
   if (!signal) throw new Error(`Signal not found: ${signalId}`);
 
   assertSignalPromotable(signal);
+  const projectId = signal.projectId!;
+
+  const duplicate = await findDuplicate(db, projectId, {
+    content: signal.rawContent,
+    embedding: signal.embedding,
+  });
+
+  // High-confidence duplicate: merge into the canonical post, create nothing new.
+  if (duplicate?.verdict === "merge") {
+    await db
+      .update(signals)
+      .set({ status: "merged", postId: duplicate.postId })
+      .where(eq(signals.id, signalId));
+
+    const [canonical] = await db
+      .select()
+      .from(posts)
+      .where(eq(posts.id, duplicate.postId));
+    return { post: canonical, merged: true };
+  }
+
+  const clusterId = await assignCluster(db, projectId, signal.embedding);
 
   const [post] = await db
     .insert(posts)
-    .values(
-      buildPostFromSignal(
+    .values({
+      ...buildPostFromSignal(
         {
           rawContent: signal.rawContent,
-          projectId: signal.projectId!,
+          projectId,
           source: signal.source,
           userId: signal.userId,
         },
         { userId: signal.userId ?? userId, title },
       ),
-    )
+      sentiment: signal.sentiment,
+      aiTags: signal.aiTags,
+      embedding: signal.embedding,
+      // medium-confidence: keep the post but point at the likely canonical
+      duplicateOfId: duplicate?.verdict === "flag" ? duplicate.postId : null,
+      clusterId,
+    })
     .returning();
 
   await db
     .update(signals)
-    .set({ status: "published", postId: post.id })
+    .set({ status: "published", postId: post.id, clusterId })
     .where(eq(signals.id, signalId));
 
-  return post;
+  return { post, merged: false };
 };
