@@ -31,7 +31,12 @@ import {
 import idpWebhook from "lib/idp/webhooks";
 import attachmentUploadRoutes from "lib/media/upload.route";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
-import { initializeSearchIndexes, search } from "lib/search";
+import {
+  SEARCH_RECONCILE_INTERVAL_MS,
+  initializeSearchIndexes,
+  reconcileSearchIndex,
+  search,
+} from "lib/search";
 
 const commit = (() => {
   try {
@@ -151,11 +156,20 @@ async function startServer(): Promise<void> {
     )
     .listen(PORT);
 
-  // Initialize search indexes if search is enabled
+  // Initialize search indexes if search is enabled, then reconcile (self-heal)
+  // the index from the database on boot and periodically thereafter so any
+  // documents dropped by best-effort indexing are restored.
   if (search) {
-    initializeSearchIndexes().catch((err) => {
-      console.error("[Search] Failed to initialize indexes:", err);
-    });
+    initializeSearchIndexes()
+      .then(() => reconcileSearchIndex())
+      .catch((err) => {
+        console.error("[Search] Failed to initialize/reconcile indexes:", err);
+      });
+    setInterval(() => {
+      reconcileSearchIndex().catch((err) => {
+        console.error("[Search] Periodic reconcile failed:", err);
+      });
+    }, SEARCH_RECONCILE_INTERVAL_MS).unref();
   }
 
   // Start the Warden sync queue poller for retrying failed authz tuple operations
