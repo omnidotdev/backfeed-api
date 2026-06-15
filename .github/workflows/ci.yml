@@ -34,7 +34,9 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:17
+        # pgvector-enabled PostgreSQL 18 (matches dev/prod) so the feedback brain's
+        # vector columns migrate and the db integration tests run
+        image: pgvector/pgvector:pg18
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
