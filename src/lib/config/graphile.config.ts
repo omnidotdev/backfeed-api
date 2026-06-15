@@ -16,7 +16,10 @@ import {
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
 import { DefaultStatusTemplatesPlugin } from "lib/graphql/plugins/defaults";
-import { EventEmissionPlugin } from "lib/graphql/plugins/events";
+import {
+  EventEmissionPlugin,
+  PostShippedPlugin,
+} from "lib/graphql/plugins/events";
 import {
   PostSignalProvenancePlugin,
   SignalIngestionPlugin,
@@ -68,6 +71,8 @@ const preset: GraphileConfig.Preset = {
     AuthzSyncPlugin,
     // Event emission plugin
     EventEmissionPlugin,
+    // Close-the-loop: emit backfeed.post.shipped when a post first ships
+    PostShippedPlugin,
     // Default resource seeding plugins
     DefaultStatusTemplatesPlugin,
     // Signal provenance plugin (records a signal per created post)

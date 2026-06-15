@@ -1,0 +1,1 @@
+ALTER TABLE "post" ADD COLUMN "shipped_at" timestamp(6) with time zone;

@@ -8,6 +8,7 @@ import { signals, statusTemplates } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
 import { embeddingProvider } from "lib/feedback/embedding";
 import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
+import { markPostShipped } from "lib/feedback/shipped";
 import { buildPostProvenanceSignal } from "lib/feedback/signal";
 import { FEATURE_KEYS, billingBypassOrgIds } from "lib/graphql/plugins/authorization/constants";
 import { events } from "lib/providers";
@@ -983,6 +984,150 @@ const spec_wardenSyncQueue = {
   executor: executor
 };
 const wardenSyncQueueCodec = recordCodec(spec_wardenSyncQueue);
+const projectIdentifier = sql.identifier("public", "project");
+const spec_project = {
+  name: "project",
+  identifier: projectIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    image: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    slug: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    next_post_number: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    prefix: {
+      codec: TYPES.varchar,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    is_public: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    inbound_email_key: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {
+          behavior: "-attribute:insert -attribute:update"
+        },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "270566",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project"
+    }
+  },
+  executor: executor
+};
+const projectCodec = recordCodec(spec_project);
 const postIdentifier = sql.identifier("public", "post");
 const spec_post = {
   name: "post",
@@ -1137,6 +1282,15 @@ const spec_post = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    shipped_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   },
   extensions: {
@@ -1151,150 +1305,6 @@ const spec_post = {
   executor: executor
 };
 const postCodec = recordCodec(spec_post);
-const projectIdentifier = sql.identifier("public", "project");
-const spec_project = {
-  name: "project",
-  identifier: projectIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    image: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    slug: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    next_post_number: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    prefix: {
-      codec: TYPES.varchar,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    is_public: {
-      codec: TYPES.boolean,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    inbound_email_key: {
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {
-          behavior: "-attribute:insert -attribute:update"
-        },
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "270566",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "project"
-    }
-  },
-  executor: executor
-};
-const projectCodec = recordCodec(spec_project);
 const signalIdentifier = sql.identifier("public", "signal");
 const spec_signal = {
   name: "signal",
@@ -1738,6 +1748,32 @@ const project_resourceOptionsConfig = {
   },
   uniques: projectUniques
 };
+const signalUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const signal_resourceOptionsConfig = {
+  executor: executor,
+  name: "signal",
+  identifier: "main.public.signal",
+  from: signalIdentifier,
+  codec: signalCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "signal"
+    },
+    tags: {
+      behavior: "-insert -update -delete"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: signalUniques
+};
 const postUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -1769,32 +1805,6 @@ const post_resourceOptionsConfig = {
   },
   uniques: postUniques
 };
-const signalUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const signal_resourceOptionsConfig = {
-  executor: executor,
-  name: "signal",
-  identifier: "main.public.signal",
-  from: signalIdentifier,
-  codec: signalCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "signal"
-    },
-    tags: {
-      behavior: "-insert -update -delete"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: signalUniques
-};
 const registryConfig = {
   pgExecutors: {
     __proto__: null,
@@ -1818,9 +1828,9 @@ const registryConfig = {
     attachment: attachmentCodec,
     wardenSyncQueue: wardenSyncQueueCodec,
     jsonb: TYPES.jsonb,
-    post: postCodec,
     project: projectCodec,
     varchar: TYPES.varchar,
+    post: postCodec,
     signal: signalCodec
   },
   pgResources: {
@@ -1853,8 +1863,8 @@ const registryConfig = {
       uniques: warden_sync_queueUniques
     },
     project: project_resourceOptionsConfig,
-    post: post_resourceOptionsConfig,
-    signal: signal_resourceOptionsConfig
+    signal: signal_resourceOptionsConfig,
+    post: post_resourceOptionsConfig
   },
   pgRelations: {
     __proto__: null,
@@ -3606,6 +3616,9 @@ function PostInput_duplicateOfIdApply(obj, val, info) {
 function PostInput_clusterIdApply(obj, val, info) {
   obj.set("cluster_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function PostInput_shippedAtApply(obj, val, info) {
+  obj.set("shipped_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const nodeIdCodecs = {
   __proto__: null,
   raw: rawNodeIdCodec,
@@ -5120,7 +5133,7 @@ ${String(oldPlan34)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const oldPlan38 = (_$root, args) => {
+const oldPlan39 = (_$root, args) => {
   const $update = pgUpdateSingle(otherSource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5154,13 +5167,13 @@ const planWrapper36 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan37(...planParams) {
+function oldPlan38(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan38.apply(this, args);
+        $prev = oldPlan39.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan38)}`);
+${String(oldPlan39)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
@@ -5210,6 +5223,51 @@ const planWrapper37 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
+function oldPlan37(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan38.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
+${String(oldPlan38)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper38 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $postId = fieldArgs.getRaw(["input", "rowId"]),
+    $db = context().get("db");
+  sideEffect([$result, $postId, $db], async ([result, postId, db]) => {
+    if (!result) return;
+    try {
+      const shipped = await markPostShipped(db, postId);
+      if (!shipped) return;
+      await events.emit({
+        type: "backfeed.post.shipped",
+        data: {
+          postId: shipped.postId,
+          projectId: shipped.projectId,
+          organizationId: shipped.organizationId,
+          title: shipped.title,
+          reporterUserIds: shipped.reporterUserIds
+        },
+        organizationId: shipped.organizationId,
+        subject: shipped.postId
+      });
+    } catch (error) {
+      console.error("[Events] Failed to emit post.shipped:", error);
+    }
+  });
+  return $result;
+};
 function oldPlan36(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
@@ -5223,12 +5281,12 @@ ${String(oldPlan37)}`);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const oldPlan40 = (_$root, args) => {
+const oldPlan41 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_commentPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5237,7 +5295,7 @@ const oldPlan40 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper39 = (plan, _, fieldArgs) => {
+const planWrapper40 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5266,25 +5324,25 @@ const planWrapper39 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan39(...planParams) {
+function oldPlan40(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan40.apply(this, args);
+        $prev = oldPlan41.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteComment, but that function did not return a step!
-${String(oldPlan40)}`);
+${String(oldPlan41)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper40 = (plan, _, fieldArgs) => {
+const planWrapper41 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $commentId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5327,7 +5385,7 @@ const planWrapper40 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan42 = (_$root, args) => {
+const oldPlan43 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_project_linkPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5336,7 +5394,7 @@ const oldPlan42 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper41 = (plan, _, fieldArgs) => {
+const planWrapper42 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5361,25 +5419,25 @@ const planWrapper41 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan41(...planParams) {
+function oldPlan42(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan42.apply(this, args);
+        $prev = oldPlan43.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProjectLink, but that function did not return a step!
-${String(oldPlan42)}`);
+${String(oldPlan43)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper42(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper42 = (plan, _, fieldArgs) => {
+const planWrapper43 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $linkId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5417,7 +5475,7 @@ const planWrapper42 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan44 = (_$root, args) => {
+const oldPlan45 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_status_templatePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5426,7 +5484,7 @@ const oldPlan44 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper43 = (plan, _, fieldArgs) => {
+const planWrapper44 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5448,25 +5506,25 @@ const planWrapper43 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan43(...planParams) {
+function oldPlan44(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan44.apply(this, args);
+        $prev = oldPlan45.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
-${String(oldPlan44)}`);
+${String(oldPlan45)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper43(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper44(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper44 = (plan, _, fieldArgs) => {
+const planWrapper45 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $templateId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5499,7 +5557,7 @@ const planWrapper44 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan46 = (_$root, args) => {
+const oldPlan47 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_votePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5508,13 +5566,13 @@ const oldPlan46 = (_$root, args) => {
     result: $delete
   });
 };
-function oldPlan45(...planParams) {
+function oldPlan46(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan46.apply(this, args);
+        $prev = oldPlan47.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteVote, but that function did not return a step!
-${String(oldPlan46)}`);
+${String(oldPlan47)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
@@ -5526,7 +5584,7 @@ ${String(oldPlan46)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper46 = (plan, _, fieldArgs) => {
+const planWrapper47 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $voteId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5569,7 +5627,7 @@ const planWrapper46 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan47 = (_$root, args) => {
+const oldPlan48 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5578,7 +5636,7 @@ const oldPlan47 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper47 = (plan, _, fieldArgs) => {
+const planWrapper48 = (plan, _, fieldArgs) => {
   const $userId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$userId, $observer], async ([userId, observer]) => {
@@ -5587,7 +5645,7 @@ const planWrapper47 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan49 = (_$root, args) => {
+const oldPlan50 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_project_status_configPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5596,7 +5654,7 @@ const oldPlan49 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper48 = (plan, _, fieldArgs) => {
+const planWrapper49 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5621,25 +5679,25 @@ const planWrapper48 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan48(...planParams) {
+function oldPlan49(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan49.apply(this, args);
+        $prev = oldPlan50.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProjectStatusConfig, but that function did not return a step!
-${String(oldPlan49)}`);
+${String(oldPlan50)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper48(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper49(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper49 = (plan, _, fieldArgs) => {
+const planWrapper50 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $configId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5677,7 +5735,7 @@ const planWrapper49 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan50 = (_$root, args) => {
+const oldPlan51 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_attachmentPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5686,7 +5744,7 @@ const oldPlan50 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper50 = (plan, _, fieldArgs) => {
+const planWrapper51 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5715,7 +5773,7 @@ const planWrapper50 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan54 = (_$root, args) => {
+const oldPlan55 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5724,7 +5782,7 @@ const oldPlan54 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper51 = (plan, _, fieldArgs) => {
+const planWrapper52 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5746,25 +5804,25 @@ const planWrapper51 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan53(...planParams) {
+function oldPlan54(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan54.apply(this, args);
+        $prev = oldPlan55.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan54)}`);
+${String(oldPlan55)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper51(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper52(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper52 = (plan, _, fieldArgs) => {
+const planWrapper53 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $projectId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5787,25 +5845,25 @@ const planWrapper52 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan52(...planParams) {
+function oldPlan53(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan53.apply(this, args);
+        $prev = oldPlan54.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan53)}`);
+${String(oldPlan54)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper52(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper53(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper53 = (plan, _, fieldArgs) => {
+const planWrapper54 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $projectId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5838,25 +5896,25 @@ const planWrapper53 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan51(...planParams) {
+function oldPlan52(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan52.apply(this, args);
+        $prev = oldPlan53.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan52)}`);
+${String(oldPlan53)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper53(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper54(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper54 = (plan, _, fieldArgs) => {
+const planWrapper55 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([projectId]) => {
@@ -5864,7 +5922,7 @@ const planWrapper54 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan57 = (_$root, args) => {
+const oldPlan58 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5873,7 +5931,7 @@ const oldPlan57 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper55 = (plan, _, fieldArgs) => {
+const planWrapper56 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5898,25 +5956,25 @@ const planWrapper55 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan56(...planParams) {
+function oldPlan57(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan57.apply(this, args);
+        $prev = oldPlan58.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan57)}`);
+${String(oldPlan58)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper56(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper56 = (plan, _, fieldArgs) => {
+const planWrapper57 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $postId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5954,25 +6012,25 @@ const planWrapper56 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan55(...planParams) {
+function oldPlan56(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan56.apply(this, args);
+        $prev = oldPlan57.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan56)}`);
+${String(oldPlan57)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper56(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper57 = (plan, _, fieldArgs) => {
+const planWrapper58 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([postId]) => {
@@ -6071,6 +6129,7 @@ type Post {
   aiTags: JSON
   duplicateOfId: UUID
   clusterId: UUID
+  shippedAt: Datetime
 
   """Reads a single \`SignalCluster\` that is related to this \`Post\`."""
   cluster: SignalCluster
@@ -6695,6 +6754,9 @@ type PostDistinctCountAggregates {
 
   """Distinct count of clusterId across the matching connection"""
   clusterId: BigInt
+
+  """Distinct count of shippedAt across the matching connection"""
+  shippedAt: BigInt
 }
 
 type PostMinAggregates {
@@ -6759,6 +6821,9 @@ enum PostGroupBy {
   AI_TAGS
   DUPLICATE_OF_ID
   CLUSTER_ID
+  SHIPPED_AT
+  SHIPPED_AT_TRUNCATED_TO_HOUR
+  SHIPPED_AT_TRUNCATED_TO_DAY
 }
 
 """Conditions for \`Post\` aggregates."""
@@ -6781,6 +6846,7 @@ input PostHavingSumInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input HavingDatetimeFilter {
@@ -6806,6 +6872,7 @@ input PostHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingMinInput {
@@ -6813,6 +6880,7 @@ input PostHavingMinInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingMaxInput {
@@ -6820,6 +6888,7 @@ input PostHavingMaxInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingAverageInput {
@@ -6827,6 +6896,7 @@ input PostHavingAverageInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingStddevSampleInput {
@@ -6834,6 +6904,7 @@ input PostHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingStddevPopulationInput {
@@ -6841,6 +6912,7 @@ input PostHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingVarianceSampleInput {
@@ -6848,6 +6920,7 @@ input PostHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingVariancePopulationInput {
@@ -6855,6 +6928,7 @@ input PostHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 """
@@ -6902,6 +6976,9 @@ input PostCondition {
 
   """Checks for equality with the object’s \`clusterId\` field."""
   clusterId: UUID
+
+  """Checks for equality with the object’s \`shippedAt\` field."""
+  shippedAt: Datetime
 }
 
 """
@@ -6949,6 +7026,9 @@ input PostFilter {
 
   """Filter by the object’s \`clusterId\` field."""
   clusterId: UUIDFilter
+
+  """Filter by the object’s \`shippedAt\` field."""
+  shippedAt: DatetimeFilter
 
   """Filter by the object’s \`comments\` relation."""
   comments: PostToManyCommentFilter
@@ -7603,6 +7683,7 @@ input PostDistinctCountAggregateFilter {
   aiTags: BigIntFilter
   duplicateOfId: BigIntFilter
   clusterId: BigIntFilter
+  shippedAt: BigIntFilter
 }
 
 input PostMinAggregateFilter {
@@ -9006,6 +9087,8 @@ enum PostOrderBy {
   DUPLICATE_OF_ID_DESC
   CLUSTER_ID_ASC
   CLUSTER_ID_DESC
+  SHIPPED_AT_ASC
+  SHIPPED_AT_DESC
   COMMENTS_COUNT_ASC
   COMMENTS_COUNT_DESC
   COMMENTS_DISTINCT_COUNT_ROW_ID_ASC
@@ -9056,6 +9139,8 @@ enum PostOrderBy {
   POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
   POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_CLUSTER_ID_ASC
   POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SHIPPED_AT_DESC
   POSTS_BY_DUPLICATE_OF_ID_MIN_NUMBER_ASC
   POSTS_BY_DUPLICATE_OF_ID_MIN_NUMBER_DESC
   POSTS_BY_DUPLICATE_OF_ID_MAX_NUMBER_ASC
@@ -11487,6 +11572,8 @@ enum SignalClusterOrderBy {
   POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
   POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_CLUSTER_ID_ASC
   POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SHIPPED_AT_DESC
   POSTS_BY_CLUSTER_ID_MIN_NUMBER_ASC
   POSTS_BY_CLUSTER_ID_MIN_NUMBER_DESC
   POSTS_BY_CLUSTER_ID_MAX_NUMBER_ASC
@@ -11883,6 +11970,8 @@ enum StatusTemplateOrderBy {
   POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -12184,6 +12273,8 @@ enum UserOrderBy {
   POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -13049,6 +13140,8 @@ enum ProjectOrderBy {
   POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -13721,6 +13814,7 @@ input PostInput {
   aiTags: JSON
   duplicateOfId: UUID
   clusterId: UUID
+  shippedAt: Datetime
 }
 
 """The output of our update \`Comment\` mutation."""
@@ -14296,6 +14390,7 @@ input PostPatch {
   aiTags: JSON
   duplicateOfId: UUID
   clusterId: UUID
+  shippedAt: Datetime
 }
 
 """The output of our delete \`Comment\` mutation."""
@@ -14743,14 +14838,14 @@ type Query implements Node {
   """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
 
+  """Get a single \`Signal\`."""
+  signal(rowId: UUID!): Signal
+
   """Get a single \`Post\`."""
   post(rowId: UUID!): Post
 
   """Get a single \`Post\`."""
   postByProjectIdAndNumber(projectId: UUID!, number: Int!): Post
-
-  """Get a single \`Signal\`."""
-  signal(rowId: UUID!): Signal
 
   """Reads and enables pagination through a set of \`Comment\`."""
   comments(
@@ -15092,40 +15187,6 @@ type Query implements Node {
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
 
-  """Reads and enables pagination through a set of \`Post\`."""
-  posts(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: PostFilter
-
-    """The method to use when ordering \`Post\`."""
-    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostConnection
-
   """Reads and enables pagination through a set of \`Signal\`."""
   signals(
     """Only read the first \`n\` values of the set."""
@@ -15159,6 +15220,40 @@ type Query implements Node {
     """The method to use when ordering \`Signal\`."""
     orderBy: [SignalOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalConnection
+
+  """Reads and enables pagination through a set of \`Post\`."""
+  posts(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering \`Post\`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection
 
   """
   Returns the currently authenticated user (observer).
@@ -16082,17 +16177,17 @@ ${String(oldPlan7)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan50.apply(this, args);
+                $prev = oldPlan51.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteAttachment, but that function did not return a step!
-${String(oldPlan50)}`);
+${String(oldPlan51)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper50(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper51(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -16105,17 +16200,17 @@ ${String(oldPlan50)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan39.apply(this, args);
+                $prev = oldPlan40.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteComment, but that function did not return a step!
-${String(oldPlan39)}`);
+${String(oldPlan40)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -16128,17 +16223,17 @@ ${String(oldPlan39)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan55.apply(this, args);
+                $prev = oldPlan56.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan55)}`);
+${String(oldPlan56)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper58(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -16151,17 +16246,17 @@ ${String(oldPlan55)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan51.apply(this, args);
+                $prev = oldPlan52.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan51)}`);
+${String(oldPlan52)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper54(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -16174,17 +16269,17 @@ ${String(oldPlan51)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan41.apply(this, args);
+                $prev = oldPlan42.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProjectLink, but that function did not return a step!
-${String(oldPlan41)}`);
+${String(oldPlan42)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper42(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper43(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -16197,17 +16292,17 @@ ${String(oldPlan41)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan48.apply(this, args);
+                $prev = oldPlan49.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProjectStatusConfig, but that function did not return a step!
-${String(oldPlan48)}`);
+${String(oldPlan49)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper49(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper50(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -16234,17 +16329,17 @@ ${String(oldPlan48)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan43.apply(this, args);
+                $prev = oldPlan44.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
-${String(oldPlan43)}`);
+${String(oldPlan44)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper44(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper45(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -16257,17 +16352,17 @@ ${String(oldPlan43)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan47.apply(this, args);
+                $prev = oldPlan48.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteUser, but that function did not return a step!
-${String(oldPlan47)}`);
+${String(oldPlan48)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper47(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper48(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -16280,17 +16375,17 @@ ${String(oldPlan47)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan45.apply(this, args);
+                $prev = oldPlan46.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteVote, but that function did not return a step!
-${String(oldPlan45)}`);
+${String(oldPlan46)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper46(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper47(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -17138,6 +17233,9 @@ ${String(oldPlan27)}`);
       project: Post_projectPlan,
       projectId: Post_projectIdPlan,
       rowId: Comment_rowIdPlan,
+      shippedAt($record) {
+        return $record.get("shipped_at");
+      },
       signals: {
         plan($record) {
           const $records = otherSource_signalPgResource.find({
@@ -17240,6 +17338,9 @@ ${String(oldPlan27)}`);
       projectId: PostDistinctCountAggregates_projectIdPlan,
       rowId: PostDistinctCountAggregates_rowIdPlan,
       sentiment: PostDistinctCountAggregates_sentimentPlan,
+      shippedAt($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.timestamptz, "shipped_at", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
       source: PostDistinctCountAggregates_sourcePlan,
       statusTemplateId: PostDistinctCountAggregates_statusTemplateIdPlan,
       statusUpdatedAt($pgSelectSingle) {
@@ -19525,6 +19626,9 @@ export const inputObjects = {
       projectId: PostCondition_projectIdApply,
       rowId: PostCondition_rowIdApply,
       sentiment: PostCondition_sentimentApply,
+      shippedAt($condition, val) {
+        return applyAttributeCondition("shipped_at", TYPES.timestamptz, $condition, val);
+      },
       source: PostCondition_sourceApply,
       statusTemplateId: PostCondition_statusTemplateIdApply,
       statusUpdatedAt($condition, val) {
@@ -19552,6 +19656,9 @@ export const inputObjects = {
       projectId: PostDistinctCountAggregateFilter_projectIdApply,
       rowId: CommentDistinctCountAggregateFilter_rowIdApply,
       sentiment: PostDistinctCountAggregateFilter_sentimentApply,
+      shippedAt($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "shipped_at", TYPES.bigint, TYPES.timestamptz, $parent, input);
+      },
       source: PostDistinctCountAggregateFilter_sourceApply,
       statusTemplateId: PostDistinctCountAggregateFilter_statusTemplateIdApply,
       statusUpdatedAt($parent, input) {
@@ -19678,6 +19785,9 @@ export const inputObjects = {
       sentiment(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("sentiment", "sentiment", spec_post.attributes.sentiment, queryBuilder, value);
       },
+      shippedAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("shippedAt", "shipped_at", spec_post.attributes.shipped_at, queryBuilder, value);
+      },
       signals($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -19763,6 +19873,9 @@ export const inputObjects = {
       number($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_post.attributes.number, "number", $having);
       },
+      shippedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_post.attributes.shipped_at, "shipped_at", $having);
+      },
       statusUpdatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_post.attributes.status_updated_at, "status_updated_at", $having);
       },
@@ -19778,6 +19891,9 @@ export const inputObjects = {
       },
       number($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_post.attributes.number, "number", $having);
+      },
+      shippedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", $having);
       },
       statusUpdatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_post.attributes.status_updated_at, "status_updated_at", $having);
@@ -19810,6 +19926,9 @@ export const inputObjects = {
       number($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_post.attributes.number, "number", $having);
       },
+      shippedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_post.attributes.shipped_at, "shipped_at", $having);
+      },
       statusUpdatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_post.attributes.status_updated_at, "status_updated_at", $having);
       },
@@ -19825,6 +19944,9 @@ export const inputObjects = {
       },
       number($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_post.attributes.number, "number", $having);
+      },
+      shippedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_post.attributes.shipped_at, "shipped_at", $having);
       },
       statusUpdatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_post.attributes.status_updated_at, "status_updated_at", $having);
@@ -19842,6 +19964,9 @@ export const inputObjects = {
       number($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_post.attributes.number, "number", $having);
       },
+      shippedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_post.attributes.shipped_at, "shipped_at", $having);
+      },
       statusUpdatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_post.attributes.status_updated_at, "status_updated_at", $having);
       },
@@ -19857,6 +19982,9 @@ export const inputObjects = {
       },
       number($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_post.attributes.number, "number", $having);
+      },
+      shippedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_post.attributes.shipped_at, "shipped_at", $having);
       },
       statusUpdatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_post.attributes.status_updated_at, "status_updated_at", $having);
@@ -19874,6 +20002,9 @@ export const inputObjects = {
       number($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_post.attributes.number, "number", $having);
       },
+      shippedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_post.attributes.shipped_at, "shipped_at", $having);
+      },
       statusUpdatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_post.attributes.status_updated_at, "status_updated_at", $having);
       },
@@ -19890,6 +20021,9 @@ export const inputObjects = {
       number($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_post.attributes.number, "number", $having);
       },
+      shippedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_post.attributes.shipped_at, "shipped_at", $having);
+      },
       statusUpdatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_post.attributes.status_updated_at, "status_updated_at", $having);
       },
@@ -19905,6 +20039,9 @@ export const inputObjects = {
       },
       number($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_post.attributes.number, "number", $having);
+      },
+      shippedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_post.attributes.shipped_at, "shipped_at", $having);
       },
       statusUpdatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_post.attributes.status_updated_at, "status_updated_at", $having);
@@ -19925,6 +20062,7 @@ export const inputObjects = {
       projectId: ProjectLinkInput_projectIdApply,
       rowId: CommentInput_rowIdApply,
       sentiment: PostInput_sentimentApply,
+      shippedAt: PostInput_shippedAtApply,
       source: PostInput_sourceApply,
       statusTemplateId: ProjectStatusConfigInput_statusTemplateIdApply,
       statusUpdatedAt: PostInput_statusUpdatedAtApply,
@@ -19958,6 +20096,7 @@ export const inputObjects = {
       projectId: ProjectLinkInput_projectIdApply,
       rowId: CommentInput_rowIdApply,
       sentiment: PostInput_sentimentApply,
+      shippedAt: PostInput_shippedAtApply,
       source: PostInput_sourceApply,
       statusTemplateId: ProjectStatusConfigInput_statusTemplateIdApply,
       statusUpdatedAt: PostInput_statusUpdatedAtApply,
@@ -23176,6 +23315,15 @@ export const enums = {
       },
       PROJECT_ID: PostGroupBy_PROJECT_IDApply,
       SENTIMENT: PostGroupBy_SENTIMENTApply,
+      SHIPPED_AT($pgSelect) {
+        applyGroupByAttribute("shipped_at", TYPES.timestamptz, $pgSelect);
+      },
+      SHIPPED_AT_TRUNCATED_TO_DAY(qb) {
+        applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_day, "shipped_at", TYPES.timestamptz, qb);
+      },
+      SHIPPED_AT_TRUNCATED_TO_HOUR(qb) {
+        applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_hour, "shipped_at", TYPES.timestamptz, qb);
+      },
       SOURCE: PostGroupBy_SOURCEApply,
       STATUS_TEMPLATE_ID: PostGroupBy_STATUS_TEMPLATE_IDApply,
       STATUS_UPDATED_AT($pgSelect) {
@@ -23556,6 +23704,12 @@ export const enums = {
       POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SENTIMENT_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.sentiment, "sentiment", "DESC", relation2, otherSource_postPgResource, $select);
       },
+      POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SHIPPED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", "ASC", relation2, otherSource_postPgResource, $select);
+      },
+      POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SHIPPED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", "DESC", relation2, otherSource_postPgResource, $select);
+      },
       POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SOURCE_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "ASC", relation2, otherSource_postPgResource, $select);
       },
@@ -23658,6 +23812,18 @@ export const enums = {
       ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply,
       SENTIMENT_ASC: PostOrderBy_SENTIMENT_ASCApply,
       SENTIMENT_DESC: PostOrderBy_SENTIMENT_DESCApply,
+      SHIPPED_AT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "shipped_at",
+          direction: "ASC"
+        });
+      },
+      SHIPPED_AT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "shipped_at",
+          direction: "DESC"
+        });
+      },
       SIGNALS_COUNT_ASC($select) {
         pgAggregatesApplyOrderByTotalCount("ASC", relation4, otherSource_signalPgResource, $select);
       },
@@ -24035,6 +24201,12 @@ export const enums = {
       },
       POSTS_DISTINCT_COUNT_SENTIMENT_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.sentiment, "sentiment", "DESC", relation16, otherSource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", "ASC", relation16, otherSource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", "DESC", relation16, otherSource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_SOURCE_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "ASC", relation16, otherSource_postPgResource, $select);
@@ -24776,6 +24948,12 @@ export const enums = {
       POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SENTIMENT_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.sentiment, "sentiment", "DESC", relation7, otherSource_postPgResource, $select);
       },
+      POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SHIPPED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", "ASC", relation7, otherSource_postPgResource, $select);
+      },
+      POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SHIPPED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", "DESC", relation7, otherSource_postPgResource, $select);
+      },
       POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SOURCE_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "ASC", relation7, otherSource_postPgResource, $select);
       },
@@ -25229,6 +25407,12 @@ export const enums = {
       },
       POSTS_DISTINCT_COUNT_SENTIMENT_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.sentiment, "sentiment", "DESC", relation9, otherSource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", "ASC", relation9, otherSource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", "DESC", relation9, otherSource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_SOURCE_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "ASC", relation9, otherSource_postPgResource, $select);
@@ -25831,6 +26015,12 @@ export const enums = {
       },
       POSTS_DISTINCT_COUNT_SENTIMENT_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.sentiment, "sentiment", "DESC", relation12, otherSource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", "ASC", relation12, otherSource_postPgResource, $select);
+      },
+      POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.shipped_at, "shipped_at", "DESC", relation12, otherSource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_SOURCE_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.source, "source", "ASC", relation12, otherSource_postPgResource, $select);

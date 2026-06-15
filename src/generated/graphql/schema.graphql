@@ -89,6 +89,7 @@ type Post {
   aiTags: JSON
   duplicateOfId: UUID
   clusterId: UUID
+  shippedAt: Datetime
 
   """Reads a single `SignalCluster` that is related to this `Post`."""
   cluster: SignalCluster
@@ -713,6 +714,9 @@ type PostDistinctCountAggregates {
 
   """Distinct count of clusterId across the matching connection"""
   clusterId: BigInt
+
+  """Distinct count of shippedAt across the matching connection"""
+  shippedAt: BigInt
 }
 
 type PostMinAggregates {
@@ -777,6 +781,9 @@ enum PostGroupBy {
   AI_TAGS
   DUPLICATE_OF_ID
   CLUSTER_ID
+  SHIPPED_AT
+  SHIPPED_AT_TRUNCATED_TO_HOUR
+  SHIPPED_AT_TRUNCATED_TO_DAY
 }
 
 """Conditions for `Post` aggregates."""
@@ -799,6 +806,7 @@ input PostHavingSumInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input HavingDatetimeFilter {
@@ -824,6 +832,7 @@ input PostHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingMinInput {
@@ -831,6 +840,7 @@ input PostHavingMinInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingMaxInput {
@@ -838,6 +848,7 @@ input PostHavingMaxInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingAverageInput {
@@ -845,6 +856,7 @@ input PostHavingAverageInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingStddevSampleInput {
@@ -852,6 +864,7 @@ input PostHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingStddevPopulationInput {
@@ -859,6 +872,7 @@ input PostHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingVarianceSampleInput {
@@ -866,6 +880,7 @@ input PostHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 input PostHavingVariancePopulationInput {
@@ -873,6 +888,7 @@ input PostHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   number: HavingIntFilter
+  shippedAt: HavingDatetimeFilter
 }
 
 """
@@ -920,6 +936,9 @@ input PostCondition {
 
   """Checks for equality with the object’s `clusterId` field."""
   clusterId: UUID
+
+  """Checks for equality with the object’s `shippedAt` field."""
+  shippedAt: Datetime
 }
 
 """
@@ -967,6 +986,9 @@ input PostFilter {
 
   """Filter by the object’s `clusterId` field."""
   clusterId: UUIDFilter
+
+  """Filter by the object’s `shippedAt` field."""
+  shippedAt: DatetimeFilter
 
   """Filter by the object’s `comments` relation."""
   comments: PostToManyCommentFilter
@@ -1621,6 +1643,7 @@ input PostDistinctCountAggregateFilter {
   aiTags: BigIntFilter
   duplicateOfId: BigIntFilter
   clusterId: BigIntFilter
+  shippedAt: BigIntFilter
 }
 
 input PostMinAggregateFilter {
@@ -3024,6 +3047,8 @@ enum PostOrderBy {
   DUPLICATE_OF_ID_DESC
   CLUSTER_ID_ASC
   CLUSTER_ID_DESC
+  SHIPPED_AT_ASC
+  SHIPPED_AT_DESC
   COMMENTS_COUNT_ASC
   COMMENTS_COUNT_DESC
   COMMENTS_DISTINCT_COUNT_ROW_ID_ASC
@@ -3074,6 +3099,8 @@ enum PostOrderBy {
   POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
   POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_CLUSTER_ID_ASC
   POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_BY_DUPLICATE_OF_ID_DISTINCT_COUNT_SHIPPED_AT_DESC
   POSTS_BY_DUPLICATE_OF_ID_MIN_NUMBER_ASC
   POSTS_BY_DUPLICATE_OF_ID_MIN_NUMBER_DESC
   POSTS_BY_DUPLICATE_OF_ID_MAX_NUMBER_ASC
@@ -5505,6 +5532,8 @@ enum SignalClusterOrderBy {
   POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
   POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_CLUSTER_ID_ASC
   POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_BY_CLUSTER_ID_DISTINCT_COUNT_SHIPPED_AT_DESC
   POSTS_BY_CLUSTER_ID_MIN_NUMBER_ASC
   POSTS_BY_CLUSTER_ID_MIN_NUMBER_DESC
   POSTS_BY_CLUSTER_ID_MAX_NUMBER_ASC
@@ -5901,6 +5930,8 @@ enum StatusTemplateOrderBy {
   POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -6202,6 +6233,8 @@ enum UserOrderBy {
   POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -7067,6 +7100,8 @@ enum ProjectOrderBy {
   POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
   POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC
   POSTS_MIN_NUMBER_ASC
   POSTS_MIN_NUMBER_DESC
   POSTS_MAX_NUMBER_ASC
@@ -7739,6 +7774,7 @@ input PostInput {
   aiTags: JSON
   duplicateOfId: UUID
   clusterId: UUID
+  shippedAt: Datetime
 }
 
 """The output of our update `Comment` mutation."""
@@ -8314,6 +8350,7 @@ input PostPatch {
   aiTags: JSON
   duplicateOfId: UUID
   clusterId: UUID
+  shippedAt: Datetime
 }
 
 """The output of our delete `Comment` mutation."""
@@ -8761,14 +8798,14 @@ type Query implements Node {
   """Get a single `Project`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
 
+  """Get a single `Signal`."""
+  signal(rowId: UUID!): Signal
+
   """Get a single `Post`."""
   post(rowId: UUID!): Post
 
   """Get a single `Post`."""
   postByProjectIdAndNumber(projectId: UUID!, number: Int!): Post
-
-  """Get a single `Signal`."""
-  signal(rowId: UUID!): Signal
 
   """Reads and enables pagination through a set of `Comment`."""
   comments(
@@ -9110,40 +9147,6 @@ type Query implements Node {
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
 
-  """Reads and enables pagination through a set of `Post`."""
-  posts(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: PostFilter
-
-    """The method to use when ordering `Post`."""
-    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostConnection
-
   """Reads and enables pagination through a set of `Signal`."""
   signals(
     """Only read the first `n` values of the set."""
@@ -9177,6 +9180,40 @@ type Query implements Node {
     """The method to use when ordering `Signal`."""
     orderBy: [SignalOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalConnection
+
+  """Reads and enables pagination through a set of `Post`."""
+  posts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection
 
   """
   Returns the currently authenticated user (observer).

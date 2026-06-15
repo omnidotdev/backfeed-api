@@ -23,6 +23,7 @@ import { signals, statusTemplates } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
 import { embeddingProvider } from "lib/feedback/embedding";
 import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
+import { markPostShipped } from "lib/feedback/shipped";
 import { buildPostProvenanceSignal } from "lib/feedback/signal";
 import {
   FEATURE_KEYS,
@@ -164,6 +165,7 @@ const generateGraphqlSchema = async () => {
       "lib/db/schema": { signals, statusTemplates },
       "lib/feedback/embedding": { embeddingProvider },
       "lib/feedback/promote": { ingestSignal, promoteSignalToPost },
+      "lib/feedback/shipped": { markPostShipped },
       "lib/feedback/signal": { buildPostProvenanceSignal },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "lib/graphql/plugins/authorization/constants": {

@@ -5,6 +5,7 @@ import {
   jsonb,
   pgTable,
   text,
+  timestamp,
   unique,
   uniqueIndex,
   uuid,
@@ -65,6 +66,9 @@ export const posts = pgTable(
       onDelete: "set null",
     }),
     statusUpdatedAt: generateDefaultDate(),
+    // Set once when the post first reaches a shipped status; guards the
+    // "you asked, we shipped" loop so reporters are notified exactly once
+    shippedAt: timestamp({ precision: 6, mode: "string", withTimezone: true }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
