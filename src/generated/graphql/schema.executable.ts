@@ -11,6 +11,7 @@ import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
 import { markPostShipped } from "lib/feedback/shipped";
 import { buildPostProvenanceSignal } from "lib/feedback/signal";
 import { FEATURE_KEYS, billingBypassOrgIds } from "lib/graphql/plugins/authorization/constants";
+import { moderateText } from "lib/moderation";
 import { events } from "lib/providers";
 import { deletePostFromIndex, deleteProjectFromIndex, indexPost, indexProject } from "lib/search";
 import { sql } from "pg-sql2";
@@ -3671,6 +3672,10 @@ const planWrapper = (plan, _, fieldArgs) => {
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     {
+      const {
+        flagged
+      } = await moderateText(input.message ?? "");
+      if (flagged) throw Error("Comment flagged by content moderation");
       const postId = input.postId,
         post = await db.query.posts.findFirst({
           where(table, {

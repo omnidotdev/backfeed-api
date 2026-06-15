@@ -50,6 +50,9 @@ export const {
   // become signals; disabled when either is unset.
   HERALD_WEBHOOK_SECRET,
   INBOUND_EMAIL_DOMAIN,
+  // Content moderation (Say Less). When unset, moderation is a noop (content
+  // always allowed).
+  SAY_LESS_URL,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
@@ -69,6 +72,9 @@ export const isEmbeddingEnabled = !!EMBEDDING_API_URL;
 /** Whether inbound email ingestion is configured */
 export const isEmailIngestionEnabled =
   !!HERALD_WEBHOOK_SECRET && !!INBOUND_EMAIL_DOMAIN;
+
+/** Whether content moderation (Say Less) is configured */
+export const isModerationEnabled = !!SAY_LESS_URL;
 
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
@@ -92,3 +98,5 @@ if (!isEmailIngestionEnabled)
   console.warn(
     "HERALD_WEBHOOK_SECRET / INBOUND_EMAIL_DOMAIN not set, inbound email ingestion disabled",
   );
+if (!SAY_LESS_URL)
+  console.warn("SAY_LESS_URL not set, content moderation disabled");

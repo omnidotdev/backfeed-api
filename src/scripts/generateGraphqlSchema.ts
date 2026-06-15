@@ -30,6 +30,7 @@ import {
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
+import { moderateText } from "lib/moderation";
 import { events } from "lib/providers";
 import {
   deletePostFromIndex,
@@ -174,6 +175,7 @@ const generateGraphqlSchema = async () => {
       },
       "lib/auth/organizations": { getDefaultOrganization },
       "lib/idp/validateOrg": { validateOrgExists },
+      "lib/moderation": { moderateText },
       "lib/providers": { events },
       "lib/search": {
         deletePostFromIndex,

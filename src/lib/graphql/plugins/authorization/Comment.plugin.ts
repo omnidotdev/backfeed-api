@@ -1,5 +1,6 @@
 import { EXPORTABLE } from "graphile-export/helpers";
 import { checkPermission } from "lib/authz";
+import { moderateText } from "lib/moderation";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -25,6 +26,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       billingBypassOrgIds,
       FEATURE_KEYS,
       isWithinLimit,
+      moderateText,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -37,6 +39,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (!observer) throw new Error("Unauthorized");
 
           if (scope === "create") {
+            // Moderate the comment body before it is created (rejects flagged
+            // content; a noop that allows everything when moderation is disabled).
+            const { flagged } = await moderateText(
+              (input as InsertComment).message ?? "",
+            );
+            if (flagged) {
+              throw new Error("Comment flagged by content moderation");
+            }
+
             const postId = (input as InsertComment).postId;
 
             const post = await db.query.posts.findFirst({
@@ -102,6 +113,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       billingBypassOrgIds,
       FEATURE_KEYS,
       isWithinLimit,
+      moderateText,
       propName,
       scope,
     ],
