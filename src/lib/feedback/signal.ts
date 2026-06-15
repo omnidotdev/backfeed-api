@@ -7,7 +7,7 @@
 
 import { heuristicTriage } from "./triage";
 
-import type { InsertSignal } from "lib/db/schema";
+import type { InsertPost, InsertSignal } from "lib/db/schema";
 
 /** Where a signal originated. */
 export const SIGNAL_SOURCES = [
@@ -109,5 +109,90 @@ export const buildPostProvenanceSignal = (post: {
     postId: post.postId,
     rawContent,
     sentiment,
+  };
+};
+
+/**
+ * Build a freshly ingested signal from an external source. Validates the source,
+ * triages the content into a type + sentiment, and always lands the signal as
+ * `pending`: nothing ingested auto-publishes to a public board (it needs an
+ * explicit promotion). `status` is intentionally not an accepted input field.
+ */
+export const buildIngestedSignal = (input: {
+  organizationId: string;
+  source: string;
+  rawContent: string;
+  projectId?: string | null;
+  userId?: string | null;
+  sourceMetadata?: unknown;
+}): InsertSignal => {
+  assertValidSignalInput({ source: input.source });
+  const { type, sentiment } = heuristicTriage(input.rawContent);
+
+  return {
+    source: input.source as SignalSource,
+    type,
+    status: DEFAULT_SIGNAL_STATUS,
+    organizationId: input.organizationId,
+    projectId: input.projectId ?? null,
+    userId: input.userId ?? null,
+    rawContent: input.rawContent,
+    sentiment,
+    sourceMetadata: input.sourceMetadata ?? null,
+  };
+};
+
+/**
+ * Guard that a signal may be promoted to a public post. A signal is promotable
+ * only while it is still `pending`, has been routed to a project, and is not
+ * already linked to a post. Throws a descriptive error otherwise.
+ */
+export const assertSignalPromotable = (signal: {
+  status?: string | null;
+  projectId?: string | null;
+  postId?: string | null;
+}): void => {
+  if (signal.status !== "pending") {
+    throw new Error(
+      `Signal must be pending to promote (status: ${String(signal.status)})`,
+    );
+  }
+  if (!signal.projectId) {
+    throw new Error("Signal must be routed to a project before promotion");
+  }
+  if (signal.postId) {
+    throw new Error("Signal is already linked to a post");
+  }
+};
+
+/**
+ * Derive the post to create when promoting a signal. Without a title override,
+ * the first paragraph of the raw content becomes the title and the remainder the
+ * description; with an override, the full raw content is kept as the description.
+ * The post is attributed to the resolved author (the signal's user when present,
+ * otherwise the promoting admin) and carries the signal's source.
+ */
+export const buildPostFromSignal = (
+  signal: {
+    rawContent: string;
+    projectId: string;
+    source?: string | null;
+    userId?: string | null;
+  },
+  opts: { userId: string; title?: string | null },
+): InsertPost => {
+  const [firstParagraph, ...rest] = signal.rawContent.split("\n\n");
+  const override = opts.title?.trim();
+  const title = override || firstParagraph.trim();
+  const description = override
+    ? signal.rawContent
+    : rest.join("\n\n").trim() || null;
+
+  return {
+    projectId: signal.projectId,
+    userId: opts.userId,
+    title,
+    description,
+    source: signal.source ?? DEFAULT_SIGNAL_SOURCE,
   };
 };

@@ -8,8 +8,9 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 
+import { eq } from "drizzle-orm";
 import { EXPORTABLE, exportSchema } from "graphile-export";
-import { printSchema } from "graphql";
+import { GraphQLError, printSchema } from "graphql";
 import { getDefaultOrganization } from "lib/auth/organizations";
 import {
   checkPermission,
@@ -20,6 +21,7 @@ import {
 import preset from "lib/config/graphile.config";
 import { signals, statusTemplates } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
+import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
 import { buildPostProvenanceSignal } from "lib/feedback/signal";
 import {
   FEATURE_KEYS,
@@ -37,7 +39,7 @@ import {
 } from "lib/search";
 import { backfeedIndexes } from "lib/search/client";
 import { makeSchema } from "postgraphile";
-import { context, sideEffect } from "postgraphile/grafast";
+import { context, lambda, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
 
 const SRC_DIR = `${__dirname}/..`;
@@ -149,7 +151,9 @@ const generateGraphqlSchema = async () => {
     mode: "typeDefs",
     modules: {
       "graphile-export": { EXPORTABLE },
-      "postgraphile/grafast": { context, sideEffect },
+      "postgraphile/grafast": { context, lambda, sideEffect },
+      "drizzle-orm": { eq },
+      graphql: { GraphQLError },
       "lib/authz": {
         checkPermission,
         deleteTuples,
@@ -157,6 +161,7 @@ const generateGraphqlSchema = async () => {
         writeTuples,
       },
       "lib/db/schema": { signals, statusTemplates },
+      "lib/feedback/promote": { ingestSignal, promoteSignalToPost },
       "lib/feedback/signal": { buildPostProvenanceSignal },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "lib/graphql/plugins/authorization/constants": {

@@ -9,7 +9,6 @@ import {
   ProjectLinkPlugin,
   ProjectPlugin,
   ProjectStatusConfigPlugin,
-  SignalPlugin,
   SmartTagPlugin,
   StatusTemplatePlugin,
   UserPlugin,
@@ -18,7 +17,10 @@ import {
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
 import { DefaultStatusTemplatesPlugin } from "lib/graphql/plugins/defaults";
 import { EventEmissionPlugin } from "lib/graphql/plugins/events";
-import { PostSignalProvenancePlugin } from "lib/graphql/plugins/feedback";
+import {
+  PostSignalProvenancePlugin,
+  SignalIngestionPlugin,
+} from "lib/graphql/plugins/feedback";
 import {
   PostSearchPlugin,
   ProjectSearchPlugin,
@@ -61,7 +63,6 @@ const preset: GraphileConfig.Preset = {
     VotePlugin,
     CommentPlugin,
     AttachmentPlugin,
-    SignalPlugin,
     SmartTagPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
@@ -71,6 +72,8 @@ const preset: GraphileConfig.Preset = {
     DefaultStatusTemplatesPlugin,
     // Signal provenance plugin (records a signal per created post)
     PostSignalProvenancePlugin,
+    // Signal ingestion + promotion mutations (the senses -> board bridge)
+    SignalIngestionPlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     PostSearchPlugin,

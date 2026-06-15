@@ -19,6 +19,14 @@ const SmartTagPlugin = jsonPgSmartTags({
           },
         },
       },
+      signal: {
+        // Signals are written only through the controlled `ingestSignal` /
+        // `promoteSignalToPost` mutations (see SignalIngestion.plugin), which run
+        // triage and enforce the no-auto-publish guardrail. The raw auto-CRUD
+        // mutations are disabled so those cannot be bypassed; the read/query
+        // surface is unaffected.
+        tags: { behavior: "-insert -update -delete" },
+      },
     },
   },
 });
