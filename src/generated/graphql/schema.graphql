@@ -374,6 +374,7 @@ type Project {
   nextPostNumber: Int!
   prefix: String
   isPublic: Boolean!
+  inboundEmailKey: String!
 
   """Reads and enables pagination through a set of `Post`."""
   posts(
@@ -2081,6 +2082,9 @@ input ProjectFilter {
 
   """Filter by the object’s `isPublic` field."""
   isPublic: BooleanFilter
+
+  """Filter by the object’s `inboundEmailKey` field."""
+  inboundEmailKey: StringFilter
 
   """Filter by the object’s `posts` relation."""
   posts: ProjectToManyPostFilter
@@ -6828,6 +6832,9 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of isPublic across the matching connection"""
   isPublic: BigInt
+
+  """Distinct count of inboundEmailKey across the matching connection"""
+  inboundEmailKey: BigInt
 }
 
 type ProjectMinAggregates {
@@ -6992,6 +6999,9 @@ input ProjectCondition {
 
   """Checks for equality with the object’s `isPublic` field."""
   isPublic: Boolean
+
+  """Checks for equality with the object’s `inboundEmailKey` field."""
+  inboundEmailKey: String
 }
 
 """Methods to use when ordering `Project`."""
@@ -7021,6 +7031,8 @@ enum ProjectOrderBy {
   PREFIX_DESC
   IS_PUBLIC_ASC
   IS_PUBLIC_DESC
+  INBOUND_EMAIL_KEY_ASC
+  INBOUND_EMAIL_KEY_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
   POSTS_SUM_NUMBER_ASC
@@ -8742,6 +8754,9 @@ type Query implements Node {
 
   """Get a single `Project`."""
   project(rowId: UUID!): Project
+
+  """Get a single `Project`."""
+  projectByInboundEmailKey(inboundEmailKey: String!): Project
 
   """Get a single `Project`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project

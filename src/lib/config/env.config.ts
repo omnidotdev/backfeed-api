@@ -46,6 +46,10 @@ export const {
   EMBEDDING_API_URL,
   EMBEDDING_API_KEY,
   EMBEDDING_MODEL,
+  // Inbound email ingestion (Herald -> webhook). Messages to <project-key>@<domain>
+  // become signals; disabled when either is unset.
+  HERALD_WEBHOOK_SECRET,
+  INBOUND_EMAIL_DOMAIN,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
@@ -61,6 +65,10 @@ export const isStorageEnabled = !!S3_BUCKET;
 
 /** Whether a semantic embedding provider is configured (else lexical fallback) */
 export const isEmbeddingEnabled = !!EMBEDDING_API_URL;
+
+/** Whether inbound email ingestion is configured */
+export const isEmailIngestionEnabled =
+  !!HERALD_WEBHOOK_SECRET && !!INBOUND_EMAIL_DOMAIN;
 
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
@@ -79,4 +87,8 @@ if (!S3_BUCKET)
 if (!EMBEDDING_API_URL)
   console.warn(
     "EMBEDDING_API_URL not set, semantic dedupe/clustering disabled (lexical fallback)",
+  );
+if (!isEmailIngestionEnabled)
+  console.warn(
+    "HERALD_WEBHOOK_SECRET / INBOUND_EMAIL_DOMAIN not set, inbound email ingestion disabled",
   );

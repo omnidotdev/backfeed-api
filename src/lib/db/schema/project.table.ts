@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -38,6 +38,13 @@ export const projects = pgTable(
     // Counter for auto-incrementing post numbers within this project
     nextPostNumber: integer("next_post_number").notNull().default(1),
     isPublic: boolean("is_public").notNull().default(true),
+    // Opaque key for the project's inbound email address (<key>@<inbound-domain>).
+    // Generated per project and backfilled for existing rows; regenerate to revoke
+    // a leaked address. Used to route inbound email to this project.
+    inboundEmailKey: text("inbound_email_key")
+      .notNull()
+      .unique()
+      .default(sql`gen_random_uuid()::text`),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

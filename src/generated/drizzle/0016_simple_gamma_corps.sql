@@ -1,0 +1,2 @@
+ALTER TABLE "project" ADD COLUMN "inbound_email_key" text DEFAULT gen_random_uuid()::text NOT NULL;--> statement-breakpoint
+ALTER TABLE "project" ADD CONSTRAINT "project_inbound_email_key_unique" UNIQUE("inbound_email_key");

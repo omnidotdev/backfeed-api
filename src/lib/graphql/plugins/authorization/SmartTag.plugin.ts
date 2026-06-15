@@ -27,6 +27,16 @@ const SmartTagPlugin = jsonPgSmartTags({
         // surface is unaffected.
         tags: { behavior: "-insert -update -delete" },
       },
+      project: {
+        attribute: {
+          // The inbound email key is server-generated (DB default) and unique;
+          // expose it read-only so clients can show the address but cannot set or
+          // collide on it. Regeneration is a future dedicated mutation.
+          inbound_email_key: {
+            tags: { behavior: "-attribute:insert -attribute:update" },
+          },
+        },
+      },
     },
   },
 });

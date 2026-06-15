@@ -983,137 +983,6 @@ const spec_wardenSyncQueue = {
   executor: executor
 };
 const wardenSyncQueueCodec = recordCodec(spec_wardenSyncQueue);
-const projectIdentifier = sql.identifier("public", "project");
-const spec_project = {
-  name: "project",
-  identifier: projectIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    image: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    slug: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    next_post_number: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    prefix: {
-      codec: TYPES.varchar,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    is_public: {
-      codec: TYPES.boolean,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "270566",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "project"
-    }
-  },
-  executor: executor
-};
-const projectCodec = recordCodec(spec_project);
 const postIdentifier = sql.identifier("public", "post");
 const spec_post = {
   name: "post",
@@ -1282,6 +1151,150 @@ const spec_post = {
   executor: executor
 };
 const postCodec = recordCodec(spec_post);
+const projectIdentifier = sql.identifier("public", "project");
+const spec_project = {
+  name: "project",
+  identifier: projectIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    image: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    slug: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    next_post_number: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    prefix: {
+      codec: TYPES.varchar,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    is_public: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    inbound_email_key: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {
+          behavior: "-attribute:insert -attribute:update"
+        },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "270566",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project"
+    }
+  },
+  executor: executor
+};
+const projectCodec = recordCodec(spec_project);
 const signalIdentifier = sql.identifier("public", "signal");
 const spec_signal = {
   name: "signal",
@@ -1690,6 +1703,14 @@ const projectUniques = [{
   attributes: ["id"],
   isPrimary: true
 }, {
+  attributes: ["inbound_email_key"],
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
+    }
+  }
+}, {
   attributes: ["slug", "organization_id"],
   extensions: {
     tags: {
@@ -1797,9 +1818,9 @@ const registryConfig = {
     attachment: attachmentCodec,
     wardenSyncQueue: wardenSyncQueueCodec,
     jsonb: TYPES.jsonb,
+    post: postCodec,
     project: projectCodec,
     varchar: TYPES.varchar,
-    post: postCodec,
     signal: signalCodec
   },
   pgResources: {
@@ -6335,6 +6356,7 @@ type Project {
   nextPostNumber: Int!
   prefix: String
   isPublic: Boolean!
+  inboundEmailKey: String!
 
   """Reads and enables pagination through a set of \`Post\`."""
   posts(
@@ -8042,6 +8064,9 @@ input ProjectFilter {
 
   """Filter by the object’s \`isPublic\` field."""
   isPublic: BooleanFilter
+
+  """Filter by the object’s \`inboundEmailKey\` field."""
+  inboundEmailKey: StringFilter
 
   """Filter by the object’s \`posts\` relation."""
   posts: ProjectToManyPostFilter
@@ -12789,6 +12814,9 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of isPublic across the matching connection"""
   isPublic: BigInt
+
+  """Distinct count of inboundEmailKey across the matching connection"""
+  inboundEmailKey: BigInt
 }
 
 type ProjectMinAggregates {
@@ -12953,6 +12981,9 @@ input ProjectCondition {
 
   """Checks for equality with the object’s \`isPublic\` field."""
   isPublic: Boolean
+
+  """Checks for equality with the object’s \`inboundEmailKey\` field."""
+  inboundEmailKey: String
 }
 
 """Methods to use when ordering \`Project\`."""
@@ -12982,6 +13013,8 @@ enum ProjectOrderBy {
   PREFIX_DESC
   IS_PUBLIC_ASC
   IS_PUBLIC_DESC
+  INBOUND_EMAIL_KEY_ASC
+  INBOUND_EMAIL_KEY_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
   POSTS_SUM_NUMBER_ASC
@@ -14705,6 +14738,9 @@ type Query implements Node {
   project(rowId: UUID!): Project
 
   """Get a single \`Project\`."""
+  projectByInboundEmailKey(inboundEmailKey: String!): Project
+
+  """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
 
   """Get a single \`Post\`."""
@@ -15546,6 +15582,13 @@ export const objects = {
       }) {
         return otherSource_projectPgResource.get({
           id: $rowId
+        });
+      },
+      projectByInboundEmailKey(_$root, {
+        $inboundEmailKey
+      }) {
+        return otherSource_projectPgResource.get({
+          inbound_email_key: $inboundEmailKey
         });
       },
       projectBySlugAndOrganizationId(_$root, {
@@ -17260,6 +17303,9 @@ ${String(oldPlan27)}`);
     assertStep: assertPgClassSingleStep,
     plans: {
       createdAt: Comment_createdAtPlan,
+      inboundEmailKey($record) {
+        return $record.get("inbound_email_key");
+      },
       isPublic($record) {
         return $record.get("is_public");
       },
@@ -17408,6 +17454,9 @@ ${String(oldPlan27)}`);
       description: PostDistinctCountAggregates_descriptionPlan,
       image($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.text, "image", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      inboundEmailKey($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "inbound_email_key", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
       isPublic($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "is_public", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
@@ -19999,6 +20048,9 @@ export const inputObjects = {
       image($condition, val) {
         return applyAttributeCondition("image", TYPES.text, $condition, val);
       },
+      inboundEmailKey($condition, val) {
+        return applyAttributeCondition("inbound_email_key", TYPES.text, $condition, val);
+      },
       isPublic($condition, val) {
         return applyAttributeCondition("is_public", TYPES.boolean, $condition, val);
       },
@@ -20028,6 +20080,9 @@ export const inputObjects = {
       },
       image(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("image", "image", spec_project.attributes.image, queryBuilder, value);
+      },
+      inboundEmailKey(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("inboundEmailKey", "inbound_email_key", spec_project.attributes.inbound_email_key, queryBuilder, value);
       },
       isPublic(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("isPublic", "is_public", spec_project.attributes.is_public, queryBuilder, value);
@@ -23872,6 +23927,20 @@ export const enums = {
           attribute: "image",
           direction: "DESC"
         });
+      },
+      INBOUND_EMAIL_KEY_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "inbound_email_key",
+          direction: "ASC"
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      INBOUND_EMAIL_KEY_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "inbound_email_key",
+          direction: "DESC"
+        });
+        queryBuilder.setOrderIsUnique();
       },
       IS_PUBLIC_ASC(queryBuilder) {
         queryBuilder.orderBy({

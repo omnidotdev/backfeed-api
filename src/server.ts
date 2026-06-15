@@ -21,6 +21,7 @@ import {
   isProdEnv,
 } from "lib/config/env.config";
 import entitlementsWebhook from "lib/entitlements/webhooks";
+import emailWebhook from "lib/feedback/email.webhook";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import {
   armorPlugin,
@@ -120,6 +121,7 @@ async function startServer(): Promise<void> {
     .use(authzRoutes)
     .use(entitlementsWebhook)
     .use(idpWebhook)
+    .use(emailWebhook)
     .use(attachmentUploadRoutes)
     .use(
       yoga({
