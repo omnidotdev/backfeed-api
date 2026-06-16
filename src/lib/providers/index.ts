@@ -86,6 +86,10 @@ export const storage = createStorageProvider(
         region: S3_REGION,
         endpoint: S3_ENDPOINT,
         publicBaseUrl: S3_PUBLIC_BASE_URL,
+        // Garage (and other S3-compatible stores) require path-style addressing;
+        // the default only enables it for localhost, so virtual-host requests to
+        // <bucket>.s3.omni.dev fail to resolve and uploads error out.
+        forcePathStyle: true,
         credentials:
           S3_ACCESS_KEY_ID && S3_SECRET_ACCESS_KEY
             ? {
