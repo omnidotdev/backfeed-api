@@ -12,7 +12,11 @@ import { randomUUID } from "node:crypto";
 
 import { extractBearerToken } from "@omnidotdev/providers/graphql";
 import { Elysia, t } from "elysia";
-import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
+import {
+  AUTH_BASE_URL,
+  PUBLIC_API_URL,
+  protectRoutes,
+} from "lib/config/env.config";
 import { storage } from "lib/providers";
 
 import { extensionForMimeType, validateUpload } from "./mediaConfig";
@@ -73,12 +77,17 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
     const storageKey = `feedback/${subject ?? "anonymous"}/${randomUUID()}.${extension}`;
 
     try {
-      const { url } = await storage.upload({
+      await storage.upload({
         key: storageKey,
         body: Buffer.from(await file.arrayBuffer()),
         contentType: file.type,
         cacheControl: `public, max-age=${ONE_YEAR_SECONDS}, immutable`,
       });
+
+      // Serve through the proxy route (Garage has no anonymous read); the stored
+      // URL stays stable while the underlying presigned URL rotates.
+      const base = (PUBLIC_API_URL ?? "").replace(/\/$/, "");
+      const url = `${base}/api/attachments/file/${encodeURIComponent(storageKey)}`;
 
       return {
         url,

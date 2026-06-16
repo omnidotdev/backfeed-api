@@ -29,6 +29,7 @@ import {
   organizationsPlugin,
 } from "lib/graphql/plugins";
 import idpWebhook from "lib/idp/webhooks";
+import attachmentServeRoutes from "lib/media/serve.route";
 import attachmentUploadRoutes from "lib/media/upload.route";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
 import {
@@ -128,6 +129,7 @@ async function startServer(): Promise<void> {
     .use(idpWebhook)
     .use(emailWebhook)
     .use(attachmentUploadRoutes)
+    .use(attachmentServeRoutes)
     .use(
       yoga({
         schema,

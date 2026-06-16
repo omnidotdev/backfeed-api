@@ -53,6 +53,9 @@ export const {
   // Content moderation (Say Less). When unset, moderation is a noop (content
   // always allowed).
   SAY_LESS_URL,
+  // Public base URL of this API (e.g. https://api.backfeed.omni.dev). Used to
+  // build absolute attachment URLs served through the media proxy route.
+  PUBLIC_API_URL,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
