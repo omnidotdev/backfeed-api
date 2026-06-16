@@ -105,7 +105,7 @@ export const findDuplicate = async (
   return toMatch(result.rows, "lexical");
 };
 
-export interface SimilarPost {
+interface SimilarPost {
   id: string;
   number: number | null;
   title: string | null;
