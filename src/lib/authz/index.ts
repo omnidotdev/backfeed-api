@@ -13,6 +13,8 @@ import { enqueueWardenSync } from "./syncQueue";
 import type {
   PermissionCheck,
   PermissionCheckResult,
+  WardenRelation,
+  WardenResourceType,
 } from "@omnidotdev/providers";
 
 export { default as authzRoutes } from "./routes";
@@ -35,11 +37,11 @@ export function isAuthzEnabled(): boolean {
  * Check if a user has permission on a resource.
  * Exported for graphile-export EXPORTABLE compatibility.
  */
-export async function checkPermission(
+export async function checkPermission<T extends WardenResourceType>(
   userId: string,
-  resourceType: string,
+  resourceType: T,
   resourceId: string,
-  permission: string,
+  permission: WardenRelation<T>,
   requestCache?: Map<string, boolean>,
 ): Promise<boolean> {
   if (!isAuthzEnabled()) return true;
