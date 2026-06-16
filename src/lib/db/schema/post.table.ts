@@ -16,6 +16,7 @@ import { EMBEDDING_DIMENSIONS } from "lib/db/vector";
 
 import { attachments } from "./attachment.table";
 import { comments } from "./comment.table";
+import { postTags } from "./postTag.table";
 import { projects } from "./project.table";
 import { signals } from "./signal.table";
 import { signalClusters } from "./signalCluster.table";
@@ -112,6 +113,7 @@ export const postRelations = relations(posts, ({ many, one }) => ({
   votes: many(votes),
   signals: many(signals),
   attachments: many(attachments),
+  postTags: many(postTags),
 }));
 
 /**

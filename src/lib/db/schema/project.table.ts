@@ -14,6 +14,7 @@ import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { posts } from "./post.table";
 import { projectLinks } from "./projectLink.table";
 import { projectStatusConfigs } from "./projectStatusConfig.table";
+import { tags } from "./tag.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -63,6 +64,7 @@ export const projectRelations = relations(projects, ({ many }) => ({
   posts: many(posts),
   links: many(projectLinks),
   statusConfigs: many(projectStatusConfigs),
+  tags: many(tags),
 }));
 
 /**

@@ -11,6 +11,7 @@ import {
   ProjectStatusConfigPlugin,
   SmartTagPlugin,
   StatusTemplatePlugin,
+  TagPlugin,
   UserPlugin,
   VotePlugin,
 } from "lib/graphql/plugins/authorization";
@@ -66,6 +67,7 @@ const preset: GraphileConfig.Preset = {
     VotePlugin,
     CommentPlugin,
     AttachmentPlugin,
+    TagPlugin,
     SmartTagPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
