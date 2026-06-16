@@ -7,5 +7,6 @@ export { default as ProjectLinkPlugin } from "./ProjectLink.plugin";
 export { default as ProjectStatusConfigPlugin } from "./ProjectStatusConfig.plugin";
 export { default as SmartTagPlugin } from "./SmartTag.plugin";
 export { default as StatusTemplatePlugin } from "./StatusTemplate.plugin";
+export { default as TagPlugin } from "./Tag.plugin";
 export { default as UserPlugin } from "./User.plugin";
 export { default as VotePlugin } from "./Vote.plugin";
