@@ -83,7 +83,7 @@ type Post {
   statusUpdatedAt: Datetime!
   createdAt: Datetime!
   updatedAt: Datetime!
-  number: Int!
+  number: Int
   source: String
   sentiment: String
   aiTags: JSON

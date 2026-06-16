@@ -147,7 +147,7 @@ const spec_comment = {
     }
   },
   extensions: {
-    oid: "270503",
+    oid: "70429",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -239,7 +239,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "300307",
+    oid: "70742",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -349,7 +349,7 @@ const spec_statusTemplate = {
     }
   },
   extensions: {
-    oid: "270616",
+    oid: "70542",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -367,7 +367,7 @@ const voteTypeCodec = enumCodec({
   values: ["up", "down"],
   description: undefined,
   extensions: {
-    oid: "270486",
+    oid: "70412",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -445,7 +445,7 @@ const spec_vote = {
     }
   },
   extensions: {
-    oid: "270656",
+    oid: "70582",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -545,7 +545,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "270635",
+    oid: "70561",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -653,7 +653,7 @@ const spec_projectStatusConfig = {
     }
   },
   extensions: {
-    oid: "270599",
+    oid: "70525",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -744,7 +744,7 @@ const spec_signalCluster = {
     }
   },
   extensions: {
-    oid: "731880",
+    oid: "105701",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -872,7 +872,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "708031",
+    oid: "105343",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -975,7 +975,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "706846",
+    oid: "70776",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1119,7 +1119,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "270566",
+    oid: "70492",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1229,7 +1229,6 @@ const spec_post = {
     },
     number: {
       codec: TYPES.int,
-      notNull: true,
       extensions: {
         tags: {
           behavior: "-attribute:insert -attribute:update"
@@ -1296,7 +1295,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "270549",
+    oid: "70475",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1461,7 +1460,7 @@ const spec_signal = {
     }
   },
   extensions: {
-    oid: "706866",
+    oid: "105302",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -6129,7 +6128,7 @@ type Post {
   statusUpdatedAt: Datetime!
   createdAt: Datetime!
   updatedAt: Datetime!
-  number: Int!
+  number: Int
   source: String
   sentiment: String
   aiTags: JSON
