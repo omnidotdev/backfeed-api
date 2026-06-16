@@ -18,8 +18,6 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
  * Default status templates seeded for every organization.
- *
- * @knipignore also consumed by the backfill script in the knip-ignored scripts dir
  */
 export const DEFAULT_STATUS_TEMPLATES: Omit<
   InsertStatusTemplate,
