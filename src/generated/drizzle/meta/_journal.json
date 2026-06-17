@@ -141,6 +141,13 @@
       "when": 1781730855140,
       "tag": "0019_nebulous_terrax",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1781738695720,
+      "tag": "0020_awesome_gateway",
+      "breakpoints": true
     }
   ]
 }
