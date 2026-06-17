@@ -269,7 +269,11 @@ const emitCommentCreated = (): PlanWrapperFn =>
         sideEffect([$result, $input, $db], async ([result, input, db]) => {
           if (!result) return;
 
-          const { postId } = input as InsertComment;
+          const {
+            postId,
+            message,
+            userId: mentionedByUserId,
+          } = input as InsertComment;
           const commentId = (result as { id?: string })?.id;
           if (!commentId) return;
 
@@ -279,6 +283,8 @@ const emitCommentCreated = (): PlanWrapperFn =>
           });
           if (!post?.project) return;
 
+          const organizationId = post.project.organizationId;
+
           try {
             await events.emit({
               type: "backfeed.comment.created",
@@ -286,13 +292,43 @@ const emitCommentCreated = (): PlanWrapperFn =>
                 commentId,
                 postId,
                 projectId: post.projectId,
-                organizationId: post.project.organizationId,
+                organizationId,
               },
-              organizationId: post.project.organizationId,
+              organizationId,
               subject: commentId,
             });
           } catch (error) {
             console.error("[Events] Failed to emit comment.created:", error);
+          }
+
+          // emit a mention event per @-mentioned user (rich-text comments link
+          // mentions to /profile/<userId>); skip the author mentioning themself
+          const mentionedUserIds = new Set<string>();
+          const mentionPattern = /\/profile\/([0-9a-fA-F-]{36})/g;
+          let match = mentionPattern.exec(message ?? "");
+          while (match !== null) {
+            if (match[1] !== mentionedByUserId) mentionedUserIds.add(match[1]);
+            match = mentionPattern.exec(message ?? "");
+          }
+
+          for (const mentionedUserId of mentionedUserIds) {
+            try {
+              await events.emit({
+                type: "backfeed.comment.mention",
+                data: {
+                  commentId,
+                  postId,
+                  projectId: post.projectId,
+                  organizationId,
+                  mentionedUserId,
+                  mentionedByUserId,
+                },
+                organizationId,
+                subject: mentionedUserId,
+              });
+            } catch (error) {
+              console.error("[Events] Failed to emit comment.mention:", error);
+            }
           }
         });
 
