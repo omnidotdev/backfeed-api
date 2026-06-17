@@ -9,6 +9,7 @@ import {
   ProjectLinkPlugin,
   ProjectPlugin,
   ProjectStatusConfigPlugin,
+  ReactionPlugin,
   SmartTagPlugin,
   StatusTemplatePlugin,
   TagPlugin,
@@ -68,6 +69,7 @@ const preset: GraphileConfig.Preset = {
     CommentPlugin,
     AttachmentPlugin,
     TagPlugin,
+    ReactionPlugin,
     SmartTagPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,

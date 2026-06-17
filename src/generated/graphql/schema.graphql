@@ -269,6 +269,40 @@ type Post {
     """The method to use when ordering `PostTag`."""
     orderBy: [PostTagOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostTagConnection!
+
+  """Reads and enables pagination through a set of `Reaction`."""
+  reactions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReactionFilter
+
+    """The method to use when ordering `Reaction`."""
+    orderBy: [ReactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReactionConnection!
 }
 
 """
@@ -1054,6 +1088,12 @@ input PostFilter {
   """Some related `postTags` exist."""
   postTagsExist: Boolean
 
+  """Filter by the object’s `reactions` relation."""
+  reactions: PostToManyReactionFilter
+
+  """Some related `reactions` exist."""
+  reactionsExist: Boolean
+
   """Filter by the object’s `cluster` relation."""
   cluster: SignalClusterFilter
 
@@ -1565,6 +1605,12 @@ input UserFilter {
 
   """Some related `attachments` exist."""
   attachmentsExist: Boolean
+
+  """Filter by the object’s `reactions` relation."""
+  reactions: UserToManyReactionFilter
+
+  """Some related `reactions` exist."""
+  reactionsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [UserFilter!]
@@ -3120,6 +3166,83 @@ input AttachmentVariancePopulationAggregateFilter {
 }
 
 """
+A filter to be used against many `Reaction` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyReactionFilter {
+  """
+  Every related `Reaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ReactionFilter
+
+  """
+  Some related `Reaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ReactionFilter
+
+  """
+  No related `Reaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ReactionFilter
+
+  """Aggregates across related `Reaction` match the filter criteria."""
+  aggregates: ReactionAggregatesFilter
+}
+
+"""
+A filter to be used against `Reaction` object types. All fields are combined with a logical ‘and.’
+"""
+input ReactionFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `postId` field."""
+  postId: UUIDFilter
+
+  """Filter by the object’s `userId` field."""
+  userId: UUIDFilter
+
+  """Filter by the object’s `emoji` field."""
+  emoji: StringFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `post` relation."""
+  post: PostFilter
+
+  """Filter by the object’s `user` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [ReactionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ReactionFilter!]
+
+  """Negates the expression."""
+  not: ReactionFilter
+}
+
+"""A filter to be used against aggregates of `Reaction` object types."""
+input ReactionAggregatesFilter {
+  """
+  A filter that must pass for the relevant `Reaction` object to be included within the aggregate.
+  """
+  filter: ReactionFilter
+
+  """Distinct count aggregate over matching `Reaction` objects."""
+  distinctCount: ReactionDistinctCountAggregateFilter
+}
+
+input ReactionDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  postId: BigIntFilter
+  userId: BigIntFilter
+  emoji: BigIntFilter
+  createdAt: BigIntFilter
+}
+
+"""
 A filter to be used against many `Post` object types. All fields are combined with a logical ‘and.’
 """
 input PostToManyPostFilter {
@@ -3232,6 +3355,29 @@ input PostToManyPostTagFilter {
 
   """Aggregates across related `PostTag` match the filter criteria."""
   aggregates: PostTagAggregatesFilter
+}
+
+"""
+A filter to be used against many `Reaction` object types. All fields are combined with a logical ‘and.’
+"""
+input PostToManyReactionFilter {
+  """
+  Every related `Reaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ReactionFilter
+
+  """
+  Some related `Reaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ReactionFilter
+
+  """
+  No related `Reaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ReactionFilter
+
+  """Aggregates across related `Reaction` match the filter criteria."""
+  aggregates: ReactionAggregatesFilter
 }
 
 """Methods to use when ordering `Post`."""
@@ -3463,6 +3609,18 @@ enum PostOrderBy {
   POST_TAGS_DISTINCT_COUNT_TAG_ID_DESC
   POST_TAGS_DISTINCT_COUNT_CREATED_AT_ASC
   POST_TAGS_DISTINCT_COUNT_CREATED_AT_DESC
+  REACTIONS_COUNT_ASC
+  REACTIONS_COUNT_DESC
+  REACTIONS_DISTINCT_COUNT_ROW_ID_ASC
+  REACTIONS_DISTINCT_COUNT_ROW_ID_DESC
+  REACTIONS_DISTINCT_COUNT_POST_ID_ASC
+  REACTIONS_DISTINCT_COUNT_POST_ID_DESC
+  REACTIONS_DISTINCT_COUNT_USER_ID_ASC
+  REACTIONS_DISTINCT_COUNT_USER_ID_DESC
+  REACTIONS_DISTINCT_COUNT_EMOJI_ASC
+  REACTIONS_DISTINCT_COUNT_EMOJI_DESC
+  REACTIONS_DISTINCT_COUNT_CREATED_AT_ASC
+  REACTIONS_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of `ProjectStatusConfig` values."""
@@ -4407,6 +4565,40 @@ type User {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentConnection!
+
+  """Reads and enables pagination through a set of `Reaction`."""
+  reactions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReactionFilter
+
+    """The method to use when ordering `Reaction`."""
+    orderBy: [ReactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReactionConnection!
 }
 
 """A connection to a list of `Comment` values."""
@@ -5343,6 +5535,187 @@ enum AttachmentOrderBy {
   WIDTH_DESC
   HEIGHT_ASC
   HEIGHT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+}
+
+"""A connection to a list of `Reaction` values."""
+type ReactionConnection {
+  """A list of `Reaction` objects."""
+  nodes: [Reaction]!
+
+  """
+  A list of edges which contains the `Reaction` and cursor to aid in pagination.
+  """
+  edges: [ReactionEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Reaction` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ReactionAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `Reaction` for these aggregates."""
+    groupBy: [ReactionGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ReactionHavingInput
+  ): [ReactionAggregates!]
+}
+
+type Reaction {
+  rowId: UUID!
+  postId: UUID!
+  userId: UUID!
+  emoji: String!
+  createdAt: Datetime!
+
+  """Reads a single `Post` that is related to this `Reaction`."""
+  post: Post
+
+  """Reads a single `User` that is related to this `Reaction`."""
+  user: User
+}
+
+"""A `Reaction` edge in the connection."""
+type ReactionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Reaction` at the end of the edge."""
+  node: Reaction
+}
+
+type ReactionAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ReactionDistinctCountAggregates
+}
+
+type ReactionDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of postId across the matching connection"""
+  postId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of emoji across the matching connection"""
+  emoji: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+"""Grouping methods for `Reaction` for usage during aggregation."""
+enum ReactionGroupBy {
+  POST_ID
+  USER_ID
+  EMOJI
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `Reaction` aggregates."""
+input ReactionHavingInput {
+  AND: [ReactionHavingInput!]
+  OR: [ReactionHavingInput!]
+  sum: ReactionHavingSumInput
+  distinctCount: ReactionHavingDistinctCountInput
+  min: ReactionHavingMinInput
+  max: ReactionHavingMaxInput
+  average: ReactionHavingAverageInput
+  stddevSample: ReactionHavingStddevSampleInput
+  stddevPopulation: ReactionHavingStddevPopulationInput
+  varianceSample: ReactionHavingVarianceSampleInput
+  variancePopulation: ReactionHavingVariancePopulationInput
+}
+
+input ReactionHavingSumInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ReactionHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ReactionHavingMinInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ReactionHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ReactionHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ReactionHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ReactionHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ReactionHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ReactionHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `Reaction` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input ReactionCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `postId` field."""
+  postId: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s `emoji` field."""
+  emoji: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+}
+
+"""Methods to use when ordering `Reaction`."""
+enum ReactionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  POST_ID_ASC
+  POST_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  EMOJI_ASC
+  EMOJI_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
 }
@@ -6658,6 +7031,18 @@ enum UserOrderBy {
   ATTACHMENTS_VARIANCE_POPULATION_WIDTH_DESC
   ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_ASC
   ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_DESC
+  REACTIONS_COUNT_ASC
+  REACTIONS_COUNT_DESC
+  REACTIONS_DISTINCT_COUNT_ROW_ID_ASC
+  REACTIONS_DISTINCT_COUNT_ROW_ID_DESC
+  REACTIONS_DISTINCT_COUNT_POST_ID_ASC
+  REACTIONS_DISTINCT_COUNT_POST_ID_DESC
+  REACTIONS_DISTINCT_COUNT_USER_ID_ASC
+  REACTIONS_DISTINCT_COUNT_USER_ID_DESC
+  REACTIONS_DISTINCT_COUNT_EMOJI_ASC
+  REACTIONS_DISTINCT_COUNT_EMOJI_DESC
+  REACTIONS_DISTINCT_COUNT_CREATED_AT_ASC
+  REACTIONS_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of `StatusTemplate` values."""
@@ -7989,6 +8374,50 @@ input PostTagInput {
   createdAt: Datetime
 }
 
+"""The output of our create `Reaction` mutation."""
+type CreateReactionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Reaction` that was created by this mutation."""
+  reaction: Reaction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Reaction`. May be used by Relay 1."""
+  reactionEdge(
+    """The method to use when ordering `Reaction`."""
+    orderBy: [ReactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReactionEdge
+}
+
+"""All input for the create `Reaction` mutation."""
+input CreateReactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Reaction` to be created by this mutation."""
+  reaction: ReactionInput!
+}
+
+"""An input for mutations affecting `Reaction`"""
+input ReactionInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  emoji: String!
+  createdAt: Datetime
+}
+
 """The output of our create `Tag` mutation."""
 type CreateTagPayload {
   """
@@ -8606,6 +9035,55 @@ input PostTagPatch {
   rowId: UUID
   postId: UUID
   tagId: UUID
+  createdAt: Datetime
+}
+
+"""The output of our update `Reaction` mutation."""
+type UpdateReactionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Reaction` that was updated by this mutation."""
+  reaction: Reaction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Reaction`. May be used by Relay 1."""
+  reactionEdge(
+    """The method to use when ordering `Reaction`."""
+    orderBy: [ReactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReactionEdge
+}
+
+"""All input for the `updateReaction` mutation."""
+input UpdateReactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Reaction` being updated.
+  """
+  patch: ReactionPatch!
+}
+
+"""
+Represents an update to a `Reaction`. Fields that are set will be updated.
+"""
+input ReactionPatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  emoji: String
   createdAt: Datetime
 }
 
@@ -9266,6 +9744,39 @@ input DeletePostTagInput {
   rowId: UUID!
 }
 
+"""The output of our delete `Reaction` mutation."""
+type DeleteReactionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Reaction` that was deleted by this mutation."""
+  reaction: Reaction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Reaction`. May be used by Relay 1."""
+  reactionEdge(
+    """The method to use when ordering `Reaction`."""
+    orderBy: [ReactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReactionEdge
+}
+
+"""All input for the `deleteReaction` mutation."""
+input DeleteReactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `Tag` mutation."""
 type DeleteTagPayload {
   """
@@ -9696,6 +10207,12 @@ type Query implements Node {
   """Get a single `PostTag`."""
   postTagByPostIdAndTagId(postId: UUID!, tagId: UUID!): PostTag
 
+  """Get a single `Reaction`."""
+  reaction(rowId: UUID!): Reaction
+
+  """Get a single `Reaction`."""
+  reactionByPostIdAndUserIdAndEmoji(postId: UUID!, userId: UUID!, emoji: String!): Reaction
+
   """Get a single `Tag`."""
   tag(rowId: UUID!): Tag
 
@@ -9798,6 +10315,40 @@ type Query implements Node {
     """The method to use when ordering `PostTag`."""
     orderBy: [PostTagOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostTagConnection
+
+  """Reads and enables pagination through a set of `Reaction`."""
+  reactions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReactionFilter
+
+    """The method to use when ordering `Reaction`."""
+    orderBy: [ReactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReactionConnection
 
   """Reads and enables pagination through a set of `Tag`."""
   tags(
@@ -10265,6 +10816,14 @@ type Mutation {
     input: CreatePostTagInput!
   ): CreatePostTagPayload
 
+  """Creates a single `Reaction`."""
+  createReaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateReactionInput!
+  ): CreateReactionPayload
+
   """Creates a single `Tag`."""
   createTag(
     """
@@ -10369,6 +10928,14 @@ type Mutation {
     input: UpdatePostTagInput!
   ): UpdatePostTagPayload
 
+  """Updates a single `Reaction` using a unique key and a patch."""
+  updateReaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReactionInput!
+  ): UpdateReactionPayload
+
   """Updates a single `Tag` using a unique key and a patch."""
   updateTag(
     """
@@ -10472,6 +11039,14 @@ type Mutation {
     """
     input: DeletePostTagInput!
   ): DeletePostTagPayload
+
+  """Deletes a single `Reaction` using a unique key."""
+  deleteReaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReactionInput!
+  ): DeleteReactionPayload
 
   """Deletes a single `Tag` using a unique key."""
   deleteTag(

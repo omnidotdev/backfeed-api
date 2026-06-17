@@ -5,6 +5,7 @@ export * from "./postTag.table";
 export * from "./project.table";
 export * from "./projectLink.table";
 export * from "./projectStatusConfig.table";
+export * from "./reaction.table";
 export * from "./signal.table";
 export * from "./signalCluster.table";
 export * from "./statusTemplate.table";

@@ -18,6 +18,7 @@ import { attachments } from "./attachment.table";
 import { comments } from "./comment.table";
 import { postTags } from "./postTag.table";
 import { projects } from "./project.table";
+import { reactions } from "./reaction.table";
 import { signals } from "./signal.table";
 import { signalClusters } from "./signalCluster.table";
 import { statusTemplates } from "./statusTemplate.table";
@@ -114,6 +115,7 @@ export const postRelations = relations(posts, ({ many, one }) => ({
   signals: many(signals),
   attachments: many(attachments),
   postTags: many(postTags),
+  reactions: many(reactions),
 }));
 
 /**
