@@ -25,6 +25,7 @@ import {
 } from "lib/graphql/plugins/events";
 import {
   ChangePostStatusPlugin,
+  NotificationPreferencePlugin,
   PostSignalProvenancePlugin,
   SignalIngestionPlugin,
 } from "lib/graphql/plugins/feedback";
@@ -89,6 +90,8 @@ const preset: GraphileConfig.Preset = {
     SignalIngestionPlugin,
     // Status change with an optional note (note-carrying updatePost)
     ChangePostStatusPlugin,
+    // Per-user email notification settings (observer-scoped)
+    NotificationPreferencePlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     PostSearchPlugin,

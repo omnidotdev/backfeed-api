@@ -12,6 +12,8 @@
 
 import { EXPORTABLE } from "graphile-export";
 import { recordPostStatusChange } from "lib/feedback/statusHistory";
+import { notifyStatusChange } from "lib/notifications/notify";
+import { notifications } from "lib/providers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
@@ -19,7 +21,13 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 
 const recordStatusChange = (): PlanWrapperFn =>
   EXPORTABLE(
-    (context, sideEffect, recordPostStatusChange): PlanWrapperFn =>
+    (
+      context,
+      notifications,
+      notifyStatusChange,
+      recordPostStatusChange,
+      sideEffect,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
         const $postId = fieldArgs.getRaw(["input", "rowId"]);
@@ -39,11 +47,27 @@ const recordStatusChange = (): PlanWrapperFn =>
             if (!statusInPatch) return;
 
             try {
-              await recordPostStatusChange(
+              const recorded = await recordPostStatusChange(
                 db,
                 postId as string,
                 observer?.id ?? null,
               );
+
+              // notify stakeholders only when the status actually changed,
+              // detached so a slow send never blocks the mutation (best-effort)
+              if (recorded) {
+                void notifyStatusChange(
+                  db,
+                  notifications,
+                  postId as string,
+                  observer?.id ?? null,
+                ).catch((error) =>
+                  console.error(
+                    "[StatusHistory] Failed to send notifications:",
+                    error,
+                  ),
+                );
+              }
             } catch (error) {
               console.error(
                 "[StatusHistory] Failed to record status change:",
@@ -55,7 +79,13 @@ const recordStatusChange = (): PlanWrapperFn =>
 
         return $result;
       },
-    [context, sideEffect, recordPostStatusChange],
+    [
+      context,
+      notifications,
+      notifyStatusChange,
+      recordPostStatusChange,
+      sideEffect,
+    ],
   );
 
 /**

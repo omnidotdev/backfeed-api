@@ -9185,6 +9185,54 @@ input UserInput {
   avatarUrl: String
 }
 
+"""The output of our create `ProjectStatusConfig` mutation."""
+type CreateProjectStatusConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectStatusConfig` that was created by this mutation."""
+  projectStatusConfig: ProjectStatusConfig
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectStatusConfig`. May be used by Relay 1."""
+  projectStatusConfigEdge(
+    """The method to use when ordering `ProjectStatusConfig`."""
+    orderBy: [ProjectStatusConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectStatusConfigEdge
+}
+
+"""All input for the create `ProjectStatusConfig` mutation."""
+input CreateProjectStatusConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProjectStatusConfig` to be created by this mutation."""
+  projectStatusConfig: ProjectStatusConfigInput!
+}
+
+"""An input for mutations affecting `ProjectStatusConfig`"""
+input ProjectStatusConfigInput {
+  rowId: UUID
+  projectId: UUID!
+  statusTemplateId: UUID!
+  customColor: String
+  customDescription: String
+  isEnabled: Boolean
+  isDefault: Boolean
+  sortOrder: Int
+  createdAt: Datetime
+}
+
 """The output of our create `ProjectLink` mutation."""
 type CreateProjectLinkPayload {
   """
@@ -9323,54 +9371,6 @@ input StatusTemplateInput {
   createdAt: Datetime
   updatedAt: Datetime
   showOnRoadmap: Boolean
-}
-
-"""The output of our create `ProjectStatusConfig` mutation."""
-type CreateProjectStatusConfigPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ProjectStatusConfig` that was created by this mutation."""
-  projectStatusConfig: ProjectStatusConfig
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ProjectStatusConfig`. May be used by Relay 1."""
-  projectStatusConfigEdge(
-    """The method to use when ordering `ProjectStatusConfig`."""
-    orderBy: [ProjectStatusConfigOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectStatusConfigEdge
-}
-
-"""All input for the create `ProjectStatusConfig` mutation."""
-input CreateProjectStatusConfigInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `ProjectStatusConfig` to be created by this mutation."""
-  projectStatusConfig: ProjectStatusConfigInput!
-}
-
-"""An input for mutations affecting `ProjectStatusConfig`"""
-input ProjectStatusConfigInput {
-  rowId: UUID
-  projectId: UUID!
-  statusTemplateId: UUID!
-  customColor: String
-  customDescription: String
-  isEnabled: Boolean
-  isDefault: Boolean
-  sortOrder: Int
-  createdAt: Datetime
 }
 
 """The output of our create `SignalCluster` mutation."""
@@ -9867,6 +9867,59 @@ input UserPatch {
   avatarUrl: String
 }
 
+"""The output of our update `ProjectStatusConfig` mutation."""
+type UpdateProjectStatusConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectStatusConfig` that was updated by this mutation."""
+  projectStatusConfig: ProjectStatusConfig
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectStatusConfig`. May be used by Relay 1."""
+  projectStatusConfigEdge(
+    """The method to use when ordering `ProjectStatusConfig`."""
+    orderBy: [ProjectStatusConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectStatusConfigEdge
+}
+
+"""All input for the `updateProjectStatusConfig` mutation."""
+input UpdateProjectStatusConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ProjectStatusConfig` being updated.
+  """
+  patch: ProjectStatusConfigPatch!
+}
+
+"""
+Represents an update to a `ProjectStatusConfig`. Fields that are set will be updated.
+"""
+input ProjectStatusConfigPatch {
+  rowId: UUID
+  projectId: UUID
+  statusTemplateId: UUID
+  customColor: String
+  customDescription: String
+  isEnabled: Boolean
+  isDefault: Boolean
+  sortOrder: Int
+  createdAt: Datetime
+}
+
 """The output of our update `ProjectLink` mutation."""
 type UpdateProjectLinkPayload {
   """
@@ -10018,59 +10071,6 @@ input StatusTemplatePatch {
   createdAt: Datetime
   updatedAt: Datetime
   showOnRoadmap: Boolean
-}
-
-"""The output of our update `ProjectStatusConfig` mutation."""
-type UpdateProjectStatusConfigPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ProjectStatusConfig` that was updated by this mutation."""
-  projectStatusConfig: ProjectStatusConfig
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ProjectStatusConfig`. May be used by Relay 1."""
-  projectStatusConfigEdge(
-    """The method to use when ordering `ProjectStatusConfig`."""
-    orderBy: [ProjectStatusConfigOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectStatusConfigEdge
-}
-
-"""All input for the `updateProjectStatusConfig` mutation."""
-input UpdateProjectStatusConfigInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `ProjectStatusConfig` being updated.
-  """
-  patch: ProjectStatusConfigPatch!
-}
-
-"""
-Represents an update to a `ProjectStatusConfig`. Fields that are set will be updated.
-"""
-input ProjectStatusConfigPatch {
-  rowId: UUID
-  projectId: UUID
-  statusTemplateId: UUID
-  customColor: String
-  customDescription: String
-  isEnabled: Boolean
-  isDefault: Boolean
-  sortOrder: Int
-  createdAt: Datetime
 }
 
 """The output of our update `SignalCluster` mutation."""
@@ -10508,6 +10508,39 @@ input DeleteUserInput {
   rowId: UUID!
 }
 
+"""The output of our delete `ProjectStatusConfig` mutation."""
+type DeleteProjectStatusConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectStatusConfig` that was deleted by this mutation."""
+  projectStatusConfig: ProjectStatusConfig
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectStatusConfig`. May be used by Relay 1."""
+  projectStatusConfigEdge(
+    """The method to use when ordering `ProjectStatusConfig`."""
+    orderBy: [ProjectStatusConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectStatusConfigEdge
+}
+
+"""All input for the `deleteProjectStatusConfig` mutation."""
+input DeleteProjectStatusConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `ProjectLink` mutation."""
 type DeleteProjectLinkPayload {
   """
@@ -10599,39 +10632,6 @@ type DeleteStatusTemplatePayload {
 
 """All input for the `deleteStatusTemplate` mutation."""
 input DeleteStatusTemplateInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `ProjectStatusConfig` mutation."""
-type DeleteProjectStatusConfigPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ProjectStatusConfig` that was deleted by this mutation."""
-  projectStatusConfig: ProjectStatusConfig
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ProjectStatusConfig`. May be used by Relay 1."""
-  projectStatusConfigEdge(
-    """The method to use when ordering `ProjectStatusConfig`."""
-    orderBy: [ProjectStatusConfigOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectStatusConfigEdge
-}
-
-"""All input for the `deleteProjectStatusConfig` mutation."""
-input DeleteProjectStatusConfigInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10851,6 +10851,17 @@ type SimilarPost {
   score: Float!
 }
 
+input ChangePostStatusInput {
+  postId: UUID!
+  statusTemplateId: UUID
+  note: String
+}
+
+type ChangePostStatusPayload {
+  id: UUID!
+  statusTemplateId: UUID
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -10909,6 +10920,12 @@ type Query implements Node {
   """Get a single `User`."""
   userByUsername(username: String!): User
 
+  """Get a single `ProjectStatusConfig`."""
+  projectStatusConfig(rowId: UUID!): ProjectStatusConfig
+
+  """Get a single `ProjectStatusConfig`."""
+  projectStatusConfigByProjectIdAndStatusTemplateId(projectId: UUID!, statusTemplateId: UUID!): ProjectStatusConfig
+
   """Get a single `ProjectLink`."""
   projectLink(rowId: UUID!): ProjectLink
 
@@ -10923,12 +10940,6 @@ type Query implements Node {
 
   """Get a single `StatusTemplate`."""
   statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
-
-  """Get a single `ProjectStatusConfig`."""
-  projectStatusConfig(rowId: UUID!): ProjectStatusConfig
-
-  """Get a single `ProjectStatusConfig`."""
-  projectStatusConfigByProjectIdAndStatusTemplateId(projectId: UUID!, statusTemplateId: UUID!): ProjectStatusConfig
 
   """Get a single `SignalCluster`."""
   signalCluster(rowId: UUID!): SignalCluster
@@ -11161,6 +11172,40 @@ type Query implements Node {
     orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserConnection
 
+  """Reads and enables pagination through a set of `ProjectStatusConfig`."""
+  projectStatusConfigs(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectStatusConfigCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectStatusConfigFilter
+
+    """The method to use when ordering `ProjectStatusConfig`."""
+    orderBy: [ProjectStatusConfigOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectStatusConfigConnection
+
   """Reads and enables pagination through a set of `ProjectLink`."""
   projectLinks(
     """Only read the first `n` values of the set."""
@@ -11262,40 +11307,6 @@ type Query implements Node {
     """The method to use when ordering `StatusTemplate`."""
     orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
   ): StatusTemplateConnection
-
-  """Reads and enables pagination through a set of `ProjectStatusConfig`."""
-  projectStatusConfigs(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ProjectStatusConfigCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ProjectStatusConfigFilter
-
-    """The method to use when ordering `ProjectStatusConfig`."""
-    orderBy: [ProjectStatusConfigOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectStatusConfigConnection
 
   """Reads and enables pagination through a set of `SignalCluster`."""
   signalClusters(
@@ -11511,6 +11522,9 @@ type Query implements Node {
   Posts similar to a draft, to surface possible duplicates at submit time.
   """
   similarPosts(projectId: UUID!, content: String!): [SimilarPost!]!
+
+  """The current user's email notification settings (defaults applied)."""
+  myNotificationPreference: NotificationPreference
 }
 
 """
@@ -11557,6 +11571,14 @@ type Mutation {
     input: CreateUserInput!
   ): CreateUserPayload
 
+  """Creates a single `ProjectStatusConfig`."""
+  createProjectStatusConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectStatusConfigInput!
+  ): CreateProjectStatusConfigPayload
+
   """Creates a single `ProjectLink`."""
   createProjectLink(
     """
@@ -11580,14 +11602,6 @@ type Mutation {
     """
     input: CreateStatusTemplateInput!
   ): CreateStatusTemplatePayload
-
-  """Creates a single `ProjectStatusConfig`."""
-  createProjectStatusConfig(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateProjectStatusConfigInput!
-  ): CreateProjectStatusConfigPayload
 
   """Creates a single `SignalCluster`."""
   createSignalCluster(
@@ -11669,6 +11683,14 @@ type Mutation {
     input: UpdateUserInput!
   ): UpdateUserPayload
 
+  """Updates a single `ProjectStatusConfig` using a unique key and a patch."""
+  updateProjectStatusConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectStatusConfigInput!
+  ): UpdateProjectStatusConfigPayload
+
   """Updates a single `ProjectLink` using a unique key and a patch."""
   updateProjectLink(
     """
@@ -11692,14 +11714,6 @@ type Mutation {
     """
     input: UpdateStatusTemplateInput!
   ): UpdateStatusTemplatePayload
-
-  """Updates a single `ProjectStatusConfig` using a unique key and a patch."""
-  updateProjectStatusConfig(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectStatusConfigInput!
-  ): UpdateProjectStatusConfigPayload
 
   """Updates a single `SignalCluster` using a unique key and a patch."""
   updateSignalCluster(
@@ -11781,6 +11795,14 @@ type Mutation {
     input: DeleteUserInput!
   ): DeleteUserPayload
 
+  """Deletes a single `ProjectStatusConfig` using a unique key."""
+  deleteProjectStatusConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectStatusConfigInput!
+  ): DeleteProjectStatusConfigPayload
+
   """Deletes a single `ProjectLink` using a unique key."""
   deleteProjectLink(
     """
@@ -11804,14 +11826,6 @@ type Mutation {
     """
     input: DeleteStatusTemplateInput!
   ): DeleteStatusTemplatePayload
-
-  """Deletes a single `ProjectStatusConfig` using a unique key."""
-  deleteProjectStatusConfig(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectStatusConfigInput!
-  ): DeleteProjectStatusConfigPayload
 
   """Deletes a single `SignalCluster` using a unique key."""
   deleteSignalCluster(
@@ -11875,15 +11889,21 @@ type Mutation {
     """
     input: ChangePostStatusInput!
   ): ChangePostStatusPayload
+
+  """Update the current user's email notification settings."""
+  setNotificationPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: SetNotificationPreferenceInput!
+  ): NotificationPreference
 }
 
-input ChangePostStatusInput {
-  postId: UUID!
-  statusTemplateId: UUID
-  note: String
+type NotificationPreference {
+  """Email me when a post I reported or upvoted changes status."""
+  postUpdates: Boolean!
 }
 
-type ChangePostStatusPayload {
-  id: UUID!
-  statusTemplateId: UUID
+input SetNotificationPreferenceInput {
+  postUpdates: Boolean!
 }

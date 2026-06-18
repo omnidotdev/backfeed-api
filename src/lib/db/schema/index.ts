@@ -1,5 +1,6 @@
 export * from "./attachment.table";
 export * from "./comment.table";
+export * from "./notificationPreference.table";
 export * from "./post.table";
 export * from "./postStatusChange.table";
 export * from "./postTag.table";

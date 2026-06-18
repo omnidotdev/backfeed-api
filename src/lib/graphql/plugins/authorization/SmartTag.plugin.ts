@@ -34,6 +34,13 @@ const SmartTagPlugin = jsonPgSmartTags({
         // read/query surface (the timeline) is unaffected.
         tags: { behavior: "-insert -update -delete" },
       },
+      notification_preference: {
+        // Per-user settings, accessed only through the observer-scoped
+        // `myNotificationPreference` query + `setNotificationPreference` mutation
+        // (see NotificationPreference.plugin). Hide the raw table entirely so one
+        // user can never read or write another's preferences.
+        tags: { behavior: "-*" },
+      },
       project: {
         attribute: {
           // The inbound email key is server-generated (DB default) and unique;

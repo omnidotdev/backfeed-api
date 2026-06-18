@@ -34,7 +34,12 @@ import {
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
 import { moderateText } from "lib/moderation";
-import { events } from "lib/providers";
+import { notifyStatusChange } from "lib/notifications/notify";
+import {
+  getNotificationPreference,
+  setNotificationPreference,
+} from "lib/notifications/preference";
+import { events, notifications } from "lib/providers";
 import {
   deletePostFromIndex,
   deleteProjectFromIndex,
@@ -182,7 +187,12 @@ const generateGraphqlSchema = async () => {
       "lib/auth/organizations": { getDefaultOrganization },
       "lib/idp/validateOrg": { validateOrgExists },
       "lib/moderation": { moderateText },
-      "lib/providers": { events },
+      "lib/notifications/notify": { notifyStatusChange },
+      "lib/notifications/preference": {
+        getNotificationPreference,
+        setNotificationPreference,
+      },
+      "lib/providers": { events, notifications },
       "lib/search": {
         deletePostFromIndex,
         deleteProjectFromIndex,

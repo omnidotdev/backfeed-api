@@ -169,6 +169,13 @@
       "when": 1781808551290,
       "tag": "0023_minor_songbird",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1781812285017,
+      "tag": "0024_nifty_sentinels",
+      "breakpoints": true
     }
   ]
 }

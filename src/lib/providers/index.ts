@@ -10,6 +10,7 @@ import {
   createBillingProvider,
   createEventsProvider,
   createFlagProvider,
+  createNotificationProvider,
   createStorageProvider,
 } from "@omnidotdev/providers";
 import {
@@ -19,6 +20,9 @@ import {
   BILLING_SERVICE_API_KEY,
   FLAGS_API_HOST,
   FLAGS_CLIENT_KEY,
+  HERALD_API_KEY,
+  HERALD_API_URL,
+  HERALD_DEFAULT_FROM,
   S3_ACCESS_KEY_ID,
   S3_BUCKET,
   S3_ENDPOINT,
@@ -56,6 +60,22 @@ export const events = createEventsProvider(
         baseUrl: VORTEX_API_URL,
         apiKey: VORTEX_API_KEY,
         source: "omni.backfeed",
+      }
+    : {},
+);
+
+/**
+ * Outbound email notifications via Herald. Falls back to the noop provider
+ * (sends succeed as no-ops) when Herald is not configured, so the app boots
+ * without notification config.
+ */
+export const notifications = createNotificationProvider(
+  HERALD_API_URL && HERALD_API_KEY && HERALD_DEFAULT_FROM
+    ? {
+        provider: "herald",
+        apiUrl: HERALD_API_URL,
+        apiKey: HERALD_API_KEY,
+        defaultFrom: HERALD_DEFAULT_FROM,
       }
     : {},
 );

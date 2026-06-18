@@ -16,7 +16,8 @@ import { GraphQLError } from "graphql";
 import { checkPermission } from "lib/authz";
 import { changePostStatus, getPostRef } from "lib/feedback/changeStatus";
 import { markPostShipped } from "lib/feedback/shipped";
-import { events } from "lib/providers";
+import { notifyStatusChange } from "lib/notifications/notify";
+import { events, notifications } from "lib/providers";
 import { context, lambda } from "postgraphile/grafast";
 import { gql, makeExtendSchemaPlugin } from "postgraphile/utils";
 
@@ -55,6 +56,8 @@ const ChangePostStatusPlugin = makeExtendSchemaPlugin(() => ({
           getPostRef,
           lambda,
           markPostShipped,
+          notifications,
+          notifyStatusChange,
         ) =>
           // biome-ignore lint/suspicious/noExplicitAny: Grafast plan signature
           function plan(_$root: any, fieldArgs: any) {
@@ -89,6 +92,20 @@ const ChangePostStatusPlugin = makeExtendSchemaPlugin(() => ({
                   userId: observer.id,
                   note: input.note,
                 });
+
+                // email stakeholders, detached so a slow send never blocks the
+                // mutation response (best-effort, like the event emission)
+                void notifyStatusChange(
+                  db,
+                  notifications,
+                  input.postId,
+                  observer.id,
+                ).catch((error) =>
+                  console.error(
+                    "[ChangePostStatus] Failed to send notifications:",
+                    error,
+                  ),
+                );
 
                 // close-the-loop: emit exactly once when the post first ships.
                 // Best-effort, never fatal (mirrors PostShipped on updatePost).
@@ -132,6 +149,8 @@ const ChangePostStatusPlugin = makeExtendSchemaPlugin(() => ({
           getPostRef,
           lambda,
           markPostShipped,
+          notifications,
+          notifyStatusChange,
         ],
       ),
     },
