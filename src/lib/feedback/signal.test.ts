@@ -11,6 +11,7 @@ import {
   buildIngestedSignal,
   buildPostFromSignal,
   buildPostProvenanceSignal,
+  isReviewSource,
   isSignalSource,
   isSignalStatus,
   isSignalType,
@@ -35,6 +36,14 @@ describe("signal source validation", () => {
   test("default source is a valid source", () => {
     expect(isSignalSource(DEFAULT_SIGNAL_SOURCE)).toBe(true);
     expect(DEFAULT_SIGNAL_SOURCE).toBe("widget");
+  });
+
+  test("identifies review-platform sources", () => {
+    expect(isReviewSource("app_store")).toBe(true);
+    expect(isReviewSource("play_store")).toBe(true);
+    expect(isReviewSource("email")).toBe(false);
+    expect(isReviewSource("widget")).toBe(false);
+    expect(isReviewSource(undefined)).toBe(false);
   });
 
   test("typed literals are assignable to the exported unions", () => {
@@ -187,6 +196,16 @@ describe("buildIngestedSignal", () => {
   test("triages the raw content into type and sentiment", () => {
     const signal = buildIngestedSignal(base);
     expect(signal.type).toBe("bug");
+    expect(signal.sentiment).toBe("negative");
+  });
+
+  test("types signals from review sources as review (sentiment from content)", () => {
+    const signal = buildIngestedSignal({
+      ...base,
+      source: "app_store",
+    });
+    // bug wording, but a store review is a review
+    expect(signal.type).toBe("review");
     expect(signal.sentiment).toBe("negative");
   });
 

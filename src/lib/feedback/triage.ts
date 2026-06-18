@@ -16,6 +16,12 @@ interface TriageResult {
   sentiment: Sentiment;
 }
 
+/** Extra context that can override content-based classification. */
+interface TriageOptions {
+  /** Force the `review` type (the content came from a review platform). */
+  isReview?: boolean;
+}
+
 const BUG_PATTERN =
   /\b(bug|broken|breaks?|crash\w*|error|errors|fail\w*|throws?|doesn'?t work|not working|won'?t|can'?t|cannot)\b/i;
 const PRAISE_PATTERN =
@@ -42,9 +48,14 @@ const classifySentiment = (content: string): Sentiment => {
 };
 
 /**
- * Default dependency-free triage provider.
+ * Default dependency-free triage provider. Review-platform content is typed as
+ * `review` (its sentiment is still classified from the words); everything else
+ * is classified from the content.
  */
-export const heuristicTriage = (content: string): TriageResult => ({
-  type: classifyType(content),
+export const heuristicTriage = (
+  content: string,
+  opts: TriageOptions = {},
+): TriageResult => ({
+  type: opts.isReview ? "review" : classifyType(content),
   sentiment: classifySentiment(content),
 });

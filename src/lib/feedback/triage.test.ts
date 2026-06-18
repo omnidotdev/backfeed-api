@@ -31,6 +31,29 @@ describe("heuristicTriage type classification", () => {
   test("prioritises bug over other signals", () => {
     expect(heuristicTriage("Why does it crash every time?").type).toBe("bug");
   });
+
+  test("types review-platform content as review regardless of wording", () => {
+    expect(
+      heuristicTriage("The app crashes on launch", { isReview: true }).type,
+    ).toBe("review");
+    expect(
+      heuristicTriage("Love this app, five stars!", { isReview: true }).type,
+    ).toBe("review");
+    expect(heuristicTriage("How do I log in?", { isReview: true }).type).toBe(
+      "review",
+    );
+  });
+
+  test("still classifies review sentiment from the words", () => {
+    expect(
+      heuristicTriage("The app crashes on launch", { isReview: true })
+        .sentiment,
+    ).toBe("negative");
+    expect(
+      heuristicTriage("Love this app, five stars!", { isReview: true })
+        .sentiment,
+    ).toBe("positive");
+  });
 });
 
 describe("heuristicTriage sentiment", () => {
