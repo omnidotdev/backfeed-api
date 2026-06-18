@@ -645,116 +645,6 @@ const spec_projectLink = {
   executor: executor
 };
 const projectLinkCodec = recordCodec(spec_projectLink);
-const statusTemplateIdentifier = sql.identifier("public", "status_template");
-const spec_statusTemplate = {
-  name: "statusTemplate",
-  identifier: statusTemplateIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    display_name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    color: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    sort_order: {
-      codec: TYPES.int,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "270616",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "status_template"
-    }
-  },
-  executor: executor
-};
-const statusTemplateCodec = recordCodec(spec_statusTemplate);
 const voteIdentifier = sql.identifier("public", "vote");
 const voteTypeCodec = enumCodec({
   name: "voteType",
@@ -851,6 +741,125 @@ const spec_vote = {
   executor: executor
 };
 const voteCodec = recordCodec(spec_vote);
+const statusTemplateIdentifier = sql.identifier("public", "status_template");
+const spec_statusTemplate = {
+  name: "statusTemplate",
+  identifier: statusTemplateIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    display_name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    color: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    show_on_roadmap: {
+      codec: TYPES.boolean,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "270616",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "status_template"
+    }
+  },
+  executor: executor
+};
+const statusTemplateCodec = recordCodec(spec_statusTemplate);
 const projectStatusConfigIdentifier = sql.identifier("public", "project_status_config");
 const spec_projectStatusConfig = {
   name: "projectStatusConfig",
@@ -1990,37 +1999,6 @@ const project_link_resourceOptionsConfig = {
   },
   uniques: project_linkUniques
 };
-const status_templateUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}, {
-  attributes: ["organization_id", "name"],
-  extensions: {
-    tags: {
-      __proto__: null,
-      behavior: ["-update", "-delete"]
-    }
-  }
-}];
-const status_template_resourceOptionsConfig = {
-  executor: executor,
-  name: "status_template",
-  identifier: "main.public.status_template",
-  from: statusTemplateIdentifier,
-  codec: statusTemplateCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "status_template"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: status_templateUniques
-};
 const voteUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2051,6 +2029,37 @@ const vote_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: voteUniques
+};
+const status_templateUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}, {
+  attributes: ["organization_id", "name"],
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
+    }
+  }
+}];
+const status_template_resourceOptionsConfig = {
+  executor: executor,
+  name: "status_template",
+  identifier: "main.public.status_template",
+  from: statusTemplateIdentifier,
+  codec: statusTemplateCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "status_template"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: status_templateUniques
 };
 const project_status_configUniques = [{
   attributes: ["id"],
@@ -2247,11 +2256,11 @@ const registryConfig = {
     user: userCodec,
     projectLink: projectLinkCodec,
     int4: TYPES.int,
-    statusTemplate: statusTemplateCodec,
     vote: voteCodec,
     voteType: voteTypeCodec,
-    projectStatusConfig: projectStatusConfigCodec,
+    statusTemplate: statusTemplateCodec,
     bool: TYPES.boolean,
+    projectStatusConfig: projectStatusConfigCodec,
     signalCluster: signalClusterCodec,
     attachment: attachmentCodec,
     wardenSyncQueue: wardenSyncQueueCodec,
@@ -2270,8 +2279,8 @@ const registryConfig = {
     comment: comment_resourceOptionsConfig,
     user: user_resourceOptionsConfig,
     project_link: project_link_resourceOptionsConfig,
-    status_template: status_template_resourceOptionsConfig,
     vote: vote_resourceOptionsConfig,
+    status_template: status_template_resourceOptionsConfig,
     project_status_config: project_status_config_resourceOptionsConfig,
     signal_cluster: signal_cluster_resourceOptionsConfig,
     attachment: attachment_resourceOptionsConfig,
@@ -4128,6 +4137,10 @@ function ProjectLinkInput_titleApply(obj, val, info) {
 function ProjectLinkInput_orderApply(obj, val, info) {
   obj.set("order", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateVotePayload_voteEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_votePgResource, voteUniques[0].attributes, $mutation, fieldArgs);
+function VoteInput_voteTypeApply(obj, val, info) {
+  obj.set("vote_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateStatusTemplatePayload_statusTemplateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_status_templatePgResource, status_templateUniques[0].attributes, $mutation, fieldArgs);
 function StatusTemplateInput_organizationIdApply(obj, val, info) {
   obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -4141,9 +4154,8 @@ function StatusTemplateInput_descriptionApply(obj, val, info) {
 function StatusTemplateInput_sortOrderApply(obj, val, info) {
   obj.set("sort_order", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateVotePayload_voteEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_votePgResource, voteUniques[0].attributes, $mutation, fieldArgs);
-function VoteInput_voteTypeApply(obj, val, info) {
-  obj.set("vote_type", bakedInputRuntime(info.schema, info.field.type, val));
+function StatusTemplateInput_showOnRoadmapApply(obj, val, info) {
+  obj.set("show_on_roadmap", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateProjectStatusConfigPayload_projectStatusConfigEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_project_status_configPgResource, project_status_configUniques[0].attributes, $mutation, fieldArgs);
 function ProjectStatusConfigInput_statusTemplateIdApply(obj, val, info) {
@@ -4611,77 +4623,14 @@ const planWrapper8 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan10(_, args) {
-  const $insert = pgInsertSingle(otherSource_status_templatePgResource);
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper9 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "statusTemplate"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    let organizationId;
-    organizationId = input.organizationId;
-    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
-  });
-  return plan();
-};
-function oldPlan9(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan10.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.createStatusTemplate, but that function did not return a step!
-${String(oldPlan10)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper10 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $input = fieldArgs.getRaw(["input", "statusTemplate"]);
-  sideEffect([$result, $input], async ([result, input]) => {
-    if (!result) return;
-    const {
-        organizationId
-      } = input,
-      templateId = result?.id;
-    if (!templateId) return;
-    try {
-      await events.emit({
-        type: "backfeed.statusTemplate.created",
-        data: {
-          statusTemplateId: templateId,
-          organizationId
-        },
-        organizationId,
-        subject: templateId
-      });
-    } catch (error) {
-      console.error("[Events] Failed to emit statusTemplate.created:", error);
-    }
-  });
-  return $result;
-};
-function oldPlan11(_, args) {
+function oldPlan9(_, args) {
   const $insert = pgInsertSingle(otherSource_votePgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper11 = (plan, _, fieldArgs) => {
+const planWrapper9 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "vote"]),
     $db = context().get("db");
@@ -4721,6 +4670,69 @@ const planWrapper11 = (plan, _, fieldArgs) => {
       });
     } catch (error) {
       console.error("[Events] Failed to emit vote.created:", error);
+    }
+  });
+  return $result;
+};
+function oldPlan11(_, args) {
+  const $insert = pgInsertSingle(otherSource_status_templatePgResource);
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper10 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "statusTemplate"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    organizationId = input.organizationId;
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan10(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan11.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.createStatusTemplate, but that function did not return a step!
+${String(oldPlan11)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper11 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $input = fieldArgs.getRaw(["input", "statusTemplate"]);
+  sideEffect([$result, $input], async ([result, input]) => {
+    if (!result) return;
+    const {
+        organizationId
+      } = input,
+      templateId = result?.id;
+    if (!templateId) return;
+    try {
+      await events.emit({
+        type: "backfeed.statusTemplate.created",
+        data: {
+          statusTemplateId: templateId,
+          organizationId
+        },
+        organizationId,
+        subject: templateId
+      });
+    } catch (error) {
+      console.error("[Events] Failed to emit statusTemplate.created:", error);
     }
   });
   return $result;
@@ -5541,88 +5553,6 @@ const planWrapper30 = (plan, _, fieldArgs) => {
   return $result;
 };
 const oldPlan32 = (_$root, args) => {
-  const $update = pgUpdateSingle(otherSource_status_templatePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper31 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    let organizationId;
-    {
-      const statusTemplate = await db.query.statusTemplates.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        }
-      });
-      if (!statusTemplate) throw Error("Status template not found");
-      organizationId = statusTemplate.organizationId;
-    }
-    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
-  });
-  return plan();
-};
-function oldPlan31(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan32.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.updateStatusTemplate, but that function did not return a step!
-${String(oldPlan32)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper32 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $templateId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
-    if (!result) return;
-    const template = await db.query.statusTemplates.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, templateId);
-      },
-      columns: {
-        organizationId: !0
-      }
-    });
-    if (!template) return;
-    try {
-      await events.emit({
-        type: "backfeed.statusTemplate.updated",
-        data: {
-          statusTemplateId: templateId,
-          organizationId: template.organizationId
-        },
-        organizationId: template.organizationId,
-        subject: templateId
-      });
-    } catch (error) {
-      console.error("[Events] Failed to emit statusTemplate.updated:", error);
-    }
-  });
-  return $result;
-};
-const oldPlan34 = (_$root, args) => {
   const $update = pgUpdateSingle(otherSource_votePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5631,7 +5561,7 @@ const oldPlan34 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper33 = (plan, _, fieldArgs) => {
+const planWrapper31 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5648,25 +5578,25 @@ const planWrapper33 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan33(...planParams) {
+function oldPlan31(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan34.apply(this, args);
+        $prev = oldPlan32.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateVote, but that function did not return a step!
-${String(oldPlan34)}`);
+${String(oldPlan32)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper34 = (plan, _, fieldArgs) => {
+const planWrapper32 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $voteId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5705,6 +5635,88 @@ const planWrapper34 = (plan, _, fieldArgs) => {
       });
     } catch (error) {
       console.error("[Events] Failed to emit vote.updated:", error);
+    }
+  });
+  return $result;
+};
+const oldPlan34 = (_$root, args) => {
+  const $update = pgUpdateSingle(otherSource_status_templatePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper33 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    {
+      const statusTemplate = await db.query.statusTemplates.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!statusTemplate) throw Error("Status template not found");
+      organizationId = statusTemplate.organizationId;
+    }
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan33(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan34.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.updateStatusTemplate, but that function did not return a step!
+${String(oldPlan34)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper34 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $templateId = fieldArgs.getRaw(["input", "rowId"]),
+    $db = context().get("db");
+  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
+    if (!result) return;
+    const template = await db.query.statusTemplates.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, templateId);
+      },
+      columns: {
+        organizationId: !0
+      }
+    });
+    if (!template) return;
+    try {
+      await events.emit({
+        type: "backfeed.statusTemplate.updated",
+        data: {
+          statusTemplateId: templateId,
+          organizationId: template.organizationId
+        },
+        organizationId: template.organizationId,
+        subject: templateId
+      });
+    } catch (error) {
+      console.error("[Events] Failed to emit statusTemplate.updated:", error);
     }
   });
   return $result;
@@ -6401,88 +6413,6 @@ const planWrapper53 = (plan, _, fieldArgs) => {
   return $result;
 };
 const oldPlan55 = (_$root, args) => {
-  const $delete = pgDeleteSingle(otherSource_status_templatePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper54 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    let organizationId;
-    {
-      const statusTemplate = await db.query.statusTemplates.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        }
-      });
-      if (!statusTemplate) throw Error("Status template not found");
-      organizationId = statusTemplate.organizationId;
-    }
-    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
-  });
-  return plan();
-};
-function oldPlan54(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan55.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
-${String(oldPlan55)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper54(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper55 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $templateId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
-    if (!result) return;
-    const template = await db.query.statusTemplates.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, templateId);
-      },
-      columns: {
-        organizationId: !0
-      }
-    });
-    if (!template) return;
-    try {
-      await events.emit({
-        type: "backfeed.statusTemplate.deleted",
-        data: {
-          statusTemplateId: templateId,
-          organizationId: template.organizationId
-        },
-        organizationId: template.organizationId,
-        subject: templateId
-      });
-    } catch (error) {
-      console.error("[Events] Failed to emit statusTemplate.deleted:", error);
-    }
-  });
-  return $result;
-};
-const oldPlan57 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_votePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6491,25 +6421,25 @@ const oldPlan57 = (_$root, args) => {
     result: $delete
   });
 };
-function oldPlan56(...planParams) {
+function oldPlan54(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan57.apply(this, args);
+        $prev = oldPlan55.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteVote, but that function did not return a step!
-${String(oldPlan57)}`);
+${String(oldPlan55)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper57 = (plan, _, fieldArgs) => {
+const planWrapper55 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $voteId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -6548,6 +6478,88 @@ const planWrapper57 = (plan, _, fieldArgs) => {
       });
     } catch (error) {
       console.error("[Events] Failed to emit vote.deleted:", error);
+    }
+  });
+  return $result;
+};
+const oldPlan57 = (_$root, args) => {
+  const $delete = pgDeleteSingle(otherSource_status_templatePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper56 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    {
+      const statusTemplate = await db.query.statusTemplates.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!statusTemplate) throw Error("Status template not found");
+      organizationId = statusTemplate.organizationId;
+    }
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan56(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan57.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
+${String(oldPlan57)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper56(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper57 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $templateId = fieldArgs.getRaw(["input", "rowId"]),
+    $db = context().get("db");
+  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
+    if (!result) return;
+    const template = await db.query.statusTemplates.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, templateId);
+      },
+      columns: {
+        organizationId: !0
+      }
+    });
+    if (!template) return;
+    try {
+      await events.emit({
+        type: "backfeed.statusTemplate.deleted",
+        data: {
+          statusTemplateId: templateId,
+          organizationId: template.organizationId
+        },
+        organizationId: template.organizationId,
+        subject: templateId
+      });
+    } catch (error) {
+      console.error("[Events] Failed to emit statusTemplate.deleted:", error);
     }
   });
   return $result;
@@ -9472,6 +9484,9 @@ input StatusTemplateFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s \`showOnRoadmap\` field."""
+  showOnRoadmap: BooleanFilter
+
   """Filter by the object’s \`posts\` relation."""
   posts: StatusTemplateToManyPostFilter
 
@@ -10889,6 +10904,7 @@ type StatusTemplate {
   sortOrder: Int
   createdAt: Datetime!
   updatedAt: Datetime!
+  showOnRoadmap: Boolean
 
   """Reads and enables pagination through a set of \`Post\`."""
   posts(
@@ -14698,6 +14714,9 @@ type StatusTemplateDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
+
+  """Distinct count of showOnRoadmap across the matching connection"""
+  showOnRoadmap: BigInt
 }
 
 type StatusTemplateMinAggregates {
@@ -14751,6 +14770,7 @@ enum StatusTemplateGroupBy {
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
+  SHOW_ON_ROADMAP
 }
 
 """Conditions for \`StatusTemplate\` aggregates."""
@@ -14853,6 +14873,9 @@ input StatusTemplateCondition {
 
   """Checks for equality with the object’s \`updatedAt\` field."""
   updatedAt: Datetime
+
+  """Checks for equality with the object’s \`showOnRoadmap\` field."""
+  showOnRoadmap: Boolean
 }
 
 """Methods to use when ordering \`StatusTemplate\`."""
@@ -14878,6 +14901,8 @@ enum StatusTemplateOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  SHOW_ON_ROADMAP_ASC
+  SHOW_ON_ROADMAP_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
   POSTS_SUM_NUMBER_ASC
@@ -16145,6 +16170,51 @@ input ProjectLinkInput {
   updatedAt: Datetime
 }
 
+"""The output of our create \`Vote\` mutation."""
+type CreateVotePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vote\` that was created by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vote\`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering \`Vote\`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the create \`Vote\` mutation."""
+input CreateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Vote\` to be created by this mutation."""
+  vote: VoteInput!
+}
+
+"""An input for mutations affecting \`Vote\`"""
+input VoteInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  voteType: VoteType!
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create \`StatusTemplate\` mutation."""
 type CreateStatusTemplatePayload {
   """
@@ -16191,51 +16261,7 @@ input StatusTemplateInput {
   sortOrder: Int
   createdAt: Datetime
   updatedAt: Datetime
-}
-
-"""The output of our create \`Vote\` mutation."""
-type CreateVotePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Vote\` that was created by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Vote\`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering \`Vote\`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the create \`Vote\` mutation."""
-input CreateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Vote\` to be created by this mutation."""
-  vote: VoteInput!
-}
-
-"""An input for mutations affecting \`Vote\`"""
-input VoteInput {
-  rowId: UUID
-  postId: UUID!
-  userId: UUID!
-  voteType: VoteType!
-  createdAt: Datetime
-  updatedAt: Datetime
+  showOnRoadmap: Boolean
 }
 
 """The output of our create \`ProjectStatusConfig\` mutation."""
@@ -16831,6 +16857,54 @@ input ProjectLinkPatch {
   updatedAt: Datetime
 }
 
+"""The output of our update \`Vote\` mutation."""
+type UpdateVotePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vote\` that was updated by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vote\`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering \`Vote\`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the \`updateVote\` mutation."""
+input UpdateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Vote\` being updated.
+  """
+  patch: VotePatch!
+}
+
+"""Represents an update to a \`Vote\`. Fields that are set will be updated."""
+input VotePatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  voteType: VoteType
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our update \`StatusTemplate\` mutation."""
 type UpdateStatusTemplatePayload {
   """
@@ -16882,54 +16956,7 @@ input StatusTemplatePatch {
   sortOrder: Int
   createdAt: Datetime
   updatedAt: Datetime
-}
-
-"""The output of our update \`Vote\` mutation."""
-type UpdateVotePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Vote\` that was updated by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Vote\`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering \`Vote\`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the \`updateVote\` mutation."""
-input UpdateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Vote\` being updated.
-  """
-  patch: VotePatch!
-}
-
-"""Represents an update to a \`Vote\`. Fields that are set will be updated."""
-input VotePatch {
-  rowId: UUID
-  postId: UUID
-  userId: UUID
-  voteType: VoteType
-  createdAt: Datetime
-  updatedAt: Datetime
+  showOnRoadmap: Boolean
 }
 
 """The output of our update \`ProjectStatusConfig\` mutation."""
@@ -17453,39 +17480,6 @@ input DeleteProjectLinkInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`StatusTemplate\` mutation."""
-type DeleteStatusTemplatePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`StatusTemplate\` that was deleted by this mutation."""
-  statusTemplate: StatusTemplate
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`StatusTemplate\`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering \`StatusTemplate\`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
-}
-
-"""All input for the \`deleteStatusTemplate\` mutation."""
-input DeleteStatusTemplateInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`Vote\` mutation."""
 type DeleteVotePayload {
   """
@@ -17511,6 +17505,39 @@ type DeleteVotePayload {
 
 """All input for the \`deleteVote\` mutation."""
 input DeleteVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`StatusTemplate\` mutation."""
+type DeleteStatusTemplatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`StatusTemplate\` that was deleted by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`StatusTemplate\`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering \`StatusTemplate\`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the \`deleteStatusTemplate\` mutation."""
+input DeleteStatusTemplateInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -17787,17 +17814,17 @@ type Query implements Node {
   """Get a single \`ProjectLink\`."""
   projectLink(rowId: UUID!): ProjectLink
 
-  """Get a single \`StatusTemplate\`."""
-  statusTemplate(rowId: UUID!): StatusTemplate
-
-  """Get a single \`StatusTemplate\`."""
-  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
-
   """Get a single \`Vote\`."""
   vote(rowId: UUID!): Vote
 
   """Get a single \`Vote\`."""
   voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
+
+  """Get a single \`StatusTemplate\`."""
+  statusTemplate(rowId: UUID!): StatusTemplate
+
+  """Get a single \`StatusTemplate\`."""
+  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
 
   """Get a single \`ProjectStatusConfig\`."""
   projectStatusConfig(rowId: UUID!): ProjectStatusConfig
@@ -18070,40 +18097,6 @@ type Query implements Node {
     orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLinkConnection
 
-  """Reads and enables pagination through a set of \`StatusTemplate\`."""
-  statusTemplates(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: StatusTemplateCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: StatusTemplateFilter
-
-    """The method to use when ordering \`StatusTemplate\`."""
-    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
-  ): StatusTemplateConnection
-
   """Reads and enables pagination through a set of \`Vote\`."""
   votes(
     """Only read the first \`n\` values of the set."""
@@ -18137,6 +18130,40 @@ type Query implements Node {
     """The method to use when ordering \`Vote\`."""
     orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
   ): VoteConnection
+
+  """Reads and enables pagination through a set of \`StatusTemplate\`."""
+  statusTemplates(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: StatusTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StatusTemplateFilter
+
+    """The method to use when ordering \`StatusTemplate\`."""
+    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): StatusTemplateConnection
 
   """Reads and enables pagination through a set of \`ProjectStatusConfig\`."""
   projectStatusConfigs(
@@ -18440,14 +18467,6 @@ type Mutation {
     input: CreateProjectLinkInput!
   ): CreateProjectLinkPayload
 
-  """Creates a single \`StatusTemplate\`."""
-  createStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateStatusTemplateInput!
-  ): CreateStatusTemplatePayload
-
   """Creates a single \`Vote\`."""
   createVote(
     """
@@ -18455,6 +18474,14 @@ type Mutation {
     """
     input: CreateVoteInput!
   ): CreateVotePayload
+
+  """Creates a single \`StatusTemplate\`."""
+  createStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateStatusTemplateInput!
+  ): CreateStatusTemplatePayload
 
   """Creates a single \`ProjectStatusConfig\`."""
   createProjectStatusConfig(
@@ -18552,14 +18579,6 @@ type Mutation {
     input: UpdateProjectLinkInput!
   ): UpdateProjectLinkPayload
 
-  """Updates a single \`StatusTemplate\` using a unique key and a patch."""
-  updateStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateStatusTemplateInput!
-  ): UpdateStatusTemplatePayload
-
   """Updates a single \`Vote\` using a unique key and a patch."""
   updateVote(
     """
@@ -18567,6 +18586,14 @@ type Mutation {
     """
     input: UpdateVoteInput!
   ): UpdateVotePayload
+
+  """Updates a single \`StatusTemplate\` using a unique key and a patch."""
+  updateStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateStatusTemplateInput!
+  ): UpdateStatusTemplatePayload
 
   """Updates a single \`ProjectStatusConfig\` using a unique key and a patch."""
   updateProjectStatusConfig(
@@ -18664,14 +18691,6 @@ type Mutation {
     input: DeleteProjectLinkInput!
   ): DeleteProjectLinkPayload
 
-  """Deletes a single \`StatusTemplate\` using a unique key."""
-  deleteStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteStatusTemplateInput!
-  ): DeleteStatusTemplatePayload
-
   """Deletes a single \`Vote\` using a unique key."""
   deleteVote(
     """
@@ -18679,6 +18698,14 @@ type Mutation {
     """
     input: DeleteVoteInput!
   ): DeleteVotePayload
+
+  """Deletes a single \`StatusTemplate\` using a unique key."""
+  deleteStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteStatusTemplateInput!
+  ): DeleteStatusTemplatePayload
 
   """Deletes a single \`ProjectStatusConfig\` using a unique key."""
   deleteProjectStatusConfig(
@@ -19484,17 +19511,17 @@ ${String(oldPlan2)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan9.apply(this, args);
+                $prev = oldPlan10.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createStatusTemplate, but that function did not return a step!
-${String(oldPlan9)}`);
+${String(oldPlan10)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19553,17 +19580,17 @@ ${String(oldPlan6)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan11.apply(this, args);
+                $prev = oldPlan9.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createVote, but that function did not return a step!
-${String(oldPlan11)}`);
+${String(oldPlan9)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19786,17 +19813,17 @@ ${String(oldPlan47)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan54.apply(this, args);
+                $prev = oldPlan56.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
-${String(oldPlan54)}`);
+${String(oldPlan56)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19855,17 +19882,17 @@ ${String(oldPlan51)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan56.apply(this, args);
+                $prev = oldPlan54.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteVote, but that function did not return a step!
-${String(oldPlan56)}`);
+${String(oldPlan54)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20135,17 +20162,17 @@ ${String(oldPlan24)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan31.apply(this, args);
+                $prev = oldPlan33.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateStatusTemplate, but that function did not return a step!
-${String(oldPlan31)}`);
+${String(oldPlan33)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20204,17 +20231,17 @@ ${String(oldPlan28)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan33.apply(this, args);
+                $prev = oldPlan31.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateVote, but that function did not return a step!
-${String(oldPlan33)}`);
+${String(oldPlan31)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22016,6 +22043,9 @@ ${String(oldPlan33)}`);
         }
       },
       rowId: PostTag_rowIdPlan,
+      showOnRoadmap($record) {
+        return $record.get("show_on_roadmap");
+      },
       sortOrder: ProjectStatusConfig_sortOrderPlan,
       updatedAt: Post_updatedAtPlan
     },
@@ -22070,6 +22100,9 @@ ${String(oldPlan33)}`);
       name: TagDistinctCountAggregates_namePlan,
       organizationId: StatusTemplateDistinctCountAggregates_organizationIdPlan,
       rowId: PostDistinctCountAggregates_rowIdPlan,
+      showOnRoadmap($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "show_on_roadmap", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
       sortOrder: ProjectStatusConfigDistinctCountAggregates_sortOrderPlan,
       updatedAt: PostDistinctCountAggregates_updatedAtPlan
     }
@@ -26410,6 +26443,9 @@ export const inputObjects = {
       name: TagCondition_nameApply,
       organizationId: StatusTemplateCondition_organizationIdApply,
       rowId: PostCondition_rowIdApply,
+      showOnRoadmap($condition, val) {
+        return applyAttributeCondition("show_on_roadmap", TYPES.boolean, $condition, val);
+      },
       sortOrder: ProjectStatusConfigCondition_sortOrderApply,
       updatedAt: PostCondition_updatedAtApply
     }
@@ -26511,6 +26547,9 @@ export const inputObjects = {
       },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_statusTemplate.attributes.id, queryBuilder, value);
+      },
+      showOnRoadmap(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("showOnRoadmap", "show_on_roadmap", spec_statusTemplate.attributes.show_on_roadmap, queryBuilder, value);
       },
       sortOrder(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("sortOrder", "sort_order", spec_statusTemplate.attributes.sort_order, queryBuilder, value);
@@ -26662,6 +26701,7 @@ export const inputObjects = {
       name: TagInput_nameApply,
       organizationId: StatusTemplateInput_organizationIdApply,
       rowId: PostTagInput_rowIdApply,
+      showOnRoadmap: StatusTemplateInput_showOnRoadmapApply,
       sortOrder: StatusTemplateInput_sortOrderApply,
       updatedAt: TagInput_updatedAtApply
     }
@@ -26676,6 +26716,7 @@ export const inputObjects = {
       name: TagInput_nameApply,
       organizationId: StatusTemplateInput_organizationIdApply,
       rowId: PostTagInput_rowIdApply,
+      showOnRoadmap: StatusTemplateInput_showOnRoadmapApply,
       sortOrder: StatusTemplateInput_sortOrderApply,
       updatedAt: TagInput_updatedAtApply
     }
@@ -30661,6 +30702,9 @@ export const enums = {
       },
       NAME: TagGroupBy_NAMEApply,
       ORGANIZATION_ID: StatusTemplateGroupBy_ORGANIZATION_IDApply,
+      SHOW_ON_ROADMAP($pgSelect) {
+        applyGroupByAttribute("show_on_roadmap", TYPES.boolean, $pgSelect);
+      },
       SORT_ORDER: ProjectStatusConfigGroupBy_SORT_ORDERApply,
       UPDATED_AT: PostGroupBy_UPDATED_ATApply,
       UPDATED_AT_TRUNCATED_TO_DAY: PostGroupBy_UPDATED_AT_TRUNCATED_TO_DAYApply,
@@ -31017,6 +31061,18 @@ export const enums = {
       },
       ROW_ID_ASC: PostOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply,
+      SHOW_ON_ROADMAP_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "show_on_roadmap",
+          direction: "ASC"
+        });
+      },
+      SHOW_ON_ROADMAP_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "show_on_roadmap",
+          direction: "DESC"
+        });
+      },
       SORT_ORDER_ASC: ProjectStatusConfigOrderBy_SORT_ORDER_ASCApply,
       SORT_ORDER_DESC: ProjectStatusConfigOrderBy_SORT_ORDER_DESCApply,
       UPDATED_AT_ASC: PostOrderBy_UPDATED_AT_ASCApply,

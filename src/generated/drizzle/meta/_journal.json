@@ -155,6 +155,13 @@
       "when": 1781749808017,
       "tag": "0021_glossy_dragon_man",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1781806012461,
+      "tag": "0022_special_shockwave",
+      "breakpoints": true
     }
   ]
 }
