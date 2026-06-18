@@ -21,6 +21,7 @@ import {
 import preset from "lib/config/graphile.config";
 import { signals, statusTemplates } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
+import { changePostStatus, getPostRef } from "lib/feedback/changeStatus";
 import { findSimilarPosts } from "lib/feedback/dedupe";
 import { embeddingProvider } from "lib/feedback/embedding";
 import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
@@ -166,6 +167,7 @@ const generateGraphqlSchema = async () => {
         writeTuples,
       },
       "lib/db/schema": { signals, statusTemplates },
+      "lib/feedback/changeStatus": { changePostStatus, getPostRef },
       "lib/feedback/dedupe": { findSimilarPosts },
       "lib/feedback/embedding": { embeddingProvider },
       "lib/feedback/promote": { ingestSignal, promoteSignalToPost },

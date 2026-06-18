@@ -2737,6 +2737,9 @@ input PostStatusChangeFilter {
   """Filter by the object’s `createdAt` field."""
   createdAt: DatetimeFilter
 
+  """Filter by the object’s `note` field."""
+  note: StringFilter
+
   """Filter by the object’s `changedBy` relation."""
   changedBy: UserFilter
 
@@ -2781,6 +2784,7 @@ input PostStatusChangeDistinctCountAggregateFilter {
   toStatusTemplateId: BigIntFilter
   changedById: BigIntFilter
   createdAt: BigIntFilter
+  note: BigIntFilter
 }
 
 """
@@ -3874,6 +3878,8 @@ enum PostOrderBy {
   POST_STATUS_CHANGES_DISTINCT_COUNT_CHANGED_BY_ID_DESC
   POST_STATUS_CHANGES_DISTINCT_COUNT_CREATED_AT_ASC
   POST_STATUS_CHANGES_DISTINCT_COUNT_CREATED_AT_DESC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_NOTE_ASC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_NOTE_DESC
 }
 
 """A connection to a list of `ProjectStatusConfig` values."""
@@ -4151,6 +4157,7 @@ type PostStatusChange {
   toStatusTemplateId: UUID
   changedById: UUID
   createdAt: Datetime!
+  note: String
 
   """Reads a single `User` that is related to this `PostStatusChange`."""
   changedBy: User
@@ -5822,6 +5829,9 @@ input PostStatusChangeCondition {
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
+
+  """Checks for equality with the object’s `note` field."""
+  note: String
 }
 
 """Methods to use when ordering `PostStatusChange`."""
@@ -5839,6 +5849,8 @@ enum PostStatusChangeOrderBy {
   CHANGED_BY_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+  NOTE_ASC
+  NOTE_DESC
 }
 
 """A `PostStatusChange` edge in the connection."""
@@ -5874,6 +5886,9 @@ type PostStatusChangeDistinctCountAggregates {
 
   """Distinct count of createdAt across the matching connection"""
   createdAt: BigInt
+
+  """Distinct count of note across the matching connection"""
+  note: BigInt
 }
 
 """Grouping methods for `PostStatusChange` for usage during aggregation."""
@@ -5884,6 +5899,7 @@ enum PostStatusChangeGroupBy {
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
+  NOTE
 }
 
 """Conditions for `PostStatusChange` aggregates."""
@@ -7630,6 +7646,8 @@ enum UserOrderBy {
   POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CHANGED_BY_ID_DESC
   POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CREATED_AT_ASC
   POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_NOTE_ASC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_NOTE_DESC
 }
 
 """A connection to a list of `StatusTemplate` values."""
@@ -8042,6 +8060,8 @@ enum StatusTemplateOrderBy {
   POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_DESC
   POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_ASC
   POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_DESC
 }
 
 """A connection to a list of `WardenSyncQueue` values."""
@@ -10794,6 +10814,43 @@ type Observer {
   username: String
 }
 
+input IngestSignalInput {
+  organizationId: UUID!
+  source: String!
+  rawContent: String!
+  projectId: UUID
+  sourceMetadata: JSON
+}
+
+type IngestSignalPayload {
+  id: UUID!
+  source: String!
+  type: String
+  status: String!
+  sentiment: String
+  projectId: UUID
+}
+
+input PromoteSignalToPostInput {
+  signalId: UUID!
+  title: String
+}
+
+type PromoteSignalToPostPayload {
+  id: UUID!
+  title: String
+  description: String
+  source: String
+  projectId: UUID!
+}
+
+type SimilarPost {
+  id: UUID!
+  number: Int
+  title: String
+  score: Float!
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -11807,41 +11864,26 @@ type Mutation {
     """
     input: PromoteSignalToPostInput!
   ): PromoteSignalToPostPayload
+
+  """
+  Move a post to a status (or clear it) with an optional note, recorded on
+  the status timeline. Admin-only.
+  """
+  changePostStatus(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: ChangePostStatusInput!
+  ): ChangePostStatusPayload
 }
 
-input IngestSignalInput {
-  organizationId: UUID!
-  source: String!
-  rawContent: String!
-  projectId: UUID
-  sourceMetadata: JSON
+input ChangePostStatusInput {
+  postId: UUID!
+  statusTemplateId: UUID
+  note: String
 }
 
-type IngestSignalPayload {
+type ChangePostStatusPayload {
   id: UUID!
-  source: String!
-  type: String
-  status: String!
-  sentiment: String
-  projectId: UUID
-}
-
-input PromoteSignalToPostInput {
-  signalId: UUID!
-  title: String
-}
-
-type PromoteSignalToPostPayload {
-  id: UUID!
-  title: String
-  description: String
-  source: String
-  projectId: UUID!
-}
-
-type SimilarPost {
-  id: UUID!
-  number: Int
-  title: String
-  score: Float!
+  statusTemplateId: UUID
 }

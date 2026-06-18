@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { index, pgTable, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { posts } from "./post.table";
@@ -31,6 +31,9 @@ export const postStatusChanges = pgTable(
     changedById: uuid().references(() => users.id, {
       onDelete: "set null",
     }),
+    // optional admin note explaining the change, shown alongside it in the
+    // timeline (e.g. "shipping next release", "merged into #42")
+    note: text(),
     createdAt: generateDefaultDate(),
   },
   (table) => [index().on(table.postId)],

@@ -6,6 +6,7 @@ import { GraphQLError, Kind } from "graphql";
 import { checkPermission, deleteTuples, isAuthzEnabled, writeTuples } from "lib/authz";
 import { signals, statusTemplates } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
+import { changePostStatus, getPostRef } from "lib/feedback/changeStatus";
 import { findSimilarPosts } from "lib/feedback/dedupe";
 import { embeddingProvider } from "lib/feedback/embedding";
 import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
@@ -179,6 +180,15 @@ const spec_postStatusChange = {
       codec: TYPES.timestamptz,
       notNull: true,
       hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    note: {
+      codec: TYPES.text,
       extensions: {
         __proto__: null,
         canSelect: true,
@@ -2249,8 +2259,8 @@ const registryConfig = {
     uuid: TYPES.uuid,
     timestamptz: TYPES.timestamptz,
     postStatusChange: postStatusChangeCodec,
-    reaction: reactionCodec,
     text: TYPES.text,
+    reaction: reactionCodec,
     tag: tagCodec,
     comment: commentCodec,
     user: userCodec,
@@ -9696,6 +9706,9 @@ input PostStatusChangeFilter {
   """Filter by the object’s \`createdAt\` field."""
   createdAt: DatetimeFilter
 
+  """Filter by the object’s \`note\` field."""
+  note: StringFilter
+
   """Filter by the object’s \`changedBy\` relation."""
   changedBy: UserFilter
 
@@ -9740,6 +9753,7 @@ input PostStatusChangeDistinctCountAggregateFilter {
   toStatusTemplateId: BigIntFilter
   changedById: BigIntFilter
   createdAt: BigIntFilter
+  note: BigIntFilter
 }
 
 """
@@ -10833,6 +10847,8 @@ enum PostOrderBy {
   POST_STATUS_CHANGES_DISTINCT_COUNT_CHANGED_BY_ID_DESC
   POST_STATUS_CHANGES_DISTINCT_COUNT_CREATED_AT_ASC
   POST_STATUS_CHANGES_DISTINCT_COUNT_CREATED_AT_DESC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_NOTE_ASC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_NOTE_DESC
 }
 
 """A connection to a list of \`ProjectStatusConfig\` values."""
@@ -11110,6 +11126,7 @@ type PostStatusChange {
   toStatusTemplateId: UUID
   changedById: UUID
   createdAt: Datetime!
+  note: String
 
   """Reads a single \`User\` that is related to this \`PostStatusChange\`."""
   changedBy: User
@@ -12781,6 +12798,9 @@ input PostStatusChangeCondition {
 
   """Checks for equality with the object’s \`createdAt\` field."""
   createdAt: Datetime
+
+  """Checks for equality with the object’s \`note\` field."""
+  note: String
 }
 
 """Methods to use when ordering \`PostStatusChange\`."""
@@ -12798,6 +12818,8 @@ enum PostStatusChangeOrderBy {
   CHANGED_BY_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+  NOTE_ASC
+  NOTE_DESC
 }
 
 """A \`PostStatusChange\` edge in the connection."""
@@ -12833,6 +12855,9 @@ type PostStatusChangeDistinctCountAggregates {
 
   """Distinct count of createdAt across the matching connection"""
   createdAt: BigInt
+
+  """Distinct count of note across the matching connection"""
+  note: BigInt
 }
 
 """Grouping methods for \`PostStatusChange\` for usage during aggregation."""
@@ -12843,6 +12868,7 @@ enum PostStatusChangeGroupBy {
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
+  NOTE
 }
 
 """Conditions for \`PostStatusChange\` aggregates."""
@@ -14589,6 +14615,8 @@ enum UserOrderBy {
   POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CHANGED_BY_ID_DESC
   POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CREATED_AT_ASC
   POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_NOTE_ASC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_NOTE_DESC
 }
 
 """A connection to a list of \`StatusTemplate\` values."""
@@ -15001,6 +15029,8 @@ enum StatusTemplateOrderBy {
   POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_DESC
   POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_ASC
   POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_DESC
 }
 
 """A connection to a list of \`WardenSyncQueue\` values."""
@@ -17753,6 +17783,43 @@ type Observer {
   username: String
 }
 
+input IngestSignalInput {
+  organizationId: UUID!
+  source: String!
+  rawContent: String!
+  projectId: UUID
+  sourceMetadata: JSON
+}
+
+type IngestSignalPayload {
+  id: UUID!
+  source: String!
+  type: String
+  status: String!
+  sentiment: String
+  projectId: UUID
+}
+
+input PromoteSignalToPostInput {
+  signalId: UUID!
+  title: String
+}
+
+type PromoteSignalToPostPayload {
+  id: UUID!
+  title: String
+  description: String
+  source: String
+  projectId: UUID!
+}
+
+type SimilarPost {
+  id: UUID!
+  number: Int
+  title: String
+  score: Float!
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -18766,43 +18833,28 @@ type Mutation {
     """
     input: PromoteSignalToPostInput!
   ): PromoteSignalToPostPayload
+
+  """
+  Move a post to a status (or clear it) with an optional note, recorded on
+  the status timeline. Admin-only.
+  """
+  changePostStatus(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: ChangePostStatusInput!
+  ): ChangePostStatusPayload
 }
 
-input IngestSignalInput {
-  organizationId: UUID!
-  source: String!
-  rawContent: String!
-  projectId: UUID
-  sourceMetadata: JSON
+input ChangePostStatusInput {
+  postId: UUID!
+  statusTemplateId: UUID
+  note: String
 }
 
-type IngestSignalPayload {
+type ChangePostStatusPayload {
   id: UUID!
-  source: String!
-  type: String
-  status: String!
-  sentiment: String
-  projectId: UUID
-}
-
-input PromoteSignalToPostInput {
-  signalId: UUID!
-  title: String
-}
-
-type PromoteSignalToPostPayload {
-  id: UUID!
-  title: String
-  description: String
-  source: String
-  projectId: UUID!
-}
-
-type SimilarPost {
-  id: UUID!
-  number: Int
-  title: String
-  score: Float!
+  statusTemplateId: UUID
 }`;
 export const objects = {
   Query: {
@@ -19311,6 +19363,45 @@ export const objects = {
   Mutation: {
     assertStep: __ValueStep,
     plans: {
+      changePostStatus(_$root, fieldArgs) {
+        const $input = fieldArgs.get("input"),
+          $observer = context().get("observer"),
+          $db = context().get("db");
+        return lambda([$input, $observer, $db], async values => {
+          const [input, observer, db] = values;
+          if (!observer) throw new GraphQLError("Unauthorized");
+          const postRef = await getPostRef(db, input.postId);
+          if (!postRef) throw new GraphQLError("Post not found");
+          if (!(await checkPermission(observer.identityProviderId, "organization", postRef.organizationId, "admin"))) throw new GraphQLError("Insufficient permissions");
+          await changePostStatus(db, {
+            postId: input.postId,
+            statusTemplateId: input.statusTemplateId ?? null,
+            userId: observer.id,
+            note: input.note
+          });
+          try {
+            const shipped = await markPostShipped(db, input.postId);
+            if (shipped) await events.emit({
+              type: "backfeed.post.shipped",
+              data: {
+                postId: shipped.postId,
+                projectId: shipped.projectId,
+                organizationId: shipped.organizationId,
+                title: shipped.title,
+                reporterUserIds: shipped.reporterUserIds
+              },
+              organizationId: shipped.organizationId,
+              subject: shipped.postId
+            });
+          } catch (error) {
+            console.error("[ChangePostStatus] Failed to emit post.shipped:", error);
+          }
+          return {
+            id: input.postId,
+            statusTemplateId: input.statusTemplateId ?? null
+          };
+        }, !1);
+      },
       createAttachment: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
@@ -21115,6 +21206,9 @@ ${String(oldPlan31)}`);
         return pgAggregatesPlanAggregateAttribute(TYPES.uuid, "changed_by_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
       createdAt: PostDistinctCountAggregates_createdAtPlan,
+      note($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "note", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
       postId: ReactionDistinctCountAggregates_postIdPlan,
       rowId: PostDistinctCountAggregates_rowIdPlan,
       toStatusTemplateId($pgSelectSingle) {
@@ -24290,6 +24384,9 @@ export const inputObjects = {
         return applyAttributeCondition("changed_by_id", TYPES.uuid, $condition, val);
       },
       createdAt: PostCondition_createdAtApply,
+      note($condition, val) {
+        return applyAttributeCondition("note", TYPES.text, $condition, val);
+      },
       postId: CommentCondition_postIdApply,
       rowId: PostCondition_rowIdApply,
       toStatusTemplateId($condition, val) {
@@ -24303,6 +24400,9 @@ export const inputObjects = {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "changed_by_id", TYPES.bigint, TYPES.uuid, $parent, input);
       },
       createdAt: CommentDistinctCountAggregateFilter_createdAtApply,
+      note($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "note", TYPES.bigint, TYPES.text, $parent, input);
+      },
       postId: CommentDistinctCountAggregateFilter_postIdApply,
       rowId: CommentDistinctCountAggregateFilter_rowIdApply,
       toStatusTemplateId($parent, input) {
@@ -24326,6 +24426,9 @@ export const inputObjects = {
         return pgConnectionFilterApplyAttribute("createdAt", "created_at", spec_postStatusChange.attributes.created_at, queryBuilder, value);
       },
       not: PostFilter_notApply,
+      note(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("note", "note", spec_postStatusChange.attributes.note, queryBuilder, value);
+      },
       or: PostFilter_orApply,
       post($where, value) {
         return pgConnectionFilterApplySingleRelation(otherSource_postPgResource, postIdentifier, registryConfig.pgRelations.postStatusChange.postByMyPostId.localAttributes, registryConfig.pgRelations.postStatusChange.postByMyPostId.remoteAttributes, $where, value);
@@ -28732,6 +28835,12 @@ export const enums = {
       POST_STATUS_CHANGES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.created_at, "created_at", "DESC", relation8, otherSource_post_status_changePgResource, $select);
       },
+      POST_STATUS_CHANGES_DISTINCT_COUNT_NOTE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.note, "note", "ASC", relation8, otherSource_post_status_changePgResource, $select);
+      },
+      POST_STATUS_CHANGES_DISTINCT_COUNT_NOTE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.note, "note", "DESC", relation8, otherSource_post_status_changePgResource, $select);
+      },
       POST_STATUS_CHANGES_DISTINCT_COUNT_POST_ID_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.post_id, "post_id", "ASC", relation8, otherSource_post_status_changePgResource, $select);
       },
@@ -29178,6 +29287,9 @@ export const enums = {
       CREATED_AT: PostGroupBy_CREATED_ATApply,
       CREATED_AT_TRUNCATED_TO_DAY: PostGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
       CREATED_AT_TRUNCATED_TO_HOUR: PostGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
+      NOTE($pgSelect) {
+        applyGroupByAttribute("note", TYPES.text, $pgSelect);
+      },
       POST_ID: ReactionGroupBy_POST_IDApply,
       TO_STATUS_TEMPLATE_ID($pgSelect) {
         applyGroupByAttribute("to_status_template_id", TYPES.uuid, $pgSelect);
@@ -29200,6 +29312,18 @@ export const enums = {
       },
       CREATED_AT_ASC: PostOrderBy_CREATED_AT_ASCApply,
       CREATED_AT_DESC: PostOrderBy_CREATED_AT_DESCApply,
+      NOTE_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "note",
+          direction: "ASC"
+        });
+      },
+      NOTE_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "note",
+          direction: "DESC"
+        });
+      },
       POST_ID_ASC: CommentOrderBy_POST_ID_ASCApply,
       POST_ID_DESC: CommentOrderBy_POST_ID_DESCApply,
       PRIMARY_KEY_ASC(queryBuilder) {
@@ -30765,6 +30889,12 @@ export const enums = {
       POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.created_at, "created_at", "DESC", relation23, otherSource_post_status_changePgResource, $select);
       },
+      POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.note, "note", "ASC", relation23, otherSource_post_status_changePgResource, $select);
+      },
+      POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.note, "note", "DESC", relation23, otherSource_post_status_changePgResource, $select);
+      },
       POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.post_id, "post_id", "ASC", relation23, otherSource_post_status_changePgResource, $select);
       },
@@ -31497,6 +31627,12 @@ export const enums = {
       },
       POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CREATED_AT_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.created_at, "created_at", "DESC", relation20, otherSource_post_status_changePgResource, $select);
+      },
+      POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_NOTE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.note, "note", "ASC", relation20, otherSource_post_status_changePgResource, $select);
+      },
+      POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_NOTE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.note, "note", "DESC", relation20, otherSource_post_status_changePgResource, $select);
       },
       POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_POST_ID_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_postStatusChange.attributes.post_id, "post_id", "ASC", relation20, otherSource_post_status_changePgResource, $select);

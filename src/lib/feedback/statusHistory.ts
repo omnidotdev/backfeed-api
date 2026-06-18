@@ -22,6 +22,7 @@ export const recordPostStatusChange = async (
   db: Db,
   postId: string,
   changedById: string | null,
+  note?: string | null,
 ): Promise<boolean> => {
   const post = await db.query.posts.findFirst({
     where: eq(posts.id, postId),
@@ -41,6 +42,7 @@ export const recordPostStatusChange = async (
     postId,
     toStatusTemplateId,
     changedById,
+    note: note?.trim() || null,
   });
 
   return true;

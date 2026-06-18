@@ -24,6 +24,7 @@ import {
   PostStatusHistoryPlugin,
 } from "lib/graphql/plugins/events";
 import {
+  ChangePostStatusPlugin,
   PostSignalProvenancePlugin,
   SignalIngestionPlugin,
 } from "lib/graphql/plugins/feedback";
@@ -86,6 +87,8 @@ const preset: GraphileConfig.Preset = {
     PostSignalProvenancePlugin,
     // Signal ingestion + promotion mutations (the senses -> board bridge)
     SignalIngestionPlugin,
+    // Status change with an optional note (note-carrying updatePost)
+    ChangePostStatusPlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     PostSearchPlugin,

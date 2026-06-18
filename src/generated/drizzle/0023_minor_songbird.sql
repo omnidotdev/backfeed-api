@@ -1,0 +1,1 @@
+ALTER TABLE "post_status_change" ADD COLUMN "note" text;
