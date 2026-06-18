@@ -1,6 +1,7 @@
 export * from "./attachment.table";
 export * from "./comment.table";
 export * from "./post.table";
+export * from "./postStatusChange.table";
 export * from "./postTag.table";
 export * from "./project.table";
 export * from "./projectLink.table";

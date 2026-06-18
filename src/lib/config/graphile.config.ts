@@ -21,6 +21,7 @@ import { DefaultStatusTemplatesPlugin } from "lib/graphql/plugins/defaults";
 import {
   EventEmissionPlugin,
   PostShippedPlugin,
+  PostStatusHistoryPlugin,
 } from "lib/graphql/plugins/events";
 import {
   PostSignalProvenancePlugin,
@@ -77,6 +78,8 @@ const preset: GraphileConfig.Preset = {
     EventEmissionPlugin,
     // Close-the-loop: emit backfeed.post.shipped when a post first ships
     PostShippedPlugin,
+    // Record post status transitions into the status timeline
+    PostStatusHistoryPlugin,
     // Default resource seeding plugins
     DefaultStatusTemplatesPlugin,
     // Signal provenance plugin (records a signal per created post)

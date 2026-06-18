@@ -27,6 +27,13 @@ const SmartTagPlugin = jsonPgSmartTags({
         // surface is unaffected.
         tags: { behavior: "-insert -update -delete" },
       },
+      post_status_change: {
+        // The status timeline is append-only and written server-side by the
+        // PostStatusHistory plugin on `updatePost`. Disable the raw auto-CRUD
+        // mutations so clients cannot forge or tamper with history; the
+        // read/query surface (the timeline) is unaffected.
+        tags: { behavior: "-insert -update -delete" },
+      },
       project: {
         attribute: {
           // The inbound email key is server-generated (DB default) and unique;

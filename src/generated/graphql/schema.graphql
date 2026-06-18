@@ -303,6 +303,40 @@ type Post {
     """The method to use when ordering `Reaction`."""
     orderBy: [ReactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): ReactionConnection!
+
+  """Reads and enables pagination through a set of `PostStatusChange`."""
+  postStatusChanges(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostStatusChangeCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostStatusChangeFilter
+
+    """The method to use when ordering `PostStatusChange`."""
+    orderBy: [PostStatusChangeOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostStatusChangeConnection!
 }
 
 """
@@ -1094,6 +1128,12 @@ input PostFilter {
   """Some related `reactions` exist."""
   reactionsExist: Boolean
 
+  """Filter by the object’s `postStatusChanges` relation."""
+  postStatusChanges: PostToManyPostStatusChangeFilter
+
+  """Some related `postStatusChanges` exist."""
+  postStatusChangesExist: Boolean
+
   """Filter by the object’s `cluster` relation."""
   cluster: SignalClusterFilter
 
@@ -1687,6 +1727,12 @@ input UserFilter {
 
   """Some related `reactions` exist."""
   reactionsExist: Boolean
+
+  """Filter by the object’s `postStatusChangesByChangedById` relation."""
+  postStatusChangesByChangedById: UserToManyPostStatusChangeFilter
+
+  """Some related `postStatusChangesByChangedById` exist."""
+  postStatusChangesByChangedByIdExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [UserFilter!]
@@ -2491,6 +2537,14 @@ input StatusTemplateFilter {
   """Some related `projectStatusConfigs` exist."""
   projectStatusConfigsExist: Boolean
 
+  """
+  Filter by the object’s `postStatusChangesByToStatusTemplateId` relation.
+  """
+  postStatusChangesByToStatusTemplateId: StatusTemplateToManyPostStatusChangeFilter
+
+  """Some related `postStatusChangesByToStatusTemplateId` exist."""
+  postStatusChangesByToStatusTemplateIdExist: Boolean
+
   """Checks for all expressions in this list."""
   and: [StatusTemplateFilter!]
 
@@ -2634,6 +2688,96 @@ input ProjectStatusConfigVarianceSampleAggregateFilter {
 
 input ProjectStatusConfigVariancePopulationAggregateFilter {
   sortOrder: BigFloatFilter
+}
+
+"""
+A filter to be used against many `PostStatusChange` object types. All fields are combined with a logical ‘and.’
+"""
+input StatusTemplateToManyPostStatusChangeFilter {
+  """
+  Every related `PostStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PostStatusChangeFilter
+
+  """
+  Some related `PostStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PostStatusChangeFilter
+
+  """
+  No related `PostStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PostStatusChangeFilter
+
+  """
+  Aggregates across related `PostStatusChange` match the filter criteria.
+  """
+  aggregates: PostStatusChangeAggregatesFilter
+}
+
+"""
+A filter to be used against `PostStatusChange` object types. All fields are combined with a logical ‘and.’
+"""
+input PostStatusChangeFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `postId` field."""
+  postId: UUIDFilter
+
+  """Filter by the object’s `toStatusTemplateId` field."""
+  toStatusTemplateId: UUIDFilter
+
+  """Filter by the object’s `changedById` field."""
+  changedById: UUIDFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `changedBy` relation."""
+  changedBy: UserFilter
+
+  """A related `changedBy` exists."""
+  changedByExists: Boolean
+
+  """Filter by the object’s `post` relation."""
+  post: PostFilter
+
+  """Filter by the object’s `toStatusTemplate` relation."""
+  toStatusTemplate: StatusTemplateFilter
+
+  """A related `toStatusTemplate` exists."""
+  toStatusTemplateExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [PostStatusChangeFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PostStatusChangeFilter!]
+
+  """Negates the expression."""
+  not: PostStatusChangeFilter
+}
+
+"""
+A filter to be used against aggregates of `PostStatusChange` object types.
+"""
+input PostStatusChangeAggregatesFilter {
+  """
+  A filter that must pass for the relevant `PostStatusChange` object to be included within the aggregate.
+  """
+  filter: PostStatusChangeFilter
+
+  """Distinct count aggregate over matching `PostStatusChange` objects."""
+  distinctCount: PostStatusChangeDistinctCountAggregateFilter
+}
+
+input PostStatusChangeDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  postId: BigIntFilter
+  toStatusTemplateId: BigIntFilter
+  changedById: BigIntFilter
+  createdAt: BigIntFilter
 }
 
 """
@@ -3285,6 +3429,31 @@ input ReactionDistinctCountAggregateFilter {
 }
 
 """
+A filter to be used against many `PostStatusChange` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyPostStatusChangeFilter {
+  """
+  Every related `PostStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PostStatusChangeFilter
+
+  """
+  Some related `PostStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PostStatusChangeFilter
+
+  """
+  No related `PostStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PostStatusChangeFilter
+
+  """
+  Aggregates across related `PostStatusChange` match the filter criteria.
+  """
+  aggregates: PostStatusChangeAggregatesFilter
+}
+
+"""
 A filter to be used against many `Post` object types. All fields are combined with a logical ‘and.’
 """
 input PostToManyPostFilter {
@@ -3420,6 +3589,31 @@ input PostToManyReactionFilter {
 
   """Aggregates across related `Reaction` match the filter criteria."""
   aggregates: ReactionAggregatesFilter
+}
+
+"""
+A filter to be used against many `PostStatusChange` object types. All fields are combined with a logical ‘and.’
+"""
+input PostToManyPostStatusChangeFilter {
+  """
+  Every related `PostStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PostStatusChangeFilter
+
+  """
+  Some related `PostStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PostStatusChangeFilter
+
+  """
+  No related `PostStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PostStatusChangeFilter
+
+  """
+  Aggregates across related `PostStatusChange` match the filter criteria.
+  """
+  aggregates: PostStatusChangeAggregatesFilter
 }
 
 """Methods to use when ordering `Post`."""
@@ -3665,6 +3859,18 @@ enum PostOrderBy {
   REACTIONS_DISTINCT_COUNT_CREATED_AT_DESC
   REACTIONS_DISTINCT_COUNT_COMMENT_ID_ASC
   REACTIONS_DISTINCT_COUNT_COMMENT_ID_DESC
+  POST_STATUS_CHANGES_COUNT_ASC
+  POST_STATUS_CHANGES_COUNT_DESC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_ROW_ID_ASC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_ROW_ID_DESC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_POST_ID_ASC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_POST_ID_DESC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_ASC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_DESC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_CHANGED_BY_ID_ASC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_CHANGED_BY_ID_DESC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_CREATED_AT_ASC
+  POST_STATUS_CHANGES_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of `ProjectStatusConfig` values."""
@@ -3804,6 +4010,40 @@ type StatusTemplate {
     """The method to use when ordering `ProjectStatusConfig`."""
     orderBy: [ProjectStatusConfigOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectStatusConfigConnection!
+
+  """Reads and enables pagination through a set of `PostStatusChange`."""
+  postStatusChangesByToStatusTemplateId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostStatusChangeCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostStatusChangeFilter
+
+    """The method to use when ordering `PostStatusChange`."""
+    orderBy: [PostStatusChangeOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostStatusChangeConnection!
 }
 
 """
@@ -3864,570 +4104,60 @@ enum ProjectStatusConfigOrderBy {
   CREATED_AT_DESC
 }
 
-"""A `ProjectStatusConfig` edge in the connection."""
-type ProjectStatusConfigEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `ProjectStatusConfig` at the end of the edge."""
-  node: ProjectStatusConfig
-}
-
-type ProjectStatusConfigAggregates {
-  keys: [String]
+"""A connection to a list of `PostStatusChange` values."""
+type PostStatusChangeConnection {
+  """A list of `PostStatusChange` objects."""
+  nodes: [PostStatusChange]!
 
   """
-  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  A list of edges which contains the `PostStatusChange` and cursor to aid in pagination.
   """
-  sum: ProjectStatusConfigSumAggregates
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: ProjectStatusConfigDistinctCountAggregates
-
-  """
-  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  min: ProjectStatusConfigMinAggregates
-
-  """
-  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  max: ProjectStatusConfigMaxAggregates
-
-  """
-  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  average: ProjectStatusConfigAverageAggregates
-
-  """
-  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevSample: ProjectStatusConfigStddevSampleAggregates
-
-  """
-  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevPopulation: ProjectStatusConfigStddevPopulationAggregates
-
-  """
-  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  varianceSample: ProjectStatusConfigVarianceSampleAggregates
-
-  """
-  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  variancePopulation: ProjectStatusConfigVariancePopulationAggregates
-}
-
-type ProjectStatusConfigSumAggregates {
-  """Sum of sortOrder across the matching connection"""
-  sortOrder: BigInt!
-}
-
-type ProjectStatusConfigDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of projectId across the matching connection"""
-  projectId: BigInt
-
-  """Distinct count of statusTemplateId across the matching connection"""
-  statusTemplateId: BigInt
-
-  """Distinct count of customColor across the matching connection"""
-  customColor: BigInt
-
-  """Distinct count of customDescription across the matching connection"""
-  customDescription: BigInt
-
-  """Distinct count of isEnabled across the matching connection"""
-  isEnabled: BigInt
-
-  """Distinct count of isDefault across the matching connection"""
-  isDefault: BigInt
-
-  """Distinct count of sortOrder across the matching connection"""
-  sortOrder: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-}
-
-type ProjectStatusConfigMinAggregates {
-  """Minimum of sortOrder across the matching connection"""
-  sortOrder: Int
-}
-
-type ProjectStatusConfigMaxAggregates {
-  """Maximum of sortOrder across the matching connection"""
-  sortOrder: Int
-}
-
-type ProjectStatusConfigAverageAggregates {
-  """Mean average of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-type ProjectStatusConfigStddevSampleAggregates {
-  """Sample standard deviation of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-type ProjectStatusConfigStddevPopulationAggregates {
-  """
-  Population standard deviation of sortOrder across the matching connection
-  """
-  sortOrder: BigFloat
-}
-
-type ProjectStatusConfigVarianceSampleAggregates {
-  """Sample variance of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-type ProjectStatusConfigVariancePopulationAggregates {
-  """Population variance of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-"""
-Grouping methods for `ProjectStatusConfig` for usage during aggregation.
-"""
-enum ProjectStatusConfigGroupBy {
-  PROJECT_ID
-  STATUS_TEMPLATE_ID
-  CUSTOM_COLOR
-  CUSTOM_DESCRIPTION
-  IS_ENABLED
-  IS_DEFAULT
-  SORT_ORDER
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for `ProjectStatusConfig` aggregates."""
-input ProjectStatusConfigHavingInput {
-  AND: [ProjectStatusConfigHavingInput!]
-  OR: [ProjectStatusConfigHavingInput!]
-  sum: ProjectStatusConfigHavingSumInput
-  distinctCount: ProjectStatusConfigHavingDistinctCountInput
-  min: ProjectStatusConfigHavingMinInput
-  max: ProjectStatusConfigHavingMaxInput
-  average: ProjectStatusConfigHavingAverageInput
-  stddevSample: ProjectStatusConfigHavingStddevSampleInput
-  stddevPopulation: ProjectStatusConfigHavingStddevPopulationInput
-  varianceSample: ProjectStatusConfigHavingVarianceSampleInput
-  variancePopulation: ProjectStatusConfigHavingVariancePopulationInput
-}
-
-input ProjectStatusConfigHavingSumInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input ProjectStatusConfigHavingDistinctCountInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input ProjectStatusConfigHavingMinInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input ProjectStatusConfigHavingMaxInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input ProjectStatusConfigHavingAverageInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input ProjectStatusConfigHavingStddevSampleInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input ProjectStatusConfigHavingStddevPopulationInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input ProjectStatusConfigHavingVarianceSampleInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input ProjectStatusConfigHavingVariancePopulationInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-}
-
-"""A connection to a list of `ProjectLink` values."""
-type ProjectLinkConnection {
-  """A list of `ProjectLink` objects."""
-  nodes: [ProjectLink]!
-
-  """
-  A list of edges which contains the `ProjectLink` and cursor to aid in pagination.
-  """
-  edges: [ProjectLinkEdge]!
+  edges: [PostStatusChangeEdge]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """The count of *all* `ProjectLink` you could get from the connection."""
+  """
+  The count of *all* `PostStatusChange` you could get from the connection.
+  """
   totalCount: Int!
 
   """
   Aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  aggregates: ProjectLinkAggregates
+  aggregates: PostStatusChangeAggregates
 
   """
   Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   groupedAggregates(
-    """The method to use when grouping `ProjectLink` for these aggregates."""
-    groupBy: [ProjectLinkGroupBy!]!
+    """
+    The method to use when grouping `PostStatusChange` for these aggregates.
+    """
+    groupBy: [PostStatusChangeGroupBy!]!
 
     """Conditions on the grouped aggregates."""
-    having: ProjectLinkHavingInput
-  ): [ProjectLinkAggregates!]
+    having: PostStatusChangeHavingInput
+  ): [PostStatusChangeAggregates!]
 }
 
-type ProjectLink {
+type PostStatusChange {
   rowId: UUID!
-  projectId: UUID!
-  url: String!
-  title: String
-  order: Int!
+  postId: UUID!
+  toStatusTemplateId: UUID
+  changedById: UUID
   createdAt: Datetime!
-  updatedAt: Datetime!
 
-  """Reads a single `Project` that is related to this `ProjectLink`."""
-  project: Project
-}
+  """Reads a single `User` that is related to this `PostStatusChange`."""
+  changedBy: User
 
-"""A `ProjectLink` edge in the connection."""
-type ProjectLinkEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `ProjectLink` at the end of the edge."""
-  node: ProjectLink
-}
-
-type ProjectLinkAggregates {
-  keys: [String]
-
-  """
-  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  sum: ProjectLinkSumAggregates
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: ProjectLinkDistinctCountAggregates
-
-  """
-  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  min: ProjectLinkMinAggregates
-
-  """
-  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  max: ProjectLinkMaxAggregates
-
-  """
-  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  average: ProjectLinkAverageAggregates
-
-  """
-  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevSample: ProjectLinkStddevSampleAggregates
-
-  """
-  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevPopulation: ProjectLinkStddevPopulationAggregates
-
-  """
-  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  varianceSample: ProjectLinkVarianceSampleAggregates
-
-  """
-  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  variancePopulation: ProjectLinkVariancePopulationAggregates
-}
-
-type ProjectLinkSumAggregates {
-  """Sum of order across the matching connection"""
-  order: BigInt!
-}
-
-type ProjectLinkDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of projectId across the matching connection"""
-  projectId: BigInt
-
-  """Distinct count of url across the matching connection"""
-  url: BigInt
-
-  """Distinct count of title across the matching connection"""
-  title: BigInt
-
-  """Distinct count of order across the matching connection"""
-  order: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-}
-
-type ProjectLinkMinAggregates {
-  """Minimum of order across the matching connection"""
-  order: Int
-}
-
-type ProjectLinkMaxAggregates {
-  """Maximum of order across the matching connection"""
-  order: Int
-}
-
-type ProjectLinkAverageAggregates {
-  """Mean average of order across the matching connection"""
-  order: BigFloat
-}
-
-type ProjectLinkStddevSampleAggregates {
-  """Sample standard deviation of order across the matching connection"""
-  order: BigFloat
-}
-
-type ProjectLinkStddevPopulationAggregates {
-  """Population standard deviation of order across the matching connection"""
-  order: BigFloat
-}
-
-type ProjectLinkVarianceSampleAggregates {
-  """Sample variance of order across the matching connection"""
-  order: BigFloat
-}
-
-type ProjectLinkVariancePopulationAggregates {
-  """Population variance of order across the matching connection"""
-  order: BigFloat
-}
-
-"""Grouping methods for `ProjectLink` for usage during aggregation."""
-enum ProjectLinkGroupBy {
-  PROJECT_ID
-  URL
-  TITLE
-  ORDER
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for `ProjectLink` aggregates."""
-input ProjectLinkHavingInput {
-  AND: [ProjectLinkHavingInput!]
-  OR: [ProjectLinkHavingInput!]
-  sum: ProjectLinkHavingSumInput
-  distinctCount: ProjectLinkHavingDistinctCountInput
-  min: ProjectLinkHavingMinInput
-  max: ProjectLinkHavingMaxInput
-  average: ProjectLinkHavingAverageInput
-  stddevSample: ProjectLinkHavingStddevSampleInput
-  stddevPopulation: ProjectLinkHavingStddevPopulationInput
-  varianceSample: ProjectLinkHavingVarianceSampleInput
-  variancePopulation: ProjectLinkHavingVariancePopulationInput
-}
-
-input ProjectLinkHavingSumInput {
-  order: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectLinkHavingDistinctCountInput {
-  order: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectLinkHavingMinInput {
-  order: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectLinkHavingMaxInput {
-  order: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectLinkHavingAverageInput {
-  order: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectLinkHavingStddevSampleInput {
-  order: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectLinkHavingStddevPopulationInput {
-  order: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectLinkHavingVarianceSampleInput {
-  order: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectLinkHavingVariancePopulationInput {
-  order: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `ProjectLink` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input ProjectLinkCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `projectId` field."""
-  projectId: UUID
-
-  """Checks for equality with the object’s `url` field."""
-  url: String
-
-  """Checks for equality with the object’s `title` field."""
-  title: String
-
-  """Checks for equality with the object’s `order` field."""
-  order: Int
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `ProjectLink`."""
-enum ProjectLinkOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  PROJECT_ID_ASC
-  PROJECT_ID_DESC
-  URL_ASC
-  URL_DESC
-  TITLE_ASC
-  TITLE_DESC
-  ORDER_ASC
-  ORDER_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-}
-
-"""A connection to a list of `Signal` values."""
-type SignalConnection {
-  """A list of `Signal` objects."""
-  nodes: [Signal]!
-
-  """
-  A list of edges which contains the `Signal` and cursor to aid in pagination.
-  """
-  edges: [SignalEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Signal` you could get from the connection."""
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: SignalAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """The method to use when grouping `Signal` for these aggregates."""
-    groupBy: [SignalGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: SignalHavingInput
-  ): [SignalAggregates!]
-}
-
-type Signal {
-  rowId: UUID!
-  organizationId: String!
-  projectId: UUID
-  userId: UUID
-  source: String!
-  type: String
-  rawContent: String!
-  sourceMetadata: JSON
-  status: String!
-  postId: UUID
-  sentiment: String
-  aiTags: JSON
-  createdAt: Datetime!
-  updatedAt: Datetime!
-  clusterId: UUID
-
-  """Reads a single `SignalCluster` that is related to this `Signal`."""
-  cluster: SignalCluster
-
-  """Reads a single `Post` that is related to this `Signal`."""
+  """Reads a single `Post` that is related to this `PostStatusChange`."""
   post: Post
 
-  """Reads a single `Project` that is related to this `Signal`."""
-  project: Project
-
-  """Reads a single `User` that is related to this `Signal`."""
-  user: User
+  """
+  Reads a single `StatusTemplate` that is related to this `PostStatusChange`.
+  """
+  toStatusTemplate: StatusTemplate
 }
 
 type User {
@@ -4643,6 +4373,40 @@ type User {
     """The method to use when ordering `Reaction`."""
     orderBy: [ReactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): ReactionConnection!
+
+  """Reads and enables pagination through a set of `PostStatusChange`."""
+  postStatusChangesByChangedById(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostStatusChangeCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostStatusChangeFilter
+
+    """The method to use when ordering `PostStatusChange`."""
+    orderBy: [PostStatusChangeOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostStatusChangeConnection!
 }
 
 """A connection to a list of `Comment` values."""
@@ -5350,6 +5114,216 @@ enum VoteOrderBy {
   UPDATED_AT_DESC
 }
 
+"""A connection to a list of `Signal` values."""
+type SignalConnection {
+  """A list of `Signal` objects."""
+  nodes: [Signal]!
+
+  """
+  A list of edges which contains the `Signal` and cursor to aid in pagination.
+  """
+  edges: [SignalEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Signal` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: SignalAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `Signal` for these aggregates."""
+    groupBy: [SignalGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: SignalHavingInput
+  ): [SignalAggregates!]
+}
+
+type Signal {
+  rowId: UUID!
+  organizationId: String!
+  projectId: UUID
+  userId: UUID
+  source: String!
+  type: String
+  rawContent: String!
+  sourceMetadata: JSON
+  status: String!
+  postId: UUID
+  sentiment: String
+  aiTags: JSON
+  createdAt: Datetime!
+  updatedAt: Datetime!
+  clusterId: UUID
+
+  """Reads a single `SignalCluster` that is related to this `Signal`."""
+  cluster: SignalCluster
+
+  """Reads a single `Post` that is related to this `Signal`."""
+  post: Post
+
+  """Reads a single `Project` that is related to this `Signal`."""
+  project: Project
+
+  """Reads a single `User` that is related to this `Signal`."""
+  user: User
+}
+
+"""A `Signal` edge in the connection."""
+type SignalEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Signal` at the end of the edge."""
+  node: Signal
+}
+
+type SignalAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: SignalDistinctCountAggregates
+}
+
+type SignalDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of source across the matching connection"""
+  source: BigInt
+
+  """Distinct count of type across the matching connection"""
+  type: BigInt
+
+  """Distinct count of rawContent across the matching connection"""
+  rawContent: BigInt
+
+  """Distinct count of sourceMetadata across the matching connection"""
+  sourceMetadata: BigInt
+
+  """Distinct count of status across the matching connection"""
+  status: BigInt
+
+  """Distinct count of postId across the matching connection"""
+  postId: BigInt
+
+  """Distinct count of sentiment across the matching connection"""
+  sentiment: BigInt
+
+  """Distinct count of aiTags across the matching connection"""
+  aiTags: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+
+  """Distinct count of clusterId across the matching connection"""
+  clusterId: BigInt
+}
+
+"""Grouping methods for `Signal` for usage during aggregation."""
+enum SignalGroupBy {
+  ORGANIZATION_ID
+  PROJECT_ID
+  USER_ID
+  SOURCE
+  TYPE
+  RAW_CONTENT
+  SOURCE_METADATA
+  STATUS
+  POST_ID
+  SENTIMENT
+  AI_TAGS
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+  CLUSTER_ID
+}
+
+"""Conditions for `Signal` aggregates."""
+input SignalHavingInput {
+  AND: [SignalHavingInput!]
+  OR: [SignalHavingInput!]
+  sum: SignalHavingSumInput
+  distinctCount: SignalHavingDistinctCountInput
+  min: SignalHavingMinInput
+  max: SignalHavingMaxInput
+  average: SignalHavingAverageInput
+  stddevSample: SignalHavingStddevSampleInput
+  stddevPopulation: SignalHavingStddevPopulationInput
+  varianceSample: SignalHavingVarianceSampleInput
+  variancePopulation: SignalHavingVariancePopulationInput
+}
+
+input SignalHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input SignalHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
 """
 A condition to be used against `Signal` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
@@ -5825,151 +5799,641 @@ enum AttachmentOrderBy {
   CREATED_AT_DESC
 }
 
-"""A `Signal` edge in the connection."""
-type SignalEdge {
+"""
+A condition to be used against `PostStatusChange` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PostStatusChangeCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `postId` field."""
+  postId: UUID
+
+  """Checks for equality with the object’s `toStatusTemplateId` field."""
+  toStatusTemplateId: UUID
+
+  """Checks for equality with the object’s `changedById` field."""
+  changedById: UUID
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+}
+
+"""Methods to use when ordering `PostStatusChange`."""
+enum PostStatusChangeOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  POST_ID_ASC
+  POST_ID_DESC
+  TO_STATUS_TEMPLATE_ID_ASC
+  TO_STATUS_TEMPLATE_ID_DESC
+  CHANGED_BY_ID_ASC
+  CHANGED_BY_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+}
+
+"""A `PostStatusChange` edge in the connection."""
+type PostStatusChangeEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
-  """The `Signal` at the end of the edge."""
-  node: Signal
+  """The `PostStatusChange` at the end of the edge."""
+  node: PostStatusChange
 }
 
-type SignalAggregates {
+type PostStatusChangeAggregates {
   keys: [String]
 
   """
   Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  distinctCount: SignalDistinctCountAggregates
+  distinctCount: PostStatusChangeDistinctCountAggregates
 }
 
-type SignalDistinctCountAggregates {
+type PostStatusChangeDistinctCountAggregates {
   """Distinct count of rowId across the matching connection"""
   rowId: BigInt
-
-  """Distinct count of organizationId across the matching connection"""
-  organizationId: BigInt
-
-  """Distinct count of projectId across the matching connection"""
-  projectId: BigInt
-
-  """Distinct count of userId across the matching connection"""
-  userId: BigInt
-
-  """Distinct count of source across the matching connection"""
-  source: BigInt
-
-  """Distinct count of type across the matching connection"""
-  type: BigInt
-
-  """Distinct count of rawContent across the matching connection"""
-  rawContent: BigInt
-
-  """Distinct count of sourceMetadata across the matching connection"""
-  sourceMetadata: BigInt
-
-  """Distinct count of status across the matching connection"""
-  status: BigInt
 
   """Distinct count of postId across the matching connection"""
   postId: BigInt
 
-  """Distinct count of sentiment across the matching connection"""
-  sentiment: BigInt
+  """Distinct count of toStatusTemplateId across the matching connection"""
+  toStatusTemplateId: BigInt
 
-  """Distinct count of aiTags across the matching connection"""
-  aiTags: BigInt
+  """Distinct count of changedById across the matching connection"""
+  changedById: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+"""Grouping methods for `PostStatusChange` for usage during aggregation."""
+enum PostStatusChangeGroupBy {
+  POST_ID
+  TO_STATUS_TEMPLATE_ID
+  CHANGED_BY_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `PostStatusChange` aggregates."""
+input PostStatusChangeHavingInput {
+  AND: [PostStatusChangeHavingInput!]
+  OR: [PostStatusChangeHavingInput!]
+  sum: PostStatusChangeHavingSumInput
+  distinctCount: PostStatusChangeHavingDistinctCountInput
+  min: PostStatusChangeHavingMinInput
+  max: PostStatusChangeHavingMaxInput
+  average: PostStatusChangeHavingAverageInput
+  stddevSample: PostStatusChangeHavingStddevSampleInput
+  stddevPopulation: PostStatusChangeHavingStddevPopulationInput
+  varianceSample: PostStatusChangeHavingVarianceSampleInput
+  variancePopulation: PostStatusChangeHavingVariancePopulationInput
+}
+
+input PostStatusChangeHavingSumInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input PostStatusChangeHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input PostStatusChangeHavingMinInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input PostStatusChangeHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input PostStatusChangeHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input PostStatusChangeHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input PostStatusChangeHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input PostStatusChangeHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input PostStatusChangeHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+}
+
+"""A `ProjectStatusConfig` edge in the connection."""
+type ProjectStatusConfigEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectStatusConfig` at the end of the edge."""
+  node: ProjectStatusConfig
+}
+
+type ProjectStatusConfigAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: ProjectStatusConfigSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectStatusConfigDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: ProjectStatusConfigMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: ProjectStatusConfigMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: ProjectStatusConfigAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: ProjectStatusConfigStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: ProjectStatusConfigStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: ProjectStatusConfigVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: ProjectStatusConfigVariancePopulationAggregates
+}
+
+type ProjectStatusConfigSumAggregates {
+  """Sum of sortOrder across the matching connection"""
+  sortOrder: BigInt!
+}
+
+type ProjectStatusConfigDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of statusTemplateId across the matching connection"""
+  statusTemplateId: BigInt
+
+  """Distinct count of customColor across the matching connection"""
+  customColor: BigInt
+
+  """Distinct count of customDescription across the matching connection"""
+  customDescription: BigInt
+
+  """Distinct count of isEnabled across the matching connection"""
+  isEnabled: BigInt
+
+  """Distinct count of isDefault across the matching connection"""
+  isDefault: BigInt
+
+  """Distinct count of sortOrder across the matching connection"""
+  sortOrder: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+type ProjectStatusConfigMinAggregates {
+  """Minimum of sortOrder across the matching connection"""
+  sortOrder: Int
+}
+
+type ProjectStatusConfigMaxAggregates {
+  """Maximum of sortOrder across the matching connection"""
+  sortOrder: Int
+}
+
+type ProjectStatusConfigAverageAggregates {
+  """Mean average of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type ProjectStatusConfigStddevSampleAggregates {
+  """Sample standard deviation of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type ProjectStatusConfigStddevPopulationAggregates {
+  """
+  Population standard deviation of sortOrder across the matching connection
+  """
+  sortOrder: BigFloat
+}
+
+type ProjectStatusConfigVarianceSampleAggregates {
+  """Sample variance of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type ProjectStatusConfigVariancePopulationAggregates {
+  """Population variance of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+"""
+Grouping methods for `ProjectStatusConfig` for usage during aggregation.
+"""
+enum ProjectStatusConfigGroupBy {
+  PROJECT_ID
+  STATUS_TEMPLATE_ID
+  CUSTOM_COLOR
+  CUSTOM_DESCRIPTION
+  IS_ENABLED
+  IS_DEFAULT
+  SORT_ORDER
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `ProjectStatusConfig` aggregates."""
+input ProjectStatusConfigHavingInput {
+  AND: [ProjectStatusConfigHavingInput!]
+  OR: [ProjectStatusConfigHavingInput!]
+  sum: ProjectStatusConfigHavingSumInput
+  distinctCount: ProjectStatusConfigHavingDistinctCountInput
+  min: ProjectStatusConfigHavingMinInput
+  max: ProjectStatusConfigHavingMaxInput
+  average: ProjectStatusConfigHavingAverageInput
+  stddevSample: ProjectStatusConfigHavingStddevSampleInput
+  stddevPopulation: ProjectStatusConfigHavingStddevPopulationInput
+  varianceSample: ProjectStatusConfigHavingVarianceSampleInput
+  variancePopulation: ProjectStatusConfigHavingVariancePopulationInput
+}
+
+input ProjectStatusConfigHavingSumInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingDistinctCountInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingMinInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingMaxInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingAverageInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingStddevSampleInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingStddevPopulationInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingVarianceSampleInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectStatusConfigHavingVariancePopulationInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+}
+
+"""A connection to a list of `ProjectLink` values."""
+type ProjectLinkConnection {
+  """A list of `ProjectLink` objects."""
+  nodes: [ProjectLink]!
+
+  """
+  A list of edges which contains the `ProjectLink` and cursor to aid in pagination.
+  """
+  edges: [ProjectLinkEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ProjectLink` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectLinkAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `ProjectLink` for these aggregates."""
+    groupBy: [ProjectLinkGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectLinkHavingInput
+  ): [ProjectLinkAggregates!]
+}
+
+type ProjectLink {
+  rowId: UUID!
+  projectId: UUID!
+  url: String!
+  title: String
+  order: Int!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Project` that is related to this `ProjectLink`."""
+  project: Project
+}
+
+"""A `ProjectLink` edge in the connection."""
+type ProjectLinkEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectLink` at the end of the edge."""
+  node: ProjectLink
+}
+
+type ProjectLinkAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: ProjectLinkSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectLinkDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: ProjectLinkMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: ProjectLinkMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: ProjectLinkAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: ProjectLinkStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: ProjectLinkStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: ProjectLinkVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: ProjectLinkVariancePopulationAggregates
+}
+
+type ProjectLinkSumAggregates {
+  """Sum of order across the matching connection"""
+  order: BigInt!
+}
+
+type ProjectLinkDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of url across the matching connection"""
+  url: BigInt
+
+  """Distinct count of title across the matching connection"""
+  title: BigInt
+
+  """Distinct count of order across the matching connection"""
+  order: BigInt
 
   """Distinct count of createdAt across the matching connection"""
   createdAt: BigInt
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
-
-  """Distinct count of clusterId across the matching connection"""
-  clusterId: BigInt
 }
 
-"""Grouping methods for `Signal` for usage during aggregation."""
-enum SignalGroupBy {
-  ORGANIZATION_ID
+type ProjectLinkMinAggregates {
+  """Minimum of order across the matching connection"""
+  order: Int
+}
+
+type ProjectLinkMaxAggregates {
+  """Maximum of order across the matching connection"""
+  order: Int
+}
+
+type ProjectLinkAverageAggregates {
+  """Mean average of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkStddevSampleAggregates {
+  """Sample standard deviation of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkStddevPopulationAggregates {
+  """Population standard deviation of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkVarianceSampleAggregates {
+  """Sample variance of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkVariancePopulationAggregates {
+  """Population variance of order across the matching connection"""
+  order: BigFloat
+}
+
+"""Grouping methods for `ProjectLink` for usage during aggregation."""
+enum ProjectLinkGroupBy {
   PROJECT_ID
-  USER_ID
-  SOURCE
-  TYPE
-  RAW_CONTENT
-  SOURCE_METADATA
-  STATUS
-  POST_ID
-  SENTIMENT
-  AI_TAGS
+  URL
+  TITLE
+  ORDER
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
-  CLUSTER_ID
 }
 
-"""Conditions for `Signal` aggregates."""
-input SignalHavingInput {
-  AND: [SignalHavingInput!]
-  OR: [SignalHavingInput!]
-  sum: SignalHavingSumInput
-  distinctCount: SignalHavingDistinctCountInput
-  min: SignalHavingMinInput
-  max: SignalHavingMaxInput
-  average: SignalHavingAverageInput
-  stddevSample: SignalHavingStddevSampleInput
-  stddevPopulation: SignalHavingStddevPopulationInput
-  varianceSample: SignalHavingVarianceSampleInput
-  variancePopulation: SignalHavingVariancePopulationInput
+"""Conditions for `ProjectLink` aggregates."""
+input ProjectLinkHavingInput {
+  AND: [ProjectLinkHavingInput!]
+  OR: [ProjectLinkHavingInput!]
+  sum: ProjectLinkHavingSumInput
+  distinctCount: ProjectLinkHavingDistinctCountInput
+  min: ProjectLinkHavingMinInput
+  max: ProjectLinkHavingMaxInput
+  average: ProjectLinkHavingAverageInput
+  stddevSample: ProjectLinkHavingStddevSampleInput
+  stddevPopulation: ProjectLinkHavingStddevPopulationInput
+  varianceSample: ProjectLinkHavingVarianceSampleInput
+  variancePopulation: ProjectLinkHavingVariancePopulationInput
 }
 
-input SignalHavingSumInput {
+input ProjectLinkHavingSumInput {
+  order: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input SignalHavingDistinctCountInput {
+input ProjectLinkHavingDistinctCountInput {
+  order: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input SignalHavingMinInput {
+input ProjectLinkHavingMinInput {
+  order: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input SignalHavingMaxInput {
+input ProjectLinkHavingMaxInput {
+  order: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input SignalHavingAverageInput {
+input ProjectLinkHavingAverageInput {
+  order: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input SignalHavingStddevSampleInput {
+input ProjectLinkHavingStddevSampleInput {
+  order: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input SignalHavingStddevPopulationInput {
+input ProjectLinkHavingStddevPopulationInput {
+  order: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input SignalHavingVarianceSampleInput {
+input ProjectLinkHavingVarianceSampleInput {
+  order: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input SignalHavingVariancePopulationInput {
+input ProjectLinkHavingVariancePopulationInput {
+  order: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `ProjectLink` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input ProjectLinkCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `url` field."""
+  url: String
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `order` field."""
+  order: Int
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `ProjectLink`."""
+enum ProjectLinkOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  URL_ASC
+  URL_DESC
+  TITLE_ASC
+  TITLE_DESC
+  ORDER_ASC
+  ORDER_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
 }
 
 """A connection to a list of `SignalCluster` values."""
@@ -7150,6 +7614,18 @@ enum UserOrderBy {
   REACTIONS_DISTINCT_COUNT_CREATED_AT_DESC
   REACTIONS_DISTINCT_COUNT_COMMENT_ID_ASC
   REACTIONS_DISTINCT_COUNT_COMMENT_ID_DESC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_COUNT_ASC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_COUNT_DESC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_ROW_ID_ASC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_ROW_ID_DESC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_POST_ID_ASC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_POST_ID_DESC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_ASC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_DESC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CHANGED_BY_ID_ASC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CHANGED_BY_ID_DESC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of `StatusTemplate` values."""
@@ -7541,6 +8017,18 @@ enum StatusTemplateOrderBy {
   PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_DESC
   PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_ASC
   PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_COUNT_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_COUNT_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_ROW_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_ROW_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of `WardenSyncQueue` values."""
@@ -10316,6 +10804,9 @@ type Query implements Node {
   """Get a single `PostTag`."""
   postTagByPostIdAndTagId(postId: UUID!, tagId: UUID!): PostTag
 
+  """Get a single `PostStatusChange`."""
+  postStatusChange(rowId: UUID!): PostStatusChange
+
   """Get a single `Reaction`."""
   reaction(rowId: UUID!): Reaction
 
@@ -10427,6 +10918,40 @@ type Query implements Node {
     """The method to use when ordering `PostTag`."""
     orderBy: [PostTagOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostTagConnection
+
+  """Reads and enables pagination through a set of `PostStatusChange`."""
+  postStatusChanges(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostStatusChangeCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostStatusChangeFilter
+
+    """The method to use when ordering `PostStatusChange`."""
+    orderBy: [PostStatusChangeOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostStatusChangeConnection
 
   """Reads and enables pagination through a set of `Reaction`."""
   reactions(
