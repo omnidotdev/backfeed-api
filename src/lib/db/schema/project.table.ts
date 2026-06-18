@@ -39,6 +39,10 @@ export const projects = pgTable(
     // Counter for auto-incrementing post numbers within this project
     nextPostNumber: integer("next_post_number").notNull().default(1),
     isPublic: boolean("is_public").notNull().default(true),
+    // Public feature visibility (the shareable roadmap + changelog views). On by
+    // default; admins can hide either per project.
+    showRoadmap: boolean("show_roadmap").notNull().default(true),
+    showChangelog: boolean("show_changelog").notNull().default(true),
     // Opaque key for the project's inbound email address (<key>@<inbound-domain>).
     // Generated per project and backfilled for existing rows; regenerate to revoke
     // a leaked address. Used to route inbound email to this project.

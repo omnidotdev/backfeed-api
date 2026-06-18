@@ -1378,150 +1378,6 @@ const spec_wardenSyncQueue = {
   executor: executor
 };
 const wardenSyncQueueCodec = recordCodec(spec_wardenSyncQueue);
-const projectIdentifier = sql.identifier("public", "project");
-const spec_project = {
-  name: "project",
-  identifier: projectIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    image: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    slug: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    next_post_number: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    prefix: {
-      codec: TYPES.varchar,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    is_public: {
-      codec: TYPES.boolean,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    inbound_email_key: {
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {
-          behavior: "-attribute:insert -attribute:update"
-        },
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "270566",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "project"
-    }
-  },
-  executor: executor
-};
-const projectCodec = recordCodec(spec_project);
 const signalIdentifier = sql.identifier("public", "signal");
 const spec_signal = {
   name: "signal",
@@ -1868,6 +1724,172 @@ const spec_post = {
   executor: executor
 };
 const postCodec = recordCodec(spec_post);
+const projectIdentifier = sql.identifier("public", "project");
+const spec_project = {
+  name: "project",
+  identifier: projectIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    image: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    slug: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    next_post_number: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    prefix: {
+      codec: TYPES.varchar,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    is_public: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    inbound_email_key: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {
+          behavior: "-attribute:insert -attribute:update"
+        },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    show_roadmap: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    show_changelog: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "270566",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project"
+    }
+  },
+  executor: executor
+};
+const projectCodec = recordCodec(spec_project);
 const post_tag_resourceOptionsConfig = {
   executor: executor,
   name: "post_tag",
@@ -2255,6 +2277,32 @@ const warden_sync_queueUniques = [{
   attributes: ["id"],
   isPrimary: true
 }];
+const signalUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const signal_resourceOptionsConfig = {
+  executor: executor,
+  name: "signal",
+  identifier: "main.public.signal",
+  from: signalIdentifier,
+  codec: signalCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "signal"
+    },
+    tags: {
+      behavior: "-insert -update -delete"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: signalUniques
+};
 const projectUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2293,32 +2341,6 @@ const project_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: projectUniques
-};
-const signalUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const signal_resourceOptionsConfig = {
-  executor: executor,
-  name: "signal",
-  identifier: "main.public.signal",
-  from: signalIdentifier,
-  codec: signalCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "signal"
-    },
-    tags: {
-      behavior: "-insert -update -delete"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: signalUniques
 };
 const postUniques = [{
   attributes: ["id"],
@@ -2379,10 +2401,10 @@ const registryConfig = {
     attachment: attachmentCodec,
     wardenSyncQueue: wardenSyncQueueCodec,
     jsonb: TYPES.jsonb,
-    project: projectCodec,
-    varchar: TYPES.varchar,
     signal: signalCodec,
-    post: postCodec
+    post: postCodec,
+    project: projectCodec,
+    varchar: TYPES.varchar
   },
   pgResources: {
     __proto__: null,
@@ -2418,8 +2440,8 @@ const registryConfig = {
       },
       uniques: warden_sync_queueUniques
     },
-    project: project_resourceOptionsConfig,
     signal: signal_resourceOptionsConfig,
+    project: project_resourceOptionsConfig,
     post: post_resourceOptionsConfig
   },
   pgRelations: {
@@ -4368,6 +4390,12 @@ function ProjectInput_prefixApply(obj, val, info) {
 }
 function ProjectInput_isPublicApply(obj, val, info) {
   obj.set("is_public", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ProjectInput_showRoadmapApply(obj, val, info) {
+  obj.set("show_roadmap", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ProjectInput_showChangelogApply(obj, val, info) {
+  obj.set("show_changelog", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreatePostPayload_postEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_postPgResource, postUniques[0].attributes, $mutation, fieldArgs);
 function PostInput_statusUpdatedAtApply(obj, val, info) {
@@ -7529,6 +7557,8 @@ type Project {
   prefix: String
   isPublic: Boolean!
   inboundEmailKey: String!
+  showRoadmap: Boolean!
+  showChangelog: Boolean!
 
   """Reads and enables pagination through a set of \`Post\`."""
   posts(
@@ -9401,6 +9431,12 @@ input ProjectFilter {
 
   """Filter by the object’s \`inboundEmailKey\` field."""
   inboundEmailKey: StringFilter
+
+  """Filter by the object’s \`showRoadmap\` field."""
+  showRoadmap: BooleanFilter
+
+  """Filter by the object’s \`showChangelog\` field."""
+  showChangelog: BooleanFilter
 
   """Filter by the object’s \`posts\` relation."""
   posts: ProjectToManyPostFilter
@@ -15654,6 +15690,12 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of inboundEmailKey across the matching connection"""
   inboundEmailKey: BigInt
+
+  """Distinct count of showRoadmap across the matching connection"""
+  showRoadmap: BigInt
+
+  """Distinct count of showChangelog across the matching connection"""
+  showChangelog: BigInt
 }
 
 type ProjectMinAggregates {
@@ -15711,6 +15753,8 @@ enum ProjectGroupBy {
   NEXT_POST_NUMBER
   PREFIX
   IS_PUBLIC
+  SHOW_ROADMAP
+  SHOW_CHANGELOG
 }
 
 """Conditions for \`Project\` aggregates."""
@@ -15821,6 +15865,12 @@ input ProjectCondition {
 
   """Checks for equality with the object’s \`inboundEmailKey\` field."""
   inboundEmailKey: String
+
+  """Checks for equality with the object’s \`showRoadmap\` field."""
+  showRoadmap: Boolean
+
+  """Checks for equality with the object’s \`showChangelog\` field."""
+  showChangelog: Boolean
 }
 
 """Methods to use when ordering \`Project\`."""
@@ -15852,6 +15902,10 @@ enum ProjectOrderBy {
   IS_PUBLIC_DESC
   INBOUND_EMAIL_KEY_ASC
   INBOUND_EMAIL_KEY_DESC
+  SHOW_ROADMAP_ASC
+  SHOW_ROADMAP_DESC
+  SHOW_CHANGELOG_ASC
+  SHOW_CHANGELOG_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
   POSTS_SUM_NUMBER_ASC
@@ -16655,6 +16709,8 @@ input ProjectInput {
   nextPostNumber: Int
   prefix: String
   isPublic: Boolean
+  showRoadmap: Boolean
+  showChangelog: Boolean
 }
 
 """The output of our create \`Post\` mutation."""
@@ -17375,6 +17431,8 @@ input ProjectPatch {
   nextPostNumber: Int
   prefix: String
   isPublic: Boolean
+  showRoadmap: Boolean
+  showChangelog: Boolean
 }
 
 """The output of our update \`Post\` mutation."""
@@ -18041,6 +18099,9 @@ type Query implements Node {
   """Get a single \`WardenSyncQueue\`."""
   wardenSyncQueue(rowId: UUID!): WardenSyncQueue
 
+  """Get a single \`Signal\`."""
+  signal(rowId: UUID!): Signal
+
   """Get a single \`Project\`."""
   project(rowId: UUID!): Project
 
@@ -18049,9 +18110,6 @@ type Query implements Node {
 
   """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
-
-  """Get a single \`Signal\`."""
-  signal(rowId: UUID!): Signal
 
   """Get a single \`Post\`."""
   post(rowId: UUID!): Post
@@ -18501,40 +18559,6 @@ type Query implements Node {
     orderBy: [WardenSyncQueueOrderBy!] = [PRIMARY_KEY_ASC]
   ): WardenSyncQueueConnection
 
-  """Reads and enables pagination through a set of \`Project\`."""
-  projects(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ProjectCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ProjectFilter
-
-    """The method to use when ordering \`Project\`."""
-    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectConnection
-
   """Reads and enables pagination through a set of \`Signal\`."""
   signals(
     """Only read the first \`n\` values of the set."""
@@ -18568,6 +18592,40 @@ type Query implements Node {
     """The method to use when ordering \`Signal\`."""
     orderBy: [SignalOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalConnection
+
+  """Reads and enables pagination through a set of \`Project\`."""
+  projects(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectFilter
+
+    """The method to use when ordering \`Project\`."""
+    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectConnection
 
   """Reads and enables pagination through a set of \`Post\`."""
   posts(
@@ -21537,6 +21595,12 @@ ${String(oldPlan33)}`);
         }
       },
       rowId: PostTag_rowIdPlan,
+      showChangelog($record) {
+        return $record.get("show_changelog");
+      },
+      showRoadmap($record) {
+        return $record.get("show_roadmap");
+      },
       signalClusters: {
         plan($record) {
           const $records = otherSource_signal_clusterPgResource.find({
@@ -21657,6 +21721,12 @@ ${String(oldPlan33)}`);
         return pgAggregatesPlanAggregateAttribute(TYPES.varchar, "prefix", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
       rowId: PostDistinctCountAggregates_rowIdPlan,
+      showChangelog($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "show_changelog", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      showRoadmap($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "show_roadmap", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
       slug($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.text, "slug", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
@@ -24960,6 +25030,12 @@ export const inputObjects = {
         return applyAttributeCondition("prefix", TYPES.varchar, $condition, val);
       },
       rowId: PostCondition_rowIdApply,
+      showChangelog($condition, val) {
+        return applyAttributeCondition("show_changelog", TYPES.boolean, $condition, val);
+      },
+      showRoadmap($condition, val) {
+        return applyAttributeCondition("show_roadmap", TYPES.boolean, $condition, val);
+      },
       slug($condition, val) {
         return applyAttributeCondition("slug", TYPES.text, $condition, val);
       },
@@ -25072,6 +25148,12 @@ export const inputObjects = {
       },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_project.attributes.id, queryBuilder, value);
+      },
+      showChangelog(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("showChangelog", "show_changelog", spec_project.attributes.show_changelog, queryBuilder, value);
+      },
+      showRoadmap(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("showRoadmap", "show_roadmap", spec_project.attributes.show_roadmap, queryBuilder, value);
       },
       signalClusters($where, value) {
         assertAllowed(value, "object");
@@ -25297,6 +25379,8 @@ export const inputObjects = {
       organizationId: StatusTemplateInput_organizationIdApply,
       prefix: ProjectInput_prefixApply,
       rowId: PostTagInput_rowIdApply,
+      showChangelog: ProjectInput_showChangelogApply,
+      showRoadmap: ProjectInput_showRoadmapApply,
       slug: ProjectInput_slugApply,
       updatedAt: TagInput_updatedAtApply
     }
@@ -25596,6 +25680,8 @@ export const inputObjects = {
       organizationId: StatusTemplateInput_organizationIdApply,
       prefix: ProjectInput_prefixApply,
       rowId: PostTagInput_rowIdApply,
+      showChangelog: ProjectInput_showChangelogApply,
+      showRoadmap: ProjectInput_showRoadmapApply,
       slug: ProjectInput_slugApply,
       updatedAt: TagInput_updatedAtApply
     }
@@ -29595,6 +29681,12 @@ export const enums = {
       PREFIX($pgSelect) {
         applyGroupByAttribute("prefix", TYPES.varchar, $pgSelect);
       },
+      SHOW_CHANGELOG($pgSelect) {
+        applyGroupByAttribute("show_changelog", TYPES.boolean, $pgSelect);
+      },
+      SHOW_ROADMAP($pgSelect) {
+        applyGroupByAttribute("show_roadmap", TYPES.boolean, $pgSelect);
+      },
       SLUG($pgSelect) {
         applyGroupByAttribute("slug", TYPES.text, $pgSelect);
       },
@@ -30111,6 +30203,30 @@ export const enums = {
       },
       ROW_ID_ASC: PostOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply,
+      SHOW_CHANGELOG_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "show_changelog",
+          direction: "ASC"
+        });
+      },
+      SHOW_CHANGELOG_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "show_changelog",
+          direction: "DESC"
+        });
+      },
+      SHOW_ROADMAP_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "show_roadmap",
+          direction: "ASC"
+        });
+      },
+      SHOW_ROADMAP_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "show_roadmap",
+          direction: "DESC"
+        });
+      },
       SIGNAL_CLUSTERS_AVERAGE_MEMBER_COUNT_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_signalCluster.attributes.member_count, "member_count", "ASC", relation28, otherSource_signal_clusterPgResource, $select);
       },

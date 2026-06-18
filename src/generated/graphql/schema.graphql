@@ -438,6 +438,8 @@ type Project {
   prefix: String
   isPublic: Boolean!
   inboundEmailKey: String!
+  showRoadmap: Boolean!
+  showChangelog: Boolean!
 
   """Reads and enables pagination through a set of `Post`."""
   posts(
@@ -2310,6 +2312,12 @@ input ProjectFilter {
 
   """Filter by the object’s `inboundEmailKey` field."""
   inboundEmailKey: StringFilter
+
+  """Filter by the object’s `showRoadmap` field."""
+  showRoadmap: BooleanFilter
+
+  """Filter by the object’s `showChangelog` field."""
+  showChangelog: BooleanFilter
 
   """Filter by the object’s `posts` relation."""
   posts: ProjectToManyPostFilter
@@ -8563,6 +8571,12 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of inboundEmailKey across the matching connection"""
   inboundEmailKey: BigInt
+
+  """Distinct count of showRoadmap across the matching connection"""
+  showRoadmap: BigInt
+
+  """Distinct count of showChangelog across the matching connection"""
+  showChangelog: BigInt
 }
 
 type ProjectMinAggregates {
@@ -8620,6 +8634,8 @@ enum ProjectGroupBy {
   NEXT_POST_NUMBER
   PREFIX
   IS_PUBLIC
+  SHOW_ROADMAP
+  SHOW_CHANGELOG
 }
 
 """Conditions for `Project` aggregates."""
@@ -8730,6 +8746,12 @@ input ProjectCondition {
 
   """Checks for equality with the object’s `inboundEmailKey` field."""
   inboundEmailKey: String
+
+  """Checks for equality with the object’s `showRoadmap` field."""
+  showRoadmap: Boolean
+
+  """Checks for equality with the object’s `showChangelog` field."""
+  showChangelog: Boolean
 }
 
 """Methods to use when ordering `Project`."""
@@ -8761,6 +8783,10 @@ enum ProjectOrderBy {
   IS_PUBLIC_DESC
   INBOUND_EMAIL_KEY_ASC
   INBOUND_EMAIL_KEY_DESC
+  SHOW_ROADMAP_ASC
+  SHOW_ROADMAP_DESC
+  SHOW_CHANGELOG_ASC
+  SHOW_CHANGELOG_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
   POSTS_SUM_NUMBER_ASC
@@ -9564,6 +9590,8 @@ input ProjectInput {
   nextPostNumber: Int
   prefix: String
   isPublic: Boolean
+  showRoadmap: Boolean
+  showChangelog: Boolean
 }
 
 """The output of our create `Post` mutation."""
@@ -10284,6 +10312,8 @@ input ProjectPatch {
   nextPostNumber: Int
   prefix: String
   isPublic: Boolean
+  showRoadmap: Boolean
+  showChangelog: Boolean
 }
 
 """The output of our update `Post` mutation."""
@@ -10950,6 +10980,9 @@ type Query implements Node {
   """Get a single `WardenSyncQueue`."""
   wardenSyncQueue(rowId: UUID!): WardenSyncQueue
 
+  """Get a single `Signal`."""
+  signal(rowId: UUID!): Signal
+
   """Get a single `Project`."""
   project(rowId: UUID!): Project
 
@@ -10958,9 +10991,6 @@ type Query implements Node {
 
   """Get a single `Project`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
-
-  """Get a single `Signal`."""
-  signal(rowId: UUID!): Signal
 
   """Get a single `Post`."""
   post(rowId: UUID!): Post
@@ -11410,40 +11440,6 @@ type Query implements Node {
     orderBy: [WardenSyncQueueOrderBy!] = [PRIMARY_KEY_ASC]
   ): WardenSyncQueueConnection
 
-  """Reads and enables pagination through a set of `Project`."""
-  projects(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ProjectCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ProjectFilter
-
-    """The method to use when ordering `Project`."""
-    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectConnection
-
   """Reads and enables pagination through a set of `Signal`."""
   signals(
     """Only read the first `n` values of the set."""
@@ -11477,6 +11473,40 @@ type Query implements Node {
     """The method to use when ordering `Signal`."""
     orderBy: [SignalOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalConnection
+
+  """Reads and enables pagination through a set of `Project`."""
+  projects(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectFilter
+
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectConnection
 
   """Reads and enables pagination through a set of `Post`."""
   posts(
