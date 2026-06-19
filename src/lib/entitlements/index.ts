@@ -21,7 +21,11 @@ const APP_ID = "backfeed";
  */
 const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
   max_projects: { free: 1 },
-  max_feedback_users: { free: 15 },
+  // -1 = unlimited, mirroring the product catalog SSOT (omni-api planConfigs:
+  // backfeed feedback is unlimited on every tier). The prior `15` was stale
+  // drift that silently capped feedback for any org not yet provisioned in
+  // Aether
+  max_feedback_users: { free: -1 },
   max_comments_per_post: { free: 100 },
   max_members: { free: 5, pro: -1, team: -1 },
   max_admins: { free: 1, pro: 3, team: -1 },
