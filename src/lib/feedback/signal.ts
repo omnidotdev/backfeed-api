@@ -15,10 +15,18 @@ export const SIGNAL_SOURCES = [
   "email",
   "social",
   "app_store",
+  "play_store",
   "discord",
   "slack",
   "web",
 ] as const;
+
+/**
+ * Sources that are inherently reviews (app/marketplace store ratings). Content
+ * from these is triaged as the `review` type regardless of wording, since a
+ * store review is a review whether it praises, reports a bug, or asks a question.
+ */
+const REVIEW_SOURCES = ["app_store", "play_store"] as const;
 
 /** What kind of input a signal represents (assigned during triage). */
 export const SIGNAL_TYPES = [
@@ -50,6 +58,11 @@ export const DEFAULT_SIGNAL_SOURCE: SignalSource = "widget";
 export const isSignalSource = (value: unknown): value is SignalSource =>
   typeof value === "string" &&
   (SIGNAL_SOURCES as readonly string[]).includes(value);
+
+/** Whether a source is a review platform (store rating). */
+export const isReviewSource = (value: unknown): boolean =>
+  typeof value === "string" &&
+  (REVIEW_SOURCES as readonly string[]).includes(value);
 
 export const isSignalType = (value: unknown): value is SignalType =>
   typeof value === "string" &&
@@ -128,7 +141,9 @@ export const buildIngestedSignal = (input: {
   embedding?: number[] | null;
 }): InsertSignal => {
   assertValidSignalInput({ source: input.source });
-  const { type, sentiment } = heuristicTriage(input.rawContent);
+  const { type, sentiment } = heuristicTriage(input.rawContent, {
+    isReview: isReviewSource(input.source),
+  });
 
   return {
     source: input.source as SignalSource,

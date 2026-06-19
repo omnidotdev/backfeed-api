@@ -27,6 +27,20 @@ const SmartTagPlugin = jsonPgSmartTags({
         // surface is unaffected.
         tags: { behavior: "-insert -update -delete" },
       },
+      post_status_change: {
+        // The status timeline is append-only and written server-side by the
+        // PostStatusHistory plugin on `updatePost`. Disable the raw auto-CRUD
+        // mutations so clients cannot forge or tamper with history; the
+        // read/query surface (the timeline) is unaffected.
+        tags: { behavior: "-insert -update -delete" },
+      },
+      notification_preference: {
+        // Per-user settings, accessed only through the observer-scoped
+        // `myNotificationPreference` query + `setNotificationPreference` mutation
+        // (see NotificationPreference.plugin). Hide the raw table entirely so one
+        // user can never read or write another's preferences.
+        tags: { behavior: "-*" },
+      },
       project: {
         attribute: {
           // The inbound email key is server-generated (DB default) and unique;

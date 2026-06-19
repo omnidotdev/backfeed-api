@@ -1,0 +1,1 @@
+ALTER TABLE "vote" ADD COLUMN "weight" integer GENERATED ALWAYS AS ((case when vote_type = 'up' then 1 else -1 end)) STORED NOT NULL;

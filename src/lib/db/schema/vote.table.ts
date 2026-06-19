@@ -1,6 +1,7 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   index,
+  integer,
   pgEnum,
   pgTable,
   unique,
@@ -37,6 +38,12 @@ export const votes = pgTable(
         onDelete: "cascade",
       }),
     voteType: voteType().notNull(),
+    // signed weight (+1 up / -1 down) so a post's net score is SUM(weight). Lets
+    // PgAggregates expose a VOTES_SUM_WEIGHT order-by (the correct "top voted"
+    // ranking) instead of VOTES_COUNT, which counts up + down together.
+    weight: integer()
+      .notNull()
+      .generatedAlwaysAs(sql`(case when vote_type = 'up' then 1 else -1 end)`),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

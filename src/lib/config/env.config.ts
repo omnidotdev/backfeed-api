@@ -50,6 +50,11 @@ export const {
   // become signals; disabled when either is unset.
   HERALD_WEBHOOK_SECRET,
   INBOUND_EMAIL_DOMAIN,
+  // Outbound notifications (Herald). Used to email reporters/voters when a post's
+  // status changes; disabled (noop send) when unset.
+  HERALD_API_URL,
+  HERALD_API_KEY,
+  HERALD_DEFAULT_FROM,
   // Content moderation (Say Less). When unset, moderation is a noop (content
   // always allowed).
   SAY_LESS_URL,
@@ -79,6 +84,10 @@ export const isEmailIngestionEnabled =
 /** Whether content moderation (Say Less) is configured */
 export const isModerationEnabled = !!SAY_LESS_URL;
 
+/** Whether outbound email notifications (Herald) are configured */
+export const isNotificationsEnabled =
+  !!HERALD_API_URL && !!HERALD_API_KEY && !!HERALD_DEFAULT_FROM;
+
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
   console.warn("BILLING_BASE_URL not set, billing disabled");
@@ -103,3 +112,7 @@ if (!isEmailIngestionEnabled)
   );
 if (!SAY_LESS_URL)
   console.warn("SAY_LESS_URL not set, content moderation disabled");
+if (!isNotificationsEnabled)
+  console.warn(
+    "HERALD_API_URL / HERALD_API_KEY / HERALD_DEFAULT_FROM not set, email notifications disabled",
+  );

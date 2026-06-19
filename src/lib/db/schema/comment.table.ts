@@ -3,6 +3,7 @@ import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import { posts } from "./post.table";
+import { reactions } from "./reaction.table";
 import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -42,7 +43,7 @@ export const comments = pgTable(
 /**
  * Comment relations.
  */
-export const commentRelations = relations(comments, ({ one }) => ({
+export const commentRelations = relations(comments, ({ many, one }) => ({
   post: one(posts, {
     fields: [comments.postId],
     references: [posts.id],
@@ -55,6 +56,7 @@ export const commentRelations = relations(comments, ({ one }) => ({
     fields: [comments.parentId],
     references: [comments.id],
   }),
+  reactions: many(reactions),
 }));
 
 /**

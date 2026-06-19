@@ -9,6 +9,7 @@ import {
   ProjectLinkPlugin,
   ProjectPlugin,
   ProjectStatusConfigPlugin,
+  ReactionPlugin,
   SmartTagPlugin,
   StatusTemplatePlugin,
   TagPlugin,
@@ -21,8 +22,11 @@ import { DefaultStatusTemplatesPlugin } from "lib/graphql/plugins/defaults";
 import {
   EventEmissionPlugin,
   PostShippedPlugin,
+  PostStatusHistoryPlugin,
 } from "lib/graphql/plugins/events";
 import {
+  ChangePostStatusPlugin,
+  NotificationPreferencePlugin,
   PostSignalProvenancePlugin,
   SignalIngestionPlugin,
 } from "lib/graphql/plugins/feedback";
@@ -71,6 +75,7 @@ const preset: GraphileConfig.Preset = {
     CommentPlugin,
     AttachmentPlugin,
     TagPlugin,
+    ReactionPlugin,
     SmartTagPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
@@ -78,12 +83,18 @@ const preset: GraphileConfig.Preset = {
     EventEmissionPlugin,
     // Close-the-loop: emit backfeed.post.shipped when a post first ships
     PostShippedPlugin,
+    // Record post status transitions into the status timeline
+    PostStatusHistoryPlugin,
     // Default resource seeding plugins
     DefaultStatusTemplatesPlugin,
     // Signal provenance plugin (records a signal per created post)
     PostSignalProvenancePlugin,
     // Signal ingestion + promotion mutations (the senses -> board bridge)
     SignalIngestionPlugin,
+    // Status change with an optional note (note-carrying updatePost)
+    ChangePostStatusPlugin,
+    // Per-user email notification settings (observer-scoped)
+    NotificationPreferencePlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     PostSearchPlugin,

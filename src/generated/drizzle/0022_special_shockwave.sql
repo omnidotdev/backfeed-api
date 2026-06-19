@@ -1,0 +1,1 @@
+ALTER TABLE "status_template" ADD COLUMN "show_on_roadmap" boolean;

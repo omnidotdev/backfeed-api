@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   integer,
   pgTable,
@@ -27,6 +28,9 @@ export const statusTemplates = pgTable(
     color: text(),
     description: text(),
     sortOrder: integer().default(0),
+    // null = fall back to the default roadmap heuristic; true/false = explicit
+    // admin choice for whether this status appears on the public roadmap
+    showOnRoadmap: boolean(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

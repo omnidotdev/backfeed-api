@@ -134,6 +134,62 @@
       "when": 1781544900000,
       "tag": "0018_lovely_tag_labels",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1781730855140,
+      "tag": "0019_nebulous_terrax",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1781738695720,
+      "tag": "0020_awesome_gateway",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1781749808017,
+      "tag": "0021_glossy_dragon_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1781806012461,
+      "tag": "0022_special_shockwave",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1781808551290,
+      "tag": "0023_minor_songbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1781812285017,
+      "tag": "0024_nifty_sentinels",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1781820901969,
+      "tag": "0025_dizzy_nova",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1781831802162,
+      "tag": "0026_lonely_speedball",
+      "breakpoints": true
     }
   ]
 }

@@ -21,18 +21,25 @@ import {
 import preset from "lib/config/graphile.config";
 import { signals, statusTemplates } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
+import { changePostStatus, getPostRef } from "lib/feedback/changeStatus";
 import { findSimilarPosts } from "lib/feedback/dedupe";
 import { embeddingProvider } from "lib/feedback/embedding";
 import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
 import { markPostShipped } from "lib/feedback/shipped";
 import { buildPostProvenanceSignal } from "lib/feedback/signal";
+import { recordPostStatusChange } from "lib/feedback/statusHistory";
 import {
   FEATURE_KEYS,
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
 import { moderateText } from "lib/moderation";
-import { events } from "lib/providers";
+import { notifyStatusChange } from "lib/notifications/notify";
+import {
+  getNotificationPreference,
+  setNotificationPreference,
+} from "lib/notifications/preference";
+import { events, notifications } from "lib/providers";
 import {
   deletePostFromIndex,
   deleteProjectFromIndex,
@@ -165,11 +172,13 @@ const generateGraphqlSchema = async () => {
         writeTuples,
       },
       "lib/db/schema": { signals, statusTemplates },
+      "lib/feedback/changeStatus": { changePostStatus, getPostRef },
       "lib/feedback/dedupe": { findSimilarPosts },
       "lib/feedback/embedding": { embeddingProvider },
       "lib/feedback/promote": { ingestSignal, promoteSignalToPost },
       "lib/feedback/shipped": { markPostShipped },
       "lib/feedback/signal": { buildPostProvenanceSignal },
+      "lib/feedback/statusHistory": { recordPostStatusChange },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "lib/graphql/plugins/authorization/constants": {
         FEATURE_KEYS,
@@ -178,7 +187,12 @@ const generateGraphqlSchema = async () => {
       "lib/auth/organizations": { getDefaultOrganization },
       "lib/idp/validateOrg": { validateOrgExists },
       "lib/moderation": { moderateText },
-      "lib/providers": { events },
+      "lib/notifications/notify": { notifyStatusChange },
+      "lib/notifications/preference": {
+        getNotificationPreference,
+        setNotificationPreference,
+      },
+      "lib/providers": { events, notifications },
       "lib/search": {
         deletePostFromIndex,
         deleteProjectFromIndex,

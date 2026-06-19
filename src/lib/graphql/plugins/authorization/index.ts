@@ -5,6 +5,7 @@ export { default as PrimaryKeyMutationsOnlyPlugin } from "./PrimaryKeyMutationsO
 export { default as ProjectPlugin } from "./Project.plugin";
 export { default as ProjectLinkPlugin } from "./ProjectLink.plugin";
 export { default as ProjectStatusConfigPlugin } from "./ProjectStatusConfig.plugin";
+export { default as ReactionPlugin } from "./Reaction.plugin";
 export { default as SmartTagPlugin } from "./SmartTag.plugin";
 export { default as StatusTemplatePlugin } from "./StatusTemplate.plugin";
 export { default as TagPlugin } from "./Tag.plugin";
