@@ -17,6 +17,7 @@ import {
   VotePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import { PgVectorPlugin } from "lib/graphql/plugins/codecs";
 import { DefaultStatusTemplatesPlugin } from "lib/graphql/plugins/defaults";
 import {
   EventEmissionPlugin,
@@ -58,6 +59,8 @@ const preset: GraphileConfig.Preset = {
   },
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   plugins: [
+    // pgvector codec support (must load before introspection builds codecs)
+    PgVectorPlugin,
     // Observer query plugin (returns current authenticated user)
     observerPlugin,
     // Authorization plugins (pre-mutation validation)

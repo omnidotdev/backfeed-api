@@ -122,7 +122,7 @@ const spec_postTag = {
     }
   },
   extensions: {
-    oid: "739621",
+    oid: "748018",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -200,7 +200,7 @@ const spec_postStatusChange = {
     }
   },
   extensions: {
-    oid: "745938",
+    oid: "748106",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -283,7 +283,7 @@ const spec_reaction = {
     }
   },
   extensions: {
-    oid: "743996",
+    oid: "748068",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -364,7 +364,7 @@ const spec_tag = {
     }
   },
   extensions: {
-    oid: "739634",
+    oid: "748031",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -437,7 +437,7 @@ const notificationPreferenceCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "746611",
+    oid: "748134",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -530,7 +530,7 @@ const spec_comment = {
     }
   },
   extensions: {
-    oid: "270503",
+    oid: "747527",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -630,7 +630,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "270635",
+    oid: "747659",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -738,7 +738,7 @@ const spec_projectStatusConfig = {
     }
   },
   extensions: {
-    oid: "270599",
+    oid: "747623",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -830,7 +830,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "300307",
+    oid: "747840",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -841,6 +841,113 @@ const spec_projectLink = {
   executor: executor
 };
 const projectLinkCodec = recordCodec(spec_projectLink);
+const voteIdentifier = sql.identifier("public", "vote");
+const voteTypeCodec = enumCodec({
+  name: "voteType",
+  identifier: sql.identifier("public", "vote_type"),
+  values: ["up", "down"],
+  description: undefined,
+  extensions: {
+    oid: "747510",
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vote_type"
+    }
+  }
+});
+const spec_vote = {
+  name: "vote",
+  identifier: voteIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    post_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    user_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    vote_type: {
+      codec: voteTypeCodec,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    weight: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "747680",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vote"
+    }
+  },
+  executor: executor
+};
+const voteCodec = recordCodec(spec_vote);
 const statusTemplateIdentifier = sql.identifier("public", "status_template");
 const spec_statusTemplate = {
   name: "statusTemplate",
@@ -949,7 +1056,7 @@ const spec_statusTemplate = {
     }
   },
   extensions: {
-    oid: "270616",
+    oid: "747640",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -960,204 +1067,6 @@ const spec_statusTemplate = {
   executor: executor
 };
 const statusTemplateCodec = recordCodec(spec_statusTemplate);
-const signalClusterIdentifier = sql.identifier("public", "signal_cluster");
-const spec_signalCluster = {
-  name: "signalCluster",
-  identifier: signalClusterIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    project_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    label: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    summary: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    member_count: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "731880",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "signal_cluster"
-    }
-  },
-  executor: executor
-};
-const signalClusterCodec = recordCodec(spec_signalCluster);
-const voteIdentifier = sql.identifier("public", "vote");
-const voteTypeCodec = enumCodec({
-  name: "voteType",
-  identifier: sql.identifier("public", "vote_type"),
-  values: ["up", "down"],
-  description: undefined,
-  extensions: {
-    oid: "270486",
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "vote_type"
-    }
-  }
-});
-const spec_vote = {
-  name: "vote",
-  identifier: voteIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    post_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    user_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    vote_type: {
-      codec: voteTypeCodec,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    weight: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "270656",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "vote"
-    }
-  },
-  executor: executor
-};
-const voteCodec = recordCodec(spec_vote);
 const attachmentIdentifier = sql.identifier("public", "attachment");
 const spec_attachment = {
   name: "attachment",
@@ -1275,7 +1184,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "708031",
+    oid: "747935",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1378,7 +1287,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "706846",
+    oid: "747874",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1389,6 +1298,118 @@ const spec_wardenSyncQueue = {
   executor: executor
 };
 const wardenSyncQueueCodec = recordCodec(spec_wardenSyncQueue);
+const signalClusterIdentifier = sql.identifier("public", "signal_cluster");
+const spec_signalCluster_attributes_centroid_codec_vector = {
+  name: "vector",
+  sqlType: sql`vector`,
+  toPg(str) {
+    return str;
+  },
+  fromPg(str) {
+    return str;
+  },
+  executor: null,
+  attributes: void 0
+};
+const spec_signalCluster = {
+  name: "signalCluster",
+  identifier: signalClusterIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    label: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    summary: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    centroid: {
+      codec: spec_signalCluster_attributes_centroid_codec_vector,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    member_count: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "747965",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "signal_cluster"
+    }
+  },
+  executor: executor
+};
+const signalClusterCodec = recordCodec(spec_signalCluster);
 const signalIdentifier = sql.identifier("public", "signal");
 const spec_signal = {
   name: "signal",
@@ -1532,6 +1553,15 @@ const spec_signal = {
         canUpdate: true
       }
     },
+    embedding: {
+      codec: spec_signalCluster_attributes_centroid_codec_vector,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
     cluster_id: {
       codec: TYPES.uuid,
       extensions: {
@@ -1543,7 +1573,7 @@ const spec_signal = {
     }
   },
   extensions: {
-    oid: "706866",
+    oid: "747894",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1657,7 +1687,6 @@ const spec_post = {
     },
     number: {
       codec: TYPES.int,
-      notNull: true,
       extensions: {
         tags: {
           behavior: "-attribute:insert -attribute:update"
@@ -1695,6 +1724,15 @@ const spec_post = {
         canUpdate: true
       }
     },
+    embedding: {
+      codec: spec_signalCluster_attributes_centroid_codec_vector,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
     duplicate_of_id: {
       codec: TYPES.uuid,
       extensions: {
@@ -1724,7 +1762,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "270549",
+    oid: "747573",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1890,7 +1928,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "270566",
+    oid: "747590",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2176,60 +2214,6 @@ const project_link_resourceOptionsConfig = {
   },
   uniques: project_linkUniques
 };
-const status_templateUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}, {
-  attributes: ["organization_id", "name"],
-  extensions: {
-    tags: {
-      __proto__: null,
-      behavior: ["-update", "-delete"]
-    }
-  }
-}];
-const status_template_resourceOptionsConfig = {
-  executor: executor,
-  name: "status_template",
-  identifier: "main.public.status_template",
-  from: statusTemplateIdentifier,
-  codec: statusTemplateCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "status_template"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: status_templateUniques
-};
-const signal_clusterUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const signal_cluster_resourceOptionsConfig = {
-  executor: executor,
-  name: "signal_cluster",
-  identifier: "main.public.signal_cluster",
-  from: signalClusterIdentifier,
-  codec: signalClusterCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "signal_cluster"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: signal_clusterUniques
-};
 const voteUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2261,6 +2245,37 @@ const vote_resourceOptionsConfig = {
   },
   uniques: voteUniques
 };
+const status_templateUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}, {
+  attributes: ["organization_id", "name"],
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
+    }
+  }
+}];
+const status_template_resourceOptionsConfig = {
+  executor: executor,
+  name: "status_template",
+  identifier: "main.public.status_template",
+  from: statusTemplateIdentifier,
+  codec: statusTemplateCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "status_template"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: status_templateUniques
+};
 const attachmentUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2288,6 +2303,29 @@ const warden_sync_queueUniques = [{
   attributes: ["id"],
   isPrimary: true
 }];
+const signal_clusterUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const signal_cluster_resourceOptionsConfig = {
+  executor: executor,
+  name: "signal_cluster",
+  identifier: "main.public.signal_cluster",
+  from: signalClusterIdentifier,
+  codec: signalClusterCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "signal_cluster"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: signal_clusterUniques
+};
 const signalUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2405,13 +2443,14 @@ const registryConfig = {
     projectStatusConfig: projectStatusConfigCodec,
     int4: TYPES.int,
     projectLink: projectLinkCodec,
-    statusTemplate: statusTemplateCodec,
-    signalCluster: signalClusterCodec,
     vote: voteCodec,
     voteType: voteTypeCodec,
+    statusTemplate: statusTemplateCodec,
     attachment: attachmentCodec,
     wardenSyncQueue: wardenSyncQueueCodec,
     jsonb: TYPES.jsonb,
+    signalCluster: signalClusterCodec,
+    vector: spec_signalCluster_attributes_centroid_codec_vector,
     signal: signalCodec,
     post: postCodec,
     project: projectCodec,
@@ -2428,9 +2467,8 @@ const registryConfig = {
     user: user_resourceOptionsConfig,
     project_status_config: project_status_config_resourceOptionsConfig,
     project_link: project_link_resourceOptionsConfig,
-    status_template: status_template_resourceOptionsConfig,
-    signal_cluster: signal_cluster_resourceOptionsConfig,
     vote: vote_resourceOptionsConfig,
+    status_template: status_template_resourceOptionsConfig,
     attachment: attachment_resourceOptionsConfig,
     warden_sync_queue: {
       executor: executor,
@@ -2451,6 +2489,7 @@ const registryConfig = {
       },
       uniques: warden_sync_queueUniques
     },
+    signal_cluster: signal_cluster_resourceOptionsConfig,
     signal: signal_resourceOptionsConfig,
     project: project_resourceOptionsConfig,
     post: post_resourceOptionsConfig
@@ -4321,6 +4360,13 @@ function ProjectLinkInput_titleApply(obj, val, info) {
 function ProjectLinkInput_orderApply(obj, val, info) {
   obj.set("order", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateVotePayload_voteEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_votePgResource, voteUniques[0].attributes, $mutation, fieldArgs);
+function VoteInput_voteTypeApply(obj, val, info) {
+  obj.set("vote_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VoteInput_weightApply(obj, val, info) {
+  obj.set("weight", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateStatusTemplatePayload_statusTemplateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_status_templatePgResource, status_templateUniques[0].attributes, $mutation, fieldArgs);
 function StatusTemplateInput_organizationIdApply(obj, val, info) {
   obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -4333,23 +4379,6 @@ function StatusTemplateInput_descriptionApply(obj, val, info) {
 }
 function StatusTemplateInput_showOnRoadmapApply(obj, val, info) {
   obj.set("show_on_roadmap", bakedInputRuntime(info.schema, info.field.type, val));
-}
-const CreateSignalClusterPayload_signalClusterEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_signal_clusterPgResource, signal_clusterUniques[0].attributes, $mutation, fieldArgs);
-function SignalClusterInput_labelApply(obj, val, info) {
-  obj.set("label", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function SignalClusterInput_summaryApply(obj, val, info) {
-  obj.set("summary", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function SignalClusterInput_memberCountApply(obj, val, info) {
-  obj.set("member_count", bakedInputRuntime(info.schema, info.field.type, val));
-}
-const CreateVotePayload_voteEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_votePgResource, voteUniques[0].attributes, $mutation, fieldArgs);
-function VoteInput_voteTypeApply(obj, val, info) {
-  obj.set("vote_type", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function VoteInput_weightApply(obj, val, info) {
-  obj.set("weight", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateAttachmentPayload_attachmentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_attachmentPgResource, attachmentUniques[0].attributes, $mutation, fieldArgs);
 function AttachmentInput_storageKeyApply(obj, val, info) {
@@ -4388,6 +4417,16 @@ function WardenSyncQueueInput_lastErrorApply(obj, val, info) {
 }
 function WardenSyncQueueInput_nextRetryAtApply(obj, val, info) {
   obj.set("next_retry_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateSignalClusterPayload_signalClusterEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_signal_clusterPgResource, signal_clusterUniques[0].attributes, $mutation, fieldArgs);
+function SignalClusterInput_labelApply(obj, val, info) {
+  obj.set("label", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function SignalClusterInput_summaryApply(obj, val, info) {
+  obj.set("summary", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function SignalClusterInput_memberCountApply(obj, val, info) {
+  obj.set("member_count", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateProjectPayload_projectEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_projectPgResource, projectUniques[0].attributes, $mutation, fieldArgs);
 function ProjectInput_imageApply(obj, val, info) {
@@ -4884,77 +4923,14 @@ const planWrapper10 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan12(_, args) {
-  const $insert = pgInsertSingle(otherSource_status_templatePgResource);
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper11 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "statusTemplate"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    let organizationId;
-    organizationId = input.organizationId;
-    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
-  });
-  return plan();
-};
-function oldPlan11(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan12.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.createStatusTemplate, but that function did not return a step!
-${String(oldPlan12)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper12 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $input = fieldArgs.getRaw(["input", "statusTemplate"]);
-  sideEffect([$result, $input], async ([result, input]) => {
-    if (!result) return;
-    const {
-        organizationId
-      } = input,
-      templateId = result?.id;
-    if (!templateId) return;
-    try {
-      await events.emit({
-        type: "backfeed.statusTemplate.created",
-        data: {
-          statusTemplateId: templateId,
-          organizationId
-        },
-        organizationId,
-        subject: templateId
-      });
-    } catch (error) {
-      console.error("[Events] Failed to emit statusTemplate.created:", error);
-    }
-  });
-  return $result;
-};
-function oldPlan13(_, args) {
+function oldPlan11(_, args) {
   const $insert = pgInsertSingle(otherSource_votePgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper13 = (plan, _, fieldArgs) => {
+const planWrapper11 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "vote"]),
     $db = context().get("db");
@@ -4994,6 +4970,69 @@ const planWrapper13 = (plan, _, fieldArgs) => {
       });
     } catch (error) {
       console.error("[Events] Failed to emit vote.created:", error);
+    }
+  });
+  return $result;
+};
+function oldPlan13(_, args) {
+  const $insert = pgInsertSingle(otherSource_status_templatePgResource);
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper12 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "statusTemplate"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    organizationId = input.organizationId;
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan12(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan13.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.createStatusTemplate, but that function did not return a step!
+${String(oldPlan13)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper13 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $input = fieldArgs.getRaw(["input", "statusTemplate"]);
+  sideEffect([$result, $input], async ([result, input]) => {
+    if (!result) return;
+    const {
+        organizationId
+      } = input,
+      templateId = result?.id;
+    if (!templateId) return;
+    try {
+      await events.emit({
+        type: "backfeed.statusTemplate.created",
+        data: {
+          statusTemplateId: templateId,
+          organizationId
+        },
+        organizationId,
+        subject: templateId
+      });
+    } catch (error) {
+      console.error("[Events] Failed to emit statusTemplate.created:", error);
     }
   });
   return $result;
@@ -5817,88 +5856,6 @@ const planWrapper32 = (plan, _, fieldArgs) => {
   return $result;
 };
 const oldPlan34 = (_$root, args) => {
-  const $update = pgUpdateSingle(otherSource_status_templatePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper33 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    let organizationId;
-    {
-      const statusTemplate = await db.query.statusTemplates.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        }
-      });
-      if (!statusTemplate) throw Error("Status template not found");
-      organizationId = statusTemplate.organizationId;
-    }
-    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
-  });
-  return plan();
-};
-function oldPlan33(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan34.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.updateStatusTemplate, but that function did not return a step!
-${String(oldPlan34)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper34 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $templateId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
-    if (!result) return;
-    const template = await db.query.statusTemplates.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, templateId);
-      },
-      columns: {
-        organizationId: !0
-      }
-    });
-    if (!template) return;
-    try {
-      await events.emit({
-        type: "backfeed.statusTemplate.updated",
-        data: {
-          statusTemplateId: templateId,
-          organizationId: template.organizationId
-        },
-        organizationId: template.organizationId,
-        subject: templateId
-      });
-    } catch (error) {
-      console.error("[Events] Failed to emit statusTemplate.updated:", error);
-    }
-  });
-  return $result;
-};
-const oldPlan36 = (_$root, args) => {
   const $update = pgUpdateSingle(otherSource_votePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5907,7 +5864,7 @@ const oldPlan36 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper35 = (plan, _, fieldArgs) => {
+const planWrapper33 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5924,25 +5881,25 @@ const planWrapper35 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan35(...planParams) {
+function oldPlan33(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan36.apply(this, args);
+        $prev = oldPlan34.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateVote, but that function did not return a step!
-${String(oldPlan36)}`);
+${String(oldPlan34)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper36 = (plan, _, fieldArgs) => {
+const planWrapper34 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $voteId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5981,6 +5938,88 @@ const planWrapper36 = (plan, _, fieldArgs) => {
       });
     } catch (error) {
       console.error("[Events] Failed to emit vote.updated:", error);
+    }
+  });
+  return $result;
+};
+const oldPlan36 = (_$root, args) => {
+  const $update = pgUpdateSingle(otherSource_status_templatePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper35 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    {
+      const statusTemplate = await db.query.statusTemplates.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!statusTemplate) throw Error("Status template not found");
+      organizationId = statusTemplate.organizationId;
+    }
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan35(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan36.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.updateStatusTemplate, but that function did not return a step!
+${String(oldPlan36)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper36 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $templateId = fieldArgs.getRaw(["input", "rowId"]),
+    $db = context().get("db");
+  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
+    if (!result) return;
+    const template = await db.query.statusTemplates.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, templateId);
+      },
+      columns: {
+        organizationId: !0
+      }
+    });
+    if (!template) return;
+    try {
+      await events.emit({
+        type: "backfeed.statusTemplate.updated",
+        data: {
+          statusTemplateId: templateId,
+          organizationId: template.organizationId
+        },
+        organizationId: template.organizationId,
+        subject: templateId
+      });
+    } catch (error) {
+      console.error("[Events] Failed to emit statusTemplate.updated:", error);
     }
   });
   return $result;
@@ -6677,88 +6716,6 @@ const planWrapper55 = (plan, _, fieldArgs) => {
   return $result;
 };
 const oldPlan57 = (_$root, args) => {
-  const $delete = pgDeleteSingle(otherSource_status_templatePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper56 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    let organizationId;
-    {
-      const statusTemplate = await db.query.statusTemplates.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        }
-      });
-      if (!statusTemplate) throw Error("Status template not found");
-      organizationId = statusTemplate.organizationId;
-    }
-    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
-  });
-  return plan();
-};
-function oldPlan56(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan57.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
-${String(oldPlan57)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper56(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper57 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $templateId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
-    if (!result) return;
-    const template = await db.query.statusTemplates.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, templateId);
-      },
-      columns: {
-        organizationId: !0
-      }
-    });
-    if (!template) return;
-    try {
-      await events.emit({
-        type: "backfeed.statusTemplate.deleted",
-        data: {
-          statusTemplateId: templateId,
-          organizationId: template.organizationId
-        },
-        organizationId: template.organizationId,
-        subject: templateId
-      });
-    } catch (error) {
-      console.error("[Events] Failed to emit statusTemplate.deleted:", error);
-    }
-  });
-  return $result;
-};
-const oldPlan59 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_votePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6767,25 +6724,25 @@ const oldPlan59 = (_$root, args) => {
     result: $delete
   });
 };
-function oldPlan58(...planParams) {
+function oldPlan56(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan59.apply(this, args);
+        $prev = oldPlan57.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteVote, but that function did not return a step!
-${String(oldPlan59)}`);
+${String(oldPlan57)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper59 = (plan, _, fieldArgs) => {
+const planWrapper57 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $voteId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -6824,6 +6781,88 @@ const planWrapper59 = (plan, _, fieldArgs) => {
       });
     } catch (error) {
       console.error("[Events] Failed to emit vote.deleted:", error);
+    }
+  });
+  return $result;
+};
+const oldPlan59 = (_$root, args) => {
+  const $delete = pgDeleteSingle(otherSource_status_templatePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper58 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    {
+      const statusTemplate = await db.query.statusTemplates.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!statusTemplate) throw Error("Status template not found");
+      organizationId = statusTemplate.organizationId;
+    }
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan58(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan59.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
+${String(oldPlan59)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper58(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper59 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $templateId = fieldArgs.getRaw(["input", "rowId"]),
+    $db = context().get("db");
+  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
+    if (!result) return;
+    const template = await db.query.statusTemplates.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, templateId);
+      },
+      columns: {
+        organizationId: !0
+      }
+    });
+    if (!template) return;
+    try {
+      await events.emit({
+        type: "backfeed.statusTemplate.deleted",
+        data: {
+          statusTemplateId: templateId,
+          organizationId: template.organizationId
+        },
+        organizationId: template.organizationId,
+        subject: templateId
+      });
+    } catch (error) {
+      console.error("[Events] Failed to emit statusTemplate.deleted:", error);
     }
   });
   return $result;
@@ -7176,7 +7215,7 @@ type Post {
   statusUpdatedAt: Datetime!
   createdAt: Datetime!
   updatedAt: Datetime!
-  number: Int!
+  number: Int
   source: String
   sentiment: String
   aiTags: JSON
@@ -16633,6 +16672,52 @@ input ProjectLinkInput {
   updatedAt: Datetime
 }
 
+"""The output of our create \`Vote\` mutation."""
+type CreateVotePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vote\` that was created by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vote\`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering \`Vote\`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the create \`Vote\` mutation."""
+input CreateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Vote\` to be created by this mutation."""
+  vote: VoteInput!
+}
+
+"""An input for mutations affecting \`Vote\`"""
+input VoteInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  voteType: VoteType!
+  createdAt: Datetime
+  updatedAt: Datetime
+  weight: Int
+}
+
 """The output of our create \`StatusTemplate\` mutation."""
 type CreateStatusTemplatePayload {
   """
@@ -16680,98 +16765,6 @@ input StatusTemplateInput {
   createdAt: Datetime
   updatedAt: Datetime
   showOnRoadmap: Boolean
-}
-
-"""The output of our create \`SignalCluster\` mutation."""
-type CreateSignalClusterPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`SignalCluster\` that was created by this mutation."""
-  signalCluster: SignalCluster
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`SignalCluster\`. May be used by Relay 1."""
-  signalClusterEdge(
-    """The method to use when ordering \`SignalCluster\`."""
-    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): SignalClusterEdge
-}
-
-"""All input for the create \`SignalCluster\` mutation."""
-input CreateSignalClusterInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`SignalCluster\` to be created by this mutation."""
-  signalCluster: SignalClusterInput!
-}
-
-"""An input for mutations affecting \`SignalCluster\`"""
-input SignalClusterInput {
-  rowId: UUID
-  projectId: UUID!
-  label: String
-  summary: String
-  memberCount: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our create \`Vote\` mutation."""
-type CreateVotePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Vote\` that was created by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Vote\`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering \`Vote\`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the create \`Vote\` mutation."""
-input CreateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Vote\` to be created by this mutation."""
-  vote: VoteInput!
-}
-
-"""An input for mutations affecting \`Vote\`"""
-input VoteInput {
-  rowId: UUID
-  postId: UUID!
-  userId: UUID!
-  voteType: VoteType!
-  createdAt: Datetime
-  updatedAt: Datetime
-  weight: Int
 }
 
 """The output of our create \`Attachment\` mutation."""
@@ -16869,6 +16862,52 @@ input WardenSyncQueueInput {
   lastError: String
   nextRetryAt: Datetime
   createdAt: Datetime
+}
+
+"""The output of our create \`SignalCluster\` mutation."""
+type CreateSignalClusterPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`SignalCluster\` that was created by this mutation."""
+  signalCluster: SignalCluster
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`SignalCluster\`. May be used by Relay 1."""
+  signalClusterEdge(
+    """The method to use when ordering \`SignalCluster\`."""
+    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalClusterEdge
+}
+
+"""All input for the create \`SignalCluster\` mutation."""
+input CreateSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`SignalCluster\` to be created by this mutation."""
+  signalCluster: SignalClusterInput!
+}
+
+"""An input for mutations affecting \`SignalCluster\`"""
+input SignalClusterInput {
+  rowId: UUID
+  projectId: UUID!
+  label: String
+  summary: String
+  memberCount: Int
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create \`Project\` mutation."""
@@ -17328,6 +17367,55 @@ input ProjectLinkPatch {
   updatedAt: Datetime
 }
 
+"""The output of our update \`Vote\` mutation."""
+type UpdateVotePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vote\` that was updated by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vote\`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering \`Vote\`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the \`updateVote\` mutation."""
+input UpdateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Vote\` being updated.
+  """
+  patch: VotePatch!
+}
+
+"""Represents an update to a \`Vote\`. Fields that are set will be updated."""
+input VotePatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  voteType: VoteType
+  createdAt: Datetime
+  updatedAt: Datetime
+  weight: Int
+}
+
 """The output of our update \`StatusTemplate\` mutation."""
 type UpdateStatusTemplatePayload {
   """
@@ -17380,106 +17468,6 @@ input StatusTemplatePatch {
   createdAt: Datetime
   updatedAt: Datetime
   showOnRoadmap: Boolean
-}
-
-"""The output of our update \`SignalCluster\` mutation."""
-type UpdateSignalClusterPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`SignalCluster\` that was updated by this mutation."""
-  signalCluster: SignalCluster
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`SignalCluster\`. May be used by Relay 1."""
-  signalClusterEdge(
-    """The method to use when ordering \`SignalCluster\`."""
-    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): SignalClusterEdge
-}
-
-"""All input for the \`updateSignalCluster\` mutation."""
-input UpdateSignalClusterInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`SignalCluster\` being updated.
-  """
-  patch: SignalClusterPatch!
-}
-
-"""
-Represents an update to a \`SignalCluster\`. Fields that are set will be updated.
-"""
-input SignalClusterPatch {
-  rowId: UUID
-  projectId: UUID
-  label: String
-  summary: String
-  memberCount: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our update \`Vote\` mutation."""
-type UpdateVotePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Vote\` that was updated by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Vote\`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering \`Vote\`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the \`updateVote\` mutation."""
-input UpdateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Vote\` being updated.
-  """
-  patch: VotePatch!
-}
-
-"""Represents an update to a \`Vote\`. Fields that are set will be updated."""
-input VotePatch {
-  rowId: UUID
-  postId: UUID
-  userId: UUID
-  voteType: VoteType
-  createdAt: Datetime
-  updatedAt: Datetime
-  weight: Int
 }
 
 """The output of our update \`Attachment\` mutation."""
@@ -17587,6 +17575,57 @@ input WardenSyncQueuePatch {
   lastError: String
   nextRetryAt: Datetime
   createdAt: Datetime
+}
+
+"""The output of our update \`SignalCluster\` mutation."""
+type UpdateSignalClusterPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`SignalCluster\` that was updated by this mutation."""
+  signalCluster: SignalCluster
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`SignalCluster\`. May be used by Relay 1."""
+  signalClusterEdge(
+    """The method to use when ordering \`SignalCluster\`."""
+    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalClusterEdge
+}
+
+"""All input for the \`updateSignalCluster\` mutation."""
+input UpdateSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`SignalCluster\` being updated.
+  """
+  patch: SignalClusterPatch!
+}
+
+"""
+Represents an update to a \`SignalCluster\`. Fields that are set will be updated.
+"""
+input SignalClusterPatch {
+  rowId: UUID
+  projectId: UUID
+  label: String
+  summary: String
+  memberCount: Int
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our update \`Project\` mutation."""
@@ -17934,72 +17973,6 @@ input DeleteProjectLinkInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`StatusTemplate\` mutation."""
-type DeleteStatusTemplatePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`StatusTemplate\` that was deleted by this mutation."""
-  statusTemplate: StatusTemplate
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`StatusTemplate\`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering \`StatusTemplate\`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
-}
-
-"""All input for the \`deleteStatusTemplate\` mutation."""
-input DeleteStatusTemplateInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete \`SignalCluster\` mutation."""
-type DeleteSignalClusterPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`SignalCluster\` that was deleted by this mutation."""
-  signalCluster: SignalCluster
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`SignalCluster\`. May be used by Relay 1."""
-  signalClusterEdge(
-    """The method to use when ordering \`SignalCluster\`."""
-    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): SignalClusterEdge
-}
-
-"""All input for the \`deleteSignalCluster\` mutation."""
-input DeleteSignalClusterInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`Vote\` mutation."""
 type DeleteVotePayload {
   """
@@ -18025,6 +17998,39 @@ type DeleteVotePayload {
 
 """All input for the \`deleteVote\` mutation."""
 input DeleteVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`StatusTemplate\` mutation."""
+type DeleteStatusTemplatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`StatusTemplate\` that was deleted by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`StatusTemplate\`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering \`StatusTemplate\`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the \`deleteStatusTemplate\` mutation."""
+input DeleteStatusTemplateInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18091,6 +18097,39 @@ type DeleteWardenSyncQueuePayload {
 
 """All input for the \`deleteWardenSyncQueue\` mutation."""
 input DeleteWardenSyncQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`SignalCluster\` mutation."""
+type DeleteSignalClusterPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`SignalCluster\` that was deleted by this mutation."""
+  signalCluster: SignalCluster
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`SignalCluster\`. May be used by Relay 1."""
+  signalClusterEdge(
+    """The method to use when ordering \`SignalCluster\`."""
+    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalClusterEdge
+}
+
+"""All input for the \`deleteSignalCluster\` mutation."""
+input DeleteSignalClusterInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18289,26 +18328,26 @@ type Query implements Node {
   """Get a single \`ProjectLink\`."""
   projectLink(rowId: UUID!): ProjectLink
 
-  """Get a single \`StatusTemplate\`."""
-  statusTemplate(rowId: UUID!): StatusTemplate
-
-  """Get a single \`StatusTemplate\`."""
-  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
-
-  """Get a single \`SignalCluster\`."""
-  signalCluster(rowId: UUID!): SignalCluster
-
   """Get a single \`Vote\`."""
   vote(rowId: UUID!): Vote
 
   """Get a single \`Vote\`."""
   voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
 
+  """Get a single \`StatusTemplate\`."""
+  statusTemplate(rowId: UUID!): StatusTemplate
+
+  """Get a single \`StatusTemplate\`."""
+  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
+
   """Get a single \`Attachment\`."""
   attachment(rowId: UUID!): Attachment
 
   """Get a single \`WardenSyncQueue\`."""
   wardenSyncQueue(rowId: UUID!): WardenSyncQueue
+
+  """Get a single \`SignalCluster\`."""
+  signalCluster(rowId: UUID!): SignalCluster
 
   """Get a single \`Signal\`."""
   signal(rowId: UUID!): Signal
@@ -18600,74 +18639,6 @@ type Query implements Node {
     orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLinkConnection
 
-  """Reads and enables pagination through a set of \`StatusTemplate\`."""
-  statusTemplates(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: StatusTemplateCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: StatusTemplateFilter
-
-    """The method to use when ordering \`StatusTemplate\`."""
-    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
-  ): StatusTemplateConnection
-
-  """Reads and enables pagination through a set of \`SignalCluster\`."""
-  signalClusters(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: SignalClusterCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: SignalClusterFilter
-
-    """The method to use when ordering \`SignalCluster\`."""
-    orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SignalClusterConnection
-
   """Reads and enables pagination through a set of \`Vote\`."""
   votes(
     """Only read the first \`n\` values of the set."""
@@ -18701,6 +18672,40 @@ type Query implements Node {
     """The method to use when ordering \`Vote\`."""
     orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
   ): VoteConnection
+
+  """Reads and enables pagination through a set of \`StatusTemplate\`."""
+  statusTemplates(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: StatusTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StatusTemplateFilter
+
+    """The method to use when ordering \`StatusTemplate\`."""
+    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): StatusTemplateConnection
 
   """Reads and enables pagination through a set of \`Attachment\`."""
   attachments(
@@ -18769,6 +18774,40 @@ type Query implements Node {
     """The method to use when ordering \`WardenSyncQueue\`."""
     orderBy: [WardenSyncQueueOrderBy!] = [PRIMARY_KEY_ASC]
   ): WardenSyncQueueConnection
+
+  """Reads and enables pagination through a set of \`SignalCluster\`."""
+  signalClusters(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SignalClusterCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SignalClusterFilter
+
+    """The method to use when ordering \`SignalCluster\`."""
+    orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SignalClusterConnection
 
   """Reads and enables pagination through a set of \`Signal\`."""
   signals(
@@ -18947,22 +18986,6 @@ type Mutation {
     input: CreateProjectLinkInput!
   ): CreateProjectLinkPayload
 
-  """Creates a single \`StatusTemplate\`."""
-  createStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateStatusTemplateInput!
-  ): CreateStatusTemplatePayload
-
-  """Creates a single \`SignalCluster\`."""
-  createSignalCluster(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateSignalClusterInput!
-  ): CreateSignalClusterPayload
-
   """Creates a single \`Vote\`."""
   createVote(
     """
@@ -18970,6 +18993,14 @@ type Mutation {
     """
     input: CreateVoteInput!
   ): CreateVotePayload
+
+  """Creates a single \`StatusTemplate\`."""
+  createStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateStatusTemplateInput!
+  ): CreateStatusTemplatePayload
 
   """Creates a single \`Attachment\`."""
   createAttachment(
@@ -18986,6 +19017,14 @@ type Mutation {
     """
     input: CreateWardenSyncQueueInput!
   ): CreateWardenSyncQueuePayload
+
+  """Creates a single \`SignalCluster\`."""
+  createSignalCluster(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSignalClusterInput!
+  ): CreateSignalClusterPayload
 
   """Creates a single \`Project\`."""
   createProject(
@@ -19059,22 +19098,6 @@ type Mutation {
     input: UpdateProjectLinkInput!
   ): UpdateProjectLinkPayload
 
-  """Updates a single \`StatusTemplate\` using a unique key and a patch."""
-  updateStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateStatusTemplateInput!
-  ): UpdateStatusTemplatePayload
-
-  """Updates a single \`SignalCluster\` using a unique key and a patch."""
-  updateSignalCluster(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSignalClusterInput!
-  ): UpdateSignalClusterPayload
-
   """Updates a single \`Vote\` using a unique key and a patch."""
   updateVote(
     """
@@ -19082,6 +19105,14 @@ type Mutation {
     """
     input: UpdateVoteInput!
   ): UpdateVotePayload
+
+  """Updates a single \`StatusTemplate\` using a unique key and a patch."""
+  updateStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateStatusTemplateInput!
+  ): UpdateStatusTemplatePayload
 
   """Updates a single \`Attachment\` using a unique key and a patch."""
   updateAttachment(
@@ -19098,6 +19129,14 @@ type Mutation {
     """
     input: UpdateWardenSyncQueueInput!
   ): UpdateWardenSyncQueuePayload
+
+  """Updates a single \`SignalCluster\` using a unique key and a patch."""
+  updateSignalCluster(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSignalClusterInput!
+  ): UpdateSignalClusterPayload
 
   """Updates a single \`Project\` using a unique key and a patch."""
   updateProject(
@@ -19171,22 +19210,6 @@ type Mutation {
     input: DeleteProjectLinkInput!
   ): DeleteProjectLinkPayload
 
-  """Deletes a single \`StatusTemplate\` using a unique key."""
-  deleteStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteStatusTemplateInput!
-  ): DeleteStatusTemplatePayload
-
-  """Deletes a single \`SignalCluster\` using a unique key."""
-  deleteSignalCluster(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSignalClusterInput!
-  ): DeleteSignalClusterPayload
-
   """Deletes a single \`Vote\` using a unique key."""
   deleteVote(
     """
@@ -19194,6 +19217,14 @@ type Mutation {
     """
     input: DeleteVoteInput!
   ): DeleteVotePayload
+
+  """Deletes a single \`StatusTemplate\` using a unique key."""
+  deleteStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteStatusTemplateInput!
+  ): DeleteStatusTemplatePayload
 
   """Deletes a single \`Attachment\` using a unique key."""
   deleteAttachment(
@@ -19210,6 +19241,14 @@ type Mutation {
     """
     input: DeleteWardenSyncQueueInput!
   ): DeleteWardenSyncQueuePayload
+
+  """Deletes a single \`SignalCluster\` using a unique key."""
+  deleteSignalCluster(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSignalClusterInput!
+  ): DeleteSignalClusterPayload
 
   """Deletes a single \`Project\` using a unique key."""
   deleteProject(
@@ -20023,17 +20062,17 @@ ${String(oldPlan2)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan11.apply(this, args);
+                $prev = oldPlan12.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createStatusTemplate, but that function did not return a step!
-${String(oldPlan11)}`);
+${String(oldPlan12)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20092,17 +20131,17 @@ ${String(oldPlan6)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan13.apply(this, args);
+                $prev = oldPlan11.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createVote, but that function did not return a step!
-${String(oldPlan13)}`);
+${String(oldPlan11)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20325,17 +20364,17 @@ ${String(oldPlan47)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan56.apply(this, args);
+                $prev = oldPlan58.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
-${String(oldPlan56)}`);
+${String(oldPlan58)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper59(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20394,17 +20433,17 @@ ${String(oldPlan51)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan58.apply(this, args);
+                $prev = oldPlan56.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteVote, but that function did not return a step!
-${String(oldPlan58)}`);
+${String(oldPlan56)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper59(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20686,17 +20725,17 @@ ${String(oldPlan24)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan33.apply(this, args);
+                $prev = oldPlan35.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateStatusTemplate, but that function did not return a step!
-${String(oldPlan33)}`);
+${String(oldPlan35)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20755,17 +20794,17 @@ ${String(oldPlan28)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan35.apply(this, args);
+                $prev = oldPlan33.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateVote, but that function did not return a step!
-${String(oldPlan35)}`);
+${String(oldPlan33)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;

@@ -43,7 +43,7 @@ type Post {
   statusUpdatedAt: Datetime!
   createdAt: Datetime!
   updatedAt: Datetime!
-  number: Int!
+  number: Int
   source: String
   sentiment: String
   aiTags: JSON
@@ -9500,6 +9500,52 @@ input ProjectLinkInput {
   updatedAt: Datetime
 }
 
+"""The output of our create `Vote` mutation."""
+type CreateVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was created by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the create `Vote` mutation."""
+input CreateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Vote` to be created by this mutation."""
+  vote: VoteInput!
+}
+
+"""An input for mutations affecting `Vote`"""
+input VoteInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  voteType: VoteType!
+  createdAt: Datetime
+  updatedAt: Datetime
+  weight: Int
+}
+
 """The output of our create `StatusTemplate` mutation."""
 type CreateStatusTemplatePayload {
   """
@@ -9547,98 +9593,6 @@ input StatusTemplateInput {
   createdAt: Datetime
   updatedAt: Datetime
   showOnRoadmap: Boolean
-}
-
-"""The output of our create `SignalCluster` mutation."""
-type CreateSignalClusterPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `SignalCluster` that was created by this mutation."""
-  signalCluster: SignalCluster
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `SignalCluster`. May be used by Relay 1."""
-  signalClusterEdge(
-    """The method to use when ordering `SignalCluster`."""
-    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): SignalClusterEdge
-}
-
-"""All input for the create `SignalCluster` mutation."""
-input CreateSignalClusterInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `SignalCluster` to be created by this mutation."""
-  signalCluster: SignalClusterInput!
-}
-
-"""An input for mutations affecting `SignalCluster`"""
-input SignalClusterInput {
-  rowId: UUID
-  projectId: UUID!
-  label: String
-  summary: String
-  memberCount: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our create `Vote` mutation."""
-type CreateVotePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Vote` that was created by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Vote`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering `Vote`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the create `Vote` mutation."""
-input CreateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Vote` to be created by this mutation."""
-  vote: VoteInput!
-}
-
-"""An input for mutations affecting `Vote`"""
-input VoteInput {
-  rowId: UUID
-  postId: UUID!
-  userId: UUID!
-  voteType: VoteType!
-  createdAt: Datetime
-  updatedAt: Datetime
-  weight: Int
 }
 
 """The output of our create `Attachment` mutation."""
@@ -9736,6 +9690,52 @@ input WardenSyncQueueInput {
   lastError: String
   nextRetryAt: Datetime
   createdAt: Datetime
+}
+
+"""The output of our create `SignalCluster` mutation."""
+type CreateSignalClusterPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SignalCluster` that was created by this mutation."""
+  signalCluster: SignalCluster
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SignalCluster`. May be used by Relay 1."""
+  signalClusterEdge(
+    """The method to use when ordering `SignalCluster`."""
+    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalClusterEdge
+}
+
+"""All input for the create `SignalCluster` mutation."""
+input CreateSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `SignalCluster` to be created by this mutation."""
+  signalCluster: SignalClusterInput!
+}
+
+"""An input for mutations affecting `SignalCluster`"""
+input SignalClusterInput {
+  rowId: UUID
+  projectId: UUID!
+  label: String
+  summary: String
+  memberCount: Int
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create `Project` mutation."""
@@ -10195,6 +10195,55 @@ input ProjectLinkPatch {
   updatedAt: Datetime
 }
 
+"""The output of our update `Vote` mutation."""
+type UpdateVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was updated by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the `updateVote` mutation."""
+input UpdateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Vote` being updated.
+  """
+  patch: VotePatch!
+}
+
+"""Represents an update to a `Vote`. Fields that are set will be updated."""
+input VotePatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  voteType: VoteType
+  createdAt: Datetime
+  updatedAt: Datetime
+  weight: Int
+}
+
 """The output of our update `StatusTemplate` mutation."""
 type UpdateStatusTemplatePayload {
   """
@@ -10247,106 +10296,6 @@ input StatusTemplatePatch {
   createdAt: Datetime
   updatedAt: Datetime
   showOnRoadmap: Boolean
-}
-
-"""The output of our update `SignalCluster` mutation."""
-type UpdateSignalClusterPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `SignalCluster` that was updated by this mutation."""
-  signalCluster: SignalCluster
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `SignalCluster`. May be used by Relay 1."""
-  signalClusterEdge(
-    """The method to use when ordering `SignalCluster`."""
-    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): SignalClusterEdge
-}
-
-"""All input for the `updateSignalCluster` mutation."""
-input UpdateSignalClusterInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `SignalCluster` being updated.
-  """
-  patch: SignalClusterPatch!
-}
-
-"""
-Represents an update to a `SignalCluster`. Fields that are set will be updated.
-"""
-input SignalClusterPatch {
-  rowId: UUID
-  projectId: UUID
-  label: String
-  summary: String
-  memberCount: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our update `Vote` mutation."""
-type UpdateVotePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Vote` that was updated by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Vote`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering `Vote`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the `updateVote` mutation."""
-input UpdateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Vote` being updated.
-  """
-  patch: VotePatch!
-}
-
-"""Represents an update to a `Vote`. Fields that are set will be updated."""
-input VotePatch {
-  rowId: UUID
-  postId: UUID
-  userId: UUID
-  voteType: VoteType
-  createdAt: Datetime
-  updatedAt: Datetime
-  weight: Int
 }
 
 """The output of our update `Attachment` mutation."""
@@ -10454,6 +10403,57 @@ input WardenSyncQueuePatch {
   lastError: String
   nextRetryAt: Datetime
   createdAt: Datetime
+}
+
+"""The output of our update `SignalCluster` mutation."""
+type UpdateSignalClusterPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SignalCluster` that was updated by this mutation."""
+  signalCluster: SignalCluster
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SignalCluster`. May be used by Relay 1."""
+  signalClusterEdge(
+    """The method to use when ordering `SignalCluster`."""
+    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalClusterEdge
+}
+
+"""All input for the `updateSignalCluster` mutation."""
+input UpdateSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `SignalCluster` being updated.
+  """
+  patch: SignalClusterPatch!
+}
+
+"""
+Represents an update to a `SignalCluster`. Fields that are set will be updated.
+"""
+input SignalClusterPatch {
+  rowId: UUID
+  projectId: UUID
+  label: String
+  summary: String
+  memberCount: Int
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our update `Project` mutation."""
@@ -10801,72 +10801,6 @@ input DeleteProjectLinkInput {
   rowId: UUID!
 }
 
-"""The output of our delete `StatusTemplate` mutation."""
-type DeleteStatusTemplatePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `StatusTemplate` that was deleted by this mutation."""
-  statusTemplate: StatusTemplate
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `StatusTemplate`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering `StatusTemplate`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
-}
-
-"""All input for the `deleteStatusTemplate` mutation."""
-input DeleteStatusTemplateInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `SignalCluster` mutation."""
-type DeleteSignalClusterPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `SignalCluster` that was deleted by this mutation."""
-  signalCluster: SignalCluster
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `SignalCluster`. May be used by Relay 1."""
-  signalClusterEdge(
-    """The method to use when ordering `SignalCluster`."""
-    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): SignalClusterEdge
-}
-
-"""All input for the `deleteSignalCluster` mutation."""
-input DeleteSignalClusterInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `Vote` mutation."""
 type DeleteVotePayload {
   """
@@ -10892,6 +10826,39 @@ type DeleteVotePayload {
 
 """All input for the `deleteVote` mutation."""
 input DeleteVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `StatusTemplate` mutation."""
+type DeleteStatusTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` that was deleted by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `StatusTemplate`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the `deleteStatusTemplate` mutation."""
+input DeleteStatusTemplateInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10958,6 +10925,39 @@ type DeleteWardenSyncQueuePayload {
 
 """All input for the `deleteWardenSyncQueue` mutation."""
 input DeleteWardenSyncQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `SignalCluster` mutation."""
+type DeleteSignalClusterPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SignalCluster` that was deleted by this mutation."""
+  signalCluster: SignalCluster
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SignalCluster`. May be used by Relay 1."""
+  signalClusterEdge(
+    """The method to use when ordering `SignalCluster`."""
+    orderBy: [SignalClusterOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SignalClusterEdge
+}
+
+"""All input for the `deleteSignalCluster` mutation."""
+input DeleteSignalClusterInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -11156,26 +11156,26 @@ type Query implements Node {
   """Get a single `ProjectLink`."""
   projectLink(rowId: UUID!): ProjectLink
 
-  """Get a single `StatusTemplate`."""
-  statusTemplate(rowId: UUID!): StatusTemplate
-
-  """Get a single `StatusTemplate`."""
-  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
-
-  """Get a single `SignalCluster`."""
-  signalCluster(rowId: UUID!): SignalCluster
-
   """Get a single `Vote`."""
   vote(rowId: UUID!): Vote
 
   """Get a single `Vote`."""
   voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
 
+  """Get a single `StatusTemplate`."""
+  statusTemplate(rowId: UUID!): StatusTemplate
+
+  """Get a single `StatusTemplate`."""
+  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
+
   """Get a single `Attachment`."""
   attachment(rowId: UUID!): Attachment
 
   """Get a single `WardenSyncQueue`."""
   wardenSyncQueue(rowId: UUID!): WardenSyncQueue
+
+  """Get a single `SignalCluster`."""
+  signalCluster(rowId: UUID!): SignalCluster
 
   """Get a single `Signal`."""
   signal(rowId: UUID!): Signal
@@ -11467,74 +11467,6 @@ type Query implements Node {
     orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLinkConnection
 
-  """Reads and enables pagination through a set of `StatusTemplate`."""
-  statusTemplates(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: StatusTemplateCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: StatusTemplateFilter
-
-    """The method to use when ordering `StatusTemplate`."""
-    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
-  ): StatusTemplateConnection
-
-  """Reads and enables pagination through a set of `SignalCluster`."""
-  signalClusters(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: SignalClusterCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: SignalClusterFilter
-
-    """The method to use when ordering `SignalCluster`."""
-    orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SignalClusterConnection
-
   """Reads and enables pagination through a set of `Vote`."""
   votes(
     """Only read the first `n` values of the set."""
@@ -11568,6 +11500,40 @@ type Query implements Node {
     """The method to use when ordering `Vote`."""
     orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
   ): VoteConnection
+
+  """Reads and enables pagination through a set of `StatusTemplate`."""
+  statusTemplates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: StatusTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StatusTemplateFilter
+
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): StatusTemplateConnection
 
   """Reads and enables pagination through a set of `Attachment`."""
   attachments(
@@ -11636,6 +11602,40 @@ type Query implements Node {
     """The method to use when ordering `WardenSyncQueue`."""
     orderBy: [WardenSyncQueueOrderBy!] = [PRIMARY_KEY_ASC]
   ): WardenSyncQueueConnection
+
+  """Reads and enables pagination through a set of `SignalCluster`."""
+  signalClusters(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SignalClusterCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SignalClusterFilter
+
+    """The method to use when ordering `SignalCluster`."""
+    orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SignalClusterConnection
 
   """Reads and enables pagination through a set of `Signal`."""
   signals(
@@ -11814,22 +11814,6 @@ type Mutation {
     input: CreateProjectLinkInput!
   ): CreateProjectLinkPayload
 
-  """Creates a single `StatusTemplate`."""
-  createStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateStatusTemplateInput!
-  ): CreateStatusTemplatePayload
-
-  """Creates a single `SignalCluster`."""
-  createSignalCluster(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateSignalClusterInput!
-  ): CreateSignalClusterPayload
-
   """Creates a single `Vote`."""
   createVote(
     """
@@ -11837,6 +11821,14 @@ type Mutation {
     """
     input: CreateVoteInput!
   ): CreateVotePayload
+
+  """Creates a single `StatusTemplate`."""
+  createStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateStatusTemplateInput!
+  ): CreateStatusTemplatePayload
 
   """Creates a single `Attachment`."""
   createAttachment(
@@ -11853,6 +11845,14 @@ type Mutation {
     """
     input: CreateWardenSyncQueueInput!
   ): CreateWardenSyncQueuePayload
+
+  """Creates a single `SignalCluster`."""
+  createSignalCluster(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSignalClusterInput!
+  ): CreateSignalClusterPayload
 
   """Creates a single `Project`."""
   createProject(
@@ -11926,22 +11926,6 @@ type Mutation {
     input: UpdateProjectLinkInput!
   ): UpdateProjectLinkPayload
 
-  """Updates a single `StatusTemplate` using a unique key and a patch."""
-  updateStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateStatusTemplateInput!
-  ): UpdateStatusTemplatePayload
-
-  """Updates a single `SignalCluster` using a unique key and a patch."""
-  updateSignalCluster(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSignalClusterInput!
-  ): UpdateSignalClusterPayload
-
   """Updates a single `Vote` using a unique key and a patch."""
   updateVote(
     """
@@ -11949,6 +11933,14 @@ type Mutation {
     """
     input: UpdateVoteInput!
   ): UpdateVotePayload
+
+  """Updates a single `StatusTemplate` using a unique key and a patch."""
+  updateStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateStatusTemplateInput!
+  ): UpdateStatusTemplatePayload
 
   """Updates a single `Attachment` using a unique key and a patch."""
   updateAttachment(
@@ -11965,6 +11957,14 @@ type Mutation {
     """
     input: UpdateWardenSyncQueueInput!
   ): UpdateWardenSyncQueuePayload
+
+  """Updates a single `SignalCluster` using a unique key and a patch."""
+  updateSignalCluster(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSignalClusterInput!
+  ): UpdateSignalClusterPayload
 
   """Updates a single `Project` using a unique key and a patch."""
   updateProject(
@@ -12038,22 +12038,6 @@ type Mutation {
     input: DeleteProjectLinkInput!
   ): DeleteProjectLinkPayload
 
-  """Deletes a single `StatusTemplate` using a unique key."""
-  deleteStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteStatusTemplateInput!
-  ): DeleteStatusTemplatePayload
-
-  """Deletes a single `SignalCluster` using a unique key."""
-  deleteSignalCluster(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSignalClusterInput!
-  ): DeleteSignalClusterPayload
-
   """Deletes a single `Vote` using a unique key."""
   deleteVote(
     """
@@ -12061,6 +12045,14 @@ type Mutation {
     """
     input: DeleteVoteInput!
   ): DeleteVotePayload
+
+  """Deletes a single `StatusTemplate` using a unique key."""
+  deleteStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteStatusTemplateInput!
+  ): DeleteStatusTemplatePayload
 
   """Deletes a single `Attachment` using a unique key."""
   deleteAttachment(
@@ -12077,6 +12069,14 @@ type Mutation {
     """
     input: DeleteWardenSyncQueueInput!
   ): DeleteWardenSyncQueuePayload
+
+  """Deletes a single `SignalCluster` using a unique key."""
+  deleteSignalCluster(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSignalClusterInput!
+  ): DeleteSignalClusterPayload
 
   """Deletes a single `Project` using a unique key."""
   deleteProject(
