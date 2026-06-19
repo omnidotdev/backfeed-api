@@ -841,102 +841,6 @@ const spec_projectLink = {
   executor: executor
 };
 const projectLinkCodec = recordCodec(spec_projectLink);
-const voteIdentifier = sql.identifier("public", "vote");
-const voteTypeCodec = enumCodec({
-  name: "voteType",
-  identifier: sql.identifier("public", "vote_type"),
-  values: ["up", "down"],
-  description: undefined,
-  extensions: {
-    oid: "270486",
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "vote_type"
-    }
-  }
-});
-const spec_vote = {
-  name: "vote",
-  identifier: voteIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    post_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    user_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    vote_type: {
-      codec: voteTypeCodec,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "270656",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "vote"
-    }
-  },
-  executor: executor
-};
-const voteCodec = recordCodec(spec_vote);
 const statusTemplateIdentifier = sql.identifier("public", "status_template");
 const spec_statusTemplate = {
   name: "statusTemplate",
@@ -1147,6 +1051,113 @@ const spec_signalCluster = {
   executor: executor
 };
 const signalClusterCodec = recordCodec(spec_signalCluster);
+const voteIdentifier = sql.identifier("public", "vote");
+const voteTypeCodec = enumCodec({
+  name: "voteType",
+  identifier: sql.identifier("public", "vote_type"),
+  values: ["up", "down"],
+  description: undefined,
+  extensions: {
+    oid: "270486",
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vote_type"
+    }
+  }
+});
+const spec_vote = {
+  name: "vote",
+  identifier: voteIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    post_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    user_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    vote_type: {
+      codec: voteTypeCodec,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    weight: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "270656",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vote"
+    }
+  },
+  executor: executor
+};
+const voteCodec = recordCodec(spec_vote);
 const attachmentIdentifier = sql.identifier("public", "attachment");
 const spec_attachment = {
   name: "attachment",
@@ -2165,37 +2176,6 @@ const project_link_resourceOptionsConfig = {
   },
   uniques: project_linkUniques
 };
-const voteUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}, {
-  attributes: ["post_id", "user_id"],
-  extensions: {
-    tags: {
-      __proto__: null,
-      behavior: ["-update", "-delete"]
-    }
-  }
-}];
-const vote_resourceOptionsConfig = {
-  executor: executor,
-  name: "vote",
-  identifier: "main.public.vote",
-  from: voteIdentifier,
-  codec: voteCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "vote"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: voteUniques
-};
 const status_templateUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2249,6 +2229,37 @@ const signal_cluster_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: signal_clusterUniques
+};
+const voteUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}, {
+  attributes: ["post_id", "user_id"],
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
+    }
+  }
+}];
+const vote_resourceOptionsConfig = {
+  executor: executor,
+  name: "vote",
+  identifier: "main.public.vote",
+  from: voteIdentifier,
+  codec: voteCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vote"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: voteUniques
 };
 const attachmentUniques = [{
   attributes: ["id"],
@@ -2394,10 +2405,10 @@ const registryConfig = {
     projectStatusConfig: projectStatusConfigCodec,
     int4: TYPES.int,
     projectLink: projectLinkCodec,
-    vote: voteCodec,
-    voteType: voteTypeCodec,
     statusTemplate: statusTemplateCodec,
     signalCluster: signalClusterCodec,
+    vote: voteCodec,
+    voteType: voteTypeCodec,
     attachment: attachmentCodec,
     wardenSyncQueue: wardenSyncQueueCodec,
     jsonb: TYPES.jsonb,
@@ -2417,9 +2428,9 @@ const registryConfig = {
     user: user_resourceOptionsConfig,
     project_status_config: project_status_config_resourceOptionsConfig,
     project_link: project_link_resourceOptionsConfig,
-    vote: vote_resourceOptionsConfig,
     status_template: status_template_resourceOptionsConfig,
     signal_cluster: signal_cluster_resourceOptionsConfig,
+    vote: vote_resourceOptionsConfig,
     attachment: attachment_resourceOptionsConfig,
     warden_sync_queue: {
       executor: executor,
@@ -4310,10 +4321,6 @@ function ProjectLinkInput_titleApply(obj, val, info) {
 function ProjectLinkInput_orderApply(obj, val, info) {
   obj.set("order", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateVotePayload_voteEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_votePgResource, voteUniques[0].attributes, $mutation, fieldArgs);
-function VoteInput_voteTypeApply(obj, val, info) {
-  obj.set("vote_type", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateStatusTemplatePayload_statusTemplateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_status_templatePgResource, status_templateUniques[0].attributes, $mutation, fieldArgs);
 function StatusTemplateInput_organizationIdApply(obj, val, info) {
   obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -4336,6 +4343,13 @@ function SignalClusterInput_summaryApply(obj, val, info) {
 }
 function SignalClusterInput_memberCountApply(obj, val, info) {
   obj.set("member_count", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateVotePayload_voteEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_votePgResource, voteUniques[0].attributes, $mutation, fieldArgs);
+function VoteInput_voteTypeApply(obj, val, info) {
+  obj.set("vote_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VoteInput_weightApply(obj, val, info) {
+  obj.set("weight", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateAttachmentPayload_attachmentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_attachmentPgResource, attachmentUniques[0].attributes, $mutation, fieldArgs);
 function AttachmentInput_storageKeyApply(obj, val, info) {
@@ -4870,14 +4884,77 @@ const planWrapper10 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan11(_, args) {
-  const $insert = pgInsertSingle(otherSource_votePgResource);
+function oldPlan12(_, args) {
+  const $insert = pgInsertSingle(otherSource_status_templatePgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
 const planWrapper11 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "statusTemplate"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    organizationId = input.organizationId;
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan11(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan12.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.createStatusTemplate, but that function did not return a step!
+${String(oldPlan12)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper12 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $input = fieldArgs.getRaw(["input", "statusTemplate"]);
+  sideEffect([$result, $input], async ([result, input]) => {
+    if (!result) return;
+    const {
+        organizationId
+      } = input,
+      templateId = result?.id;
+    if (!templateId) return;
+    try {
+      await events.emit({
+        type: "backfeed.statusTemplate.created",
+        data: {
+          statusTemplateId: templateId,
+          organizationId
+        },
+        organizationId,
+        subject: templateId
+      });
+    } catch (error) {
+      console.error("[Events] Failed to emit statusTemplate.created:", error);
+    }
+  });
+  return $result;
+};
+function oldPlan13(_, args) {
+  const $insert = pgInsertSingle(otherSource_votePgResource);
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper13 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "vote"]),
     $db = context().get("db");
@@ -4917,69 +4994,6 @@ const planWrapper11 = (plan, _, fieldArgs) => {
       });
     } catch (error) {
       console.error("[Events] Failed to emit vote.created:", error);
-    }
-  });
-  return $result;
-};
-function oldPlan13(_, args) {
-  const $insert = pgInsertSingle(otherSource_status_templatePgResource);
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper12 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "statusTemplate"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    let organizationId;
-    organizationId = input.organizationId;
-    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
-  });
-  return plan();
-};
-function oldPlan12(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan13.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.createStatusTemplate, but that function did not return a step!
-${String(oldPlan13)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper13 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $input = fieldArgs.getRaw(["input", "statusTemplate"]);
-  sideEffect([$result, $input], async ([result, input]) => {
-    if (!result) return;
-    const {
-        organizationId
-      } = input,
-      templateId = result?.id;
-    if (!templateId) return;
-    try {
-      await events.emit({
-        type: "backfeed.statusTemplate.created",
-        data: {
-          statusTemplateId: templateId,
-          organizationId
-        },
-        organizationId,
-        subject: templateId
-      });
-    } catch (error) {
-      console.error("[Events] Failed to emit statusTemplate.created:", error);
     }
   });
   return $result;
@@ -5803,7 +5817,7 @@ const planWrapper32 = (plan, _, fieldArgs) => {
   return $result;
 };
 const oldPlan34 = (_$root, args) => {
-  const $update = pgUpdateSingle(otherSource_votePgResource, {
+  const $update = pgUpdateSingle(otherSource_status_templatePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
   args.apply($update);
@@ -5812,6 +5826,88 @@ const oldPlan34 = (_$root, args) => {
   });
 };
 const planWrapper33 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    {
+      const statusTemplate = await db.query.statusTemplates.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!statusTemplate) throw Error("Status template not found");
+      organizationId = statusTemplate.organizationId;
+    }
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan33(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan34.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.updateStatusTemplate, but that function did not return a step!
+${String(oldPlan34)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper34 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $templateId = fieldArgs.getRaw(["input", "rowId"]),
+    $db = context().get("db");
+  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
+    if (!result) return;
+    const template = await db.query.statusTemplates.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, templateId);
+      },
+      columns: {
+        organizationId: !0
+      }
+    });
+    if (!template) return;
+    try {
+      await events.emit({
+        type: "backfeed.statusTemplate.updated",
+        data: {
+          statusTemplateId: templateId,
+          organizationId: template.organizationId
+        },
+        organizationId: template.organizationId,
+        subject: templateId
+      });
+    } catch (error) {
+      console.error("[Events] Failed to emit statusTemplate.updated:", error);
+    }
+  });
+  return $result;
+};
+const oldPlan36 = (_$root, args) => {
+  const $update = pgUpdateSingle(otherSource_votePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper35 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5828,25 +5924,25 @@ const planWrapper33 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan33(...planParams) {
+function oldPlan35(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan34.apply(this, args);
+        $prev = oldPlan36.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateVote, but that function did not return a step!
-${String(oldPlan34)}`);
+${String(oldPlan36)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper34 = (plan, _, fieldArgs) => {
+const planWrapper36 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $voteId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -5885,88 +5981,6 @@ const planWrapper34 = (plan, _, fieldArgs) => {
       });
     } catch (error) {
       console.error("[Events] Failed to emit vote.updated:", error);
-    }
-  });
-  return $result;
-};
-const oldPlan36 = (_$root, args) => {
-  const $update = pgUpdateSingle(otherSource_status_templatePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper35 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    let organizationId;
-    {
-      const statusTemplate = await db.query.statusTemplates.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        }
-      });
-      if (!statusTemplate) throw Error("Status template not found");
-      organizationId = statusTemplate.organizationId;
-    }
-    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
-  });
-  return plan();
-};
-function oldPlan35(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan36.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.updateStatusTemplate, but that function did not return a step!
-${String(oldPlan36)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper36 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $templateId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
-    if (!result) return;
-    const template = await db.query.statusTemplates.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, templateId);
-      },
-      columns: {
-        organizationId: !0
-      }
-    });
-    if (!template) return;
-    try {
-      await events.emit({
-        type: "backfeed.statusTemplate.updated",
-        data: {
-          statusTemplateId: templateId,
-          organizationId: template.organizationId
-        },
-        organizationId: template.organizationId,
-        subject: templateId
-      });
-    } catch (error) {
-      console.error("[Events] Failed to emit statusTemplate.updated:", error);
     }
   });
   return $result;
@@ -6663,6 +6677,88 @@ const planWrapper55 = (plan, _, fieldArgs) => {
   return $result;
 };
 const oldPlan57 = (_$root, args) => {
+  const $delete = pgDeleteSingle(otherSource_status_templatePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper56 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    let organizationId;
+    {
+      const statusTemplate = await db.query.statusTemplates.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!statusTemplate) throw Error("Status template not found");
+      organizationId = statusTemplate.organizationId;
+    }
+    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
+  });
+  return plan();
+};
+function oldPlan56(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan57.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
+${String(oldPlan57)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper56(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper57 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $templateId = fieldArgs.getRaw(["input", "rowId"]),
+    $db = context().get("db");
+  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
+    if (!result) return;
+    const template = await db.query.statusTemplates.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, templateId);
+      },
+      columns: {
+        organizationId: !0
+      }
+    });
+    if (!template) return;
+    try {
+      await events.emit({
+        type: "backfeed.statusTemplate.deleted",
+        data: {
+          statusTemplateId: templateId,
+          organizationId: template.organizationId
+        },
+        organizationId: template.organizationId,
+        subject: templateId
+      });
+    } catch (error) {
+      console.error("[Events] Failed to emit statusTemplate.deleted:", error);
+    }
+  });
+  return $result;
+};
+const oldPlan59 = (_$root, args) => {
   const $delete = pgDeleteSingle(otherSource_votePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6671,25 +6767,25 @@ const oldPlan57 = (_$root, args) => {
     result: $delete
   });
 };
-function oldPlan56(...planParams) {
+function oldPlan58(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan57.apply(this, args);
+        $prev = oldPlan59.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteVote, but that function did not return a step!
-${String(oldPlan57)}`);
+${String(oldPlan59)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper57 = (plan, _, fieldArgs) => {
+const planWrapper59 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $voteId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db");
@@ -6728,88 +6824,6 @@ const planWrapper57 = (plan, _, fieldArgs) => {
       });
     } catch (error) {
       console.error("[Events] Failed to emit vote.deleted:", error);
-    }
-  });
-  return $result;
-};
-const oldPlan59 = (_$root, args) => {
-  const $delete = pgDeleteSingle(otherSource_status_templatePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper58 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    let organizationId;
-    {
-      const statusTemplate = await db.query.statusTemplates.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        }
-      });
-      if (!statusTemplate) throw Error("Status template not found");
-      organizationId = statusTemplate.organizationId;
-    }
-    if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin"))) throw Error("Insufficient permissions");
-  });
-  return plan();
-};
-function oldPlan58(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan59.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
-${String(oldPlan59)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper58(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper59 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $templateId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
-    if (!result) return;
-    const template = await db.query.statusTemplates.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, templateId);
-      },
-      columns: {
-        organizationId: !0
-      }
-    });
-    if (!template) return;
-    try {
-      await events.emit({
-        type: "backfeed.statusTemplate.deleted",
-        data: {
-          statusTemplateId: templateId,
-          organizationId: template.organizationId
-        },
-        organizationId: template.organizationId,
-        subject: templateId
-      });
-    } catch (error) {
-      console.error("[Events] Failed to emit statusTemplate.deleted:", error);
     }
   });
   return $result;
@@ -9084,6 +9098,9 @@ input VoteFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s \`weight\` field."""
+  weight: IntFilter
+
   """Filter by the object’s \`post\` relation."""
   post: PostFilter
 
@@ -9154,8 +9171,36 @@ input VoteAggregatesFilter {
   """
   filter: VoteFilter
 
+  """Sum aggregate over matching \`Vote\` objects."""
+  sum: VoteSumAggregateFilter
+
   """Distinct count aggregate over matching \`Vote\` objects."""
   distinctCount: VoteDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching \`Vote\` objects."""
+  min: VoteMinAggregateFilter
+
+  """Maximum aggregate over matching \`Vote\` objects."""
+  max: VoteMaxAggregateFilter
+
+  """Mean average aggregate over matching \`Vote\` objects."""
+  average: VoteAverageAggregateFilter
+
+  """Sample standard deviation aggregate over matching \`Vote\` objects."""
+  stddevSample: VoteStddevSampleAggregateFilter
+
+  """Population standard deviation aggregate over matching \`Vote\` objects."""
+  stddevPopulation: VoteStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching \`Vote\` objects."""
+  varianceSample: VoteVarianceSampleAggregateFilter
+
+  """Population variance aggregate over matching \`Vote\` objects."""
+  variancePopulation: VoteVariancePopulationAggregateFilter
+}
+
+input VoteSumAggregateFilter {
+  weight: BigIntFilter
 }
 
 input VoteDistinctCountAggregateFilter {
@@ -9165,6 +9210,35 @@ input VoteDistinctCountAggregateFilter {
   voteType: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+  weight: BigIntFilter
+}
+
+input VoteMinAggregateFilter {
+  weight: IntFilter
+}
+
+input VoteMaxAggregateFilter {
+  weight: IntFilter
+}
+
+input VoteAverageAggregateFilter {
+  weight: BigFloatFilter
+}
+
+input VoteStddevSampleAggregateFilter {
+  weight: BigFloatFilter
+}
+
+input VoteStddevPopulationAggregateFilter {
+  weight: BigFloatFilter
+}
+
+input VoteVarianceSampleAggregateFilter {
+  weight: BigFloatFilter
+}
+
+input VoteVariancePopulationAggregateFilter {
+  weight: BigFloatFilter
 }
 
 """
@@ -10853,6 +10927,8 @@ enum PostOrderBy {
   POSTS_BY_DUPLICATE_OF_ID_VARIANCE_POPULATION_NUMBER_DESC
   VOTES_COUNT_ASC
   VOTES_COUNT_DESC
+  VOTES_SUM_WEIGHT_ASC
+  VOTES_SUM_WEIGHT_DESC
   VOTES_DISTINCT_COUNT_ROW_ID_ASC
   VOTES_DISTINCT_COUNT_ROW_ID_DESC
   VOTES_DISTINCT_COUNT_POST_ID_ASC
@@ -10865,6 +10941,22 @@ enum PostOrderBy {
   VOTES_DISTINCT_COUNT_CREATED_AT_DESC
   VOTES_DISTINCT_COUNT_UPDATED_AT_ASC
   VOTES_DISTINCT_COUNT_UPDATED_AT_DESC
+  VOTES_DISTINCT_COUNT_WEIGHT_ASC
+  VOTES_DISTINCT_COUNT_WEIGHT_DESC
+  VOTES_MIN_WEIGHT_ASC
+  VOTES_MIN_WEIGHT_DESC
+  VOTES_MAX_WEIGHT_ASC
+  VOTES_MAX_WEIGHT_DESC
+  VOTES_AVERAGE_WEIGHT_ASC
+  VOTES_AVERAGE_WEIGHT_DESC
+  VOTES_STDDEV_SAMPLE_WEIGHT_ASC
+  VOTES_STDDEV_SAMPLE_WEIGHT_DESC
+  VOTES_STDDEV_POPULATION_WEIGHT_ASC
+  VOTES_STDDEV_POPULATION_WEIGHT_DESC
+  VOTES_VARIANCE_SAMPLE_WEIGHT_ASC
+  VOTES_VARIANCE_SAMPLE_WEIGHT_DESC
+  VOTES_VARIANCE_POPULATION_WEIGHT_ASC
+  VOTES_VARIANCE_POPULATION_WEIGHT_DESC
   SIGNALS_COUNT_ASC
   SIGNALS_COUNT_DESC
   SIGNALS_DISTINCT_COUNT_ROW_ID_ASC
@@ -12093,6 +12185,7 @@ type Vote {
   voteType: VoteType!
   createdAt: Datetime!
   updatedAt: Datetime!
+  weight: Int!
 
   """Reads a single \`Post\` that is related to this \`Vote\`."""
   post: Post
@@ -12114,9 +12207,54 @@ type VoteAggregates {
   keys: [String]
 
   """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: VoteSumAggregates
+
+  """
   Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   distinctCount: VoteDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: VoteMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: VoteMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: VoteAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: VoteStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: VoteStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: VoteVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: VoteVariancePopulationAggregates
+}
+
+type VoteSumAggregates {
+  """Sum of weight across the matching connection"""
+  weight: BigInt!
 }
 
 type VoteDistinctCountAggregates {
@@ -12137,6 +12275,44 @@ type VoteDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
+
+  """Distinct count of weight across the matching connection"""
+  weight: BigInt
+}
+
+type VoteMinAggregates {
+  """Minimum of weight across the matching connection"""
+  weight: Int
+}
+
+type VoteMaxAggregates {
+  """Maximum of weight across the matching connection"""
+  weight: Int
+}
+
+type VoteAverageAggregates {
+  """Mean average of weight across the matching connection"""
+  weight: BigFloat
+}
+
+type VoteStddevSampleAggregates {
+  """Sample standard deviation of weight across the matching connection"""
+  weight: BigFloat
+}
+
+type VoteStddevPopulationAggregates {
+  """Population standard deviation of weight across the matching connection"""
+  weight: BigFloat
+}
+
+type VoteVarianceSampleAggregates {
+  """Sample variance of weight across the matching connection"""
+  weight: BigFloat
+}
+
+type VoteVariancePopulationAggregates {
+  """Population variance of weight across the matching connection"""
+  weight: BigFloat
 }
 
 """Grouping methods for \`Vote\` for usage during aggregation."""
@@ -12150,6 +12326,7 @@ enum VoteGroupBy {
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
+  WEIGHT
 }
 
 """Conditions for \`Vote\` aggregates."""
@@ -12170,46 +12347,55 @@ input VoteHavingInput {
 input VoteHavingSumInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingMinInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingMaxInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingAverageInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 """
@@ -12233,6 +12419,9 @@ input VoteCondition {
 
   """Checks for equality with the object’s \`updatedAt\` field."""
   updatedAt: Datetime
+
+  """Checks for equality with the object’s \`weight\` field."""
+  weight: Int
 }
 
 """Methods to use when ordering \`Vote\`."""
@@ -12250,6 +12439,8 @@ enum VoteOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  WEIGHT_ASC
+  WEIGHT_DESC
 }
 
 """A connection to a list of \`Signal\` values."""
@@ -14631,6 +14822,8 @@ enum UserOrderBy {
   POSTS_VARIANCE_POPULATION_NUMBER_DESC
   VOTES_COUNT_ASC
   VOTES_COUNT_DESC
+  VOTES_SUM_WEIGHT_ASC
+  VOTES_SUM_WEIGHT_DESC
   VOTES_DISTINCT_COUNT_ROW_ID_ASC
   VOTES_DISTINCT_COUNT_ROW_ID_DESC
   VOTES_DISTINCT_COUNT_POST_ID_ASC
@@ -14643,6 +14836,22 @@ enum UserOrderBy {
   VOTES_DISTINCT_COUNT_CREATED_AT_DESC
   VOTES_DISTINCT_COUNT_UPDATED_AT_ASC
   VOTES_DISTINCT_COUNT_UPDATED_AT_DESC
+  VOTES_DISTINCT_COUNT_WEIGHT_ASC
+  VOTES_DISTINCT_COUNT_WEIGHT_DESC
+  VOTES_MIN_WEIGHT_ASC
+  VOTES_MIN_WEIGHT_DESC
+  VOTES_MAX_WEIGHT_ASC
+  VOTES_MAX_WEIGHT_DESC
+  VOTES_AVERAGE_WEIGHT_ASC
+  VOTES_AVERAGE_WEIGHT_DESC
+  VOTES_STDDEV_SAMPLE_WEIGHT_ASC
+  VOTES_STDDEV_SAMPLE_WEIGHT_DESC
+  VOTES_STDDEV_POPULATION_WEIGHT_ASC
+  VOTES_STDDEV_POPULATION_WEIGHT_DESC
+  VOTES_VARIANCE_SAMPLE_WEIGHT_ASC
+  VOTES_VARIANCE_SAMPLE_WEIGHT_DESC
+  VOTES_VARIANCE_POPULATION_WEIGHT_ASC
+  VOTES_VARIANCE_POPULATION_WEIGHT_DESC
   SIGNALS_COUNT_ASC
   SIGNALS_COUNT_DESC
   SIGNALS_DISTINCT_COUNT_ROW_ID_ASC
@@ -16424,51 +16633,6 @@ input ProjectLinkInput {
   updatedAt: Datetime
 }
 
-"""The output of our create \`Vote\` mutation."""
-type CreateVotePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Vote\` that was created by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Vote\`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering \`Vote\`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the create \`Vote\` mutation."""
-input CreateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Vote\` to be created by this mutation."""
-  vote: VoteInput!
-}
-
-"""An input for mutations affecting \`Vote\`"""
-input VoteInput {
-  rowId: UUID
-  postId: UUID!
-  userId: UUID!
-  voteType: VoteType!
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create \`StatusTemplate\` mutation."""
 type CreateStatusTemplatePayload {
   """
@@ -16562,6 +16726,52 @@ input SignalClusterInput {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`Vote\` mutation."""
+type CreateVotePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vote\` that was created by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vote\`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering \`Vote\`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the create \`Vote\` mutation."""
+input CreateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Vote\` to be created by this mutation."""
+  vote: VoteInput!
+}
+
+"""An input for mutations affecting \`Vote\`"""
+input VoteInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  voteType: VoteType!
+  createdAt: Datetime
+  updatedAt: Datetime
+  weight: Int
 }
 
 """The output of our create \`Attachment\` mutation."""
@@ -17118,54 +17328,6 @@ input ProjectLinkPatch {
   updatedAt: Datetime
 }
 
-"""The output of our update \`Vote\` mutation."""
-type UpdateVotePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Vote\` that was updated by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Vote\`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering \`Vote\`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the \`updateVote\` mutation."""
-input UpdateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Vote\` being updated.
-  """
-  patch: VotePatch!
-}
-
-"""Represents an update to a \`Vote\`. Fields that are set will be updated."""
-input VotePatch {
-  rowId: UUID
-  postId: UUID
-  userId: UUID
-  voteType: VoteType
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our update \`StatusTemplate\` mutation."""
 type UpdateStatusTemplatePayload {
   """
@@ -17269,6 +17431,55 @@ input SignalClusterPatch {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our update \`Vote\` mutation."""
+type UpdateVotePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vote\` that was updated by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vote\`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering \`Vote\`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the \`updateVote\` mutation."""
+input UpdateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Vote\` being updated.
+  """
+  patch: VotePatch!
+}
+
+"""Represents an update to a \`Vote\`. Fields that are set will be updated."""
+input VotePatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  voteType: VoteType
+  createdAt: Datetime
+  updatedAt: Datetime
+  weight: Int
 }
 
 """The output of our update \`Attachment\` mutation."""
@@ -17723,39 +17934,6 @@ input DeleteProjectLinkInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`Vote\` mutation."""
-type DeleteVotePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Vote\` that was deleted by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Vote\`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering \`Vote\`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the \`deleteVote\` mutation."""
-input DeleteVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`StatusTemplate\` mutation."""
 type DeleteStatusTemplatePayload {
   """
@@ -17814,6 +17992,39 @@ type DeleteSignalClusterPayload {
 
 """All input for the \`deleteSignalCluster\` mutation."""
 input DeleteSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Vote\` mutation."""
+type DeleteVotePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vote\` that was deleted by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vote\`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering \`Vote\`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the \`deleteVote\` mutation."""
+input DeleteVoteInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18078,12 +18289,6 @@ type Query implements Node {
   """Get a single \`ProjectLink\`."""
   projectLink(rowId: UUID!): ProjectLink
 
-  """Get a single \`Vote\`."""
-  vote(rowId: UUID!): Vote
-
-  """Get a single \`Vote\`."""
-  voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
-
   """Get a single \`StatusTemplate\`."""
   statusTemplate(rowId: UUID!): StatusTemplate
 
@@ -18092,6 +18297,12 @@ type Query implements Node {
 
   """Get a single \`SignalCluster\`."""
   signalCluster(rowId: UUID!): SignalCluster
+
+  """Get a single \`Vote\`."""
+  vote(rowId: UUID!): Vote
+
+  """Get a single \`Vote\`."""
+  voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
 
   """Get a single \`Attachment\`."""
   attachment(rowId: UUID!): Attachment
@@ -18389,40 +18600,6 @@ type Query implements Node {
     orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLinkConnection
 
-  """Reads and enables pagination through a set of \`Vote\`."""
-  votes(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: VoteCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: VoteFilter
-
-    """The method to use when ordering \`Vote\`."""
-    orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
-  ): VoteConnection
-
   """Reads and enables pagination through a set of \`StatusTemplate\`."""
   statusTemplates(
     """Only read the first \`n\` values of the set."""
@@ -18490,6 +18667,40 @@ type Query implements Node {
     """The method to use when ordering \`SignalCluster\`."""
     orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalClusterConnection
+
+  """Reads and enables pagination through a set of \`Vote\`."""
+  votes(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VoteCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VoteFilter
+
+    """The method to use when ordering \`Vote\`."""
+    orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VoteConnection
 
   """Reads and enables pagination through a set of \`Attachment\`."""
   attachments(
@@ -18736,14 +18947,6 @@ type Mutation {
     input: CreateProjectLinkInput!
   ): CreateProjectLinkPayload
 
-  """Creates a single \`Vote\`."""
-  createVote(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateVoteInput!
-  ): CreateVotePayload
-
   """Creates a single \`StatusTemplate\`."""
   createStatusTemplate(
     """
@@ -18759,6 +18962,14 @@ type Mutation {
     """
     input: CreateSignalClusterInput!
   ): CreateSignalClusterPayload
+
+  """Creates a single \`Vote\`."""
+  createVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVoteInput!
+  ): CreateVotePayload
 
   """Creates a single \`Attachment\`."""
   createAttachment(
@@ -18848,14 +19059,6 @@ type Mutation {
     input: UpdateProjectLinkInput!
   ): UpdateProjectLinkPayload
 
-  """Updates a single \`Vote\` using a unique key and a patch."""
-  updateVote(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateVoteInput!
-  ): UpdateVotePayload
-
   """Updates a single \`StatusTemplate\` using a unique key and a patch."""
   updateStatusTemplate(
     """
@@ -18871,6 +19074,14 @@ type Mutation {
     """
     input: UpdateSignalClusterInput!
   ): UpdateSignalClusterPayload
+
+  """Updates a single \`Vote\` using a unique key and a patch."""
+  updateVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVoteInput!
+  ): UpdateVotePayload
 
   """Updates a single \`Attachment\` using a unique key and a patch."""
   updateAttachment(
@@ -18960,14 +19171,6 @@ type Mutation {
     input: DeleteProjectLinkInput!
   ): DeleteProjectLinkPayload
 
-  """Deletes a single \`Vote\` using a unique key."""
-  deleteVote(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteVoteInput!
-  ): DeleteVotePayload
-
   """Deletes a single \`StatusTemplate\` using a unique key."""
   deleteStatusTemplate(
     """
@@ -18983,6 +19186,14 @@ type Mutation {
     """
     input: DeleteSignalClusterInput!
   ): DeleteSignalClusterPayload
+
+  """Deletes a single \`Vote\` using a unique key."""
+  deleteVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVoteInput!
+  ): DeleteVotePayload
 
   """Deletes a single \`Attachment\` using a unique key."""
   deleteAttachment(
@@ -19812,17 +20023,17 @@ ${String(oldPlan2)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan12.apply(this, args);
+                $prev = oldPlan11.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createStatusTemplate, but that function did not return a step!
-${String(oldPlan12)}`);
+${String(oldPlan11)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19881,17 +20092,17 @@ ${String(oldPlan6)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan11.apply(this, args);
+                $prev = oldPlan13.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createVote, but that function did not return a step!
-${String(oldPlan11)}`);
+${String(oldPlan13)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20114,17 +20325,17 @@ ${String(oldPlan47)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan58.apply(this, args);
+                $prev = oldPlan56.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteStatusTemplate, but that function did not return a step!
-${String(oldPlan58)}`);
+${String(oldPlan56)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper59(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20183,17 +20394,17 @@ ${String(oldPlan51)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan56.apply(this, args);
+                $prev = oldPlan58.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteVote, but that function did not return a step!
-${String(oldPlan56)}`);
+${String(oldPlan58)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper59(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20475,17 +20686,17 @@ ${String(oldPlan24)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan35.apply(this, args);
+                $prev = oldPlan33.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateStatusTemplate, but that function did not return a step!
-${String(oldPlan35)}`);
+${String(oldPlan33)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20544,17 +20755,17 @@ ${String(oldPlan28)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan33.apply(this, args);
+                $prev = oldPlan35.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateVote, but that function did not return a step!
-${String(oldPlan33)}`);
+${String(oldPlan35)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22869,8 +23080,23 @@ ${String(oldPlan33)}`);
   VoteAggregates: {
     assertStep: assertPgClassSingleStep,
     plans: {
+      average: pgAggregatesPlanAggregates,
       distinctCount: pgAggregatesPlanAggregates,
-      keys: PostAggregates_keysPlan
+      keys: PostAggregates_keysPlan,
+      max: pgAggregatesPlanAggregates,
+      min: pgAggregatesPlanAggregates,
+      stddevPopulation: pgAggregatesPlanAggregates,
+      stddevSample: pgAggregatesPlanAggregates,
+      sum: pgAggregatesPlanAggregates,
+      variancePopulation: pgAggregatesPlanAggregates,
+      varianceSample: pgAggregatesPlanAggregates
+    }
+  },
+  VoteAverageAggregates: {
+    plans: {
+      weight($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "weight", TYPES.numeric, pgAggregateSpec_average, $pgSelectSingle);
+      }
     }
   },
   VoteConnection: {
@@ -22896,6 +23122,58 @@ ${String(oldPlan33)}`);
       userId: PostDistinctCountAggregates_userIdPlan,
       voteType($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(voteTypeCodec, "vote_type", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      weight($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "weight", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      }
+    }
+  },
+  VoteMaxAggregates: {
+    plans: {
+      weight($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "weight", TYPES.int, pgAggregateSpec_max, $pgSelectSingle);
+      }
+    }
+  },
+  VoteMinAggregates: {
+    plans: {
+      weight($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "weight", TYPES.int, pgAggregateSpec_min, $pgSelectSingle);
+      }
+    }
+  },
+  VoteStddevPopulationAggregates: {
+    plans: {
+      weight($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "weight", TYPES.numeric, pgAggregateSpec_stddevPopulation, $pgSelectSingle);
+      }
+    }
+  },
+  VoteStddevSampleAggregates: {
+    plans: {
+      weight($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "weight", TYPES.numeric, pgAggregateSpec_stddevSample, $pgSelectSingle);
+      }
+    }
+  },
+  VoteSumAggregates: {
+    plans: {
+      weight($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "weight", TYPES.bigint, pgAggregateSpec_sum, $pgSelectSingle);
+      }
+    }
+  },
+  VoteVariancePopulationAggregates: {
+    plans: {
+      weight($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "weight", TYPES.numeric, pgAggregateSpec_variancePopulation, $pgSelectSingle);
+      }
+    }
+  },
+  VoteVarianceSampleAggregates: {
+    plans: {
+      weight($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "weight", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
       }
     }
   },
@@ -27915,8 +28193,23 @@ export const inputObjects = {
   },
   VoteAggregatesFilter: {
     plans: {
+      average: PostAggregatesFilter_averageApply,
       distinctCount: CommentAggregatesFilter_distinctCountApply,
-      filter: filterApply
+      filter: filterApply,
+      max: PostAggregatesFilter_maxApply,
+      min: PostAggregatesFilter_minApply,
+      stddevPopulation: PostAggregatesFilter_stddevPopulationApply,
+      stddevSample: PostAggregatesFilter_stddevSampleApply,
+      sum: PostAggregatesFilter_sumApply,
+      variancePopulation: PostAggregatesFilter_variancePopulationApply,
+      varianceSample: PostAggregatesFilter_varianceSampleApply
+    }
+  },
+  VoteAverageAggregateFilter: {
+    plans: {
+      weight($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_average, "weight", TYPES.numeric, TYPES.int, $parent, input);
+      }
     }
   },
   VoteCondition: {
@@ -27928,6 +28221,9 @@ export const inputObjects = {
       userId: PostCondition_userIdApply,
       voteType($condition, val) {
         return applyAttributeCondition("vote_type", voteTypeCodec, $condition, val);
+      },
+      weight($condition, val) {
+        return applyAttributeCondition("weight", TYPES.int, $condition, val);
       }
     }
   },
@@ -27940,6 +28236,9 @@ export const inputObjects = {
       userId: CommentDistinctCountAggregateFilter_userIdApply,
       voteType($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "vote_type", TYPES.bigint, voteTypeCodec, $parent, input);
+      },
+      weight($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "weight", TYPES.bigint, TYPES.int, $parent, input);
       }
     }
   },
@@ -27971,6 +28270,9 @@ export const inputObjects = {
       },
       voteType(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("voteType", "vote_type", spec_vote.attributes.vote_type, queryBuilder, value);
+      },
+      weight(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("weight", "weight", spec_vote.attributes.weight, queryBuilder, value);
       }
     }
   },
@@ -27981,6 +28283,9 @@ export const inputObjects = {
       },
       updatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_vote.attributes.updated_at, "updated_at", $having);
+      },
+      weight($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_vote.attributes.weight, "weight", $having);
       }
     }
   },
@@ -27991,6 +28296,9 @@ export const inputObjects = {
       },
       updatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_vote.attributes.updated_at, "updated_at", $having);
+      },
+      weight($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_vote.attributes.weight, "weight", $having);
       }
     }
   },
@@ -28016,6 +28324,9 @@ export const inputObjects = {
       },
       updatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_vote.attributes.updated_at, "updated_at", $having);
+      },
+      weight($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_vote.attributes.weight, "weight", $having);
       }
     }
   },
@@ -28026,6 +28337,9 @@ export const inputObjects = {
       },
       updatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_vote.attributes.updated_at, "updated_at", $having);
+      },
+      weight($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_vote.attributes.weight, "weight", $having);
       }
     }
   },
@@ -28036,6 +28350,9 @@ export const inputObjects = {
       },
       updatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_vote.attributes.updated_at, "updated_at", $having);
+      },
+      weight($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_vote.attributes.weight, "weight", $having);
       }
     }
   },
@@ -28046,6 +28363,9 @@ export const inputObjects = {
       },
       updatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_vote.attributes.updated_at, "updated_at", $having);
+      },
+      weight($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_vote.attributes.weight, "weight", $having);
       }
     }
   },
@@ -28056,6 +28376,9 @@ export const inputObjects = {
       },
       updatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_vote.attributes.updated_at, "updated_at", $having);
+      },
+      weight($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_vote.attributes.weight, "weight", $having);
       }
     }
   },
@@ -28066,6 +28389,9 @@ export const inputObjects = {
       },
       updatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_vote.attributes.updated_at, "updated_at", $having);
+      },
+      weight($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_vote.attributes.weight, "weight", $having);
       }
     }
   },
@@ -28076,6 +28402,9 @@ export const inputObjects = {
       },
       updatedAt($having) {
         return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_vote.attributes.updated_at, "updated_at", $having);
+      },
+      weight($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_vote.attributes.weight, "weight", $having);
       }
     }
   },
@@ -28087,7 +28416,22 @@ export const inputObjects = {
       rowId: PostTagInput_rowIdApply,
       updatedAt: TagInput_updatedAtApply,
       userId: ReactionInput_userIdApply,
-      voteType: VoteInput_voteTypeApply
+      voteType: VoteInput_voteTypeApply,
+      weight: VoteInput_weightApply
+    }
+  },
+  VoteMaxAggregateFilter: {
+    plans: {
+      weight($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_max, "weight", TYPES.int, TYPES.int, $parent, input);
+      }
+    }
+  },
+  VoteMinAggregateFilter: {
+    plans: {
+      weight($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_min, "weight", TYPES.int, TYPES.int, $parent, input);
+      }
     }
   },
   VotePatch: {
@@ -28098,7 +28442,29 @@ export const inputObjects = {
       rowId: PostTagInput_rowIdApply,
       updatedAt: TagInput_updatedAtApply,
       userId: ReactionInput_userIdApply,
-      voteType: VoteInput_voteTypeApply
+      voteType: VoteInput_voteTypeApply,
+      weight: VoteInput_weightApply
+    }
+  },
+  VoteStddevPopulationAggregateFilter: {
+    plans: {
+      weight($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_stddevPopulation, "weight", TYPES.numeric, TYPES.int, $parent, input);
+      }
+    }
+  },
+  VoteStddevSampleAggregateFilter: {
+    plans: {
+      weight($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_stddevSample, "weight", TYPES.numeric, TYPES.int, $parent, input);
+      }
+    }
+  },
+  VoteSumAggregateFilter: {
+    plans: {
+      weight($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_sum, "weight", TYPES.bigint, TYPES.int, $parent, input);
+      }
     }
   },
   VoteTypeFilter: {
@@ -28114,6 +28480,20 @@ export const inputObjects = {
       notDistinctFrom: pgAggregatesApply_notDistinctFrom,
       notEqualTo: pgAggregatesApply_notEqualTo,
       notIn: pgAggregatesApply_notIn
+    }
+  },
+  VoteVariancePopulationAggregateFilter: {
+    plans: {
+      weight($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_variancePopulation, "weight", TYPES.numeric, TYPES.int, $parent, input);
+      }
+    }
+  },
+  VoteVarianceSampleAggregateFilter: {
+    plans: {
+      weight($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_varianceSample, "weight", TYPES.numeric, TYPES.int, $parent, input);
+      }
     }
   },
   WardenSyncQueueCondition: {
@@ -29485,6 +29865,12 @@ export const enums = {
       UPDATED_AT_DESC: PostOrderBy_UPDATED_AT_DESCApply,
       USER_ID_ASC: PostOrderBy_USER_ID_ASCApply,
       USER_ID_DESC: PostOrderBy_USER_ID_DESCApply,
+      VOTES_AVERAGE_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_vote.attributes.weight, "weight", "ASC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_AVERAGE_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_vote.attributes.weight, "weight", "DESC", relation3, otherSource_votePgResource, $select);
+      },
       VOTES_COUNT_ASC($select) {
         pgAggregatesApplyOrderByTotalCount("ASC", relation3, otherSource_votePgResource, $select);
       },
@@ -29526,6 +29912,54 @@ export const enums = {
       },
       VOTES_DISTINCT_COUNT_VOTE_TYPE_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.vote_type, "vote_type", "DESC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_DISTINCT_COUNT_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.weight, "weight", "ASC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_DISTINCT_COUNT_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.weight, "weight", "DESC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_MAX_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_vote.attributes.weight, "weight", "ASC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_MAX_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_vote.attributes.weight, "weight", "DESC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_MIN_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_vote.attributes.weight, "weight", "ASC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_MIN_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_vote.attributes.weight, "weight", "DESC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_STDDEV_POPULATION_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_vote.attributes.weight, "weight", "ASC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_STDDEV_POPULATION_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_vote.attributes.weight, "weight", "DESC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_STDDEV_SAMPLE_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_vote.attributes.weight, "weight", "ASC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_STDDEV_SAMPLE_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_vote.attributes.weight, "weight", "DESC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_SUM_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_vote.attributes.weight, "weight", "ASC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_SUM_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_vote.attributes.weight, "weight", "DESC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_VARIANCE_POPULATION_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_vote.attributes.weight, "weight", "ASC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_VARIANCE_POPULATION_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_vote.attributes.weight, "weight", "DESC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_VARIANCE_SAMPLE_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_vote.attributes.weight, "weight", "ASC", relation3, otherSource_votePgResource, $select);
+      },
+      VOTES_VARIANCE_SAMPLE_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_vote.attributes.weight, "weight", "DESC", relation3, otherSource_votePgResource, $select);
       }
     }
   },
@@ -32256,6 +32690,12 @@ export const enums = {
         });
         queryBuilder.setOrderIsUnique();
       },
+      VOTES_AVERAGE_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_vote.attributes.weight, "weight", "ASC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_AVERAGE_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_vote.attributes.weight, "weight", "DESC", relation16, otherSource_votePgResource, $select);
+      },
       VOTES_COUNT_ASC($select) {
         pgAggregatesApplyOrderByTotalCount("ASC", relation16, otherSource_votePgResource, $select);
       },
@@ -32297,6 +32737,54 @@ export const enums = {
       },
       VOTES_DISTINCT_COUNT_VOTE_TYPE_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.vote_type, "vote_type", "DESC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_DISTINCT_COUNT_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.weight, "weight", "ASC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_DISTINCT_COUNT_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_vote.attributes.weight, "weight", "DESC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_MAX_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_vote.attributes.weight, "weight", "ASC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_MAX_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_vote.attributes.weight, "weight", "DESC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_MIN_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_vote.attributes.weight, "weight", "ASC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_MIN_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_vote.attributes.weight, "weight", "DESC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_STDDEV_POPULATION_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_vote.attributes.weight, "weight", "ASC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_STDDEV_POPULATION_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_vote.attributes.weight, "weight", "DESC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_STDDEV_SAMPLE_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_vote.attributes.weight, "weight", "ASC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_STDDEV_SAMPLE_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_vote.attributes.weight, "weight", "DESC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_SUM_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_vote.attributes.weight, "weight", "ASC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_SUM_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_vote.attributes.weight, "weight", "DESC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_VARIANCE_POPULATION_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_vote.attributes.weight, "weight", "ASC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_VARIANCE_POPULATION_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_vote.attributes.weight, "weight", "DESC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_VARIANCE_SAMPLE_WEIGHT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_vote.attributes.weight, "weight", "ASC", relation16, otherSource_votePgResource, $select);
+      },
+      VOTES_VARIANCE_SAMPLE_WEIGHT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_vote.attributes.weight, "weight", "DESC", relation16, otherSource_votePgResource, $select);
       }
     }
   },
@@ -32312,6 +32800,9 @@ export const enums = {
       USER_ID: PostGroupBy_USER_IDApply,
       VOTE_TYPE($pgSelect) {
         applyGroupByAttribute("vote_type", voteTypeCodec, $pgSelect);
+      },
+      WEIGHT($pgSelect) {
+        applyGroupByAttribute("weight", TYPES.int, $pgSelect);
       }
     }
   },
@@ -32344,7 +32835,19 @@ export const enums = {
       UPDATED_AT_ASC: PostOrderBy_UPDATED_AT_ASCApply,
       UPDATED_AT_DESC: PostOrderBy_UPDATED_AT_DESCApply,
       USER_ID_ASC: PostOrderBy_USER_ID_ASCApply,
-      USER_ID_DESC: PostOrderBy_USER_ID_DESCApply
+      USER_ID_DESC: PostOrderBy_USER_ID_DESCApply,
+      WEIGHT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "weight",
+          direction: "ASC"
+        });
+      },
+      WEIGHT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "weight",
+          direction: "DESC"
+        });
+      }
     }
   },
   WardenSyncQueueGroupBy: {

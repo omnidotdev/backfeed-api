@@ -1965,6 +1965,9 @@ input VoteFilter {
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s `weight` field."""
+  weight: IntFilter
+
   """Filter by the object’s `post` relation."""
   post: PostFilter
 
@@ -2035,8 +2038,36 @@ input VoteAggregatesFilter {
   """
   filter: VoteFilter
 
+  """Sum aggregate over matching `Vote` objects."""
+  sum: VoteSumAggregateFilter
+
   """Distinct count aggregate over matching `Vote` objects."""
   distinctCount: VoteDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching `Vote` objects."""
+  min: VoteMinAggregateFilter
+
+  """Maximum aggregate over matching `Vote` objects."""
+  max: VoteMaxAggregateFilter
+
+  """Mean average aggregate over matching `Vote` objects."""
+  average: VoteAverageAggregateFilter
+
+  """Sample standard deviation aggregate over matching `Vote` objects."""
+  stddevSample: VoteStddevSampleAggregateFilter
+
+  """Population standard deviation aggregate over matching `Vote` objects."""
+  stddevPopulation: VoteStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching `Vote` objects."""
+  varianceSample: VoteVarianceSampleAggregateFilter
+
+  """Population variance aggregate over matching `Vote` objects."""
+  variancePopulation: VoteVariancePopulationAggregateFilter
+}
+
+input VoteSumAggregateFilter {
+  weight: BigIntFilter
 }
 
 input VoteDistinctCountAggregateFilter {
@@ -2046,6 +2077,35 @@ input VoteDistinctCountAggregateFilter {
   voteType: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+  weight: BigIntFilter
+}
+
+input VoteMinAggregateFilter {
+  weight: IntFilter
+}
+
+input VoteMaxAggregateFilter {
+  weight: IntFilter
+}
+
+input VoteAverageAggregateFilter {
+  weight: BigFloatFilter
+}
+
+input VoteStddevSampleAggregateFilter {
+  weight: BigFloatFilter
+}
+
+input VoteStddevPopulationAggregateFilter {
+  weight: BigFloatFilter
+}
+
+input VoteVarianceSampleAggregateFilter {
+  weight: BigFloatFilter
+}
+
+input VoteVariancePopulationAggregateFilter {
+  weight: BigFloatFilter
 }
 
 """
@@ -3734,6 +3794,8 @@ enum PostOrderBy {
   POSTS_BY_DUPLICATE_OF_ID_VARIANCE_POPULATION_NUMBER_DESC
   VOTES_COUNT_ASC
   VOTES_COUNT_DESC
+  VOTES_SUM_WEIGHT_ASC
+  VOTES_SUM_WEIGHT_DESC
   VOTES_DISTINCT_COUNT_ROW_ID_ASC
   VOTES_DISTINCT_COUNT_ROW_ID_DESC
   VOTES_DISTINCT_COUNT_POST_ID_ASC
@@ -3746,6 +3808,22 @@ enum PostOrderBy {
   VOTES_DISTINCT_COUNT_CREATED_AT_DESC
   VOTES_DISTINCT_COUNT_UPDATED_AT_ASC
   VOTES_DISTINCT_COUNT_UPDATED_AT_DESC
+  VOTES_DISTINCT_COUNT_WEIGHT_ASC
+  VOTES_DISTINCT_COUNT_WEIGHT_DESC
+  VOTES_MIN_WEIGHT_ASC
+  VOTES_MIN_WEIGHT_DESC
+  VOTES_MAX_WEIGHT_ASC
+  VOTES_MAX_WEIGHT_DESC
+  VOTES_AVERAGE_WEIGHT_ASC
+  VOTES_AVERAGE_WEIGHT_DESC
+  VOTES_STDDEV_SAMPLE_WEIGHT_ASC
+  VOTES_STDDEV_SAMPLE_WEIGHT_DESC
+  VOTES_STDDEV_POPULATION_WEIGHT_ASC
+  VOTES_STDDEV_POPULATION_WEIGHT_DESC
+  VOTES_VARIANCE_SAMPLE_WEIGHT_ASC
+  VOTES_VARIANCE_SAMPLE_WEIGHT_DESC
+  VOTES_VARIANCE_POPULATION_WEIGHT_ASC
+  VOTES_VARIANCE_POPULATION_WEIGHT_DESC
   SIGNALS_COUNT_ASC
   SIGNALS_COUNT_DESC
   SIGNALS_DISTINCT_COUNT_ROW_ID_ASC
@@ -4974,6 +5052,7 @@ type Vote {
   voteType: VoteType!
   createdAt: Datetime!
   updatedAt: Datetime!
+  weight: Int!
 
   """Reads a single `Post` that is related to this `Vote`."""
   post: Post
@@ -4995,9 +5074,54 @@ type VoteAggregates {
   keys: [String]
 
   """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: VoteSumAggregates
+
+  """
   Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   distinctCount: VoteDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: VoteMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: VoteMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: VoteAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: VoteStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: VoteStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: VoteVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: VoteVariancePopulationAggregates
+}
+
+type VoteSumAggregates {
+  """Sum of weight across the matching connection"""
+  weight: BigInt!
 }
 
 type VoteDistinctCountAggregates {
@@ -5018,6 +5142,44 @@ type VoteDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
+
+  """Distinct count of weight across the matching connection"""
+  weight: BigInt
+}
+
+type VoteMinAggregates {
+  """Minimum of weight across the matching connection"""
+  weight: Int
+}
+
+type VoteMaxAggregates {
+  """Maximum of weight across the matching connection"""
+  weight: Int
+}
+
+type VoteAverageAggregates {
+  """Mean average of weight across the matching connection"""
+  weight: BigFloat
+}
+
+type VoteStddevSampleAggregates {
+  """Sample standard deviation of weight across the matching connection"""
+  weight: BigFloat
+}
+
+type VoteStddevPopulationAggregates {
+  """Population standard deviation of weight across the matching connection"""
+  weight: BigFloat
+}
+
+type VoteVarianceSampleAggregates {
+  """Sample variance of weight across the matching connection"""
+  weight: BigFloat
+}
+
+type VoteVariancePopulationAggregates {
+  """Population variance of weight across the matching connection"""
+  weight: BigFloat
 }
 
 """Grouping methods for `Vote` for usage during aggregation."""
@@ -5031,6 +5193,7 @@ enum VoteGroupBy {
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
+  WEIGHT
 }
 
 """Conditions for `Vote` aggregates."""
@@ -5051,46 +5214,55 @@ input VoteHavingInput {
 input VoteHavingSumInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingMinInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingMaxInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingAverageInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 input VoteHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  weight: HavingIntFilter
 }
 
 """
@@ -5114,6 +5286,9 @@ input VoteCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
+
+  """Checks for equality with the object’s `weight` field."""
+  weight: Int
 }
 
 """Methods to use when ordering `Vote`."""
@@ -5131,6 +5306,8 @@ enum VoteOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  WEIGHT_ASC
+  WEIGHT_DESC
 }
 
 """A connection to a list of `Signal` values."""
@@ -7512,6 +7689,8 @@ enum UserOrderBy {
   POSTS_VARIANCE_POPULATION_NUMBER_DESC
   VOTES_COUNT_ASC
   VOTES_COUNT_DESC
+  VOTES_SUM_WEIGHT_ASC
+  VOTES_SUM_WEIGHT_DESC
   VOTES_DISTINCT_COUNT_ROW_ID_ASC
   VOTES_DISTINCT_COUNT_ROW_ID_DESC
   VOTES_DISTINCT_COUNT_POST_ID_ASC
@@ -7524,6 +7703,22 @@ enum UserOrderBy {
   VOTES_DISTINCT_COUNT_CREATED_AT_DESC
   VOTES_DISTINCT_COUNT_UPDATED_AT_ASC
   VOTES_DISTINCT_COUNT_UPDATED_AT_DESC
+  VOTES_DISTINCT_COUNT_WEIGHT_ASC
+  VOTES_DISTINCT_COUNT_WEIGHT_DESC
+  VOTES_MIN_WEIGHT_ASC
+  VOTES_MIN_WEIGHT_DESC
+  VOTES_MAX_WEIGHT_ASC
+  VOTES_MAX_WEIGHT_DESC
+  VOTES_AVERAGE_WEIGHT_ASC
+  VOTES_AVERAGE_WEIGHT_DESC
+  VOTES_STDDEV_SAMPLE_WEIGHT_ASC
+  VOTES_STDDEV_SAMPLE_WEIGHT_DESC
+  VOTES_STDDEV_POPULATION_WEIGHT_ASC
+  VOTES_STDDEV_POPULATION_WEIGHT_DESC
+  VOTES_VARIANCE_SAMPLE_WEIGHT_ASC
+  VOTES_VARIANCE_SAMPLE_WEIGHT_DESC
+  VOTES_VARIANCE_POPULATION_WEIGHT_ASC
+  VOTES_VARIANCE_POPULATION_WEIGHT_DESC
   SIGNALS_COUNT_ASC
   SIGNALS_COUNT_DESC
   SIGNALS_DISTINCT_COUNT_ROW_ID_ASC
@@ -9305,51 +9500,6 @@ input ProjectLinkInput {
   updatedAt: Datetime
 }
 
-"""The output of our create `Vote` mutation."""
-type CreateVotePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Vote` that was created by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Vote`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering `Vote`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the create `Vote` mutation."""
-input CreateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Vote` to be created by this mutation."""
-  vote: VoteInput!
-}
-
-"""An input for mutations affecting `Vote`"""
-input VoteInput {
-  rowId: UUID
-  postId: UUID!
-  userId: UUID!
-  voteType: VoteType!
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create `StatusTemplate` mutation."""
 type CreateStatusTemplatePayload {
   """
@@ -9443,6 +9593,52 @@ input SignalClusterInput {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `Vote` mutation."""
+type CreateVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was created by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the create `Vote` mutation."""
+input CreateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Vote` to be created by this mutation."""
+  vote: VoteInput!
+}
+
+"""An input for mutations affecting `Vote`"""
+input VoteInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  voteType: VoteType!
+  createdAt: Datetime
+  updatedAt: Datetime
+  weight: Int
 }
 
 """The output of our create `Attachment` mutation."""
@@ -9999,54 +10195,6 @@ input ProjectLinkPatch {
   updatedAt: Datetime
 }
 
-"""The output of our update `Vote` mutation."""
-type UpdateVotePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Vote` that was updated by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Vote`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering `Vote`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the `updateVote` mutation."""
-input UpdateVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Vote` being updated.
-  """
-  patch: VotePatch!
-}
-
-"""Represents an update to a `Vote`. Fields that are set will be updated."""
-input VotePatch {
-  rowId: UUID
-  postId: UUID
-  userId: UUID
-  voteType: VoteType
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our update `StatusTemplate` mutation."""
 type UpdateStatusTemplatePayload {
   """
@@ -10150,6 +10298,55 @@ input SignalClusterPatch {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our update `Vote` mutation."""
+type UpdateVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was updated by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the `updateVote` mutation."""
+input UpdateVoteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Vote` being updated.
+  """
+  patch: VotePatch!
+}
+
+"""Represents an update to a `Vote`. Fields that are set will be updated."""
+input VotePatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  voteType: VoteType
+  createdAt: Datetime
+  updatedAt: Datetime
+  weight: Int
 }
 
 """The output of our update `Attachment` mutation."""
@@ -10604,39 +10801,6 @@ input DeleteProjectLinkInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Vote` mutation."""
-type DeleteVotePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Vote` that was deleted by this mutation."""
-  vote: Vote
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Vote`. May be used by Relay 1."""
-  voteEdge(
-    """The method to use when ordering `Vote`."""
-    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): VoteEdge
-}
-
-"""All input for the `deleteVote` mutation."""
-input DeleteVoteInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `StatusTemplate` mutation."""
 type DeleteStatusTemplatePayload {
   """
@@ -10695,6 +10859,39 @@ type DeleteSignalClusterPayload {
 
 """All input for the `deleteSignalCluster` mutation."""
 input DeleteSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Vote` mutation."""
+type DeleteVotePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Vote` that was deleted by this mutation."""
+  vote: Vote
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Vote`. May be used by Relay 1."""
+  voteEdge(
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VoteEdge
+}
+
+"""All input for the `deleteVote` mutation."""
+input DeleteVoteInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10959,12 +11156,6 @@ type Query implements Node {
   """Get a single `ProjectLink`."""
   projectLink(rowId: UUID!): ProjectLink
 
-  """Get a single `Vote`."""
-  vote(rowId: UUID!): Vote
-
-  """Get a single `Vote`."""
-  voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
-
   """Get a single `StatusTemplate`."""
   statusTemplate(rowId: UUID!): StatusTemplate
 
@@ -10973,6 +11164,12 @@ type Query implements Node {
 
   """Get a single `SignalCluster`."""
   signalCluster(rowId: UUID!): SignalCluster
+
+  """Get a single `Vote`."""
+  vote(rowId: UUID!): Vote
+
+  """Get a single `Vote`."""
+  voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
 
   """Get a single `Attachment`."""
   attachment(rowId: UUID!): Attachment
@@ -11270,40 +11467,6 @@ type Query implements Node {
     orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLinkConnection
 
-  """Reads and enables pagination through a set of `Vote`."""
-  votes(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: VoteCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: VoteFilter
-
-    """The method to use when ordering `Vote`."""
-    orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
-  ): VoteConnection
-
   """Reads and enables pagination through a set of `StatusTemplate`."""
   statusTemplates(
     """Only read the first `n` values of the set."""
@@ -11371,6 +11534,40 @@ type Query implements Node {
     """The method to use when ordering `SignalCluster`."""
     orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalClusterConnection
+
+  """Reads and enables pagination through a set of `Vote`."""
+  votes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VoteCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VoteFilter
+
+    """The method to use when ordering `Vote`."""
+    orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VoteConnection
 
   """Reads and enables pagination through a set of `Attachment`."""
   attachments(
@@ -11617,14 +11814,6 @@ type Mutation {
     input: CreateProjectLinkInput!
   ): CreateProjectLinkPayload
 
-  """Creates a single `Vote`."""
-  createVote(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateVoteInput!
-  ): CreateVotePayload
-
   """Creates a single `StatusTemplate`."""
   createStatusTemplate(
     """
@@ -11640,6 +11829,14 @@ type Mutation {
     """
     input: CreateSignalClusterInput!
   ): CreateSignalClusterPayload
+
+  """Creates a single `Vote`."""
+  createVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVoteInput!
+  ): CreateVotePayload
 
   """Creates a single `Attachment`."""
   createAttachment(
@@ -11729,14 +11926,6 @@ type Mutation {
     input: UpdateProjectLinkInput!
   ): UpdateProjectLinkPayload
 
-  """Updates a single `Vote` using a unique key and a patch."""
-  updateVote(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateVoteInput!
-  ): UpdateVotePayload
-
   """Updates a single `StatusTemplate` using a unique key and a patch."""
   updateStatusTemplate(
     """
@@ -11752,6 +11941,14 @@ type Mutation {
     """
     input: UpdateSignalClusterInput!
   ): UpdateSignalClusterPayload
+
+  """Updates a single `Vote` using a unique key and a patch."""
+  updateVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVoteInput!
+  ): UpdateVotePayload
 
   """Updates a single `Attachment` using a unique key and a patch."""
   updateAttachment(
@@ -11841,14 +12038,6 @@ type Mutation {
     input: DeleteProjectLinkInput!
   ): DeleteProjectLinkPayload
 
-  """Deletes a single `Vote` using a unique key."""
-  deleteVote(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteVoteInput!
-  ): DeleteVotePayload
-
   """Deletes a single `StatusTemplate` using a unique key."""
   deleteStatusTemplate(
     """
@@ -11864,6 +12053,14 @@ type Mutation {
     """
     input: DeleteSignalClusterInput!
   ): DeleteSignalClusterPayload
+
+  """Deletes a single `Vote` using a unique key."""
+  deleteVote(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVoteInput!
+  ): DeleteVotePayload
 
   """Deletes a single `Attachment` using a unique key."""
   deleteAttachment(
