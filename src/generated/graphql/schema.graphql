@@ -11089,6 +11089,14 @@ type ChangePostStatusPayload {
   statusTemplateId: UUID
 }
 
+input DeletePostStatusChangeInput {
+  rowId: UUID!
+}
+
+type DeletePostStatusChangePayload {
+  id: UUID!
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -12116,6 +12124,17 @@ type Mutation {
     """
     input: ChangePostStatusInput!
   ): ChangePostStatusPayload
+
+  """
+  Remove a single entry from a post's status timeline. Admin-only. Does not
+  change the post's current status (use changePostStatus for that).
+  """
+  deletePostStatusChange(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostStatusChangeInput!
+  ): DeletePostStatusChangePayload
 
   """Update the current user's email notification settings."""
   setNotificationPreference(

@@ -47,3 +47,38 @@ export const recordPostStatusChange = async (
 
   return true;
 };
+
+/**
+ * Resolve the post a status-timeline entry belongs to, used to authorize
+ * removal against the post's organization. Returns null when the entry does not
+ * exist.
+ */
+export const getStatusChangePostId = async (
+  db: Db,
+  id: string,
+): Promise<string | null> => {
+  const row = await db.query.postStatusChanges.findFirst({
+    where: eq(postStatusChanges.id, id),
+    columns: { postId: true },
+  });
+
+  return row?.postId ?? null;
+};
+
+/**
+ * Remove a single entry from a post's status timeline. The post's current
+ * status (`posts.statusTemplateId`) is intentionally left untouched, mirroring
+ * how deleting a comment removes only that comment. Returns true if a row was
+ * deleted.
+ */
+export const deletePostStatusChange = async (
+  db: Db,
+  id: string,
+): Promise<boolean> => {
+  const deleted = await db
+    .delete(postStatusChanges)
+    .where(eq(postStatusChanges.id, id))
+    .returning({ id: postStatusChanges.id });
+
+  return deleted.length > 0;
+};

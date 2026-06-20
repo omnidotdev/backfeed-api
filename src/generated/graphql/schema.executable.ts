@@ -12,7 +12,7 @@ import { embeddingProvider } from "lib/feedback/embedding";
 import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
 import { markPostShipped } from "lib/feedback/shipped";
 import { buildPostProvenanceSignal } from "lib/feedback/signal";
-import { recordPostStatusChange } from "lib/feedback/statusHistory";
+import { deletePostStatusChange, getStatusChangePostId, recordPostStatusChange } from "lib/feedback/statusHistory";
 import { FEATURE_KEYS, billingBypassOrgIds } from "lib/graphql/plugins/authorization/constants";
 import { moderateText } from "lib/moderation";
 import { notifyStatusChange } from "lib/notifications/notify";
@@ -122,7 +122,7 @@ const spec_postTag = {
     }
   },
   extensions: {
-    oid: "748018",
+    oid: "17322",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -200,7 +200,7 @@ const spec_postStatusChange = {
     }
   },
   extensions: {
-    oid: "748106",
+    oid: "17410",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -283,7 +283,7 @@ const spec_reaction = {
     }
   },
   extensions: {
-    oid: "748068",
+    oid: "17372",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -364,7 +364,7 @@ const spec_tag = {
     }
   },
   extensions: {
-    oid: "748031",
+    oid: "17335",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -437,7 +437,7 @@ const notificationPreferenceCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "748134",
+    oid: "17438",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -530,7 +530,7 @@ const spec_comment = {
     }
   },
   extensions: {
-    oid: "747527",
+    oid: "16831",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -630,7 +630,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "747659",
+    oid: "16963",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -738,7 +738,7 @@ const spec_projectStatusConfig = {
     }
   },
   extensions: {
-    oid: "747623",
+    oid: "16927",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -830,7 +830,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "747840",
+    oid: "17144",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -848,7 +848,7 @@ const voteTypeCodec = enumCodec({
   values: ["up", "down"],
   description: undefined,
   extensions: {
-    oid: "747510",
+    oid: "16814",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -937,7 +937,7 @@ const spec_vote = {
     }
   },
   extensions: {
-    oid: "747680",
+    oid: "16984",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1056,7 +1056,7 @@ const spec_statusTemplate = {
     }
   },
   extensions: {
-    oid: "747640",
+    oid: "16944",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1184,7 +1184,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "747935",
+    oid: "17239",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1287,7 +1287,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "747874",
+    oid: "17178",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1399,7 +1399,7 @@ const spec_signalCluster = {
     }
   },
   extensions: {
-    oid: "747965",
+    oid: "17269",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1573,7 +1573,7 @@ const spec_signal = {
     }
   },
   extensions: {
-    oid: "747894",
+    oid: "17198",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1762,7 +1762,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "747573",
+    oid: "16877",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1928,7 +1928,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "747590",
+    oid: "16894",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -18261,6 +18261,14 @@ type ChangePostStatusPayload {
   statusTemplateId: UUID
 }
 
+input DeletePostStatusChangeInput {
+  rowId: UUID!
+}
+
+type DeletePostStatusChangePayload {
+  id: UUID!
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -19289,6 +19297,17 @@ type Mutation {
     input: ChangePostStatusInput!
   ): ChangePostStatusPayload
 
+  """
+  Remove a single entry from a post's status timeline. Admin-only. Does not
+  change the post's current status (use changePostStatus for that).
+  """
+  deletePostStatusChange(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostStatusChangeInput!
+  ): DeletePostStatusChangePayload
+
   """Update the current user's email notification settings."""
   setNotificationPreference(
     """
@@ -20230,6 +20249,24 @@ ${String(oldPlan65)}`);
         args: {
           input: applyInputToUpdateOrDelete
         }
+      },
+      deletePostStatusChange(_$root, fieldArgs) {
+        const $input = fieldArgs.getRaw("input"),
+          $observer = context().get("observer"),
+          $db = context().get("db");
+        return lambda([$input, $observer, $db], async values => {
+          const [input, observer, db] = values;
+          if (!observer) throw new GraphQLError("Unauthorized");
+          const postId = await getStatusChangePostId(db, input.rowId);
+          if (!postId) throw new GraphQLError("Status update not found");
+          const postRef = await getPostRef(db, postId);
+          if (!postRef) throw new GraphQLError("Post not found");
+          if (!(await checkPermission(observer.identityProviderId, "organization", postRef.organizationId, "admin"))) throw new GraphQLError("Insufficient permissions");
+          await deletePostStatusChange(db, input.rowId);
+          return {
+            id: input.rowId
+          };
+        }, !1);
       },
       deletePostTag: {
         plan(...planParams) {

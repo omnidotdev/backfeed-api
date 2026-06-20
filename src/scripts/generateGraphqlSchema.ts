@@ -27,7 +27,11 @@ import { embeddingProvider } from "lib/feedback/embedding";
 import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
 import { markPostShipped } from "lib/feedback/shipped";
 import { buildPostProvenanceSignal } from "lib/feedback/signal";
-import { recordPostStatusChange } from "lib/feedback/statusHistory";
+import {
+  deletePostStatusChange,
+  getStatusChangePostId,
+  recordPostStatusChange,
+} from "lib/feedback/statusHistory";
 import {
   FEATURE_KEYS,
   billingBypassOrgIds,
@@ -178,7 +182,11 @@ const generateGraphqlSchema = async () => {
       "lib/feedback/promote": { ingestSignal, promoteSignalToPost },
       "lib/feedback/shipped": { markPostShipped },
       "lib/feedback/signal": { buildPostProvenanceSignal },
-      "lib/feedback/statusHistory": { recordPostStatusChange },
+      "lib/feedback/statusHistory": {
+        deletePostStatusChange,
+        getStatusChangePostId,
+        recordPostStatusChange,
+      },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "lib/graphql/plugins/authorization/constants": {
         FEATURE_KEYS,
