@@ -19823,7 +19823,7 @@ export const objects = {
     assertStep: __ValueStep,
     plans: {
       changePostStatus(_$root, fieldArgs) {
-        const $input = fieldArgs.get("input"),
+        const $input = fieldArgs.getRaw("input"),
           $observer = context().get("observer"),
           $db = context().get("db");
         return lambda([$input, $observer, $db], async values => {
@@ -20467,7 +20467,7 @@ ${String(oldPlan56)}`);
         }
       },
       ingestSignal(_$root, fieldArgs) {
-        const $input = fieldArgs.get("input"),
+        const $input = fieldArgs.getRaw("input"),
           $observer = context().get("observer"),
           $db = context().get("db");
         return lambda([$input, $observer, $db], async values => {
@@ -20482,7 +20482,7 @@ ${String(oldPlan56)}`);
         }, !1);
       },
       promoteSignalToPost(_$root, fieldArgs) {
-        const $input = fieldArgs.get("input"),
+        const $input = fieldArgs.getRaw("input"),
           $observer = context().get("observer"),
           $db = context().get("db");
         return lambda([$input, $observer, $db], async values => {
@@ -20521,7 +20521,7 @@ ${String(oldPlan56)}`);
         }, !1);
       },
       setNotificationPreference(_$root, fieldArgs) {
-        const $input = fieldArgs.get("input"),
+        const $input = fieldArgs.getRaw("input"),
           $observer = context().get("observer"),
           $db = context().get("db");
         return lambda([$input, $observer, $db], async values => {

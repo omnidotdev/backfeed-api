@@ -121,7 +121,7 @@ const SignalIngestionPlugin = makeExtendSchemaPlugin(() => ({
         ) =>
           // biome-ignore lint/suspicious/noExplicitAny: Grafast plan signature
           function plan(_$root: any, fieldArgs: any) {
-            const $input = fieldArgs.get("input");
+            const $input = fieldArgs.getRaw("input");
             const $observer = context().get("observer");
             const $db = context().get("db");
 
@@ -177,7 +177,7 @@ const SignalIngestionPlugin = makeExtendSchemaPlugin(() => ({
         ) =>
           // biome-ignore lint/suspicious/noExplicitAny: Grafast plan signature
           function plan(_$root: any, fieldArgs: any) {
-            const $input = fieldArgs.get("input");
+            const $input = fieldArgs.getRaw("input");
             const $observer = context().get("observer");
             const $db = context().get("db");
 
