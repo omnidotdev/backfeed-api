@@ -11,9 +11,9 @@ jobs:
     name: Lint & Type Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: latest
 
@@ -36,7 +36,7 @@ jobs:
       postgres:
         # pgvector-enabled PostgreSQL 18 (matches dev/prod) so the feedback brain's
         # vector columns migrate and the db integration tests run
-        image: pgvector/pgvector:pg18
+        image: pgvector/pgvector:pg18@sha256:c8a919765f2ef63681329fa21021b830cd4d79d1165bdca730dd016014e4da84
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -51,9 +51,9 @@ jobs:
     env:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/backfeed_test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: latest
 
