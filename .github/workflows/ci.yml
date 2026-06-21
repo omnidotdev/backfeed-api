@@ -11,7 +11,7 @@ jobs:
     name: Lint & Type Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -51,7 +51,7 @@ jobs:
     env:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/backfeed_test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - uses: oven-sh/setup-bun@v2
         with:
