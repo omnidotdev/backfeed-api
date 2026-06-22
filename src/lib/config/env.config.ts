@@ -58,6 +58,10 @@ export const {
   // Content moderation (Say Less). When unset, moderation is a noop (content
   // always allowed).
   SAY_LESS_URL,
+  // Image moderation (See Less). When unset, image moderation is a noop. URL of
+  // the See Less service plus the API key it authenticates callers with.
+  SEE_LESS_API_URL,
+  SEE_LESS_API_KEY,
   // Public base URL of this API (e.g. https://api.backfeed.omni.dev). Used to
   // build absolute attachment URLs served through the media proxy route.
   PUBLIC_API_URL,
@@ -83,6 +87,9 @@ export const isEmailIngestionEnabled =
 
 /** Whether content moderation (Say Less) is configured */
 export const isModerationEnabled = !!SAY_LESS_URL;
+
+/** Whether image moderation (See Less) is configured */
+export const isImageModerationEnabled = !!SEE_LESS_API_URL;
 
 /** Whether outbound email notifications (Herald) are configured */
 export const isNotificationsEnabled =
@@ -112,6 +119,8 @@ if (!isEmailIngestionEnabled)
   );
 if (!SAY_LESS_URL)
   console.warn("SAY_LESS_URL not set, content moderation disabled");
+if (!SEE_LESS_API_URL)
+  console.warn("SEE_LESS_API_URL not set, image moderation disabled");
 if (!isNotificationsEnabled)
   console.warn(
     "HERALD_API_URL / HERALD_API_KEY / HERALD_DEFAULT_FROM not set, email notifications disabled",

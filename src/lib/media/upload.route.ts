@@ -17,6 +17,7 @@ import {
   PUBLIC_API_URL,
   protectRoutes,
 } from "lib/config/env.config";
+import { moderateImage } from "lib/moderation/image";
 import { storage } from "lib/providers";
 
 import { extensionForMimeType, validateUpload } from "./mediaConfig";
@@ -76,10 +77,22 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
     const extension = extensionForMimeType(file.type);
     const storageKey = `feedback/${subject ?? "anonymous"}/${randomUUID()}.${extension}`;
 
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Screen images through See Less before storing. A hard "block" verdict
+    // rejects the upload; lesser verdicts are allowed through. Fails open
+    if (validation.kind === "image") {
+      const { verdict } = await moderateImage(buffer, file.type);
+      if (verdict === "block") {
+        set.status = 422;
+        return { error: "Image rejected by content moderation" };
+      }
+    }
+
     try {
       await storage.upload({
         key: storageKey,
-        body: Buffer.from(await file.arrayBuffer()),
+        body: buffer,
         contentType: file.type,
         cacheControl: `public, max-age=${ONE_YEAR_SECONDS}, immutable`,
       });
