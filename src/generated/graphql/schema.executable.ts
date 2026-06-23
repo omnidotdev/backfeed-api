@@ -6,6 +6,7 @@ import { GraphQLError, Kind } from "graphql";
 import { checkPermission, deleteTuples, isAuthzEnabled, writeTuples } from "lib/authz";
 import { signals, statusTemplates } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
+import { eventMeta } from "lib/events/enrich";
 import { changePostStatus, getPostRef } from "lib/feedback/changeStatus";
 import { findSimilarPosts } from "lib/feedback/dedupe";
 import { embeddingProvider } from "lib/feedback/embedding";
@@ -122,7 +123,7 @@ const spec_postTag = {
     }
   },
   extensions: {
-    oid: "17322",
+    oid: "739621",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -200,7 +201,7 @@ const spec_postStatusChange = {
     }
   },
   extensions: {
-    oid: "17410",
+    oid: "745938",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -283,7 +284,7 @@ const spec_reaction = {
     }
   },
   extensions: {
-    oid: "17372",
+    oid: "743996",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -364,7 +365,7 @@ const spec_tag = {
     }
   },
   extensions: {
-    oid: "17335",
+    oid: "739634",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -437,7 +438,7 @@ const notificationPreferenceCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "17438",
+    oid: "746611",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -530,7 +531,7 @@ const spec_comment = {
     }
   },
   extensions: {
-    oid: "16831",
+    oid: "270503",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -630,7 +631,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "16963",
+    oid: "270635",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -738,7 +739,7 @@ const spec_projectStatusConfig = {
     }
   },
   extensions: {
-    oid: "16927",
+    oid: "270599",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -830,7 +831,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "17144",
+    oid: "300307",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -848,7 +849,7 @@ const voteTypeCodec = enumCodec({
   values: ["up", "down"],
   description: undefined,
   extensions: {
-    oid: "16814",
+    oid: "270486",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -937,7 +938,7 @@ const spec_vote = {
     }
   },
   extensions: {
-    oid: "16984",
+    oid: "270656",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1056,7 +1057,7 @@ const spec_statusTemplate = {
     }
   },
   extensions: {
-    oid: "16944",
+    oid: "270616",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1184,7 +1185,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "17239",
+    oid: "708031",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1287,7 +1288,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "17178",
+    oid: "706846",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1399,7 +1400,7 @@ const spec_signalCluster = {
     }
   },
   extensions: {
-    oid: "17269",
+    oid: "731880",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1573,7 +1574,7 @@ const spec_signal = {
     }
   },
   extensions: {
-    oid: "17198",
+    oid: "706866",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1762,7 +1763,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "16877",
+    oid: "270549",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1928,7 +1929,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "16894",
+    oid: "270566",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4666,8 +4667,9 @@ ${String(oldPlan5)}`);
 const planWrapper5 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "comment"]),
-    $db = context().get("db");
-  sideEffect([$result, $input, $db], async ([result, input, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $input, $db, $observer], async ([result, input, db, observer]) => {
     if (!result) return;
     const {
         postId,
@@ -4699,7 +4701,8 @@ const planWrapper5 = (plan, _, fieldArgs) => {
           commentId,
           postId,
           projectId: post.projectId,
-          organizationId
+          organizationId,
+          ...eventMeta(observer, "comment")
         },
         organizationId,
         subject: commentId
@@ -4723,7 +4726,8 @@ const planWrapper5 = (plan, _, fieldArgs) => {
           projectId: post.projectId,
           organizationId,
           mentionedUserId,
-          mentionedByUserId
+          mentionedByUserId,
+          ...eventMeta(observer, "comment")
         },
         organizationId,
         subject: mentionedUserId
@@ -4800,8 +4804,9 @@ ${String(oldPlan8)}`);
 const planWrapper8 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "projectStatusConfig"]),
-    $db = context().get("db");
-  sideEffect([$result, $input, $db], async ([result, input, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $input, $db, $observer], async ([result, input, db, observer]) => {
     if (!result) return;
     const {
         projectId
@@ -4825,7 +4830,8 @@ const planWrapper8 = (plan, _, fieldArgs) => {
         data: {
           projectStatusConfigId: configId,
           projectId,
-          organizationId: project.organizationId
+          organizationId: project.organizationId,
+          ...eventMeta(observer, "projectStatusConfig")
         },
         organizationId: project.organizationId,
         subject: configId
@@ -4887,11 +4893,13 @@ ${String(oldPlan10)}`);
 const planWrapper10 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "projectLink"]),
-    $db = context().get("db");
-  sideEffect([$result, $input, $db], async ([result, input, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $input, $db, $observer], async ([result, input, db, observer]) => {
     if (!result) return;
     const {
-        projectId
+        projectId,
+        title
       } = input,
       linkId = result?.id;
     if (!linkId) return;
@@ -4912,7 +4920,8 @@ const planWrapper10 = (plan, _, fieldArgs) => {
         data: {
           projectLinkId: linkId,
           projectId,
-          organizationId: project.organizationId
+          organizationId: project.organizationId,
+          ...eventMeta(observer, "projectLink", title)
         },
         organizationId: project.organizationId,
         subject: linkId
@@ -4933,8 +4942,9 @@ function oldPlan11(_, args) {
 const planWrapper11 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "vote"]),
-    $db = context().get("db");
-  sideEffect([$result, $input, $db], async ([result, input, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $input, $db, $observer], async ([result, input, db, observer]) => {
     if (!result) return;
     const {
         postId
@@ -4963,7 +4973,8 @@ const planWrapper11 = (plan, _, fieldArgs) => {
           voteId,
           postId,
           projectId: post.projectId,
-          organizationId: post.project.organizationId
+          organizationId: post.project.organizationId,
+          ...eventMeta(observer, "vote")
         },
         organizationId: post.project.organizationId,
         subject: voteId
@@ -5013,11 +5024,13 @@ ${String(oldPlan13)}`);
 }
 const planWrapper13 = (plan, _, fieldArgs) => {
   const $result = plan(),
-    $input = fieldArgs.getRaw(["input", "statusTemplate"]);
-  sideEffect([$result, $input], async ([result, input]) => {
+    $input = fieldArgs.getRaw(["input", "statusTemplate"]),
+    $observer = context().get("observer");
+  sideEffect([$result, $input, $observer], async ([result, input, observer]) => {
     if (!result) return;
     const {
-        organizationId
+        organizationId,
+        name
       } = input,
       templateId = result?.id;
     if (!templateId) return;
@@ -5026,7 +5039,8 @@ const planWrapper13 = (plan, _, fieldArgs) => {
         type: "backfeed.statusTemplate.created",
         data: {
           statusTemplateId: templateId,
-          organizationId
+          organizationId,
+          ...eventMeta(observer, "statusTemplate", name)
         },
         organizationId,
         subject: templateId
@@ -5161,11 +5175,13 @@ ${String(oldPlan18)}`);
 }
 const planWrapper17 = (plan, _, fieldArgs) => {
   const $result = plan(),
-    $input = fieldArgs.getRaw(["input", "project"]);
-  sideEffect([$result, $input], async ([result, input]) => {
+    $input = fieldArgs.getRaw(["input", "project"]),
+    $observer = context().get("observer");
+  sideEffect([$result, $input, $observer], async ([result, input, observer]) => {
     if (!result) return;
     const {
-        organizationId
+        organizationId,
+        name
       } = input,
       projectId = result?.id;
     if (!projectId) return;
@@ -5174,7 +5190,8 @@ const planWrapper17 = (plan, _, fieldArgs) => {
         type: "backfeed.project.created",
         data: {
           projectId,
-          organizationId
+          organizationId,
+          ...eventMeta(observer, "project", name)
         },
         organizationId,
         subject: projectId
@@ -5364,11 +5381,13 @@ ${String(oldPlan23)}`);
 const planWrapper21 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "post"]),
-    $db = context().get("db");
-  sideEffect([$result, $input, $db], async ([result, input, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $input, $db, $observer], async ([result, input, db, observer]) => {
     if (!result) return;
     const {
-        projectId
+        projectId,
+        title
       } = input,
       postId = result?.id;
     if (!postId) return;
@@ -5389,7 +5408,8 @@ const planWrapper21 = (plan, _, fieldArgs) => {
         data: {
           postId,
           projectId,
-          organizationId: project.organizationId
+          organizationId: project.organizationId,
+          ...eventMeta(observer, "post", title)
         },
         organizationId: project.organizationId,
         subject: postId
@@ -5617,8 +5637,9 @@ ${String(oldPlan27)}`);
 const planWrapper27 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $commentId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $commentId, $db], async ([result, commentId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $commentId, $db, $observer], async ([result, commentId, db, observer]) => {
     if (!result) return;
     const comment = await db.query.comments.findFirst({
       where(table, {
@@ -5646,7 +5667,8 @@ const planWrapper27 = (plan, _, fieldArgs) => {
           commentId,
           postId: comment.postId,
           projectId: comment.post.projectId,
-          organizationId: comment.post.project.organizationId
+          organizationId: comment.post.project.organizationId,
+          ...eventMeta(observer, "comment")
         },
         organizationId: comment.post.project.organizationId,
         subject: commentId
@@ -5730,8 +5752,9 @@ ${String(oldPlan30)}`);
 const planWrapper30 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $configId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $configId, $db], async ([result, configId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $configId, $db, $observer], async ([result, configId, db, observer]) => {
     if (!result) return;
     const config = await db.query.projectStatusConfigs.findFirst({
       where(table, {
@@ -5754,7 +5777,8 @@ const planWrapper30 = (plan, _, fieldArgs) => {
         data: {
           projectStatusConfigId: configId,
           projectId: config.projectId,
-          organizationId: config.project.organizationId
+          organizationId: config.project.organizationId,
+          ...eventMeta(observer, "projectStatusConfig")
         },
         organizationId: config.project.organizationId,
         subject: configId
@@ -5820,8 +5844,9 @@ ${String(oldPlan32)}`);
 const planWrapper32 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $linkId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $linkId, $db], async ([result, linkId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $linkId, $db, $observer], async ([result, linkId, db, observer]) => {
     if (!result) return;
     const link = await db.query.projectLinks.findFirst({
       where(table, {
@@ -5844,7 +5869,8 @@ const planWrapper32 = (plan, _, fieldArgs) => {
         data: {
           projectLinkId: linkId,
           projectId: link.projectId,
-          organizationId: link.project.organizationId
+          organizationId: link.project.organizationId,
+          ...eventMeta(observer, "projectLink", link.title)
         },
         organizationId: link.project.organizationId,
         subject: linkId
@@ -5902,8 +5928,9 @@ ${String(oldPlan34)}`);
 const planWrapper34 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $voteId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $voteId, $db], async ([result, voteId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $voteId, $db, $observer], async ([result, voteId, db, observer]) => {
     if (!result) return;
     const vote = await db.query.votes.findFirst({
       where(table, {
@@ -5931,7 +5958,8 @@ const planWrapper34 = (plan, _, fieldArgs) => {
           voteId,
           postId: vote.postId,
           projectId: vote.post.projectId,
-          organizationId: vote.post.project.organizationId
+          organizationId: vote.post.project.organizationId,
+          ...eventMeta(observer, "vote")
         },
         organizationId: vote.post.project.organizationId,
         subject: voteId
@@ -5994,8 +6022,9 @@ ${String(oldPlan36)}`);
 const planWrapper36 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $templateId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $templateId, $db, $observer], async ([result, templateId, db, observer]) => {
     if (!result) return;
     const template = await db.query.statusTemplates.findFirst({
       where(table, {
@@ -6004,7 +6033,8 @@ const planWrapper36 = (plan, _, fieldArgs) => {
         return eq(table.id, templateId);
       },
       columns: {
-        organizationId: !0
+        organizationId: !0,
+        name: !0
       }
     });
     if (!template) return;
@@ -6013,7 +6043,8 @@ const planWrapper36 = (plan, _, fieldArgs) => {
         type: "backfeed.statusTemplate.updated",
         data: {
           statusTemplateId: templateId,
-          organizationId: template.organizationId
+          organizationId: template.organizationId,
+          ...eventMeta(observer, "statusTemplate", template.name)
         },
         organizationId: template.organizationId,
         subject: templateId
@@ -6114,8 +6145,9 @@ ${String(oldPlan40)}`);
 const planWrapper39 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $projectId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $projectId, $db], async ([result, projectId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $projectId, $db, $observer], async ([result, projectId, db, observer]) => {
     if (!result) return;
     const project = await db.query.projects.findFirst({
       where(table, {
@@ -6124,7 +6156,8 @@ const planWrapper39 = (plan, _, fieldArgs) => {
         return eq(table.id, projectId);
       },
       columns: {
-        organizationId: !0
+        organizationId: !0,
+        name: !0
       }
     });
     if (!project) return;
@@ -6133,7 +6166,8 @@ const planWrapper39 = (plan, _, fieldArgs) => {
         type: "backfeed.project.updated",
         data: {
           projectId,
-          organizationId: project.organizationId
+          organizationId: project.organizationId,
+          ...eventMeta(observer, "project", project.name)
         },
         organizationId: project.organizationId,
         subject: projectId
@@ -6217,8 +6251,9 @@ ${String(oldPlan45)}`);
 const planWrapper42 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $postId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $postId, $db], async ([result, postId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $postId, $db, $observer], async ([result, postId, db, observer]) => {
     if (!result) return;
     const post = await db.query.posts.findFirst({
       where(table, {
@@ -6241,7 +6276,8 @@ const planWrapper42 = (plan, _, fieldArgs) => {
         data: {
           postId,
           projectId: post.projectId,
-          organizationId: post.project.organizationId
+          organizationId: post.project.organizationId,
+          ...eventMeta(observer, "post", post.title)
         },
         organizationId: post.project.organizationId,
         subject: postId
@@ -6477,8 +6513,9 @@ ${String(oldPlan50)}`);
 const planWrapper50 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $commentId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $commentId, $db], async ([result, commentId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $commentId, $db, $observer], async ([result, commentId, db, observer]) => {
     if (!result) return;
     const comment = await db.query.comments.findFirst({
       where(table, {
@@ -6506,7 +6543,8 @@ const planWrapper50 = (plan, _, fieldArgs) => {
           commentId,
           postId: comment.postId,
           projectId: comment.post.projectId,
-          organizationId: comment.post.project.organizationId
+          organizationId: comment.post.project.organizationId,
+          ...eventMeta(observer, "comment")
         },
         organizationId: comment.post.project.organizationId,
         subject: commentId
@@ -6590,8 +6628,9 @@ ${String(oldPlan53)}`);
 const planWrapper53 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $configId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $configId, $db], async ([result, configId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $configId, $db, $observer], async ([result, configId, db, observer]) => {
     if (!result) return;
     const config = await db.query.projectStatusConfigs.findFirst({
       where(table, {
@@ -6614,7 +6653,8 @@ const planWrapper53 = (plan, _, fieldArgs) => {
         data: {
           projectStatusConfigId: configId,
           projectId: config.projectId,
-          organizationId: config.project.organizationId
+          organizationId: config.project.organizationId,
+          ...eventMeta(observer, "projectStatusConfig")
         },
         organizationId: config.project.organizationId,
         subject: configId
@@ -6680,8 +6720,9 @@ ${String(oldPlan55)}`);
 const planWrapper55 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $linkId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $linkId, $db], async ([result, linkId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $linkId, $db, $observer], async ([result, linkId, db, observer]) => {
     if (!result) return;
     const link = await db.query.projectLinks.findFirst({
       where(table, {
@@ -6704,7 +6745,8 @@ const planWrapper55 = (plan, _, fieldArgs) => {
         data: {
           projectLinkId: linkId,
           projectId: link.projectId,
-          organizationId: link.project.organizationId
+          organizationId: link.project.organizationId,
+          ...eventMeta(observer, "projectLink", link.title)
         },
         organizationId: link.project.organizationId,
         subject: linkId
@@ -6745,8 +6787,9 @@ ${String(oldPlan57)}`);
 const planWrapper57 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $voteId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $voteId, $db], async ([result, voteId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $voteId, $db, $observer], async ([result, voteId, db, observer]) => {
     if (!result) return;
     const vote = await db.query.votes.findFirst({
       where(table, {
@@ -6774,7 +6817,8 @@ const planWrapper57 = (plan, _, fieldArgs) => {
           voteId,
           postId: vote.postId,
           projectId: vote.post.projectId,
-          organizationId: vote.post.project.organizationId
+          organizationId: vote.post.project.organizationId,
+          ...eventMeta(observer, "vote")
         },
         organizationId: vote.post.project.organizationId,
         subject: voteId
@@ -6837,8 +6881,9 @@ ${String(oldPlan59)}`);
 const planWrapper59 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $templateId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $templateId, $db], async ([result, templateId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $templateId, $db, $observer], async ([result, templateId, db, observer]) => {
     if (!result) return;
     const template = await db.query.statusTemplates.findFirst({
       where(table, {
@@ -6847,7 +6892,8 @@ const planWrapper59 = (plan, _, fieldArgs) => {
         return eq(table.id, templateId);
       },
       columns: {
-        organizationId: !0
+        organizationId: !0,
+        name: !0
       }
     });
     if (!template) return;
@@ -6856,7 +6902,8 @@ const planWrapper59 = (plan, _, fieldArgs) => {
         type: "backfeed.statusTemplate.deleted",
         data: {
           statusTemplateId: templateId,
-          organizationId: template.organizationId
+          organizationId: template.organizationId,
+          ...eventMeta(observer, "statusTemplate", template.name)
         },
         organizationId: template.organizationId,
         subject: templateId
@@ -6998,8 +7045,9 @@ ${String(oldPlan63)}`);
 const planWrapper63 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $projectId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $projectId, $db], async ([result, projectId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $projectId, $db, $observer], async ([result, projectId, db, observer]) => {
     if (!result) return;
     const project = await db.query.projects.findFirst({
       where(table, {
@@ -7008,7 +7056,8 @@ const planWrapper63 = (plan, _, fieldArgs) => {
         return eq(table.id, projectId);
       },
       columns: {
-        organizationId: !0
+        organizationId: !0,
+        name: !0
       }
     });
     if (!project) return;
@@ -7017,7 +7066,8 @@ const planWrapper63 = (plan, _, fieldArgs) => {
         type: "backfeed.project.deleted",
         data: {
           projectId,
-          organizationId: project.organizationId
+          organizationId: project.organizationId,
+          ...eventMeta(observer, "project", project.name)
         },
         organizationId: project.organizationId,
         subject: projectId
@@ -7109,8 +7159,9 @@ ${String(oldPlan67)}`);
 const planWrapper66 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $postId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $postId, $db], async ([result, postId, db]) => {
+    $db = context().get("db"),
+    $observer = context().get("observer");
+  sideEffect([$result, $postId, $db, $observer], async ([result, postId, db, observer]) => {
     if (!result) return;
     const post = await db.query.posts.findFirst({
       where(table, {
@@ -7133,7 +7184,8 @@ const planWrapper66 = (plan, _, fieldArgs) => {
         data: {
           postId,
           projectId: post.projectId,
-          organizationId: post.project.organizationId
+          organizationId: post.project.organizationId,
+          ...eventMeta(observer, "post", post.title)
         },
         organizationId: post.project.organizationId,
         subject: postId

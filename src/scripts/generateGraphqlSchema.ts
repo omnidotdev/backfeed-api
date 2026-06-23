@@ -21,6 +21,7 @@ import {
 import preset from "lib/config/graphile.config";
 import { signals, statusTemplates } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
+import { eventMeta } from "lib/events/enrich";
 import { changePostStatus, getPostRef } from "lib/feedback/changeStatus";
 import { findSimilarPosts } from "lib/feedback/dedupe";
 import { embeddingProvider } from "lib/feedback/embedding";
@@ -188,6 +189,7 @@ const generateGraphqlSchema = async () => {
         recordPostStatusChange,
       },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
+      "lib/events/enrich": { eventMeta },
       "lib/graphql/plugins/authorization/constants": {
         FEATURE_KEYS,
         billingBypassOrgIds,
