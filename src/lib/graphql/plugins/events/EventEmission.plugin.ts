@@ -12,8 +12,8 @@
  * which thing" without extra lookups.
  */
 
+import { eventMeta } from "@omnidotdev/providers/events";
 import { EXPORTABLE } from "graphile-export";
-import { eventMeta } from "lib/events/enrich";
 import { events } from "lib/providers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";

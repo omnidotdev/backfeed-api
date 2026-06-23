@@ -1,12 +1,12 @@
 // @ts-nocheck
 import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
+import { eventMeta } from "@omnidotdev/providers/events";
 import { eq } from "drizzle-orm";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inspect, isStep, lambda, makeDecodeNodeId, makeGrafastSchema, markSyncAndSafe, object, rootValue, sideEffect } from "grafast";
 import { GraphQLError, Kind } from "graphql";
 import { checkPermission, deleteTuples, isAuthzEnabled, writeTuples } from "lib/authz";
 import { signals, statusTemplates } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
-import { eventMeta } from "lib/events/enrich";
 import { changePostStatus, getPostRef } from "lib/feedback/changeStatus";
 import { findSimilarPosts } from "lib/feedback/dedupe";
 import { embeddingProvider } from "lib/feedback/embedding";
