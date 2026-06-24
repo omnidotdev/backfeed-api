@@ -31,6 +31,7 @@ import {
   PostSignalProvenancePlugin,
   SignalIngestionPlugin,
 } from "lib/graphql/plugins/feedback";
+import { AttachmentCleanupPlugin } from "lib/graphql/plugins/media";
 import {
   PostSearchPlugin,
   ProjectSearchPlugin,
@@ -82,6 +83,8 @@ const preset: GraphileConfig.Preset = {
     AuthzSyncPlugin,
     // Event emission plugin
     EventEmissionPlugin,
+    // Media cleanup plugin (post-delete orphaned-object deletion)
+    AttachmentCleanupPlugin,
     // Close-the-loop: emit backfeed.post.shipped when a post first ships
     PostShippedPlugin,
     // Record post status transitions into the status timeline

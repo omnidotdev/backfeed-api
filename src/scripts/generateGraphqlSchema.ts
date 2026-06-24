@@ -38,6 +38,7 @@ import {
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
+import { deleteStorageObjects } from "lib/media/cleanupAttachments";
 import { moderateText } from "lib/moderation";
 import { notifyStatusChange } from "lib/notifications/notify";
 import {
@@ -196,6 +197,7 @@ const generateGraphqlSchema = async () => {
       },
       "lib/auth/organizations": { getDefaultOrganization },
       "lib/idp/validateOrg": { validateOrgExists },
+      "lib/media/cleanupAttachments": { deleteStorageObjects },
       "lib/moderation": { moderateText },
       "lib/notifications/notify": { notifyStatusChange },
       "lib/notifications/preference": {
