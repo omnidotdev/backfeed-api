@@ -11,6 +11,13 @@ COPY . .
 ARG GIT_SHA
 RUN echo "$GIT_SHA" > /app/.git-sha
 RUN bun run build
+# Guard: bun's bundler can emit an undefined __promiseAll helper for concurrent
+# async-module init, crash-looping the server on boot (the 2026-06 aether
+# incident). Fail the build before a broken bundle can deploy.
+RUN if grep -q '__promiseAll' build/server.js && \
+      ! grep -qE '(function|var|let|const) +__promiseAll' build/server.js; then \
+      echo 'FATAL: bundle references undefined __promiseAll (bun bundler bug); aborting build'; exit 1; \
+    fi
 RUN bun run src/scripts/cacheSchemaHash.ts
 
 # Run
