@@ -14,6 +14,7 @@
 
 import { eventMeta } from "@omnidotdev/providers/events";
 import { EXPORTABLE } from "graphile-export";
+import { extractMentionUserIds } from "lib/feedback/references";
 import { events } from "lib/providers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
@@ -293,7 +294,13 @@ const emitPostDeleted = (): PlanWrapperFn =>
 
 const emitCommentCreated = (): PlanWrapperFn =>
   EXPORTABLE(
-    (context, sideEffect, events, eventMeta): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      events,
+      eventMeta,
+      extractMentionUserIds,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
         const $input = fieldArgs.getRaw(["input", "comment"]);
@@ -340,14 +347,10 @@ const emitCommentCreated = (): PlanWrapperFn =>
 
             // emit a mention event per @-mentioned user (rich-text comments link
             // mentions to /profile/<userId>); skip the author mentioning themself
-            const mentionedUserIds = new Set<string>();
-            const mentionPattern = /\/profile\/([0-9a-fA-F-]{36})/g;
-            let match = mentionPattern.exec(message ?? "");
-            while (match !== null) {
-              if (match[1] !== mentionedByUserId)
-                mentionedUserIds.add(match[1]);
-              match = mentionPattern.exec(message ?? "");
-            }
+            const mentionedUserIds = extractMentionUserIds(
+              message ?? "",
+              mentionedByUserId ?? "",
+            );
 
             for (const mentionedUserId of mentionedUserIds) {
               try {
@@ -377,7 +380,7 @@ const emitCommentCreated = (): PlanWrapperFn =>
 
         return $result;
       },
-    [context, sideEffect, events, eventMeta],
+    [context, sideEffect, events, eventMeta, extractMentionUserIds],
   );
 
 const emitCommentUpdated = (): PlanWrapperFn =>
