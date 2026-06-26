@@ -31,6 +31,11 @@ export const statusTemplates = pgTable(
     // null = fall back to the default roadmap heuristic; true/false = explicit
     // admin choice for whether this status appears on the public roadmap
     showOnRoadmap: boolean(),
+    // Marks this template as the target a magic-word keyword (closes/fixes/
+    // resolves) transitions a post to. null = not a keyword target; the parser
+    // falls back to the seeded `completed`/`closed` names. At most one per org
+    // should carry "resolved".
+    keywordRole: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
