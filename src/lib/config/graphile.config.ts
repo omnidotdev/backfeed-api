@@ -32,6 +32,7 @@ import {
   SignalIngestionPlugin,
 } from "lib/graphql/plugins/feedback";
 import { AttachmentCleanupPlugin } from "lib/graphql/plugins/media";
+import { ReferenceExtractionPlugin } from "lib/graphql/plugins/references";
 import {
   PostSearchPlugin,
   ProjectSearchPlugin,
@@ -83,6 +84,8 @@ const preset: GraphileConfig.Preset = {
     AuthzSyncPlugin,
     // Event emission plugin
     EventEmissionPlugin,
+    // Reference extraction plugin (post_reference edges + post.mention events)
+    ReferenceExtractionPlugin,
     // Media cleanup plugin (post-delete orphaned-object deletion)
     AttachmentCleanupPlugin,
     // Close-the-loop: emit backfeed.post.shipped when a post first ships

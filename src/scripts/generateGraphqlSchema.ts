@@ -17,6 +17,7 @@ import {
   checkPermission,
   deleteTuples,
   isAuthzEnabled,
+  isOrganizationAdmin,
   writeTuples,
 } from "lib/authz";
 import preset from "lib/config/graphile.config";
@@ -26,6 +27,7 @@ import { changePostStatus, getPostRef } from "lib/feedback/changeStatus";
 import { findSimilarPosts } from "lib/feedback/dedupe";
 import { embeddingProvider } from "lib/feedback/embedding";
 import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
+import { extractMentionUserIds } from "lib/feedback/references";
 import { markPostShipped } from "lib/feedback/shipped";
 import { buildPostProvenanceSignal } from "lib/feedback/signal";
 import {
@@ -33,6 +35,7 @@ import {
   getStatusChangePostId,
   recordPostStatusChange,
 } from "lib/feedback/statusHistory";
+import { syncReferences } from "lib/feedback/syncReferences";
 import {
   FEATURE_KEYS,
   billingBypassOrgIds,
@@ -175,6 +178,7 @@ const generateGraphqlSchema = async () => {
         checkPermission,
         deleteTuples,
         isAuthzEnabled,
+        isOrganizationAdmin,
         writeTuples,
       },
       "lib/db/schema": { signals, statusTemplates },
@@ -182,6 +186,7 @@ const generateGraphqlSchema = async () => {
       "lib/feedback/dedupe": { findSimilarPosts },
       "lib/feedback/embedding": { embeddingProvider },
       "lib/feedback/promote": { ingestSignal, promoteSignalToPost },
+      "lib/feedback/references": { extractMentionUserIds },
       "lib/feedback/shipped": { markPostShipped },
       "lib/feedback/signal": { buildPostProvenanceSignal },
       "lib/feedback/statusHistory": {
@@ -189,6 +194,7 @@ const generateGraphqlSchema = async () => {
         getStatusChangePostId,
         recordPostStatusChange,
       },
+      "lib/feedback/syncReferences": { syncReferences },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "@omnidotdev/providers/events": { eventMeta },
       "lib/graphql/plugins/authorization/constants": {

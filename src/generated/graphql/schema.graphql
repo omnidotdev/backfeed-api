@@ -337,6 +337,40 @@ type Post {
     """The method to use when ordering `PostStatusChange`."""
     orderBy: [PostStatusChangeOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostStatusChangeConnection!
+
+  """Reads and enables pagination through a set of `PostReference`."""
+  postReferencesByTargetPostId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostReferenceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostReferenceFilter
+
+    """The method to use when ordering `PostReference`."""
+    orderBy: [PostReferenceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostReferenceConnection!
 }
 
 """
@@ -1135,6 +1169,12 @@ input PostFilter {
 
   """Some related `postStatusChanges` exist."""
   postStatusChangesExist: Boolean
+
+  """Filter by the object’s `postReferencesByTargetPostId` relation."""
+  postReferencesByTargetPostId: PostToManyPostReferenceFilter
+
+  """Some related `postReferencesByTargetPostId` exist."""
+  postReferencesByTargetPostIdExist: Boolean
 
   """Filter by the object’s `cluster` relation."""
   cluster: SignalClusterFilter
@@ -2596,6 +2636,9 @@ input StatusTemplateFilter {
   """Filter by the object’s `showOnRoadmap` field."""
   showOnRoadmap: BooleanFilter
 
+  """Filter by the object’s `keywordRole` field."""
+  keywordRole: StringFilter
+
   """Filter by the object’s `posts` relation."""
   posts: StatusTemplateToManyPostFilter
 
@@ -3691,6 +3734,102 @@ input PostToManyPostStatusChangeFilter {
   aggregates: PostStatusChangeAggregatesFilter
 }
 
+"""
+A filter to be used against many `PostReference` object types. All fields are combined with a logical ‘and.’
+"""
+input PostToManyPostReferenceFilter {
+  """
+  Every related `PostReference` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PostReferenceFilter
+
+  """
+  Some related `PostReference` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PostReferenceFilter
+
+  """
+  No related `PostReference` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PostReferenceFilter
+
+  """Aggregates across related `PostReference` match the filter criteria."""
+  aggregates: PostReferenceAggregatesFilter
+}
+
+"""
+A filter to be used against `PostReference` object types. All fields are combined with a logical ‘and.’
+"""
+input PostReferenceFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `sourceType` field."""
+  sourceType: StringFilter
+
+  """Filter by the object’s `sourceId` field."""
+  sourceId: UUIDFilter
+
+  """Filter by the object’s `targetPostId` field."""
+  targetPostId: UUIDFilter
+
+  """Filter by the object’s `refKind` field."""
+  refKind: StringFilter
+
+  """Filter by the object’s `keyword` field."""
+  keyword: StringFilter
+
+  """Filter by the object’s `firedAt` field."""
+  firedAt: DatetimeFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `targetPost` relation."""
+  targetPost: PostFilter
+
+  """Checks for all expressions in this list."""
+  and: [PostReferenceFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PostReferenceFilter!]
+
+  """Negates the expression."""
+  not: PostReferenceFilter
+}
+
+"""
+A filter to be used against aggregates of `PostReference` object types.
+"""
+input PostReferenceAggregatesFilter {
+  """
+  A filter that must pass for the relevant `PostReference` object to be included within the aggregate.
+  """
+  filter: PostReferenceFilter
+
+  """Distinct count aggregate over matching `PostReference` objects."""
+  distinctCount: PostReferenceDistinctCountAggregateFilter
+}
+
+input PostReferenceDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  sourceType: BigIntFilter
+  sourceId: BigIntFilter
+  targetPostId: BigIntFilter
+  refKind: BigIntFilter
+  keyword: BigIntFilter
+  firedAt: BigIntFilter
+  organizationId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
 """Methods to use when ordering `Post`."""
 enum PostOrderBy {
   NATURAL
@@ -3966,6 +4105,28 @@ enum PostOrderBy {
   POST_STATUS_CHANGES_DISTINCT_COUNT_CREATED_AT_DESC
   POST_STATUS_CHANGES_DISTINCT_COUNT_NOTE_ASC
   POST_STATUS_CHANGES_DISTINCT_COUNT_NOTE_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_COUNT_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_COUNT_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_ROW_ID_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_ROW_ID_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_SOURCE_TYPE_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_SOURCE_TYPE_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_SOURCE_ID_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_SOURCE_ID_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_TARGET_POST_ID_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_TARGET_POST_ID_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_REF_KIND_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_REF_KIND_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_KEYWORD_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_KEYWORD_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_FIRED_AT_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_FIRED_AT_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_UPDATED_AT_ASC
+  POST_REFERENCES_BY_TARGET_POST_ID_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of `ProjectStatusConfig` values."""
@@ -4038,6 +4199,7 @@ type StatusTemplate {
   createdAt: Datetime!
   updatedAt: Datetime!
   showOnRoadmap: Boolean
+  keywordRole: String
 
   """Reads and enables pagination through a set of `Post`."""
   posts(
@@ -7411,6 +7573,256 @@ enum TagOrderBy {
   POST_TAGS_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
+"""A connection to a list of `PostReference` values."""
+type PostReferenceConnection {
+  """A list of `PostReference` objects."""
+  nodes: [PostReference]!
+
+  """
+  A list of edges which contains the `PostReference` and cursor to aid in pagination.
+  """
+  edges: [PostReferenceEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `PostReference` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: PostReferenceAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `PostReference` for these aggregates."""
+    groupBy: [PostReferenceGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: PostReferenceHavingInput
+  ): [PostReferenceAggregates!]
+}
+
+type PostReference {
+  rowId: UUID!
+  sourceType: String!
+  sourceId: UUID!
+  targetPostId: UUID!
+  refKind: String!
+  keyword: String
+  firedAt: Datetime
+  organizationId: String!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Post` that is related to this `PostReference`."""
+  targetPost: Post
+}
+
+"""A `PostReference` edge in the connection."""
+type PostReferenceEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `PostReference` at the end of the edge."""
+  node: PostReference
+}
+
+type PostReferenceAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: PostReferenceDistinctCountAggregates
+}
+
+type PostReferenceDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of sourceType across the matching connection"""
+  sourceType: BigInt
+
+  """Distinct count of sourceId across the matching connection"""
+  sourceId: BigInt
+
+  """Distinct count of targetPostId across the matching connection"""
+  targetPostId: BigInt
+
+  """Distinct count of refKind across the matching connection"""
+  refKind: BigInt
+
+  """Distinct count of keyword across the matching connection"""
+  keyword: BigInt
+
+  """Distinct count of firedAt across the matching connection"""
+  firedAt: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for `PostReference` for usage during aggregation."""
+enum PostReferenceGroupBy {
+  SOURCE_TYPE
+  SOURCE_ID
+  TARGET_POST_ID
+  REF_KIND
+  KEYWORD
+  FIRED_AT
+  FIRED_AT_TRUNCATED_TO_HOUR
+  FIRED_AT_TRUNCATED_TO_DAY
+  ORGANIZATION_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `PostReference` aggregates."""
+input PostReferenceHavingInput {
+  AND: [PostReferenceHavingInput!]
+  OR: [PostReferenceHavingInput!]
+  sum: PostReferenceHavingSumInput
+  distinctCount: PostReferenceHavingDistinctCountInput
+  min: PostReferenceHavingMinInput
+  max: PostReferenceHavingMaxInput
+  average: PostReferenceHavingAverageInput
+  stddevSample: PostReferenceHavingStddevSampleInput
+  stddevPopulation: PostReferenceHavingStddevPopulationInput
+  varianceSample: PostReferenceHavingVarianceSampleInput
+  variancePopulation: PostReferenceHavingVariancePopulationInput
+}
+
+input PostReferenceHavingSumInput {
+  firedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostReferenceHavingDistinctCountInput {
+  firedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostReferenceHavingMinInput {
+  firedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostReferenceHavingMaxInput {
+  firedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostReferenceHavingAverageInput {
+  firedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostReferenceHavingStddevSampleInput {
+  firedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostReferenceHavingStddevPopulationInput {
+  firedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostReferenceHavingVarianceSampleInput {
+  firedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input PostReferenceHavingVariancePopulationInput {
+  firedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `PostReference` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PostReferenceCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `sourceType` field."""
+  sourceType: String
+
+  """Checks for equality with the object’s `sourceId` field."""
+  sourceId: UUID
+
+  """Checks for equality with the object’s `targetPostId` field."""
+  targetPostId: UUID
+
+  """Checks for equality with the object’s `refKind` field."""
+  refKind: String
+
+  """Checks for equality with the object’s `keyword` field."""
+  keyword: String
+
+  """Checks for equality with the object’s `firedAt` field."""
+  firedAt: Datetime
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `PostReference`."""
+enum PostReferenceOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  SOURCE_TYPE_ASC
+  SOURCE_TYPE_DESC
+  SOURCE_ID_ASC
+  SOURCE_ID_DESC
+  TARGET_POST_ID_ASC
+  TARGET_POST_ID_DESC
+  REF_KIND_ASC
+  REF_KIND_DESC
+  KEYWORD_ASC
+  KEYWORD_DESC
+  FIRED_AT_ASC
+  FIRED_AT_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 type WardenSyncQueue {
   rowId: UUID!
   operation: String!
@@ -7979,6 +8391,9 @@ type StatusTemplateDistinctCountAggregates {
 
   """Distinct count of showOnRoadmap across the matching connection"""
   showOnRoadmap: BigInt
+
+  """Distinct count of keywordRole across the matching connection"""
+  keywordRole: BigInt
 }
 
 type StatusTemplateMinAggregates {
@@ -8033,6 +8448,7 @@ enum StatusTemplateGroupBy {
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
   SHOW_ON_ROADMAP
+  KEYWORD_ROLE
 }
 
 """Conditions for `StatusTemplate` aggregates."""
@@ -8138,6 +8554,9 @@ input StatusTemplateCondition {
 
   """Checks for equality with the object’s `showOnRoadmap` field."""
   showOnRoadmap: Boolean
+
+  """Checks for equality with the object’s `keywordRole` field."""
+  keywordRole: String
 }
 
 """Methods to use when ordering `StatusTemplate`."""
@@ -8165,6 +8584,8 @@ enum StatusTemplateOrderBy {
   UPDATED_AT_DESC
   SHOW_ON_ROADMAP_ASC
   SHOW_ON_ROADMAP_DESC
+  KEYWORD_ROLE_ASC
+  KEYWORD_ROLE_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
   POSTS_SUM_NUMBER_ASC
@@ -9546,53 +9967,53 @@ input VoteInput {
   weight: Int
 }
 
-"""The output of our create `StatusTemplate` mutation."""
-type CreateStatusTemplatePayload {
+"""The output of our create `PostReference` mutation."""
+type CreatePostReferencePayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `StatusTemplate` that was created by this mutation."""
-  statusTemplate: StatusTemplate
+  """The `PostReference` that was created by this mutation."""
+  postReference: PostReference
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `StatusTemplate`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering `StatusTemplate`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
+  """An edge for our `PostReference`. May be used by Relay 1."""
+  postReferenceEdge(
+    """The method to use when ordering `PostReference`."""
+    orderBy: [PostReferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostReferenceEdge
 }
 
-"""All input for the create `StatusTemplate` mutation."""
-input CreateStatusTemplateInput {
+"""All input for the create `PostReference` mutation."""
+input CreatePostReferenceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The `StatusTemplate` to be created by this mutation."""
-  statusTemplate: StatusTemplateInput!
+  """The `PostReference` to be created by this mutation."""
+  postReference: PostReferenceInput!
 }
 
-"""An input for mutations affecting `StatusTemplate`"""
-input StatusTemplateInput {
+"""An input for mutations affecting `PostReference`"""
+input PostReferenceInput {
   rowId: UUID
-  organizationId: UUID!
-  name: String!
-  displayName: String!
-  color: String
-  description: String
-  sortOrder: Int
+  sourceType: String!
+  sourceId: UUID!
+  targetPostId: UUID!
+  refKind: String!
+  keyword: String
+  firedAt: Datetime
+  organizationId: String!
   createdAt: Datetime
   updatedAt: Datetime
-  showOnRoadmap: Boolean
 }
 
 """The output of our create `Attachment` mutation."""
@@ -9643,6 +10064,56 @@ input AttachmentInput {
   width: Int
   height: Int
   createdAt: Datetime
+}
+
+"""The output of our create `StatusTemplate` mutation."""
+type CreateStatusTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` that was created by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `StatusTemplate`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the create `StatusTemplate` mutation."""
+input CreateStatusTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` to be created by this mutation."""
+  statusTemplate: StatusTemplateInput!
+}
+
+"""An input for mutations affecting `StatusTemplate`"""
+input StatusTemplateInput {
+  rowId: UUID
+  organizationId: UUID!
+  name: String!
+  displayName: String!
+  color: String
+  description: String
+  sortOrder: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  showOnRoadmap: Boolean
+  keywordRole: String
 }
 
 """The output of our create `WardenSyncQueue` mutation."""
@@ -10244,31 +10715,31 @@ input VotePatch {
   weight: Int
 }
 
-"""The output of our update `StatusTemplate` mutation."""
-type UpdateStatusTemplatePayload {
+"""The output of our update `PostReference` mutation."""
+type UpdatePostReferencePayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `StatusTemplate` that was updated by this mutation."""
-  statusTemplate: StatusTemplate
+  """The `PostReference` that was updated by this mutation."""
+  postReference: PostReference
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `StatusTemplate`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering `StatusTemplate`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
+  """An edge for our `PostReference`. May be used by Relay 1."""
+  postReferenceEdge(
+    """The method to use when ordering `PostReference`."""
+    orderBy: [PostReferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostReferenceEdge
 }
 
-"""All input for the `updateStatusTemplate` mutation."""
-input UpdateStatusTemplateInput {
+"""All input for the `updatePostReference` mutation."""
+input UpdatePostReferenceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10277,25 +10748,25 @@ input UpdateStatusTemplateInput {
   rowId: UUID!
 
   """
-  An object where the defined keys will be set on the `StatusTemplate` being updated.
+  An object where the defined keys will be set on the `PostReference` being updated.
   """
-  patch: StatusTemplatePatch!
+  patch: PostReferencePatch!
 }
 
 """
-Represents an update to a `StatusTemplate`. Fields that are set will be updated.
+Represents an update to a `PostReference`. Fields that are set will be updated.
 """
-input StatusTemplatePatch {
+input PostReferencePatch {
   rowId: UUID
-  organizationId: UUID
-  name: String
-  displayName: String
-  color: String
-  description: String
-  sortOrder: Int
+  sourceType: String
+  sourceId: UUID
+  targetPostId: UUID
+  refKind: String
+  keyword: String
+  firedAt: Datetime
+  organizationId: String
   createdAt: Datetime
   updatedAt: Datetime
-  showOnRoadmap: Boolean
 }
 
 """The output of our update `Attachment` mutation."""
@@ -10351,6 +10822,61 @@ input AttachmentPatch {
   width: Int
   height: Int
   createdAt: Datetime
+}
+
+"""The output of our update `StatusTemplate` mutation."""
+type UpdateStatusTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` that was updated by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `StatusTemplate`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the `updateStatusTemplate` mutation."""
+input UpdateStatusTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `StatusTemplate` being updated.
+  """
+  patch: StatusTemplatePatch!
+}
+
+"""
+Represents an update to a `StatusTemplate`. Fields that are set will be updated.
+"""
+input StatusTemplatePatch {
+  rowId: UUID
+  organizationId: UUID
+  name: String
+  displayName: String
+  color: String
+  description: String
+  sortOrder: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  showOnRoadmap: Boolean
+  keywordRole: String
 }
 
 """The output of our update `WardenSyncQueue` mutation."""
@@ -10834,31 +11360,31 @@ input DeleteVoteInput {
   rowId: UUID!
 }
 
-"""The output of our delete `StatusTemplate` mutation."""
-type DeleteStatusTemplatePayload {
+"""The output of our delete `PostReference` mutation."""
+type DeletePostReferencePayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `StatusTemplate` that was deleted by this mutation."""
-  statusTemplate: StatusTemplate
+  """The `PostReference` that was deleted by this mutation."""
+  postReference: PostReference
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `StatusTemplate`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering `StatusTemplate`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
+  """An edge for our `PostReference`. May be used by Relay 1."""
+  postReferenceEdge(
+    """The method to use when ordering `PostReference`."""
+    orderBy: [PostReferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostReferenceEdge
 }
 
-"""All input for the `deleteStatusTemplate` mutation."""
-input DeleteStatusTemplateInput {
+"""All input for the `deletePostReference` mutation."""
+input DeletePostReferenceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10892,6 +11418,39 @@ type DeleteAttachmentPayload {
 
 """All input for the `deleteAttachment` mutation."""
 input DeleteAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `StatusTemplate` mutation."""
+type DeleteStatusTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` that was deleted by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `StatusTemplate`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the `deleteStatusTemplate` mutation."""
+input DeleteStatusTemplateInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -11170,14 +11729,20 @@ type Query implements Node {
   """Get a single `Vote`."""
   voteByPostIdAndUserId(postId: UUID!, userId: UUID!): Vote
 
+  """Get a single `PostReference`."""
+  postReference(rowId: UUID!): PostReference
+
+  """Get a single `PostReference`."""
+  postReferenceBySourceTypeAndSourceIdAndTargetPostIdAndKeyword(sourceType: String!, sourceId: UUID!, targetPostId: UUID!, keyword: String!): PostReference
+
+  """Get a single `Attachment`."""
+  attachment(rowId: UUID!): Attachment
+
   """Get a single `StatusTemplate`."""
   statusTemplate(rowId: UUID!): StatusTemplate
 
   """Get a single `StatusTemplate`."""
   statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
-
-  """Get a single `Attachment`."""
-  attachment(rowId: UUID!): Attachment
 
   """Get a single `WardenSyncQueue`."""
   wardenSyncQueue(rowId: UUID!): WardenSyncQueue
@@ -11509,8 +12074,8 @@ type Query implements Node {
     orderBy: [VoteOrderBy!] = [PRIMARY_KEY_ASC]
   ): VoteConnection
 
-  """Reads and enables pagination through a set of `StatusTemplate`."""
-  statusTemplates(
+  """Reads and enables pagination through a set of `PostReference`."""
+  postReferences(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -11532,16 +12097,16 @@ type Query implements Node {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: StatusTemplateCondition
+    condition: PostReferenceCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: StatusTemplateFilter
+    filter: PostReferenceFilter
 
-    """The method to use when ordering `StatusTemplate`."""
-    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
-  ): StatusTemplateConnection
+    """The method to use when ordering `PostReference`."""
+    orderBy: [PostReferenceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostReferenceConnection
 
   """Reads and enables pagination through a set of `Attachment`."""
   attachments(
@@ -11576,6 +12141,40 @@ type Query implements Node {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentConnection
+
+  """Reads and enables pagination through a set of `StatusTemplate`."""
+  statusTemplates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: StatusTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StatusTemplateFilter
+
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): StatusTemplateConnection
 
   """Reads and enables pagination through a set of `WardenSyncQueue`."""
   wardenSyncQueues(
@@ -11830,13 +12429,13 @@ type Mutation {
     input: CreateVoteInput!
   ): CreateVotePayload
 
-  """Creates a single `StatusTemplate`."""
-  createStatusTemplate(
+  """Creates a single `PostReference`."""
+  createPostReference(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateStatusTemplateInput!
-  ): CreateStatusTemplatePayload
+    input: CreatePostReferenceInput!
+  ): CreatePostReferencePayload
 
   """Creates a single `Attachment`."""
   createAttachment(
@@ -11845,6 +12444,14 @@ type Mutation {
     """
     input: CreateAttachmentInput!
   ): CreateAttachmentPayload
+
+  """Creates a single `StatusTemplate`."""
+  createStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateStatusTemplateInput!
+  ): CreateStatusTemplatePayload
 
   """Creates a single `WardenSyncQueue`."""
   createWardenSyncQueue(
@@ -11942,13 +12549,13 @@ type Mutation {
     input: UpdateVoteInput!
   ): UpdateVotePayload
 
-  """Updates a single `StatusTemplate` using a unique key and a patch."""
-  updateStatusTemplate(
+  """Updates a single `PostReference` using a unique key and a patch."""
+  updatePostReference(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateStatusTemplateInput!
-  ): UpdateStatusTemplatePayload
+    input: UpdatePostReferenceInput!
+  ): UpdatePostReferencePayload
 
   """Updates a single `Attachment` using a unique key and a patch."""
   updateAttachment(
@@ -11957,6 +12564,14 @@ type Mutation {
     """
     input: UpdateAttachmentInput!
   ): UpdateAttachmentPayload
+
+  """Updates a single `StatusTemplate` using a unique key and a patch."""
+  updateStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateStatusTemplateInput!
+  ): UpdateStatusTemplatePayload
 
   """Updates a single `WardenSyncQueue` using a unique key and a patch."""
   updateWardenSyncQueue(
@@ -12054,13 +12669,13 @@ type Mutation {
     input: DeleteVoteInput!
   ): DeleteVotePayload
 
-  """Deletes a single `StatusTemplate` using a unique key."""
-  deleteStatusTemplate(
+  """Deletes a single `PostReference` using a unique key."""
+  deletePostReference(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteStatusTemplateInput!
-  ): DeleteStatusTemplatePayload
+    input: DeletePostReferenceInput!
+  ): DeletePostReferencePayload
 
   """Deletes a single `Attachment` using a unique key."""
   deleteAttachment(
@@ -12069,6 +12684,14 @@ type Mutation {
     """
     input: DeleteAttachmentInput!
   ): DeleteAttachmentPayload
+
+  """Deletes a single `StatusTemplate` using a unique key."""
+  deleteStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteStatusTemplateInput!
+  ): DeleteStatusTemplatePayload
 
   """Deletes a single `WardenSyncQueue` using a unique key."""
   deleteWardenSyncQueue(
