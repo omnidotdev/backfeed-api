@@ -13,7 +13,7 @@
 
 import { EXPORTABLE } from "graphile-export";
 import { GraphQLError } from "graphql";
-import { checkPermission } from "lib/authz";
+import { isOrganizationAdmin } from "lib/authz";
 import { changePostStatus, getPostRef } from "lib/feedback/changeStatus";
 import { markPostShipped } from "lib/feedback/shipped";
 import { notifyStatusChange } from "lib/notifications/notify";
@@ -50,10 +50,10 @@ const ChangePostStatusPlugin = makeExtendSchemaPlugin(() => ({
         (
           GraphQLError,
           changePostStatus,
-          checkPermission,
           context,
           events,
           getPostRef,
+          isOrganizationAdmin,
           lambda,
           markPostShipped,
           notifications,
@@ -76,11 +76,9 @@ const ChangePostStatusPlugin = makeExtendSchemaPlugin(() => ({
                 const postRef = await getPostRef(db, input.postId);
                 if (!postRef) throw new GraphQLError("Post not found");
 
-                const allowed = await checkPermission(
+                const allowed = await isOrganizationAdmin(
                   observer.identityProviderId,
-                  "organization",
                   postRef.organizationId,
-                  "admin",
                 );
                 if (!allowed) {
                   throw new GraphQLError("Insufficient permissions");
@@ -143,10 +141,10 @@ const ChangePostStatusPlugin = makeExtendSchemaPlugin(() => ({
         [
           GraphQLError,
           changePostStatus,
-          checkPermission,
           context,
           events,
           getPostRef,
+          isOrganizationAdmin,
           lambda,
           markPostShipped,
           notifications,

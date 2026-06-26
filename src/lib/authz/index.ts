@@ -56,6 +56,22 @@ export async function checkPermission<T extends WardenResourceType>(
 }
 
 /**
+ * Check if an identity is an admin of an organization (the moderation gate).
+ * Exported for graphile-export EXPORTABLE compatibility.
+ */
+export async function isOrganizationAdmin(
+  identityProviderId: string,
+  organizationId: string,
+): Promise<boolean> {
+  return checkPermission(
+    identityProviderId,
+    "organization",
+    organizationId,
+    "admin",
+  );
+}
+
+/**
  * Batch check multiple permissions in a single API call.
  */
 export async function checkPermissionsBatch(
