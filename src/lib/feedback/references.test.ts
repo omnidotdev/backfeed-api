@@ -54,6 +54,27 @@ describe("extractIssueRefs", () => {
       { number: 5, keyword: null },
     ]);
   });
+
+  test("extracts multiple distinct references, mixing plain and magic", () => {
+    expect(
+      extractIssueRefs("dup of #3, also see #7, and this closes #9"),
+    ).toEqual([
+      { number: 3, keyword: null },
+      { number: 7, keyword: null },
+      { number: 9, keyword: "close" },
+    ]);
+  });
+
+  test("an uppercase keyword is still recognized and canonicalized", () => {
+    expect(extractIssueRefs("This CLOSES #4")).toEqual([
+      { number: 4, keyword: "close" },
+    ]);
+  });
+
+  test("empty or reference-free text yields no refs", () => {
+    expect(extractIssueRefs("")).toEqual([]);
+    expect(extractIssueRefs("nothing to see here")).toEqual([]);
+  });
 });
 
 describe("resolveResolutionTemplateId", () => {
