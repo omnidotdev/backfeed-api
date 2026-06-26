@@ -42,6 +42,7 @@ describe.skipIf(!DATABASE_URL)("syncReferences (db integration)", () => {
   let sourceAId: string; // plain reference -> target1, then pruned
   let sourceBId: string; // admin magicword -> target2
   let sourceCId: string; // non-admin magicword -> target3
+  let sourceDId: string; // re-run plain reference (no duplicate)
   let sourceSId: string; // self-reference
   let sourceSNumber: number;
 
@@ -106,6 +107,9 @@ describe.skipIf(!DATABASE_URL)("syncReferences (db integration)", () => {
 
     const c = await insertPost("Source C");
     sourceCId = c.id;
+
+    const d = await insertPost("Source D");
+    sourceDId = d.id;
 
     const s = await insertPost("Source S");
     sourceSId = s.id;
@@ -265,6 +269,28 @@ describe.skipIf(!DATABASE_URL)("syncReferences (db integration)", () => {
 
     const edges = await edgesFor(sourceAId);
     expect(edges).toHaveLength(0);
+  });
+
+  test("re-running a plain reference does not duplicate the edge", async () => {
+    const text = `see #${target1Number}`;
+    for (let i = 0; i < 3; i++) {
+      await syncReferences({
+        db,
+        sourceType: "post",
+        sourceId: sourceDId,
+        projectId,
+        organizationId,
+        text,
+        authorUserId: userId,
+        isAdmin: false,
+        selfPostId: sourceDId,
+      });
+    }
+
+    const edges = await edgesFor(sourceDId);
+    expect(edges).toHaveLength(1);
+    expect(edges[0].refKind).toBe("reference");
+    expect(edges[0].targetPostId).toBe(target1Id);
   });
 
   test("a self-reference is skipped", async () => {
