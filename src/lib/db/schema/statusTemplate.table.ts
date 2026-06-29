@@ -31,6 +31,10 @@ export const statusTemplates = pgTable(
     // null = fall back to the default roadmap heuristic; true/false = explicit
     // admin choice for whether this status appears on the public roadmap
     showOnRoadmap: boolean(),
+    // null = fall back to the default board heuristic; true/false = explicit
+    // admin choice for whether this status is shown by default on the board
+    // (terminal statuses like completed/closed are hidden by default)
+    showOnBoard: boolean(),
     // Marks this template as the target a magic-word keyword (closes/fixes/
     // resolves) transitions a post to. null = not a keyword target; the parser
     // falls back to the seeded `completed`/`closed` names. At most one per org

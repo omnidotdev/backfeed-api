@@ -126,7 +126,7 @@ const spec_postTag = {
     }
   },
   extensions: {
-    oid: "779880",
+    oid: "739621",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -204,7 +204,7 @@ const spec_postStatusChange = {
     }
   },
   extensions: {
-    oid: "779968",
+    oid: "745938",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -287,7 +287,7 @@ const spec_reaction = {
     }
   },
   extensions: {
-    oid: "779930",
+    oid: "743996",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -368,7 +368,7 @@ const spec_tag = {
     }
   },
   extensions: {
-    oid: "779893",
+    oid: "739634",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -441,7 +441,7 @@ const notificationPreferenceCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "779996",
+    oid: "746611",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -534,7 +534,7 @@ const spec_comment = {
     }
   },
   extensions: {
-    oid: "779389",
+    oid: "270503",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -634,7 +634,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "779521",
+    oid: "270635",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -742,7 +742,7 @@ const spec_projectStatusConfig = {
     }
   },
   extensions: {
-    oid: "779485",
+    oid: "270599",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -834,7 +834,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "779702",
+    oid: "300307",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -852,7 +852,7 @@ const voteTypeCodec = enumCodec({
   values: ["up", "down"],
   description: undefined,
   extensions: {
-    oid: "779372",
+    oid: "270486",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -941,7 +941,7 @@ const spec_vote = {
     }
   },
   extensions: {
-    oid: "779542",
+    oid: "270656",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1061,7 +1061,7 @@ const spec_postReference = {
     }
   },
   extensions: {
-    oid: "780033",
+    oid: "781347",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1189,7 +1189,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "779797",
+    oid: "708031",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1200,6 +1200,221 @@ const spec_attachment = {
   executor: executor
 };
 const attachmentCodec = recordCodec(spec_attachment);
+const wardenSyncQueueIdentifier = sql.identifier("public", "warden_sync_queue");
+const spec_wardenSyncQueue = {
+  name: "wardenSyncQueue",
+  identifier: wardenSyncQueueIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    operation: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    payload: {
+      codec: TYPES.jsonb,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    attempts: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    max_attempts: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    last_error: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    next_retry_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "706846",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "warden_sync_queue"
+    }
+  },
+  executor: executor
+};
+const wardenSyncQueueCodec = recordCodec(spec_wardenSyncQueue);
+const signalClusterIdentifier = sql.identifier("public", "signal_cluster");
+const spec_signalCluster_attributes_centroid_codec_vector = {
+  name: "vector",
+  sqlType: sql`vector`,
+  toPg(str) {
+    return str;
+  },
+  fromPg(str) {
+    return str;
+  },
+  executor: null,
+  attributes: void 0
+};
+const spec_signalCluster = {
+  name: "signalCluster",
+  identifier: signalClusterIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    label: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    summary: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    centroid: {
+      codec: spec_signalCluster_attributes_centroid_codec_vector,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    member_count: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "731880",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "signal_cluster"
+    }
+  },
+  executor: executor
+};
+const signalClusterCodec = recordCodec(spec_signalCluster);
 const statusTemplateIdentifier = sql.identifier("public", "status_template");
 const spec_statusTemplate = {
   name: "statusTemplate",
@@ -1314,10 +1529,19 @@ const spec_statusTemplate = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    show_on_board: {
+      codec: TYPES.boolean,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   },
   extensions: {
-    oid: "779502",
+    oid: "270616",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1328,221 +1552,6 @@ const spec_statusTemplate = {
   executor: executor
 };
 const statusTemplateCodec = recordCodec(spec_statusTemplate);
-const wardenSyncQueueIdentifier = sql.identifier("public", "warden_sync_queue");
-const spec_wardenSyncQueue = {
-  name: "wardenSyncQueue",
-  identifier: wardenSyncQueueIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    operation: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    payload: {
-      codec: TYPES.jsonb,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    attempts: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    max_attempts: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    last_error: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    next_retry_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "779736",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "warden_sync_queue"
-    }
-  },
-  executor: executor
-};
-const wardenSyncQueueCodec = recordCodec(spec_wardenSyncQueue);
-const signalClusterIdentifier = sql.identifier("public", "signal_cluster");
-const spec_signalCluster_attributes_centroid_codec_vector = {
-  name: "vector",
-  sqlType: sql`vector`,
-  toPg(str) {
-    return str;
-  },
-  fromPg(str) {
-    return str;
-  },
-  executor: null,
-  attributes: void 0
-};
-const spec_signalCluster = {
-  name: "signalCluster",
-  identifier: signalClusterIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    project_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    label: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    summary: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    centroid: {
-      codec: spec_signalCluster_attributes_centroid_codec_vector,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    member_count: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "779827",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "signal_cluster"
-    }
-  },
-  executor: executor
-};
-const signalClusterCodec = recordCodec(spec_signalCluster);
 const signalIdentifier = sql.identifier("public", "signal");
 const spec_signal = {
   name: "signal",
@@ -1706,7 +1715,7 @@ const spec_signal = {
     }
   },
   extensions: {
-    oid: "779756",
+    oid: "706866",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1895,7 +1904,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "779435",
+    oid: "270549",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2061,7 +2070,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "779452",
+    oid: "270566",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2432,6 +2441,33 @@ const attachment_resourceOptionsConfig = {
   },
   uniques: attachmentUniques
 };
+const warden_sync_queueUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const signal_clusterUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const signal_cluster_resourceOptionsConfig = {
+  executor: executor,
+  name: "signal_cluster",
+  identifier: "main.public.signal_cluster",
+  from: signalClusterIdentifier,
+  codec: signalClusterCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "signal_cluster"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: signal_clusterUniques
+};
 const status_templateUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2462,33 +2498,6 @@ const status_template_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: status_templateUniques
-};
-const warden_sync_queueUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const signal_clusterUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const signal_cluster_resourceOptionsConfig = {
-  executor: executor,
-  name: "signal_cluster",
-  identifier: "main.public.signal_cluster",
-  from: signalClusterIdentifier,
-  codec: signalClusterCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "signal_cluster"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: signal_clusterUniques
 };
 const signalUniques = [{
   attributes: ["id"],
@@ -2611,11 +2620,11 @@ const registryConfig = {
     voteType: voteTypeCodec,
     postReference: postReferenceCodec,
     attachment: attachmentCodec,
-    statusTemplate: statusTemplateCodec,
     wardenSyncQueue: wardenSyncQueueCodec,
     jsonb: TYPES.jsonb,
     signalCluster: signalClusterCodec,
     vector: spec_signalCluster_attributes_centroid_codec_vector,
+    statusTemplate: statusTemplateCodec,
     signal: signalCodec,
     post: postCodec,
     project: projectCodec,
@@ -2635,7 +2644,6 @@ const registryConfig = {
     vote: vote_resourceOptionsConfig,
     post_reference: post_reference_resourceOptionsConfig,
     attachment: attachment_resourceOptionsConfig,
-    status_template: status_template_resourceOptionsConfig,
     warden_sync_queue: {
       executor: executor,
       name: "warden_sync_queue",
@@ -2656,6 +2664,7 @@ const registryConfig = {
       uniques: warden_sync_queueUniques
     },
     signal_cluster: signal_cluster_resourceOptionsConfig,
+    status_template: status_template_resourceOptionsConfig,
     signal: signal_resourceOptionsConfig,
     project: project_resourceOptionsConfig,
     post: post_resourceOptionsConfig
@@ -4603,19 +4612,6 @@ function AttachmentInput_widthApply(obj, val, info) {
 function AttachmentInput_heightApply(obj, val, info) {
   obj.set("height", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateStatusTemplatePayload_statusTemplateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_status_templatePgResource, status_templateUniques[0].attributes, $mutation, fieldArgs);
-function StatusTemplateInput_displayNameApply(obj, val, info) {
-  obj.set("display_name", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function StatusTemplateInput_descriptionApply(obj, val, info) {
-  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function StatusTemplateInput_showOnRoadmapApply(obj, val, info) {
-  obj.set("show_on_roadmap", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function StatusTemplateInput_keywordRoleApply(obj, val, info) {
-  obj.set("keyword_role", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_warden_sync_queuePgResource, warden_sync_queueUniques[0].attributes, $mutation, fieldArgs);
 function WardenSyncQueueInput_operationApply(obj, val, info) {
   obj.set("operation", bakedInputRuntime(info.schema, info.field.type, val));
@@ -4644,6 +4640,22 @@ function SignalClusterInput_summaryApply(obj, val, info) {
 }
 function SignalClusterInput_memberCountApply(obj, val, info) {
   obj.set("member_count", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateStatusTemplatePayload_statusTemplateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_status_templatePgResource, status_templateUniques[0].attributes, $mutation, fieldArgs);
+function StatusTemplateInput_displayNameApply(obj, val, info) {
+  obj.set("display_name", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function StatusTemplateInput_descriptionApply(obj, val, info) {
+  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function StatusTemplateInput_showOnRoadmapApply(obj, val, info) {
+  obj.set("show_on_roadmap", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function StatusTemplateInput_keywordRoleApply(obj, val, info) {
+  obj.set("keyword_role", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function StatusTemplateInput_showOnBoardApply(obj, val, info) {
+  obj.set("show_on_board", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateProjectPayload_projectEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_projectPgResource, projectUniques[0].attributes, $mutation, fieldArgs);
 function ProjectInput_imageApply(obj, val, info) {
@@ -10443,6 +10455,9 @@ input StatusTemplateFilter {
   """Filter by the object’s \`keywordRole\` field."""
   keywordRole: StringFilter
 
+  """Filter by the object’s \`showOnBoard\` field."""
+  showOnBoard: BooleanFilter
+
   """Filter by the object’s \`posts\` relation."""
   posts: StatusTemplateToManyPostFilter
 
@@ -12004,6 +12019,7 @@ type StatusTemplate {
   updatedAt: Datetime!
   showOnRoadmap: Boolean
   keywordRole: String
+  showOnBoard: Boolean
 
   """Reads and enables pagination through a set of \`Post\`."""
   posts(
@@ -16069,429 +16085,6 @@ enum UserOrderBy {
   POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_NOTE_DESC
 }
 
-"""A connection to a list of \`StatusTemplate\` values."""
-type StatusTemplateConnection {
-  """A list of \`StatusTemplate\` objects."""
-  nodes: [StatusTemplate]!
-
-  """
-  A list of edges which contains the \`StatusTemplate\` and cursor to aid in pagination.
-  """
-  edges: [StatusTemplateEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* \`StatusTemplate\` you could get from the connection."""
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: StatusTemplateAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """The method to use when grouping \`StatusTemplate\` for these aggregates."""
-    groupBy: [StatusTemplateGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: StatusTemplateHavingInput
-  ): [StatusTemplateAggregates!]
-}
-
-"""A \`StatusTemplate\` edge in the connection."""
-type StatusTemplateEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The \`StatusTemplate\` at the end of the edge."""
-  node: StatusTemplate
-}
-
-type StatusTemplateAggregates {
-  keys: [String]
-
-  """
-  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  sum: StatusTemplateSumAggregates
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: StatusTemplateDistinctCountAggregates
-
-  """
-  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  min: StatusTemplateMinAggregates
-
-  """
-  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  max: StatusTemplateMaxAggregates
-
-  """
-  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  average: StatusTemplateAverageAggregates
-
-  """
-  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevSample: StatusTemplateStddevSampleAggregates
-
-  """
-  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevPopulation: StatusTemplateStddevPopulationAggregates
-
-  """
-  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  varianceSample: StatusTemplateVarianceSampleAggregates
-
-  """
-  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  variancePopulation: StatusTemplateVariancePopulationAggregates
-}
-
-type StatusTemplateSumAggregates {
-  """Sum of sortOrder across the matching connection"""
-  sortOrder: BigInt!
-}
-
-type StatusTemplateDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of organizationId across the matching connection"""
-  organizationId: BigInt
-
-  """Distinct count of name across the matching connection"""
-  name: BigInt
-
-  """Distinct count of displayName across the matching connection"""
-  displayName: BigInt
-
-  """Distinct count of color across the matching connection"""
-  color: BigInt
-
-  """Distinct count of description across the matching connection"""
-  description: BigInt
-
-  """Distinct count of sortOrder across the matching connection"""
-  sortOrder: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-
-  """Distinct count of showOnRoadmap across the matching connection"""
-  showOnRoadmap: BigInt
-
-  """Distinct count of keywordRole across the matching connection"""
-  keywordRole: BigInt
-}
-
-type StatusTemplateMinAggregates {
-  """Minimum of sortOrder across the matching connection"""
-  sortOrder: Int
-}
-
-type StatusTemplateMaxAggregates {
-  """Maximum of sortOrder across the matching connection"""
-  sortOrder: Int
-}
-
-type StatusTemplateAverageAggregates {
-  """Mean average of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-type StatusTemplateStddevSampleAggregates {
-  """Sample standard deviation of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-type StatusTemplateStddevPopulationAggregates {
-  """
-  Population standard deviation of sortOrder across the matching connection
-  """
-  sortOrder: BigFloat
-}
-
-type StatusTemplateVarianceSampleAggregates {
-  """Sample variance of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-type StatusTemplateVariancePopulationAggregates {
-  """Population variance of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-"""Grouping methods for \`StatusTemplate\` for usage during aggregation."""
-enum StatusTemplateGroupBy {
-  ORGANIZATION_ID
-  NAME
-  DISPLAY_NAME
-  COLOR
-  DESCRIPTION
-  SORT_ORDER
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-  SHOW_ON_ROADMAP
-  KEYWORD_ROLE
-}
-
-"""Conditions for \`StatusTemplate\` aggregates."""
-input StatusTemplateHavingInput {
-  AND: [StatusTemplateHavingInput!]
-  OR: [StatusTemplateHavingInput!]
-  sum: StatusTemplateHavingSumInput
-  distinctCount: StatusTemplateHavingDistinctCountInput
-  min: StatusTemplateHavingMinInput
-  max: StatusTemplateHavingMaxInput
-  average: StatusTemplateHavingAverageInput
-  stddevSample: StatusTemplateHavingStddevSampleInput
-  stddevPopulation: StatusTemplateHavingStddevPopulationInput
-  varianceSample: StatusTemplateHavingVarianceSampleInput
-  variancePopulation: StatusTemplateHavingVariancePopulationInput
-}
-
-input StatusTemplateHavingSumInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingDistinctCountInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingMinInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingMaxInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingAverageInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingStddevSampleInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingStddevPopulationInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingVarianceSampleInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingVariancePopulationInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against \`StatusTemplate\` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input StatusTemplateCondition {
-  """Checks for equality with the object’s \`rowId\` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: UUID
-
-  """Checks for equality with the object’s \`name\` field."""
-  name: String
-
-  """Checks for equality with the object’s \`displayName\` field."""
-  displayName: String
-
-  """Checks for equality with the object’s \`color\` field."""
-  color: String
-
-  """Checks for equality with the object’s \`description\` field."""
-  description: String
-
-  """Checks for equality with the object’s \`sortOrder\` field."""
-  sortOrder: Int
-
-  """Checks for equality with the object’s \`createdAt\` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s \`updatedAt\` field."""
-  updatedAt: Datetime
-
-  """Checks for equality with the object’s \`showOnRoadmap\` field."""
-  showOnRoadmap: Boolean
-
-  """Checks for equality with the object’s \`keywordRole\` field."""
-  keywordRole: String
-}
-
-"""Methods to use when ordering \`StatusTemplate\`."""
-enum StatusTemplateOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  ORGANIZATION_ID_ASC
-  ORGANIZATION_ID_DESC
-  NAME_ASC
-  NAME_DESC
-  DISPLAY_NAME_ASC
-  DISPLAY_NAME_DESC
-  COLOR_ASC
-  COLOR_DESC
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
-  SORT_ORDER_ASC
-  SORT_ORDER_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-  SHOW_ON_ROADMAP_ASC
-  SHOW_ON_ROADMAP_DESC
-  KEYWORD_ROLE_ASC
-  KEYWORD_ROLE_DESC
-  POSTS_COUNT_ASC
-  POSTS_COUNT_DESC
-  POSTS_SUM_NUMBER_ASC
-  POSTS_SUM_NUMBER_DESC
-  POSTS_DISTINCT_COUNT_ROW_ID_ASC
-  POSTS_DISTINCT_COUNT_ROW_ID_DESC
-  POSTS_DISTINCT_COUNT_TITLE_ASC
-  POSTS_DISTINCT_COUNT_TITLE_DESC
-  POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
-  POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
-  POSTS_DISTINCT_COUNT_PROJECT_ID_ASC
-  POSTS_DISTINCT_COUNT_PROJECT_ID_DESC
-  POSTS_DISTINCT_COUNT_USER_ID_ASC
-  POSTS_DISTINCT_COUNT_USER_ID_DESC
-  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
-  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
-  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC
-  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC
-  POSTS_DISTINCT_COUNT_CREATED_AT_ASC
-  POSTS_DISTINCT_COUNT_CREATED_AT_DESC
-  POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
-  POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
-  POSTS_DISTINCT_COUNT_NUMBER_ASC
-  POSTS_DISTINCT_COUNT_NUMBER_DESC
-  POSTS_DISTINCT_COUNT_SOURCE_ASC
-  POSTS_DISTINCT_COUNT_SOURCE_DESC
-  POSTS_DISTINCT_COUNT_SENTIMENT_ASC
-  POSTS_DISTINCT_COUNT_SENTIMENT_DESC
-  POSTS_DISTINCT_COUNT_AI_TAGS_ASC
-  POSTS_DISTINCT_COUNT_AI_TAGS_DESC
-  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_ASC
-  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
-  POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
-  POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
-  POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC
-  POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC
-  POSTS_MIN_NUMBER_ASC
-  POSTS_MIN_NUMBER_DESC
-  POSTS_MAX_NUMBER_ASC
-  POSTS_MAX_NUMBER_DESC
-  POSTS_AVERAGE_NUMBER_ASC
-  POSTS_AVERAGE_NUMBER_DESC
-  POSTS_STDDEV_SAMPLE_NUMBER_ASC
-  POSTS_STDDEV_SAMPLE_NUMBER_DESC
-  POSTS_STDDEV_POPULATION_NUMBER_ASC
-  POSTS_STDDEV_POPULATION_NUMBER_DESC
-  POSTS_VARIANCE_SAMPLE_NUMBER_ASC
-  POSTS_VARIANCE_SAMPLE_NUMBER_DESC
-  POSTS_VARIANCE_POPULATION_NUMBER_ASC
-  POSTS_VARIANCE_POPULATION_NUMBER_DESC
-  PROJECT_STATUS_CONFIGS_COUNT_ASC
-  PROJECT_STATUS_CONFIGS_COUNT_DESC
-  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_DESC
-  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_COUNT_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_COUNT_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_ROW_ID_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_ROW_ID_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_DESC
-}
-
 """A connection to a list of \`WardenSyncQueue\` values."""
 type WardenSyncQueueConnection {
   """A list of \`WardenSyncQueue\` objects."""
@@ -16857,6 +16450,438 @@ enum WardenSyncQueueOrderBy {
   NEXT_RETRY_AT_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+}
+
+"""A connection to a list of \`StatusTemplate\` values."""
+type StatusTemplateConnection {
+  """A list of \`StatusTemplate\` objects."""
+  nodes: [StatusTemplate]!
+
+  """
+  A list of edges which contains the \`StatusTemplate\` and cursor to aid in pagination.
+  """
+  edges: [StatusTemplateEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`StatusTemplate\` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: StatusTemplateAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`StatusTemplate\` for these aggregates."""
+    groupBy: [StatusTemplateGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: StatusTemplateHavingInput
+  ): [StatusTemplateAggregates!]
+}
+
+"""A \`StatusTemplate\` edge in the connection."""
+type StatusTemplateEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`StatusTemplate\` at the end of the edge."""
+  node: StatusTemplate
+}
+
+type StatusTemplateAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: StatusTemplateSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: StatusTemplateDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: StatusTemplateMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: StatusTemplateMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: StatusTemplateAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: StatusTemplateStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: StatusTemplateStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: StatusTemplateVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: StatusTemplateVariancePopulationAggregates
+}
+
+type StatusTemplateSumAggregates {
+  """Sum of sortOrder across the matching connection"""
+  sortOrder: BigInt!
+}
+
+type StatusTemplateDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of name across the matching connection"""
+  name: BigInt
+
+  """Distinct count of displayName across the matching connection"""
+  displayName: BigInt
+
+  """Distinct count of color across the matching connection"""
+  color: BigInt
+
+  """Distinct count of description across the matching connection"""
+  description: BigInt
+
+  """Distinct count of sortOrder across the matching connection"""
+  sortOrder: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+
+  """Distinct count of showOnRoadmap across the matching connection"""
+  showOnRoadmap: BigInt
+
+  """Distinct count of keywordRole across the matching connection"""
+  keywordRole: BigInt
+
+  """Distinct count of showOnBoard across the matching connection"""
+  showOnBoard: BigInt
+}
+
+type StatusTemplateMinAggregates {
+  """Minimum of sortOrder across the matching connection"""
+  sortOrder: Int
+}
+
+type StatusTemplateMaxAggregates {
+  """Maximum of sortOrder across the matching connection"""
+  sortOrder: Int
+}
+
+type StatusTemplateAverageAggregates {
+  """Mean average of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type StatusTemplateStddevSampleAggregates {
+  """Sample standard deviation of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type StatusTemplateStddevPopulationAggregates {
+  """
+  Population standard deviation of sortOrder across the matching connection
+  """
+  sortOrder: BigFloat
+}
+
+type StatusTemplateVarianceSampleAggregates {
+  """Sample variance of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type StatusTemplateVariancePopulationAggregates {
+  """Population variance of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+"""Grouping methods for \`StatusTemplate\` for usage during aggregation."""
+enum StatusTemplateGroupBy {
+  ORGANIZATION_ID
+  NAME
+  DISPLAY_NAME
+  COLOR
+  DESCRIPTION
+  SORT_ORDER
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+  SHOW_ON_ROADMAP
+  KEYWORD_ROLE
+  SHOW_ON_BOARD
+}
+
+"""Conditions for \`StatusTemplate\` aggregates."""
+input StatusTemplateHavingInput {
+  AND: [StatusTemplateHavingInput!]
+  OR: [StatusTemplateHavingInput!]
+  sum: StatusTemplateHavingSumInput
+  distinctCount: StatusTemplateHavingDistinctCountInput
+  min: StatusTemplateHavingMinInput
+  max: StatusTemplateHavingMaxInput
+  average: StatusTemplateHavingAverageInput
+  stddevSample: StatusTemplateHavingStddevSampleInput
+  stddevPopulation: StatusTemplateHavingStddevPopulationInput
+  varianceSample: StatusTemplateHavingVarianceSampleInput
+  variancePopulation: StatusTemplateHavingVariancePopulationInput
+}
+
+input StatusTemplateHavingSumInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingDistinctCountInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingMinInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingMaxInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingAverageInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingStddevSampleInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingStddevPopulationInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingVarianceSampleInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingVariancePopulationInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against \`StatusTemplate\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input StatusTemplateCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`organizationId\` field."""
+  organizationId: UUID
+
+  """Checks for equality with the object’s \`name\` field."""
+  name: String
+
+  """Checks for equality with the object’s \`displayName\` field."""
+  displayName: String
+
+  """Checks for equality with the object’s \`color\` field."""
+  color: String
+
+  """Checks for equality with the object’s \`description\` field."""
+  description: String
+
+  """Checks for equality with the object’s \`sortOrder\` field."""
+  sortOrder: Int
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s \`showOnRoadmap\` field."""
+  showOnRoadmap: Boolean
+
+  """Checks for equality with the object’s \`keywordRole\` field."""
+  keywordRole: String
+
+  """Checks for equality with the object’s \`showOnBoard\` field."""
+  showOnBoard: Boolean
+}
+
+"""Methods to use when ordering \`StatusTemplate\`."""
+enum StatusTemplateOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  DISPLAY_NAME_ASC
+  DISPLAY_NAME_DESC
+  COLOR_ASC
+  COLOR_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  SORT_ORDER_ASC
+  SORT_ORDER_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  SHOW_ON_ROADMAP_ASC
+  SHOW_ON_ROADMAP_DESC
+  KEYWORD_ROLE_ASC
+  KEYWORD_ROLE_DESC
+  SHOW_ON_BOARD_ASC
+  SHOW_ON_BOARD_DESC
+  POSTS_COUNT_ASC
+  POSTS_COUNT_DESC
+  POSTS_SUM_NUMBER_ASC
+  POSTS_SUM_NUMBER_DESC
+  POSTS_DISTINCT_COUNT_ROW_ID_ASC
+  POSTS_DISTINCT_COUNT_ROW_ID_DESC
+  POSTS_DISTINCT_COUNT_TITLE_ASC
+  POSTS_DISTINCT_COUNT_TITLE_DESC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_ASC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_DESC
+  POSTS_DISTINCT_COUNT_USER_ID_ASC
+  POSTS_DISTINCT_COUNT_USER_ID_DESC
+  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_CREATED_AT_ASC
+  POSTS_DISTINCT_COUNT_CREATED_AT_DESC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_NUMBER_ASC
+  POSTS_DISTINCT_COUNT_NUMBER_DESC
+  POSTS_DISTINCT_COUNT_SOURCE_ASC
+  POSTS_DISTINCT_COUNT_SOURCE_DESC
+  POSTS_DISTINCT_COUNT_SENTIMENT_ASC
+  POSTS_DISTINCT_COUNT_SENTIMENT_DESC
+  POSTS_DISTINCT_COUNT_AI_TAGS_ASC
+  POSTS_DISTINCT_COUNT_AI_TAGS_DESC
+  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_ASC
+  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
+  POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
+  POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC
+  POSTS_MIN_NUMBER_ASC
+  POSTS_MIN_NUMBER_DESC
+  POSTS_MAX_NUMBER_ASC
+  POSTS_MAX_NUMBER_DESC
+  POSTS_AVERAGE_NUMBER_ASC
+  POSTS_AVERAGE_NUMBER_DESC
+  POSTS_STDDEV_SAMPLE_NUMBER_ASC
+  POSTS_STDDEV_SAMPLE_NUMBER_DESC
+  POSTS_STDDEV_POPULATION_NUMBER_ASC
+  POSTS_STDDEV_POPULATION_NUMBER_DESC
+  POSTS_VARIANCE_SAMPLE_NUMBER_ASC
+  POSTS_VARIANCE_SAMPLE_NUMBER_DESC
+  POSTS_VARIANCE_POPULATION_NUMBER_ASC
+  POSTS_VARIANCE_POPULATION_NUMBER_DESC
+  PROJECT_STATUS_CONFIGS_COUNT_ASC
+  PROJECT_STATUS_CONFIGS_COUNT_DESC
+  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_COUNT_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_COUNT_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_ROW_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_ROW_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_DESC
 }
 
 """A connection to a list of \`Project\` values."""
@@ -17870,56 +17895,6 @@ input AttachmentInput {
   createdAt: Datetime
 }
 
-"""The output of our create \`StatusTemplate\` mutation."""
-type CreateStatusTemplatePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`StatusTemplate\` that was created by this mutation."""
-  statusTemplate: StatusTemplate
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`StatusTemplate\`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering \`StatusTemplate\`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
-}
-
-"""All input for the create \`StatusTemplate\` mutation."""
-input CreateStatusTemplateInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`StatusTemplate\` to be created by this mutation."""
-  statusTemplate: StatusTemplateInput!
-}
-
-"""An input for mutations affecting \`StatusTemplate\`"""
-input StatusTemplateInput {
-  rowId: UUID
-  organizationId: UUID!
-  name: String!
-  displayName: String!
-  color: String
-  description: String
-  sortOrder: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-  showOnRoadmap: Boolean
-  keywordRole: String
-}
-
 """The output of our create \`WardenSyncQueue\` mutation."""
 type CreateWardenSyncQueuePayload {
   """
@@ -18011,6 +17986,57 @@ input SignalClusterInput {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`StatusTemplate\` mutation."""
+type CreateStatusTemplatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`StatusTemplate\` that was created by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`StatusTemplate\`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering \`StatusTemplate\`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the create \`StatusTemplate\` mutation."""
+input CreateStatusTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`StatusTemplate\` to be created by this mutation."""
+  statusTemplate: StatusTemplateInput!
+}
+
+"""An input for mutations affecting \`StatusTemplate\`"""
+input StatusTemplateInput {
+  rowId: UUID
+  organizationId: UUID!
+  name: String!
+  displayName: String!
+  color: String
+  description: String
+  sortOrder: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  showOnRoadmap: Boolean
+  keywordRole: String
+  showOnBoard: Boolean
 }
 
 """The output of our create \`Project\` mutation."""
@@ -18628,61 +18654,6 @@ input AttachmentPatch {
   createdAt: Datetime
 }
 
-"""The output of our update \`StatusTemplate\` mutation."""
-type UpdateStatusTemplatePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`StatusTemplate\` that was updated by this mutation."""
-  statusTemplate: StatusTemplate
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`StatusTemplate\`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering \`StatusTemplate\`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
-}
-
-"""All input for the \`updateStatusTemplate\` mutation."""
-input UpdateStatusTemplateInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`StatusTemplate\` being updated.
-  """
-  patch: StatusTemplatePatch!
-}
-
-"""
-Represents an update to a \`StatusTemplate\`. Fields that are set will be updated.
-"""
-input StatusTemplatePatch {
-  rowId: UUID
-  organizationId: UUID
-  name: String
-  displayName: String
-  color: String
-  description: String
-  sortOrder: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-  showOnRoadmap: Boolean
-  keywordRole: String
-}
-
 """The output of our update \`WardenSyncQueue\` mutation."""
 type UpdateWardenSyncQueuePayload {
   """
@@ -18784,6 +18755,62 @@ input SignalClusterPatch {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our update \`StatusTemplate\` mutation."""
+type UpdateStatusTemplatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`StatusTemplate\` that was updated by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`StatusTemplate\`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering \`StatusTemplate\`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the \`updateStatusTemplate\` mutation."""
+input UpdateStatusTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`StatusTemplate\` being updated.
+  """
+  patch: StatusTemplatePatch!
+}
+
+"""
+Represents an update to a \`StatusTemplate\`. Fields that are set will be updated.
+"""
+input StatusTemplatePatch {
+  rowId: UUID
+  organizationId: UUID
+  name: String
+  displayName: String
+  color: String
+  description: String
+  sortOrder: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  showOnRoadmap: Boolean
+  keywordRole: String
+  showOnBoard: Boolean
 }
 
 """The output of our update \`Project\` mutation."""
@@ -19230,39 +19257,6 @@ input DeleteAttachmentInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`StatusTemplate\` mutation."""
-type DeleteStatusTemplatePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`StatusTemplate\` that was deleted by this mutation."""
-  statusTemplate: StatusTemplate
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`StatusTemplate\`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering \`StatusTemplate\`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
-}
-
-"""All input for the \`deleteStatusTemplate\` mutation."""
-input DeleteStatusTemplateInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`WardenSyncQueue\` mutation."""
 type DeleteWardenSyncQueuePayload {
   """
@@ -19321,6 +19315,39 @@ type DeleteSignalClusterPayload {
 
 """All input for the \`deleteSignalCluster\` mutation."""
 input DeleteSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`StatusTemplate\` mutation."""
+type DeleteStatusTemplatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`StatusTemplate\` that was deleted by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`StatusTemplate\`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering \`StatusTemplate\`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the \`deleteStatusTemplate\` mutation."""
+input DeleteStatusTemplateInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -19542,17 +19569,17 @@ type Query implements Node {
   """Get a single \`Attachment\`."""
   attachment(rowId: UUID!): Attachment
 
-  """Get a single \`StatusTemplate\`."""
-  statusTemplate(rowId: UUID!): StatusTemplate
-
-  """Get a single \`StatusTemplate\`."""
-  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
-
   """Get a single \`WardenSyncQueue\`."""
   wardenSyncQueue(rowId: UUID!): WardenSyncQueue
 
   """Get a single \`SignalCluster\`."""
   signalCluster(rowId: UUID!): SignalCluster
+
+  """Get a single \`StatusTemplate\`."""
+  statusTemplate(rowId: UUID!): StatusTemplate
+
+  """Get a single \`StatusTemplate\`."""
+  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
 
   """Get a single \`Signal\`."""
   signal(rowId: UUID!): Signal
@@ -19946,40 +19973,6 @@ type Query implements Node {
     orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentConnection
 
-  """Reads and enables pagination through a set of \`StatusTemplate\`."""
-  statusTemplates(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: StatusTemplateCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: StatusTemplateFilter
-
-    """The method to use when ordering \`StatusTemplate\`."""
-    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
-  ): StatusTemplateConnection
-
   """Reads and enables pagination through a set of \`WardenSyncQueue\`."""
   wardenSyncQueues(
     """Only read the first \`n\` values of the set."""
@@ -20047,6 +20040,40 @@ type Query implements Node {
     """The method to use when ordering \`SignalCluster\`."""
     orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalClusterConnection
+
+  """Reads and enables pagination through a set of \`StatusTemplate\`."""
+  statusTemplates(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: StatusTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StatusTemplateFilter
+
+    """The method to use when ordering \`StatusTemplate\`."""
+    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): StatusTemplateConnection
 
   """Reads and enables pagination through a set of \`Signal\`."""
   signals(
@@ -20249,14 +20276,6 @@ type Mutation {
     input: CreateAttachmentInput!
   ): CreateAttachmentPayload
 
-  """Creates a single \`StatusTemplate\`."""
-  createStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateStatusTemplateInput!
-  ): CreateStatusTemplatePayload
-
   """Creates a single \`WardenSyncQueue\`."""
   createWardenSyncQueue(
     """
@@ -20272,6 +20291,14 @@ type Mutation {
     """
     input: CreateSignalClusterInput!
   ): CreateSignalClusterPayload
+
+  """Creates a single \`StatusTemplate\`."""
+  createStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateStatusTemplateInput!
+  ): CreateStatusTemplatePayload
 
   """Creates a single \`Project\`."""
   createProject(
@@ -20369,14 +20396,6 @@ type Mutation {
     input: UpdateAttachmentInput!
   ): UpdateAttachmentPayload
 
-  """Updates a single \`StatusTemplate\` using a unique key and a patch."""
-  updateStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateStatusTemplateInput!
-  ): UpdateStatusTemplatePayload
-
   """Updates a single \`WardenSyncQueue\` using a unique key and a patch."""
   updateWardenSyncQueue(
     """
@@ -20392,6 +20411,14 @@ type Mutation {
     """
     input: UpdateSignalClusterInput!
   ): UpdateSignalClusterPayload
+
+  """Updates a single \`StatusTemplate\` using a unique key and a patch."""
+  updateStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateStatusTemplateInput!
+  ): UpdateStatusTemplatePayload
 
   """Updates a single \`Project\` using a unique key and a patch."""
   updateProject(
@@ -20489,14 +20516,6 @@ type Mutation {
     input: DeleteAttachmentInput!
   ): DeleteAttachmentPayload
 
-  """Deletes a single \`StatusTemplate\` using a unique key."""
-  deleteStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteStatusTemplateInput!
-  ): DeleteStatusTemplatePayload
-
   """Deletes a single \`WardenSyncQueue\` using a unique key."""
   deleteWardenSyncQueue(
     """
@@ -20512,6 +20531,14 @@ type Mutation {
     """
     input: DeleteSignalClusterInput!
   ): DeleteSignalClusterPayload
+
+  """Deletes a single \`StatusTemplate\` using a unique key."""
+  deleteStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteStatusTemplateInput!
+  ): DeleteStatusTemplatePayload
 
   """Deletes a single \`Project\` using a unique key."""
   deleteProject(
@@ -24106,6 +24133,9 @@ ${String(oldPlan36)}`);
         }
       },
       rowId: PostTag_rowIdPlan,
+      showOnBoard($record) {
+        return $record.get("show_on_board");
+      },
       showOnRoadmap($record) {
         return $record.get("show_on_roadmap");
       },
@@ -24166,6 +24196,9 @@ ${String(oldPlan36)}`);
       name: TagDistinctCountAggregates_namePlan,
       organizationId: StatusTemplateDistinctCountAggregates_organizationIdPlan,
       rowId: PostDistinctCountAggregates_rowIdPlan,
+      showOnBoard($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "show_on_board", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
       showOnRoadmap($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "show_on_roadmap", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
@@ -28912,6 +28945,9 @@ export const inputObjects = {
       name: TagCondition_nameApply,
       organizationId: StatusTemplateCondition_organizationIdApply,
       rowId: PostCondition_rowIdApply,
+      showOnBoard($condition, val) {
+        return applyAttributeCondition("show_on_board", TYPES.boolean, $condition, val);
+      },
       showOnRoadmap($condition, val) {
         return applyAttributeCondition("show_on_roadmap", TYPES.boolean, $condition, val);
       },
@@ -29019,6 +29055,9 @@ export const inputObjects = {
       },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_statusTemplate.attributes.id, queryBuilder, value);
+      },
+      showOnBoard(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("showOnBoard", "show_on_board", spec_statusTemplate.attributes.show_on_board, queryBuilder, value);
       },
       showOnRoadmap(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("showOnRoadmap", "show_on_roadmap", spec_statusTemplate.attributes.show_on_roadmap, queryBuilder, value);
@@ -29174,6 +29213,7 @@ export const inputObjects = {
       name: TagInput_nameApply,
       organizationId: PostReferenceInput_organizationIdApply,
       rowId: PostTagInput_rowIdApply,
+      showOnBoard: StatusTemplateInput_showOnBoardApply,
       showOnRoadmap: StatusTemplateInput_showOnRoadmapApply,
       sortOrder: ProjectStatusConfigInput_sortOrderApply,
       updatedAt: TagInput_updatedAtApply
@@ -29190,6 +29230,7 @@ export const inputObjects = {
       name: TagInput_nameApply,
       organizationId: PostReferenceInput_organizationIdApply,
       rowId: PostTagInput_rowIdApply,
+      showOnBoard: StatusTemplateInput_showOnBoardApply,
       showOnRoadmap: StatusTemplateInput_showOnRoadmapApply,
       sortOrder: ProjectStatusConfigInput_sortOrderApply,
       updatedAt: TagInput_updatedAtApply
@@ -33595,6 +33636,9 @@ export const enums = {
       },
       NAME: TagGroupBy_NAMEApply,
       ORGANIZATION_ID: StatusTemplateGroupBy_ORGANIZATION_IDApply,
+      SHOW_ON_BOARD($pgSelect) {
+        applyGroupByAttribute("show_on_board", TYPES.boolean, $pgSelect);
+      },
       SHOW_ON_ROADMAP($pgSelect) {
         applyGroupByAttribute("show_on_roadmap", TYPES.boolean, $pgSelect);
       },
@@ -33972,6 +34016,18 @@ export const enums = {
       },
       ROW_ID_ASC: PostOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: PostOrderBy_ROW_ID_DESCApply,
+      SHOW_ON_BOARD_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "show_on_board",
+          direction: "ASC"
+        });
+      },
+      SHOW_ON_BOARD_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "show_on_board",
+          direction: "DESC"
+        });
+      },
       SHOW_ON_ROADMAP_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "show_on_roadmap",

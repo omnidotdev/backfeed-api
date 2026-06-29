@@ -2639,6 +2639,9 @@ input StatusTemplateFilter {
   """Filter by the object’s `keywordRole` field."""
   keywordRole: StringFilter
 
+  """Filter by the object’s `showOnBoard` field."""
+  showOnBoard: BooleanFilter
+
   """Filter by the object’s `posts` relation."""
   posts: StatusTemplateToManyPostFilter
 
@@ -4200,6 +4203,7 @@ type StatusTemplate {
   updatedAt: Datetime!
   showOnRoadmap: Boolean
   keywordRole: String
+  showOnBoard: Boolean
 
   """Reads and enables pagination through a set of `Post`."""
   posts(
@@ -8265,429 +8269,6 @@ enum UserOrderBy {
   POST_STATUS_CHANGES_BY_CHANGED_BY_ID_DISTINCT_COUNT_NOTE_DESC
 }
 
-"""A connection to a list of `StatusTemplate` values."""
-type StatusTemplateConnection {
-  """A list of `StatusTemplate` objects."""
-  nodes: [StatusTemplate]!
-
-  """
-  A list of edges which contains the `StatusTemplate` and cursor to aid in pagination.
-  """
-  edges: [StatusTemplateEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `StatusTemplate` you could get from the connection."""
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: StatusTemplateAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """The method to use when grouping `StatusTemplate` for these aggregates."""
-    groupBy: [StatusTemplateGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: StatusTemplateHavingInput
-  ): [StatusTemplateAggregates!]
-}
-
-"""A `StatusTemplate` edge in the connection."""
-type StatusTemplateEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `StatusTemplate` at the end of the edge."""
-  node: StatusTemplate
-}
-
-type StatusTemplateAggregates {
-  keys: [String]
-
-  """
-  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  sum: StatusTemplateSumAggregates
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: StatusTemplateDistinctCountAggregates
-
-  """
-  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  min: StatusTemplateMinAggregates
-
-  """
-  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  max: StatusTemplateMaxAggregates
-
-  """
-  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  average: StatusTemplateAverageAggregates
-
-  """
-  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevSample: StatusTemplateStddevSampleAggregates
-
-  """
-  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevPopulation: StatusTemplateStddevPopulationAggregates
-
-  """
-  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  varianceSample: StatusTemplateVarianceSampleAggregates
-
-  """
-  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  variancePopulation: StatusTemplateVariancePopulationAggregates
-}
-
-type StatusTemplateSumAggregates {
-  """Sum of sortOrder across the matching connection"""
-  sortOrder: BigInt!
-}
-
-type StatusTemplateDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of organizationId across the matching connection"""
-  organizationId: BigInt
-
-  """Distinct count of name across the matching connection"""
-  name: BigInt
-
-  """Distinct count of displayName across the matching connection"""
-  displayName: BigInt
-
-  """Distinct count of color across the matching connection"""
-  color: BigInt
-
-  """Distinct count of description across the matching connection"""
-  description: BigInt
-
-  """Distinct count of sortOrder across the matching connection"""
-  sortOrder: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-
-  """Distinct count of showOnRoadmap across the matching connection"""
-  showOnRoadmap: BigInt
-
-  """Distinct count of keywordRole across the matching connection"""
-  keywordRole: BigInt
-}
-
-type StatusTemplateMinAggregates {
-  """Minimum of sortOrder across the matching connection"""
-  sortOrder: Int
-}
-
-type StatusTemplateMaxAggregates {
-  """Maximum of sortOrder across the matching connection"""
-  sortOrder: Int
-}
-
-type StatusTemplateAverageAggregates {
-  """Mean average of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-type StatusTemplateStddevSampleAggregates {
-  """Sample standard deviation of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-type StatusTemplateStddevPopulationAggregates {
-  """
-  Population standard deviation of sortOrder across the matching connection
-  """
-  sortOrder: BigFloat
-}
-
-type StatusTemplateVarianceSampleAggregates {
-  """Sample variance of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-type StatusTemplateVariancePopulationAggregates {
-  """Population variance of sortOrder across the matching connection"""
-  sortOrder: BigFloat
-}
-
-"""Grouping methods for `StatusTemplate` for usage during aggregation."""
-enum StatusTemplateGroupBy {
-  ORGANIZATION_ID
-  NAME
-  DISPLAY_NAME
-  COLOR
-  DESCRIPTION
-  SORT_ORDER
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-  SHOW_ON_ROADMAP
-  KEYWORD_ROLE
-}
-
-"""Conditions for `StatusTemplate` aggregates."""
-input StatusTemplateHavingInput {
-  AND: [StatusTemplateHavingInput!]
-  OR: [StatusTemplateHavingInput!]
-  sum: StatusTemplateHavingSumInput
-  distinctCount: StatusTemplateHavingDistinctCountInput
-  min: StatusTemplateHavingMinInput
-  max: StatusTemplateHavingMaxInput
-  average: StatusTemplateHavingAverageInput
-  stddevSample: StatusTemplateHavingStddevSampleInput
-  stddevPopulation: StatusTemplateHavingStddevPopulationInput
-  varianceSample: StatusTemplateHavingVarianceSampleInput
-  variancePopulation: StatusTemplateHavingVariancePopulationInput
-}
-
-input StatusTemplateHavingSumInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingDistinctCountInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingMinInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingMaxInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingAverageInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingStddevSampleInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingStddevPopulationInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingVarianceSampleInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input StatusTemplateHavingVariancePopulationInput {
-  sortOrder: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `StatusTemplate` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input StatusTemplateCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `organizationId` field."""
-  organizationId: UUID
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-
-  """Checks for equality with the object’s `displayName` field."""
-  displayName: String
-
-  """Checks for equality with the object’s `color` field."""
-  color: String
-
-  """Checks for equality with the object’s `description` field."""
-  description: String
-
-  """Checks for equality with the object’s `sortOrder` field."""
-  sortOrder: Int
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-
-  """Checks for equality with the object’s `showOnRoadmap` field."""
-  showOnRoadmap: Boolean
-
-  """Checks for equality with the object’s `keywordRole` field."""
-  keywordRole: String
-}
-
-"""Methods to use when ordering `StatusTemplate`."""
-enum StatusTemplateOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  ORGANIZATION_ID_ASC
-  ORGANIZATION_ID_DESC
-  NAME_ASC
-  NAME_DESC
-  DISPLAY_NAME_ASC
-  DISPLAY_NAME_DESC
-  COLOR_ASC
-  COLOR_DESC
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
-  SORT_ORDER_ASC
-  SORT_ORDER_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-  SHOW_ON_ROADMAP_ASC
-  SHOW_ON_ROADMAP_DESC
-  KEYWORD_ROLE_ASC
-  KEYWORD_ROLE_DESC
-  POSTS_COUNT_ASC
-  POSTS_COUNT_DESC
-  POSTS_SUM_NUMBER_ASC
-  POSTS_SUM_NUMBER_DESC
-  POSTS_DISTINCT_COUNT_ROW_ID_ASC
-  POSTS_DISTINCT_COUNT_ROW_ID_DESC
-  POSTS_DISTINCT_COUNT_TITLE_ASC
-  POSTS_DISTINCT_COUNT_TITLE_DESC
-  POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
-  POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
-  POSTS_DISTINCT_COUNT_PROJECT_ID_ASC
-  POSTS_DISTINCT_COUNT_PROJECT_ID_DESC
-  POSTS_DISTINCT_COUNT_USER_ID_ASC
-  POSTS_DISTINCT_COUNT_USER_ID_DESC
-  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
-  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
-  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC
-  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC
-  POSTS_DISTINCT_COUNT_CREATED_AT_ASC
-  POSTS_DISTINCT_COUNT_CREATED_AT_DESC
-  POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
-  POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
-  POSTS_DISTINCT_COUNT_NUMBER_ASC
-  POSTS_DISTINCT_COUNT_NUMBER_DESC
-  POSTS_DISTINCT_COUNT_SOURCE_ASC
-  POSTS_DISTINCT_COUNT_SOURCE_DESC
-  POSTS_DISTINCT_COUNT_SENTIMENT_ASC
-  POSTS_DISTINCT_COUNT_SENTIMENT_DESC
-  POSTS_DISTINCT_COUNT_AI_TAGS_ASC
-  POSTS_DISTINCT_COUNT_AI_TAGS_DESC
-  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_ASC
-  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
-  POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
-  POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
-  POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC
-  POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC
-  POSTS_MIN_NUMBER_ASC
-  POSTS_MIN_NUMBER_DESC
-  POSTS_MAX_NUMBER_ASC
-  POSTS_MAX_NUMBER_DESC
-  POSTS_AVERAGE_NUMBER_ASC
-  POSTS_AVERAGE_NUMBER_DESC
-  POSTS_STDDEV_SAMPLE_NUMBER_ASC
-  POSTS_STDDEV_SAMPLE_NUMBER_DESC
-  POSTS_STDDEV_POPULATION_NUMBER_ASC
-  POSTS_STDDEV_POPULATION_NUMBER_DESC
-  POSTS_VARIANCE_SAMPLE_NUMBER_ASC
-  POSTS_VARIANCE_SAMPLE_NUMBER_DESC
-  POSTS_VARIANCE_POPULATION_NUMBER_ASC
-  POSTS_VARIANCE_POPULATION_NUMBER_DESC
-  PROJECT_STATUS_CONFIGS_COUNT_ASC
-  PROJECT_STATUS_CONFIGS_COUNT_DESC
-  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_ASC
-  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_DESC
-  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_DESC
-  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_ASC
-  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_COUNT_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_COUNT_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_ROW_ID_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_ROW_ID_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_DESC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_ASC
-  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_DESC
-}
-
 """A connection to a list of `WardenSyncQueue` values."""
 type WardenSyncQueueConnection {
   """A list of `WardenSyncQueue` objects."""
@@ -9053,6 +8634,438 @@ enum WardenSyncQueueOrderBy {
   NEXT_RETRY_AT_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+}
+
+"""A connection to a list of `StatusTemplate` values."""
+type StatusTemplateConnection {
+  """A list of `StatusTemplate` objects."""
+  nodes: [StatusTemplate]!
+
+  """
+  A list of edges which contains the `StatusTemplate` and cursor to aid in pagination.
+  """
+  edges: [StatusTemplateEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `StatusTemplate` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: StatusTemplateAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `StatusTemplate` for these aggregates."""
+    groupBy: [StatusTemplateGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: StatusTemplateHavingInput
+  ): [StatusTemplateAggregates!]
+}
+
+"""A `StatusTemplate` edge in the connection."""
+type StatusTemplateEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `StatusTemplate` at the end of the edge."""
+  node: StatusTemplate
+}
+
+type StatusTemplateAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: StatusTemplateSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: StatusTemplateDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: StatusTemplateMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: StatusTemplateMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: StatusTemplateAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: StatusTemplateStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: StatusTemplateStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: StatusTemplateVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: StatusTemplateVariancePopulationAggregates
+}
+
+type StatusTemplateSumAggregates {
+  """Sum of sortOrder across the matching connection"""
+  sortOrder: BigInt!
+}
+
+type StatusTemplateDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of name across the matching connection"""
+  name: BigInt
+
+  """Distinct count of displayName across the matching connection"""
+  displayName: BigInt
+
+  """Distinct count of color across the matching connection"""
+  color: BigInt
+
+  """Distinct count of description across the matching connection"""
+  description: BigInt
+
+  """Distinct count of sortOrder across the matching connection"""
+  sortOrder: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+
+  """Distinct count of showOnRoadmap across the matching connection"""
+  showOnRoadmap: BigInt
+
+  """Distinct count of keywordRole across the matching connection"""
+  keywordRole: BigInt
+
+  """Distinct count of showOnBoard across the matching connection"""
+  showOnBoard: BigInt
+}
+
+type StatusTemplateMinAggregates {
+  """Minimum of sortOrder across the matching connection"""
+  sortOrder: Int
+}
+
+type StatusTemplateMaxAggregates {
+  """Maximum of sortOrder across the matching connection"""
+  sortOrder: Int
+}
+
+type StatusTemplateAverageAggregates {
+  """Mean average of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type StatusTemplateStddevSampleAggregates {
+  """Sample standard deviation of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type StatusTemplateStddevPopulationAggregates {
+  """
+  Population standard deviation of sortOrder across the matching connection
+  """
+  sortOrder: BigFloat
+}
+
+type StatusTemplateVarianceSampleAggregates {
+  """Sample variance of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+type StatusTemplateVariancePopulationAggregates {
+  """Population variance of sortOrder across the matching connection"""
+  sortOrder: BigFloat
+}
+
+"""Grouping methods for `StatusTemplate` for usage during aggregation."""
+enum StatusTemplateGroupBy {
+  ORGANIZATION_ID
+  NAME
+  DISPLAY_NAME
+  COLOR
+  DESCRIPTION
+  SORT_ORDER
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+  SHOW_ON_ROADMAP
+  KEYWORD_ROLE
+  SHOW_ON_BOARD
+}
+
+"""Conditions for `StatusTemplate` aggregates."""
+input StatusTemplateHavingInput {
+  AND: [StatusTemplateHavingInput!]
+  OR: [StatusTemplateHavingInput!]
+  sum: StatusTemplateHavingSumInput
+  distinctCount: StatusTemplateHavingDistinctCountInput
+  min: StatusTemplateHavingMinInput
+  max: StatusTemplateHavingMaxInput
+  average: StatusTemplateHavingAverageInput
+  stddevSample: StatusTemplateHavingStddevSampleInput
+  stddevPopulation: StatusTemplateHavingStddevPopulationInput
+  varianceSample: StatusTemplateHavingVarianceSampleInput
+  variancePopulation: StatusTemplateHavingVariancePopulationInput
+}
+
+input StatusTemplateHavingSumInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingDistinctCountInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingMinInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingMaxInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingAverageInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingStddevSampleInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingStddevPopulationInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingVarianceSampleInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input StatusTemplateHavingVariancePopulationInput {
+  sortOrder: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `StatusTemplate` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input StatusTemplateCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: UUID
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `displayName` field."""
+  displayName: String
+
+  """Checks for equality with the object’s `color` field."""
+  color: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `sortOrder` field."""
+  sortOrder: Int
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s `showOnRoadmap` field."""
+  showOnRoadmap: Boolean
+
+  """Checks for equality with the object’s `keywordRole` field."""
+  keywordRole: String
+
+  """Checks for equality with the object’s `showOnBoard` field."""
+  showOnBoard: Boolean
+}
+
+"""Methods to use when ordering `StatusTemplate`."""
+enum StatusTemplateOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  DISPLAY_NAME_ASC
+  DISPLAY_NAME_DESC
+  COLOR_ASC
+  COLOR_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  SORT_ORDER_ASC
+  SORT_ORDER_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  SHOW_ON_ROADMAP_ASC
+  SHOW_ON_ROADMAP_DESC
+  KEYWORD_ROLE_ASC
+  KEYWORD_ROLE_DESC
+  SHOW_ON_BOARD_ASC
+  SHOW_ON_BOARD_DESC
+  POSTS_COUNT_ASC
+  POSTS_COUNT_DESC
+  POSTS_SUM_NUMBER_ASC
+  POSTS_SUM_NUMBER_DESC
+  POSTS_DISTINCT_COUNT_ROW_ID_ASC
+  POSTS_DISTINCT_COUNT_ROW_ID_DESC
+  POSTS_DISTINCT_COUNT_TITLE_ASC
+  POSTS_DISTINCT_COUNT_TITLE_DESC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_ASC
+  POSTS_DISTINCT_COUNT_PROJECT_ID_DESC
+  POSTS_DISTINCT_COUNT_USER_ID_ASC
+  POSTS_DISTINCT_COUNT_USER_ID_DESC
+  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  POSTS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_STATUS_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_CREATED_AT_ASC
+  POSTS_DISTINCT_COUNT_CREATED_AT_DESC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_NUMBER_ASC
+  POSTS_DISTINCT_COUNT_NUMBER_DESC
+  POSTS_DISTINCT_COUNT_SOURCE_ASC
+  POSTS_DISTINCT_COUNT_SOURCE_DESC
+  POSTS_DISTINCT_COUNT_SENTIMENT_ASC
+  POSTS_DISTINCT_COUNT_SENTIMENT_DESC
+  POSTS_DISTINCT_COUNT_AI_TAGS_ASC
+  POSTS_DISTINCT_COUNT_AI_TAGS_DESC
+  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_ASC
+  POSTS_DISTINCT_COUNT_DUPLICATE_OF_ID_DESC
+  POSTS_DISTINCT_COUNT_CLUSTER_ID_ASC
+  POSTS_DISTINCT_COUNT_CLUSTER_ID_DESC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_ASC
+  POSTS_DISTINCT_COUNT_SHIPPED_AT_DESC
+  POSTS_MIN_NUMBER_ASC
+  POSTS_MIN_NUMBER_DESC
+  POSTS_MAX_NUMBER_ASC
+  POSTS_MAX_NUMBER_DESC
+  POSTS_AVERAGE_NUMBER_ASC
+  POSTS_AVERAGE_NUMBER_DESC
+  POSTS_STDDEV_SAMPLE_NUMBER_ASC
+  POSTS_STDDEV_SAMPLE_NUMBER_DESC
+  POSTS_STDDEV_POPULATION_NUMBER_ASC
+  POSTS_STDDEV_POPULATION_NUMBER_DESC
+  POSTS_VARIANCE_SAMPLE_NUMBER_ASC
+  POSTS_VARIANCE_SAMPLE_NUMBER_DESC
+  POSTS_VARIANCE_POPULATION_NUMBER_ASC
+  POSTS_VARIANCE_POPULATION_NUMBER_DESC
+  PROJECT_STATUS_CONFIGS_COUNT_ASC
+  PROJECT_STATUS_CONFIGS_COUNT_DESC
+  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_SUM_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_ROW_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_PROJECT_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_STATUS_TEMPLATE_ID_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_COLOR_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CUSTOM_DESCRIPTION_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_ENABLED_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_IS_DEFAULT_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECT_STATUS_CONFIGS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_MIN_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_MAX_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_AVERAGE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_STDDEV_SAMPLE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_STDDEV_POPULATION_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_VARIANCE_SAMPLE_SORT_ORDER_DESC
+  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_ASC
+  PROJECT_STATUS_CONFIGS_VARIANCE_POPULATION_SORT_ORDER_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_COUNT_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_COUNT_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_ROW_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_ROW_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_POST_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_TO_STATUS_TEMPLATE_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CHANGED_BY_ID_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_ASC
+  POST_STATUS_CHANGES_BY_TO_STATUS_TEMPLATE_ID_DISTINCT_COUNT_NOTE_DESC
 }
 
 """A connection to a list of `Project` values."""
@@ -10066,56 +10079,6 @@ input AttachmentInput {
   createdAt: Datetime
 }
 
-"""The output of our create `StatusTemplate` mutation."""
-type CreateStatusTemplatePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `StatusTemplate` that was created by this mutation."""
-  statusTemplate: StatusTemplate
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `StatusTemplate`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering `StatusTemplate`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
-}
-
-"""All input for the create `StatusTemplate` mutation."""
-input CreateStatusTemplateInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `StatusTemplate` to be created by this mutation."""
-  statusTemplate: StatusTemplateInput!
-}
-
-"""An input for mutations affecting `StatusTemplate`"""
-input StatusTemplateInput {
-  rowId: UUID
-  organizationId: UUID!
-  name: String!
-  displayName: String!
-  color: String
-  description: String
-  sortOrder: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-  showOnRoadmap: Boolean
-  keywordRole: String
-}
-
 """The output of our create `WardenSyncQueue` mutation."""
 type CreateWardenSyncQueuePayload {
   """
@@ -10207,6 +10170,57 @@ input SignalClusterInput {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `StatusTemplate` mutation."""
+type CreateStatusTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` that was created by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `StatusTemplate`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the create `StatusTemplate` mutation."""
+input CreateStatusTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` to be created by this mutation."""
+  statusTemplate: StatusTemplateInput!
+}
+
+"""An input for mutations affecting `StatusTemplate`"""
+input StatusTemplateInput {
+  rowId: UUID
+  organizationId: UUID!
+  name: String!
+  displayName: String!
+  color: String
+  description: String
+  sortOrder: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  showOnRoadmap: Boolean
+  keywordRole: String
+  showOnBoard: Boolean
 }
 
 """The output of our create `Project` mutation."""
@@ -10824,61 +10838,6 @@ input AttachmentPatch {
   createdAt: Datetime
 }
 
-"""The output of our update `StatusTemplate` mutation."""
-type UpdateStatusTemplatePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `StatusTemplate` that was updated by this mutation."""
-  statusTemplate: StatusTemplate
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `StatusTemplate`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering `StatusTemplate`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
-}
-
-"""All input for the `updateStatusTemplate` mutation."""
-input UpdateStatusTemplateInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `StatusTemplate` being updated.
-  """
-  patch: StatusTemplatePatch!
-}
-
-"""
-Represents an update to a `StatusTemplate`. Fields that are set will be updated.
-"""
-input StatusTemplatePatch {
-  rowId: UUID
-  organizationId: UUID
-  name: String
-  displayName: String
-  color: String
-  description: String
-  sortOrder: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-  showOnRoadmap: Boolean
-  keywordRole: String
-}
-
 """The output of our update `WardenSyncQueue` mutation."""
 type UpdateWardenSyncQueuePayload {
   """
@@ -10980,6 +10939,62 @@ input SignalClusterPatch {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our update `StatusTemplate` mutation."""
+type UpdateStatusTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` that was updated by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `StatusTemplate`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the `updateStatusTemplate` mutation."""
+input UpdateStatusTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `StatusTemplate` being updated.
+  """
+  patch: StatusTemplatePatch!
+}
+
+"""
+Represents an update to a `StatusTemplate`. Fields that are set will be updated.
+"""
+input StatusTemplatePatch {
+  rowId: UUID
+  organizationId: UUID
+  name: String
+  displayName: String
+  color: String
+  description: String
+  sortOrder: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  showOnRoadmap: Boolean
+  keywordRole: String
+  showOnBoard: Boolean
 }
 
 """The output of our update `Project` mutation."""
@@ -11426,39 +11441,6 @@ input DeleteAttachmentInput {
   rowId: UUID!
 }
 
-"""The output of our delete `StatusTemplate` mutation."""
-type DeleteStatusTemplatePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `StatusTemplate` that was deleted by this mutation."""
-  statusTemplate: StatusTemplate
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `StatusTemplate`. May be used by Relay 1."""
-  statusTemplateEdge(
-    """The method to use when ordering `StatusTemplate`."""
-    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): StatusTemplateEdge
-}
-
-"""All input for the `deleteStatusTemplate` mutation."""
-input DeleteStatusTemplateInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `WardenSyncQueue` mutation."""
 type DeleteWardenSyncQueuePayload {
   """
@@ -11517,6 +11499,39 @@ type DeleteSignalClusterPayload {
 
 """All input for the `deleteSignalCluster` mutation."""
 input DeleteSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `StatusTemplate` mutation."""
+type DeleteStatusTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `StatusTemplate` that was deleted by this mutation."""
+  statusTemplate: StatusTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `StatusTemplate`. May be used by Relay 1."""
+  statusTemplateEdge(
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): StatusTemplateEdge
+}
+
+"""All input for the `deleteStatusTemplate` mutation."""
+input DeleteStatusTemplateInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -11738,17 +11753,17 @@ type Query implements Node {
   """Get a single `Attachment`."""
   attachment(rowId: UUID!): Attachment
 
-  """Get a single `StatusTemplate`."""
-  statusTemplate(rowId: UUID!): StatusTemplate
-
-  """Get a single `StatusTemplate`."""
-  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
-
   """Get a single `WardenSyncQueue`."""
   wardenSyncQueue(rowId: UUID!): WardenSyncQueue
 
   """Get a single `SignalCluster`."""
   signalCluster(rowId: UUID!): SignalCluster
+
+  """Get a single `StatusTemplate`."""
+  statusTemplate(rowId: UUID!): StatusTemplate
+
+  """Get a single `StatusTemplate`."""
+  statusTemplateByOrganizationIdAndName(organizationId: UUID!, name: String!): StatusTemplate
 
   """Get a single `Signal`."""
   signal(rowId: UUID!): Signal
@@ -12142,40 +12157,6 @@ type Query implements Node {
     orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentConnection
 
-  """Reads and enables pagination through a set of `StatusTemplate`."""
-  statusTemplates(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: StatusTemplateCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: StatusTemplateFilter
-
-    """The method to use when ordering `StatusTemplate`."""
-    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
-  ): StatusTemplateConnection
-
   """Reads and enables pagination through a set of `WardenSyncQueue`."""
   wardenSyncQueues(
     """Only read the first `n` values of the set."""
@@ -12243,6 +12224,40 @@ type Query implements Node {
     """The method to use when ordering `SignalCluster`."""
     orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalClusterConnection
+
+  """Reads and enables pagination through a set of `StatusTemplate`."""
+  statusTemplates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: StatusTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StatusTemplateFilter
+
+    """The method to use when ordering `StatusTemplate`."""
+    orderBy: [StatusTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): StatusTemplateConnection
 
   """Reads and enables pagination through a set of `Signal`."""
   signals(
@@ -12445,14 +12460,6 @@ type Mutation {
     input: CreateAttachmentInput!
   ): CreateAttachmentPayload
 
-  """Creates a single `StatusTemplate`."""
-  createStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateStatusTemplateInput!
-  ): CreateStatusTemplatePayload
-
   """Creates a single `WardenSyncQueue`."""
   createWardenSyncQueue(
     """
@@ -12468,6 +12475,14 @@ type Mutation {
     """
     input: CreateSignalClusterInput!
   ): CreateSignalClusterPayload
+
+  """Creates a single `StatusTemplate`."""
+  createStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateStatusTemplateInput!
+  ): CreateStatusTemplatePayload
 
   """Creates a single `Project`."""
   createProject(
@@ -12565,14 +12580,6 @@ type Mutation {
     input: UpdateAttachmentInput!
   ): UpdateAttachmentPayload
 
-  """Updates a single `StatusTemplate` using a unique key and a patch."""
-  updateStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateStatusTemplateInput!
-  ): UpdateStatusTemplatePayload
-
   """Updates a single `WardenSyncQueue` using a unique key and a patch."""
   updateWardenSyncQueue(
     """
@@ -12588,6 +12595,14 @@ type Mutation {
     """
     input: UpdateSignalClusterInput!
   ): UpdateSignalClusterPayload
+
+  """Updates a single `StatusTemplate` using a unique key and a patch."""
+  updateStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateStatusTemplateInput!
+  ): UpdateStatusTemplatePayload
 
   """Updates a single `Project` using a unique key and a patch."""
   updateProject(
@@ -12685,14 +12700,6 @@ type Mutation {
     input: DeleteAttachmentInput!
   ): DeleteAttachmentPayload
 
-  """Deletes a single `StatusTemplate` using a unique key."""
-  deleteStatusTemplate(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteStatusTemplateInput!
-  ): DeleteStatusTemplatePayload
-
   """Deletes a single `WardenSyncQueue` using a unique key."""
   deleteWardenSyncQueue(
     """
@@ -12708,6 +12715,14 @@ type Mutation {
     """
     input: DeleteSignalClusterInput!
   ): DeleteSignalClusterPayload
+
+  """Deletes a single `StatusTemplate` using a unique key."""
+  deleteStatusTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteStatusTemplateInput!
+  ): DeleteStatusTemplatePayload
 
   """Deletes a single `Project` using a unique key."""
   deleteProject(
