@@ -11671,6 +11671,16 @@ type DeletePostStatusChangePayload {
   id: UUID!
 }
 
+input UpdatePostStatusChangeInput {
+  rowId: UUID!
+  note: String
+}
+
+type UpdatePostStatusChangePayload {
+  id: UUID!
+  note: String
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -12773,6 +12783,18 @@ type Mutation {
     """
     input: DeletePostStatusChangeInput!
   ): DeletePostStatusChangePayload
+
+  """
+  Edit the note on a single entry in a post's status timeline. Admin-only.
+  Does not change the recorded status (use changePostStatus for that). A
+  null or empty note clears it.
+  """
+  updatePostStatusChange(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostStatusChangeInput!
+  ): UpdatePostStatusChangePayload
 
   """Update the current user's email notification settings."""
   setNotificationPreference(

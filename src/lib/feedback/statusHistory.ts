@@ -66,6 +66,26 @@ export const getStatusChangePostId = async (
 };
 
 /**
+ * Edit the note on a single status-timeline entry, leaving the recorded status
+ * and timestamp untouched (only the admin's annotation changes). The note is
+ * trimmed like the append path; an empty note clears it. Returns the stored
+ * note (which may be null), or undefined if no row matched.
+ */
+export const updatePostStatusChangeNote = async (
+  db: Db,
+  id: string,
+  note: string | null,
+): Promise<string | null | undefined> => {
+  const [updated] = await db
+    .update(postStatusChanges)
+    .set({ note: note?.trim() || null })
+    .where(eq(postStatusChanges.id, id))
+    .returning({ note: postStatusChanges.note });
+
+  return updated?.note;
+};
+
+/**
  * Remove a single entry from a post's status timeline. The post's current
  * status (`posts.statusTemplateId`) is intentionally left untouched, mirroring
  * how deleting a comment removes only that comment. Returns true if a row was

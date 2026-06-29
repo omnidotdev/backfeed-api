@@ -30,6 +30,7 @@ import {
   NotificationPreferencePlugin,
   PostSignalProvenancePlugin,
   SignalIngestionPlugin,
+  UpdatePostStatusChangePlugin,
 } from "lib/graphql/plugins/feedback";
 import { AttachmentCleanupPlugin } from "lib/graphql/plugins/media";
 import { ReferenceExtractionPlugin } from "lib/graphql/plugins/references";
@@ -102,6 +103,8 @@ const preset: GraphileConfig.Preset = {
     ChangePostStatusPlugin,
     // Remove a single status-timeline entry (admin curation)
     DeletePostStatusChangePlugin,
+    // Edit the note on a single status-timeline entry (admin curation)
+    UpdatePostStatusChangePlugin,
     // Per-user email notification settings (observer-scoped)
     NotificationPreferencePlugin,
     // Search indexing plugins

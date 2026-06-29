@@ -14,7 +14,7 @@ import { ingestSignal, promoteSignalToPost } from "lib/feedback/promote";
 import { extractMentionUserIds } from "lib/feedback/references";
 import { markPostShipped } from "lib/feedback/shipped";
 import { buildPostProvenanceSignal } from "lib/feedback/signal";
-import { deletePostStatusChange, getStatusChangePostId, recordPostStatusChange } from "lib/feedback/statusHistory";
+import { deletePostStatusChange, getStatusChangePostId, recordPostStatusChange, updatePostStatusChangeNote } from "lib/feedback/statusHistory";
 import { syncReferences } from "lib/feedback/syncReferences";
 import { FEATURE_KEYS, billingBypassOrgIds } from "lib/graphql/plugins/authorization/constants";
 import { deleteStorageObjects } from "lib/media/cleanupAttachments";
@@ -19487,6 +19487,16 @@ type DeletePostStatusChangePayload {
   id: UUID!
 }
 
+input UpdatePostStatusChangeInput {
+  rowId: UUID!
+  note: String
+}
+
+type UpdatePostStatusChangePayload {
+  id: UUID!
+  note: String
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -20589,6 +20599,18 @@ type Mutation {
     """
     input: DeletePostStatusChangeInput!
   ): DeletePostStatusChangePayload
+
+  """
+  Edit the note on a single entry in a post's status timeline. Admin-only.
+  Does not change the recorded status (use changePostStatus for that). A
+  null or empty note clears it.
+  """
+  updatePostStatusChange(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostStatusChangeInput!
+  ): UpdatePostStatusChangePayload
 
   """Update the current user's email notification settings."""
   setNotificationPreference(
@@ -21994,6 +22016,25 @@ ${String(oldPlan44)}`);
         args: {
           input: applyInputToUpdateOrDelete
         }
+      },
+      updatePostStatusChange(_$root, fieldArgs) {
+        const $input = fieldArgs.getRaw("input"),
+          $observer = context().get("observer"),
+          $db = context().get("db");
+        return lambda([$input, $observer, $db], async values => {
+          const [input, observer, db] = values;
+          if (!observer) throw new GraphQLError("Unauthorized");
+          const postId = await getStatusChangePostId(db, input.rowId);
+          if (!postId) throw new GraphQLError("Status update not found");
+          const postRef = await getPostRef(db, postId);
+          if (!postRef) throw new GraphQLError("Post not found");
+          if (!(await checkPermission(observer.identityProviderId, "organization", postRef.organizationId, "admin"))) throw new GraphQLError("Insufficient permissions");
+          const note = await updatePostStatusChangeNote(db, input.rowId, input.note ?? null);
+          return {
+            id: input.rowId,
+            note: note ?? null
+          };
+        }, !1);
       },
       updatePostTag: {
         plan(_$root, args) {

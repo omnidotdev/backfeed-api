@@ -16,6 +16,7 @@ import {
   deletePostStatusChange,
   getStatusChangePostId,
   recordPostStatusChange,
+  updatePostStatusChangeNote,
 } from "./statusHistory";
 
 import type { dbPool } from "../db/db";
@@ -228,6 +229,110 @@ describe.skipIf(!DATABASE_URL)(
 
     test("deleting a non-existent entry returns false", async () => {
       expect(await deletePostStatusChange(db, crypto.randomUUID())).toBe(false);
+    });
+  },
+);
+
+describe.skipIf(!DATABASE_URL)(
+  "updatePostStatusChangeNote (db integration)",
+  () => {
+    const runId = crypto.randomUUID();
+    const organizationId = crypto.randomUUID();
+
+    let pool: Pool;
+    let db: typeof dbPool;
+    let userId: string;
+    let projectId: string;
+    let statusId: string;
+    let postId: string;
+
+    beforeAll(async () => {
+      pool = new Pool({ connectionString: DATABASE_URL });
+      db = drizzle({ client: pool, schema, casing: "snake_case" });
+
+      const [user] = await db
+        .insert(users)
+        .values({
+          identityProviderId: crypto.randomUUID(),
+          name: "Curator",
+          email: `update-status-${runId}@example.com`,
+        })
+        .returning();
+      userId = user.id;
+
+      const [project] = await db
+        .insert(projects)
+        .values({ organizationId, name: "Update", slug: `update-${runId}` })
+        .returning();
+      projectId = project.id;
+
+      const [planned] = await db
+        .insert(statusTemplates)
+        .values({ organizationId, name: "planned", displayName: "Planned" })
+        .returning();
+      statusId = planned.id;
+
+      const [post] = await db
+        .insert(posts)
+        .values({
+          projectId,
+          userId,
+          title: "Dark mode",
+          statusTemplateId: statusId,
+        })
+        .returning();
+      postId = post.id;
+    });
+
+    afterAll(async () => {
+      await db
+        .delete(projects)
+        .where(eq(projects.organizationId, organizationId));
+      await db
+        .delete(statusTemplates)
+        .where(eq(statusTemplates.organizationId, organizationId));
+      await db.delete(users).where(eq(users.id, userId));
+      await pool.end();
+    });
+
+    const seedChange = async (note: string | null) => {
+      const [change] = await db
+        .insert(postStatusChanges)
+        .values({
+          postId,
+          toStatusTemplateId: statusId,
+          changedById: userId,
+          note,
+        })
+        .returning();
+      return change.id;
+    };
+
+    test("edits the note and trims surrounding whitespace", async () => {
+      const changeId = await seedChange("old");
+
+      expect(
+        await updatePostStatusChangeNote(db, changeId, "  shipped in v2  "),
+      ).toBe("shipped in v2");
+
+      const row = await db.query.postStatusChanges.findFirst({
+        where: eq(postStatusChanges.id, changeId),
+        columns: { note: true, toStatusTemplateId: true },
+      });
+      expect(row?.note).toBe("shipped in v2");
+      // editing the note leaves the recorded status untouched
+      expect(row?.toStatusTemplateId).toBe(statusId);
+    });
+
+    test("a blank note clears it to null", async () => {
+      const changeId = await seedChange("present");
+      expect(await updatePostStatusChangeNote(db, changeId, "   ")).toBeNull();
+    });
+
+    test("updating a non-existent entry returns undefined", async () => {
+      expect(
+        await updatePostStatusChangeNote(db, crypto.randomUUID(), "x"),
+      ).toBeUndefined();
     });
   },
 );

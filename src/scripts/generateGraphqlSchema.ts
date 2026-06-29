@@ -34,6 +34,7 @@ import {
   deletePostStatusChange,
   getStatusChangePostId,
   recordPostStatusChange,
+  updatePostStatusChangeNote,
 } from "lib/feedback/statusHistory";
 import { syncReferences } from "lib/feedback/syncReferences";
 import {
@@ -193,6 +194,7 @@ const generateGraphqlSchema = async () => {
         deletePostStatusChange,
         getStatusChangePostId,
         recordPostStatusChange,
+        updatePostStatusChangeNote,
       },
       "lib/feedback/syncReferences": { syncReferences },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },

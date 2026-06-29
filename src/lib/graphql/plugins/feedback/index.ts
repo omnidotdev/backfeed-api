@@ -3,3 +3,4 @@ export { default as DeletePostStatusChangePlugin } from "./DeletePostStatusChang
 export { default as NotificationPreferencePlugin } from "./NotificationPreference.plugin";
 export { default as PostSignalProvenancePlugin } from "./PostSignalProvenance.plugin";
 export { default as SignalIngestionPlugin } from "./SignalIngestion.plugin";
+export { default as UpdatePostStatusChangePlugin } from "./UpdatePostStatusChange.plugin";
