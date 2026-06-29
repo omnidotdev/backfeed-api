@@ -12,6 +12,7 @@
 
 import { EXPORTABLE } from "graphile-export";
 import { recordPostStatusChange } from "lib/feedback/statusHistory";
+import { notifyStatusChangeInApp } from "lib/notifications/center";
 import { notifyStatusChange } from "lib/notifications/notify";
 import { notifications } from "lib/providers";
 import { context, sideEffect } from "postgraphile/grafast";
@@ -25,6 +26,7 @@ const recordStatusChange = (): PlanWrapperFn =>
       context,
       notifications,
       notifyStatusChange,
+      notifyStatusChangeInApp,
       recordPostStatusChange,
       sideEffect,
     ): PlanWrapperFn =>
@@ -67,6 +69,18 @@ const recordStatusChange = (): PlanWrapperFn =>
                     error,
                   ),
                 );
+
+                // write in-app notification rows for post followers
+                void notifyStatusChangeInApp(
+                  db,
+                  postId as string,
+                  observer?.id ?? null,
+                ).catch((error) =>
+                  console.error(
+                    "[StatusHistory] Failed to write notifications:",
+                    error,
+                  ),
+                );
               }
             } catch (error) {
               console.error(
@@ -83,6 +97,7 @@ const recordStatusChange = (): PlanWrapperFn =>
       context,
       notifications,
       notifyStatusChange,
+      notifyStatusChangeInApp,
       recordPostStatusChange,
       sideEffect,
     ],

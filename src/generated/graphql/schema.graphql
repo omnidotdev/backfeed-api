@@ -11681,6 +11681,15 @@ type UpdatePostStatusChangePayload {
   note: String
 }
 
+type NotificationPreference {
+  """Email me when a post I reported or upvoted changes status."""
+  postUpdates: Boolean!
+}
+
+input SetNotificationPreferenceInput {
+  postUpdates: Boolean!
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -12384,6 +12393,12 @@ type Query implements Node {
 
   """The current user's email notification settings (defaults applied)."""
   myNotificationPreference: NotificationPreference
+
+  """The current user's most recent notifications, newest first."""
+  myNotifications(limit: Int): [Notification!]!
+
+  """Count of the current user's unread notifications."""
+  unreadNotificationCount: Int!
 }
 
 """
@@ -12803,13 +12818,43 @@ type Mutation {
     """
     input: SetNotificationPreferenceInput!
   ): NotificationPreference
+
+  """
+  Mark the given notifications (the current user's) read. Returns the number updated.
+  """
+  markNotificationsRead(ids: [UUID!]!): Int!
+
+  """
+  Mark all the current user's notifications read. Returns the number updated.
+  """
+  markAllNotificationsRead: Int!
 }
 
-type NotificationPreference {
-  """Email me when a post I reported or upvoted changes status."""
-  postUpdates: Boolean!
+"""The user who triggered a notification."""
+type NotificationActor {
+  username: String
+  image: String
 }
 
-input SetNotificationPreferenceInput {
-  postUpdates: Boolean!
+"""An in-app notification for the current user."""
+type Notification {
+  id: UUID!
+
+  """One of: mention, reply, reaction, status_change."""
+  type: String!
+
+  """Reaction emoji (reaction notifications only)."""
+  emoji: String
+
+  """New status display name (status_change notifications only)."""
+  statusName: String
+  isRead: Boolean!
+  createdAt: Datetime!
+  actor: NotificationActor
+  postId: UUID
+  commentId: UUID
+  postNumber: Int
+  postTitle: String
+  projectSlug: String
+  organizationId: String
 }

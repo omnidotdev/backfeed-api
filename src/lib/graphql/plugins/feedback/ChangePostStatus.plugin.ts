@@ -16,6 +16,7 @@ import { GraphQLError } from "graphql";
 import { isOrganizationAdmin } from "lib/authz";
 import { changePostStatus, getPostRef } from "lib/feedback/changeStatus";
 import { markPostShipped } from "lib/feedback/shipped";
+import { notifyStatusChangeInApp } from "lib/notifications/center";
 import { notifyStatusChange } from "lib/notifications/notify";
 import { events, notifications } from "lib/providers";
 import { context, lambda } from "postgraphile/grafast";
@@ -58,6 +59,7 @@ const ChangePostStatusPlugin = makeExtendSchemaPlugin(() => ({
           markPostShipped,
           notifications,
           notifyStatusChange,
+          notifyStatusChangeInApp,
         ) =>
           // biome-ignore lint/suspicious/noExplicitAny: Grafast plan signature
           function plan(_$root: any, fieldArgs: any) {
@@ -101,6 +103,19 @@ const ChangePostStatusPlugin = makeExtendSchemaPlugin(() => ({
                 ).catch((error) =>
                   console.error(
                     "[ChangePostStatus] Failed to send notifications:",
+                    error,
+                  ),
+                );
+
+                // write in-app notification rows for post followers, detached
+                // and best-effort like the email send above
+                void notifyStatusChangeInApp(
+                  db,
+                  input.postId,
+                  observer.id,
+                ).catch((error) =>
+                  console.error(
+                    "[ChangePostStatus] Failed to write notifications:",
                     error,
                   ),
                 );
@@ -149,6 +164,7 @@ const ChangePostStatusPlugin = makeExtendSchemaPlugin(() => ({
           markPostShipped,
           notifications,
           notifyStatusChange,
+          notifyStatusChangeInApp,
         ],
       ),
     },

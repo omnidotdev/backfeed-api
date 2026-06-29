@@ -33,6 +33,10 @@ import {
   UpdatePostStatusChangePlugin,
 } from "lib/graphql/plugins/feedback";
 import { AttachmentCleanupPlugin } from "lib/graphql/plugins/media";
+import {
+  NotificationCenterPlugin,
+  NotificationWritePlugin,
+} from "lib/graphql/plugins/notifications";
 import { ReferenceExtractionPlugin } from "lib/graphql/plugins/references";
 import {
   PostSearchPlugin,
@@ -107,6 +111,10 @@ const preset: GraphileConfig.Preset = {
     UpdatePostStatusChangePlugin,
     // Per-user email notification settings (observer-scoped)
     NotificationPreferencePlugin,
+    // In-app notification center: write rows on comment/reaction/post (fan-out)
+    NotificationWritePlugin,
+    // In-app notification center: observer-scoped reads + mark-read mutations
+    NotificationCenterPlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     PostSearchPlugin,

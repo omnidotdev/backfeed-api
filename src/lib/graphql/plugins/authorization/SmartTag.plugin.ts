@@ -41,6 +41,13 @@ const SmartTagPlugin = jsonPgSmartTags({
         // user can never read or write another's preferences.
         tags: { behavior: "-*" },
       },
+      notification: {
+        // Per-user notification records, accessed only through the observer-scoped
+        // `myNotifications` / `unreadNotificationCount` queries + mark-read
+        // mutations (see NotificationCenter.plugin). Hide the raw table entirely
+        // so one user can never read or write another's notifications.
+        tags: { behavior: "-*" },
+      },
       project: {
         attribute: {
           // The inbound email key is server-generated (DB default) and unique;

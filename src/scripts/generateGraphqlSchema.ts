@@ -44,6 +44,16 @@ import {
 import { validateOrgExists } from "lib/idp/validateOrg";
 import { deleteStorageObjects } from "lib/media/cleanupAttachments";
 import { moderateText } from "lib/moderation";
+import {
+  getNotifications,
+  getUnreadNotificationCount,
+  markAllNotificationsRead,
+  markNotificationsRead,
+  notifyOnComment,
+  notifyOnPostCreated,
+  notifyOnReaction,
+  notifyStatusChangeInApp,
+} from "lib/notifications/center";
 import { notifyStatusChange } from "lib/notifications/notify";
 import {
   getNotificationPreference,
@@ -208,6 +218,16 @@ const generateGraphqlSchema = async () => {
       "lib/media/cleanupAttachments": { deleteStorageObjects },
       "lib/moderation": { moderateText },
       "lib/notifications/notify": { notifyStatusChange },
+      "lib/notifications/center": {
+        getNotifications,
+        getUnreadNotificationCount,
+        markAllNotificationsRead,
+        markNotificationsRead,
+        notifyOnComment,
+        notifyOnPostCreated,
+        notifyOnReaction,
+        notifyStatusChangeInApp,
+      },
       "lib/notifications/preference": {
         getNotificationPreference,
         setNotificationPreference,
