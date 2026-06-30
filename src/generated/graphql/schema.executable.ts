@@ -2,7 +2,7 @@
 import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
 import { eventMeta } from "@omnidotdev/providers/events";
 import { eq } from "drizzle-orm";
-import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inspect, isStep, lambda, makeDecodeNodeId, makeGrafastSchema, markSyncAndSafe, object, rootValue, sideEffect } from "grafast";
+import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inspect, isStep, lambda, listen, makeDecodeNodeId, makeGrafastSchema, markSyncAndSafe, object, rootValue, sideEffect } from "grafast";
 import { GraphQLError, Kind } from "graphql";
 import { checkPermission, deleteTuples, isAuthzEnabled, isOrganizationAdmin, writeTuples } from "lib/authz";
 import { signals, statusTemplates } from "lib/db/schema";
@@ -25,6 +25,7 @@ import { getNotificationPreference, setNotificationPreference } from "lib/notifi
 import { events, notifications } from "lib/providers";
 import { deletePostFromIndex, deleteProjectFromIndex, indexPost, indexProject } from "lib/search";
 import { sql } from "pg-sql2";
+import { jsonParse } from "postgraphile/@dataplan/json";
 const rawNodeIdCodec = {
   name: "raw",
   encode: markSyncAndSafe(function rawEncode(value) {
@@ -19845,6 +19846,35 @@ input SetNotificationPreferenceInput {
   postUpdates: Boolean!
 }
 
+"""The user who triggered a notification."""
+type NotificationActor {
+  username: String
+  image: String
+}
+
+"""An in-app notification for the current user."""
+type Notification {
+  id: UUID!
+
+  """One of: mention, reply, reaction, status_change."""
+  type: String!
+
+  """Reaction emoji (reaction notifications only)."""
+  emoji: String
+
+  """New status display name (status_change notifications only)."""
+  statusName: String
+  isRead: Boolean!
+  createdAt: Datetime!
+  actor: NotificationActor
+  postId: UUID
+  commentId: UUID
+  postNumber: Int
+  postTitle: String
+  projectSlug: String
+  organizationId: String
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -20985,33 +21015,18 @@ type Mutation {
   markAllNotificationsRead: Int!
 }
 
-"""The user who triggered a notification."""
-type NotificationActor {
-  username: String
-  image: String
+"""
+The root subscription type: contains realtime events you can subscribe to with the \`subscription\` operation.
+"""
+type Subscription {
+  """Fires when the current user receives a new notification."""
+  notificationReceived: NotificationEvent
 }
 
-"""An in-app notification for the current user."""
-type Notification {
-  id: UUID!
-
-  """One of: mention, reply, reaction, status_change."""
-  type: String!
-
-  """Reaction emoji (reaction notifications only)."""
-  emoji: String
-
-  """New status display name (status_change notifications only)."""
-  statusName: String
-  isRead: Boolean!
-  createdAt: Datetime!
-  actor: NotificationActor
-  postId: UUID
-  commentId: UUID
-  postNumber: Int
-  postTitle: String
-  projectSlug: String
-  organizationId: String
+"""A lightweight signal that the current user received a notification."""
+type NotificationEvent {
+  id: UUID
+  type: String
 }`;
 export const objects = {
   Query: {
@@ -22683,6 +22698,22 @@ ${String(oldPlan39)}`);
         },
         args: {
           input: applyInputToUpdateOrDelete
+        }
+      }
+    }
+  },
+  Subscription: {
+    assertStep: __ValueStep,
+    plans: {
+      notificationReceived: {
+        plan($event) {
+          return $event;
+        },
+        subscribePlan() {
+          const $pgSubscriber = context().get("pgSubscriber"),
+            $observer = context().get("observer"),
+            $topic = lambda($observer, observer => observer ? `notification:${observer.id}` : "notification:__none__");
+          return listen($pgSubscriber, $topic, jsonParse);
         }
       }
     }

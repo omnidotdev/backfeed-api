@@ -1,5 +1,6 @@
 import { dbPool } from "lib/db/db";
 import { pgPool } from "lib/db/pool";
+import { pgSubscriber } from "lib/db/pubsub";
 import { createWithPgClient } from "postgraphile/adaptors/pg";
 
 import type { YogaInitialContext } from "graphql-yoga";
@@ -20,6 +21,7 @@ declare global {
       observer: SelectUser | null;
       organizations: OrganizationClaim[];
       db: typeof dbPool;
+      pgSubscriber: PgSubscriber | null;
     }
   }
 }
@@ -45,12 +47,15 @@ export interface GraphQLContext {
 const createGraphqlContext = async ({
   request,
 }: Omit<YogaInitialContext, "waitUntil">): Promise<
-  Omit<GraphQLContext, "observer" | "pgSettings" | "pgSubscriber">
+  Omit<GraphQLContext, "observer" | "pgSettings">
 > => ({
   db: dbPool,
   organizations: [],
   request,
   withPgClient,
+  // injected here (not by Postgraphile) because this app supplies its own
+  // context function; the grafast `listen` step reads it for subscriptions
+  pgSubscriber,
 });
 
 export default createGraphqlContext;

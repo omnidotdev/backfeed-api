@@ -40,13 +40,30 @@ interface NotificationView {
   organizationId: string | null;
 }
 
-/** Insert notification rows, skipping an empty batch. */
+/** Insert notification rows, skipping an empty batch, then push a realtime
+ * signal to each distinct recipient's LISTEN/NOTIFY channel so an open
+ * subscription refreshes immediately (best-effort; the bell also polls). */
 const createNotifications = async (
   db: Db,
   rows: InsertNotification[],
 ): Promise<void> => {
   if (!rows.length) return;
   await db.insert(notifications).values(rows);
+
+  const byUser = new Map<string, string>();
+  for (const row of rows)
+    if (!byUser.has(row.userId)) byUser.set(row.userId, row.type);
+  await Promise.all(
+    [...byUser].map(([userId, type]) =>
+      db
+        .execute(
+          sql`select pg_notify(${`notification:${userId}`}, ${JSON.stringify({ type })})`,
+        )
+        .catch((error) =>
+          console.error("[Notifications] pg_notify failed:", error),
+        ),
+    ),
+  );
 };
 
 /**

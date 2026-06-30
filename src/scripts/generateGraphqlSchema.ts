@@ -70,7 +70,8 @@ import {
 } from "lib/search";
 import { backfeedIndexes } from "lib/search/client";
 import { makeSchema } from "postgraphile";
-import { context, lambda, sideEffect } from "postgraphile/grafast";
+import { jsonParse } from "postgraphile/@dataplan/json";
+import { context, lambda, listen, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
 
 const SRC_DIR = `${__dirname}/..`;
@@ -182,7 +183,8 @@ const generateGraphqlSchema = async () => {
     mode: "typeDefs",
     modules: {
       "graphile-export": { EXPORTABLE },
-      "postgraphile/grafast": { context, lambda, sideEffect },
+      "postgraphile/grafast": { context, lambda, listen, sideEffect },
+      "postgraphile/@dataplan/json": { jsonParse },
       "drizzle-orm": { eq },
       graphql: { GraphQLError },
       "lib/authz": {

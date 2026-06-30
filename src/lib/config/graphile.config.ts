@@ -1,5 +1,6 @@
 import { PgAggregatesPreset } from "@graphile/pg-aggregates";
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
+import { pgSubscriber } from "lib/db/pubsub";
 import { observerPlugin } from "lib/graphql/plugins";
 import {
   AttachmentPlugin,
@@ -35,6 +36,7 @@ import {
 import { AttachmentCleanupPlugin } from "lib/graphql/plugins/media";
 import {
   NotificationCenterPlugin,
+  NotificationSubscriptionPlugin,
   NotificationWritePlugin,
 } from "lib/graphql/plugins/notifications";
 import { ReferenceExtractionPlugin } from "lib/graphql/plugins/references";
@@ -115,6 +117,8 @@ const preset: GraphileConfig.Preset = {
     NotificationWritePlugin,
     // In-app notification center: observer-scoped reads + mark-read mutations
     NotificationCenterPlugin,
+    // In-app notification center: realtime push via Postgres LISTEN/NOTIFY
+    NotificationSubscriptionPlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     PostSearchPlugin,
@@ -126,6 +130,10 @@ const preset: GraphileConfig.Preset = {
     makePgService({
       connectionString: DATABASE_URL,
       schemas: ["public"],
+      // LISTEN/NOTIFY subscriber for GraphQL subscriptions. This app supplies
+      // its own context function, so the subscriber is also injected onto the
+      // context in createGraphqlContext (that is what the `listen` step reads).
+      pgSubscriber,
     }),
   ],
 };

@@ -11690,6 +11690,35 @@ input SetNotificationPreferenceInput {
   postUpdates: Boolean!
 }
 
+"""The user who triggered a notification."""
+type NotificationActor {
+  username: String
+  image: String
+}
+
+"""An in-app notification for the current user."""
+type Notification {
+  id: UUID!
+
+  """One of: mention, reply, reaction, status_change."""
+  type: String!
+
+  """Reaction emoji (reaction notifications only)."""
+  emoji: String
+
+  """New status display name (status_change notifications only)."""
+  statusName: String
+  isRead: Boolean!
+  createdAt: Datetime!
+  actor: NotificationActor
+  postId: UUID
+  commentId: UUID
+  postNumber: Int
+  postTitle: String
+  projectSlug: String
+  organizationId: String
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -12830,31 +12859,16 @@ type Mutation {
   markAllNotificationsRead: Int!
 }
 
-"""The user who triggered a notification."""
-type NotificationActor {
-  username: String
-  image: String
+"""
+The root subscription type: contains realtime events you can subscribe to with the `subscription` operation.
+"""
+type Subscription {
+  """Fires when the current user receives a new notification."""
+  notificationReceived: NotificationEvent
 }
 
-"""An in-app notification for the current user."""
-type Notification {
-  id: UUID!
-
-  """One of: mention, reply, reaction, status_change."""
-  type: String!
-
-  """Reaction emoji (reaction notifications only)."""
-  emoji: String
-
-  """New status display name (status_change notifications only)."""
-  statusName: String
-  isRead: Boolean!
-  createdAt: Datetime!
-  actor: NotificationActor
-  postId: UUID
-  commentId: UUID
-  postNumber: Int
-  postTitle: String
-  projectSlug: String
-  organizationId: String
+"""A lightweight signal that the current user received a notification."""
+type NotificationEvent {
+  id: UUID
+  type: String
 }
