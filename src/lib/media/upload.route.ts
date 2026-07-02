@@ -21,6 +21,7 @@ import { moderateImage } from "lib/moderation/image";
 import { storage } from "lib/providers";
 
 import { extensionForMimeType, validateUpload } from "./mediaConfig";
+import { generateLqip } from "./transform";
 
 /** One year, in seconds, for immutable content-hashed-ish object caching */
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
@@ -89,6 +90,18 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
       }
     }
 
+    // Derive a blur-up placeholder for images: a tiny blurred derivative,
+    // inlined as base64 and rendered behind the image until its bytes decode.
+    // Best-effort; a failure here just means no placeholder, never a rejection.
+    let lqip: string | undefined;
+    if (validation.kind === "image") {
+      try {
+        lqip = await generateLqip(buffer);
+      } catch (error) {
+        console.warn("[Attachments] LQIP generation failed:", error);
+      }
+    }
+
     try {
       await storage.upload({
         key: storageKey,
@@ -97,8 +110,8 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
         cacheControl: `public, max-age=${ONE_YEAR_SECONDS}, immutable`,
       });
 
-      // Serve through the proxy route (Garage has no anonymous read); the stored
-      // URL stays stable while the underlying presigned URL rotates.
+      // Serve through the API route (which streams the bytes and can emit
+      // resized/blur-up derivatives); the stored URL stays stable.
       const base = (PUBLIC_API_URL ?? "").replace(/\/$/, "");
       const url = `${base}/api/attachments/file/${encodeURIComponent(storageKey)}`;
 
@@ -108,6 +121,7 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
         mimeType: file.type,
         fileSize: file.size,
         kind: validation.kind,
+        ...(lqip ? { lqip } : {}),
       };
     } catch (error) {
       console.error("[Attachments] Upload failed:", error);

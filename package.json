@@ -60,6 +60,7 @@
     "pg": "^8.16.3",
     "postgraphile": "^5.0.0-rc.9",
     "postgraphile-plugin-connection-filter": "^3.0.0-rc.1",
+    "sharp": "^0.35.3",
     "unleash-client": "^6.9.0"
   },
   "devDependencies": {

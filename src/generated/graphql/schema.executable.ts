@@ -1192,134 +1192,6 @@ const spec_postReference = {
   executor: executor
 };
 const postReferenceCodec = recordCodec(spec_postReference);
-const attachmentIdentifier = sql.identifier("public", "attachment");
-const spec_attachment = {
-  name: "attachment",
-  identifier: attachmentIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    post_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    user_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    url: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    storage_key: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    mime_type: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    file_size: {
-      codec: TYPES.int,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    kind: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    width: {
-      codec: TYPES.int,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    height: {
-      codec: TYPES.int,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "708031",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "attachment"
-    }
-  },
-  executor: executor
-};
-const attachmentCodec = recordCodec(spec_attachment);
 const wardenSyncQueueIdentifier = sql.identifier("public", "warden_sync_queue");
 const spec_wardenSyncQueue = {
   name: "wardenSyncQueue",
@@ -1535,6 +1407,143 @@ const spec_signalCluster = {
   executor: executor
 };
 const signalClusterCodec = recordCodec(spec_signalCluster);
+const attachmentIdentifier = sql.identifier("public", "attachment");
+const spec_attachment = {
+  name: "attachment",
+  identifier: attachmentIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    post_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    user_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    url: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    storage_key: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    mime_type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    file_size: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    kind: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    width: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    height: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    lqip: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "708031",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "attachment"
+    }
+  },
+  executor: executor
+};
+const attachmentCodec = recordCodec(spec_attachment);
 const statusTemplateIdentifier = sql.identifier("public", "status_template");
 const spec_statusTemplate = {
   name: "statusTemplate",
@@ -2563,29 +2572,6 @@ const post_reference_resourceOptionsConfig = {
   },
   uniques: post_referenceUniques
 };
-const attachmentUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const attachment_resourceOptionsConfig = {
-  executor: executor,
-  name: "attachment",
-  identifier: "main.public.attachment",
-  from: attachmentIdentifier,
-  codec: attachmentCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "attachment"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: attachmentUniques
-};
 const warden_sync_queueUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2612,6 +2598,29 @@ const signal_cluster_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: signal_clusterUniques
+};
+const attachmentUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const attachment_resourceOptionsConfig = {
+  executor: executor,
+  name: "attachment",
+  identifier: "main.public.attachment",
+  from: attachmentIdentifier,
+  codec: attachmentCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "attachment"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: attachmentUniques
 };
 const status_templateUniques = [{
   attributes: ["id"],
@@ -2765,11 +2774,11 @@ const registryConfig = {
     vote: voteCodec,
     voteType: voteTypeCodec,
     postReference: postReferenceCodec,
-    attachment: attachmentCodec,
     wardenSyncQueue: wardenSyncQueueCodec,
     jsonb: TYPES.jsonb,
     signalCluster: signalClusterCodec,
     vector: spec_signalCluster_attributes_centroid_codec_vector,
+    attachment: attachmentCodec,
     statusTemplate: statusTemplateCodec,
     signal: signalCodec,
     post: postCodec,
@@ -2790,7 +2799,6 @@ const registryConfig = {
     notification: notification_resourceOptionsConfig,
     vote: vote_resourceOptionsConfig,
     post_reference: post_reference_resourceOptionsConfig,
-    attachment: attachment_resourceOptionsConfig,
     warden_sync_queue: {
       executor: executor,
       name: "warden_sync_queue",
@@ -2811,6 +2819,7 @@ const registryConfig = {
       uniques: warden_sync_queueUniques
     },
     signal_cluster: signal_cluster_resourceOptionsConfig,
+    attachment: attachment_resourceOptionsConfig,
     status_template: status_template_resourceOptionsConfig,
     signal: signal_resourceOptionsConfig,
     project: project_resourceOptionsConfig,
@@ -4799,25 +4808,6 @@ function PostReferenceInput_firedAtApply(obj, val, info) {
 function PostReferenceInput_organizationIdApply(obj, val, info) {
   obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateAttachmentPayload_attachmentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_attachmentPgResource, attachmentUniques[0].attributes, $mutation, fieldArgs);
-function AttachmentInput_storageKeyApply(obj, val, info) {
-  obj.set("storage_key", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AttachmentInput_mimeTypeApply(obj, val, info) {
-  obj.set("mime_type", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AttachmentInput_fileSizeApply(obj, val, info) {
-  obj.set("file_size", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AttachmentInput_kindApply(obj, val, info) {
-  obj.set("kind", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AttachmentInput_widthApply(obj, val, info) {
-  obj.set("width", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AttachmentInput_heightApply(obj, val, info) {
-  obj.set("height", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_warden_sync_queuePgResource, warden_sync_queueUniques[0].attributes, $mutation, fieldArgs);
 function WardenSyncQueueInput_operationApply(obj, val, info) {
   obj.set("operation", bakedInputRuntime(info.schema, info.field.type, val));
@@ -4846,6 +4836,28 @@ function SignalClusterInput_summaryApply(obj, val, info) {
 }
 function SignalClusterInput_memberCountApply(obj, val, info) {
   obj.set("member_count", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateAttachmentPayload_attachmentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_attachmentPgResource, attachmentUniques[0].attributes, $mutation, fieldArgs);
+function AttachmentInput_storageKeyApply(obj, val, info) {
+  obj.set("storage_key", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_mimeTypeApply(obj, val, info) {
+  obj.set("mime_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_fileSizeApply(obj, val, info) {
+  obj.set("file_size", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_kindApply(obj, val, info) {
+  obj.set("kind", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_widthApply(obj, val, info) {
+  obj.set("width", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_heightApply(obj, val, info) {
+  obj.set("height", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_lqipApply(obj, val, info) {
+  obj.set("lqip", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateStatusTemplatePayload_statusTemplateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(otherSource_status_templatePgResource, status_templateUniques[0].attributes, $mutation, fieldArgs);
 function StatusTemplateInput_displayNameApply(obj, val, info) {
@@ -11545,6 +11557,9 @@ input AttachmentFilter {
   """Filter by the object’s \`createdAt\` field."""
   createdAt: DatetimeFilter
 
+  """Filter by the object’s \`lqip\` field."""
+  lqip: StringFilter
+
   """Filter by the object’s \`post\` relation."""
   post: PostFilter
 
@@ -11618,6 +11633,7 @@ input AttachmentDistinctCountAggregateFilter {
   width: BigIntFilter
   height: BigIntFilter
   createdAt: BigIntFilter
+  lqip: BigIntFilter
 }
 
 input AttachmentMinAggregateFilter {
@@ -12184,6 +12200,8 @@ enum PostOrderBy {
   ATTACHMENTS_DISTINCT_COUNT_HEIGHT_DESC
   ATTACHMENTS_DISTINCT_COUNT_CREATED_AT_ASC
   ATTACHMENTS_DISTINCT_COUNT_CREATED_AT_DESC
+  ATTACHMENTS_DISTINCT_COUNT_LQIP_ASC
+  ATTACHMENTS_DISTINCT_COUNT_LQIP_DESC
   ATTACHMENTS_MIN_FILE_SIZE_ASC
   ATTACHMENTS_MIN_FILE_SIZE_DESC
   ATTACHMENTS_MIN_WIDTH_ASC
@@ -13964,6 +13982,7 @@ type Attachment {
   width: Int
   height: Int
   createdAt: Datetime!
+  lqip: String
 
   """Reads a single \`Post\` that is related to this \`Attachment\`."""
   post: Post
@@ -14074,6 +14093,9 @@ type AttachmentDistinctCountAggregates {
 
   """Distinct count of createdAt across the matching connection"""
   createdAt: BigInt
+
+  """Distinct count of lqip across the matching connection"""
+  lqip: BigInt
 }
 
 type AttachmentMinAggregates {
@@ -14169,6 +14191,7 @@ enum AttachmentGroupBy {
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
+  LQIP
 }
 
 """Conditions for \`Attachment\` aggregates."""
@@ -14286,6 +14309,9 @@ input AttachmentCondition {
 
   """Checks for equality with the object’s \`createdAt\` field."""
   createdAt: Datetime
+
+  """Checks for equality with the object’s \`lqip\` field."""
+  lqip: String
 }
 
 """Methods to use when ordering \`Attachment\`."""
@@ -14315,6 +14341,8 @@ enum AttachmentOrderBy {
   HEIGHT_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+  LQIP_ASC
+  LQIP_DESC
 }
 
 """
@@ -16353,6 +16381,8 @@ enum UserOrderBy {
   ATTACHMENTS_DISTINCT_COUNT_HEIGHT_DESC
   ATTACHMENTS_DISTINCT_COUNT_CREATED_AT_ASC
   ATTACHMENTS_DISTINCT_COUNT_CREATED_AT_DESC
+  ATTACHMENTS_DISTINCT_COUNT_LQIP_ASC
+  ATTACHMENTS_DISTINCT_COUNT_LQIP_DESC
   ATTACHMENTS_MIN_FILE_SIZE_ASC
   ATTACHMENTS_MIN_FILE_SIZE_DESC
   ATTACHMENTS_MIN_WIDTH_ASC
@@ -18185,56 +18215,6 @@ input PostReferenceInput {
   updatedAt: Datetime
 }
 
-"""The output of our create \`Attachment\` mutation."""
-type CreateAttachmentPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Attachment\` that was created by this mutation."""
-  attachment: Attachment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Attachment\`. May be used by Relay 1."""
-  attachmentEdge(
-    """The method to use when ordering \`Attachment\`."""
-    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AttachmentEdge
-}
-
-"""All input for the create \`Attachment\` mutation."""
-input CreateAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Attachment\` to be created by this mutation."""
-  attachment: AttachmentInput!
-}
-
-"""An input for mutations affecting \`Attachment\`"""
-input AttachmentInput {
-  rowId: UUID
-  postId: UUID!
-  userId: UUID!
-  url: String!
-  storageKey: String!
-  mimeType: String!
-  fileSize: Int
-  kind: String!
-  width: Int
-  height: Int
-  createdAt: Datetime
-}
-
 """The output of our create \`WardenSyncQueue\` mutation."""
 type CreateWardenSyncQueuePayload {
   """
@@ -18326,6 +18306,57 @@ input SignalClusterInput {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`Attachment\` mutation."""
+type CreateAttachmentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Attachment\` that was created by this mutation."""
+  attachment: Attachment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Attachment\`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering \`Attachment\`."""
+    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AttachmentEdge
+}
+
+"""All input for the create \`Attachment\` mutation."""
+input CreateAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Attachment\` to be created by this mutation."""
+  attachment: AttachmentInput!
+}
+
+"""An input for mutations affecting \`Attachment\`"""
+input AttachmentInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  url: String!
+  storageKey: String!
+  mimeType: String!
+  fileSize: Int
+  kind: String!
+  width: Int
+  height: Int
+  createdAt: Datetime
+  lqip: String
 }
 
 """The output of our create \`StatusTemplate\` mutation."""
@@ -18939,61 +18970,6 @@ input PostReferencePatch {
   updatedAt: Datetime
 }
 
-"""The output of our update \`Attachment\` mutation."""
-type UpdateAttachmentPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Attachment\` that was updated by this mutation."""
-  attachment: Attachment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Attachment\`. May be used by Relay 1."""
-  attachmentEdge(
-    """The method to use when ordering \`Attachment\`."""
-    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AttachmentEdge
-}
-
-"""All input for the \`updateAttachment\` mutation."""
-input UpdateAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Attachment\` being updated.
-  """
-  patch: AttachmentPatch!
-}
-
-"""
-Represents an update to a \`Attachment\`. Fields that are set will be updated.
-"""
-input AttachmentPatch {
-  rowId: UUID
-  postId: UUID
-  userId: UUID
-  url: String
-  storageKey: String
-  mimeType: String
-  fileSize: Int
-  kind: String
-  width: Int
-  height: Int
-  createdAt: Datetime
-}
-
 """The output of our update \`WardenSyncQueue\` mutation."""
 type UpdateWardenSyncQueuePayload {
   """
@@ -19095,6 +19071,62 @@ input SignalClusterPatch {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our update \`Attachment\` mutation."""
+type UpdateAttachmentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Attachment\` that was updated by this mutation."""
+  attachment: Attachment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Attachment\`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering \`Attachment\`."""
+    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AttachmentEdge
+}
+
+"""All input for the \`updateAttachment\` mutation."""
+input UpdateAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Attachment\` being updated.
+  """
+  patch: AttachmentPatch!
+}
+
+"""
+Represents an update to a \`Attachment\`. Fields that are set will be updated.
+"""
+input AttachmentPatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  url: String
+  storageKey: String
+  mimeType: String
+  fileSize: Int
+  kind: String
+  width: Int
+  height: Int
+  createdAt: Datetime
+  lqip: String
 }
 
 """The output of our update \`StatusTemplate\` mutation."""
@@ -19564,39 +19596,6 @@ input DeletePostReferenceInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`Attachment\` mutation."""
-type DeleteAttachmentPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Attachment\` that was deleted by this mutation."""
-  attachment: Attachment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Attachment\`. May be used by Relay 1."""
-  attachmentEdge(
-    """The method to use when ordering \`Attachment\`."""
-    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AttachmentEdge
-}
-
-"""All input for the \`deleteAttachment\` mutation."""
-input DeleteAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`WardenSyncQueue\` mutation."""
 type DeleteWardenSyncQueuePayload {
   """
@@ -19655,6 +19654,39 @@ type DeleteSignalClusterPayload {
 
 """All input for the \`deleteSignalCluster\` mutation."""
 input DeleteSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Attachment\` mutation."""
+type DeleteAttachmentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Attachment\` that was deleted by this mutation."""
+  attachment: Attachment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Attachment\`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering \`Attachment\`."""
+    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AttachmentEdge
+}
+
+"""All input for the \`deleteAttachment\` mutation."""
+input DeleteAttachmentInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -19960,14 +19992,14 @@ type Query implements Node {
   """Get a single \`PostReference\`."""
   postReferenceBySourceTypeAndSourceIdAndTargetPostIdAndKeyword(sourceType: String!, sourceId: UUID!, targetPostId: UUID!, keyword: String!): PostReference
 
-  """Get a single \`Attachment\`."""
-  attachment(rowId: UUID!): Attachment
-
   """Get a single \`WardenSyncQueue\`."""
   wardenSyncQueue(rowId: UUID!): WardenSyncQueue
 
   """Get a single \`SignalCluster\`."""
   signalCluster(rowId: UUID!): SignalCluster
+
+  """Get a single \`Attachment\`."""
+  attachment(rowId: UUID!): Attachment
 
   """Get a single \`StatusTemplate\`."""
   statusTemplate(rowId: UUID!): StatusTemplate
@@ -20333,40 +20365,6 @@ type Query implements Node {
     orderBy: [PostReferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostReferenceConnection
 
-  """Reads and enables pagination through a set of \`Attachment\`."""
-  attachments(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AttachmentCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AttachmentFilter
-
-    """The method to use when ordering \`Attachment\`."""
-    orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AttachmentConnection
-
   """Reads and enables pagination through a set of \`WardenSyncQueue\`."""
   wardenSyncQueues(
     """Only read the first \`n\` values of the set."""
@@ -20434,6 +20432,40 @@ type Query implements Node {
     """The method to use when ordering \`SignalCluster\`."""
     orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalClusterConnection
+
+  """Reads and enables pagination through a set of \`Attachment\`."""
+  attachments(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttachmentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AttachmentFilter
+
+    """The method to use when ordering \`Attachment\`."""
+    orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentConnection
 
   """Reads and enables pagination through a set of \`StatusTemplate\`."""
   statusTemplates(
@@ -20668,14 +20700,6 @@ type Mutation {
     input: CreatePostReferenceInput!
   ): CreatePostReferencePayload
 
-  """Creates a single \`Attachment\`."""
-  createAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateAttachmentInput!
-  ): CreateAttachmentPayload
-
   """Creates a single \`WardenSyncQueue\`."""
   createWardenSyncQueue(
     """
@@ -20691,6 +20715,14 @@ type Mutation {
     """
     input: CreateSignalClusterInput!
   ): CreateSignalClusterPayload
+
+  """Creates a single \`Attachment\`."""
+  createAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAttachmentInput!
+  ): CreateAttachmentPayload
 
   """Creates a single \`StatusTemplate\`."""
   createStatusTemplate(
@@ -20788,14 +20820,6 @@ type Mutation {
     input: UpdatePostReferenceInput!
   ): UpdatePostReferencePayload
 
-  """Updates a single \`Attachment\` using a unique key and a patch."""
-  updateAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAttachmentInput!
-  ): UpdateAttachmentPayload
-
   """Updates a single \`WardenSyncQueue\` using a unique key and a patch."""
   updateWardenSyncQueue(
     """
@@ -20811,6 +20835,14 @@ type Mutation {
     """
     input: UpdateSignalClusterInput!
   ): UpdateSignalClusterPayload
+
+  """Updates a single \`Attachment\` using a unique key and a patch."""
+  updateAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttachmentInput!
+  ): UpdateAttachmentPayload
 
   """Updates a single \`StatusTemplate\` using a unique key and a patch."""
   updateStatusTemplate(
@@ -20908,14 +20940,6 @@ type Mutation {
     input: DeletePostReferenceInput!
   ): DeletePostReferencePayload
 
-  """Deletes a single \`Attachment\` using a unique key."""
-  deleteAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAttachmentInput!
-  ): DeleteAttachmentPayload
-
   """Deletes a single \`WardenSyncQueue\` using a unique key."""
   deleteWardenSyncQueue(
     """
@@ -20931,6 +20955,14 @@ type Mutation {
     """
     input: DeleteSignalClusterInput!
   ): DeleteSignalClusterPayload
+
+  """Deletes a single \`Attachment\` using a unique key."""
+  deleteAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttachmentInput!
+  ): DeleteAttachmentPayload
 
   """Deletes a single \`StatusTemplate\` using a unique key."""
   deleteStatusTemplate(
@@ -22802,6 +22834,9 @@ ${String(oldPlan39)}`);
       },
       kind($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.text, "kind", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      lqip($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "lqip", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
       mimeType($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.text, "mime_type", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
@@ -25456,6 +25491,9 @@ export const inputObjects = {
       kind($condition, val) {
         return applyAttributeCondition("kind", TYPES.text, $condition, val);
       },
+      lqip($condition, val) {
+        return applyAttributeCondition("lqip", TYPES.text, $condition, val);
+      },
       mimeType($condition, val) {
         return applyAttributeCondition("mime_type", TYPES.text, $condition, val);
       },
@@ -25482,6 +25520,9 @@ export const inputObjects = {
       },
       kind($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "kind", TYPES.bigint, TYPES.text, $parent, input);
+      },
+      lqip($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "lqip", TYPES.bigint, TYPES.text, $parent, input);
       },
       mimeType($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "mime_type", TYPES.bigint, TYPES.text, $parent, input);
@@ -25512,6 +25553,9 @@ export const inputObjects = {
       },
       kind(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("kind", "kind", spec_attachment.attributes.kind, queryBuilder, value);
+      },
+      lqip(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("lqip", "lqip", spec_attachment.attributes.lqip, queryBuilder, value);
       },
       mimeType(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("mimeType", "mime_type", spec_attachment.attributes.mime_type, queryBuilder, value);
@@ -25710,6 +25754,7 @@ export const inputObjects = {
       fileSize: AttachmentInput_fileSizeApply,
       height: AttachmentInput_heightApply,
       kind: AttachmentInput_kindApply,
+      lqip: AttachmentInput_lqipApply,
       mimeType: AttachmentInput_mimeTypeApply,
       postId: PostTagInput_postIdApply,
       rowId: PostTagInput_rowIdApply,
@@ -25752,6 +25797,7 @@ export const inputObjects = {
       fileSize: AttachmentInput_fileSizeApply,
       height: AttachmentInput_heightApply,
       kind: AttachmentInput_kindApply,
+      lqip: AttachmentInput_lqipApply,
       mimeType: AttachmentInput_mimeTypeApply,
       postId: PostTagInput_postIdApply,
       rowId: PostTagInput_rowIdApply,
@@ -31217,6 +31263,9 @@ export const enums = {
       KIND($pgSelect) {
         applyGroupByAttribute("kind", TYPES.text, $pgSelect);
       },
+      LQIP($pgSelect) {
+        applyGroupByAttribute("lqip", TYPES.text, $pgSelect);
+      },
       MIME_TYPE($pgSelect) {
         applyGroupByAttribute("mime_type", TYPES.text, $pgSelect);
       },
@@ -31268,6 +31317,18 @@ export const enums = {
       KIND_DESC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "kind",
+          direction: "DESC"
+        });
+      },
+      LQIP_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "lqip",
+          direction: "ASC"
+        });
+      },
+      LQIP_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "lqip",
           direction: "DESC"
         });
       },
@@ -31591,6 +31652,12 @@ export const enums = {
       },
       ATTACHMENTS_DISTINCT_COUNT_KIND_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_attachment.attributes.kind, "kind", "DESC", relation5, otherSource_attachmentPgResource, $select);
+      },
+      ATTACHMENTS_DISTINCT_COUNT_LQIP_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_attachment.attributes.lqip, "lqip", "ASC", relation5, otherSource_attachmentPgResource, $select);
+      },
+      ATTACHMENTS_DISTINCT_COUNT_LQIP_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_attachment.attributes.lqip, "lqip", "DESC", relation5, otherSource_attachmentPgResource, $select);
       },
       ATTACHMENTS_DISTINCT_COUNT_MIME_TYPE_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_attachment.attributes.mime_type, "mime_type", "ASC", relation5, otherSource_attachmentPgResource, $select);
@@ -34687,6 +34754,12 @@ export const enums = {
       },
       ATTACHMENTS_DISTINCT_COUNT_KIND_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_attachment.attributes.kind, "kind", "DESC", relation19, otherSource_attachmentPgResource, $select);
+      },
+      ATTACHMENTS_DISTINCT_COUNT_LQIP_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_attachment.attributes.lqip, "lqip", "ASC", relation19, otherSource_attachmentPgResource, $select);
+      },
+      ATTACHMENTS_DISTINCT_COUNT_LQIP_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_attachment.attributes.lqip, "lqip", "DESC", relation19, otherSource_attachmentPgResource, $select);
       },
       ATTACHMENTS_DISTINCT_COUNT_MIME_TYPE_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_attachment.attributes.mime_type, "mime_type", "ASC", relation19, otherSource_attachmentPgResource, $select);
