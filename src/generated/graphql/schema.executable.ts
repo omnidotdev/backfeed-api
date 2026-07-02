@@ -19801,11 +19801,17 @@ type PromoteSignalToPostPayload {
   projectId: UUID!
 }
 
+type SimilarPostStatus {
+  displayName: String!
+  color: String
+}
+
 type SimilarPost {
   id: UUID!
   number: Int
   title: String
   score: Float!
+  status: SimilarPostStatus
 }
 
 input ChangePostStatusInput {
