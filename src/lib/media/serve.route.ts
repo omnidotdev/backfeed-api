@@ -1,45 +1,28 @@
 /**
  * Public attachment serving route.
  *
- * Garage (the S3 backend) does not support anonymous reads, so attachments can't
- * be served directly from a public bucket URL. Instead this route presigns a
- * short-lived GET URL for the object and redirects the browser to it, so an
- * `<img src>` (which carries no auth) can load the file. The stored attachment
- * URL points here, keeping it stable while the underlying presigned URL rotates.
+ * Streams objects through the API rather than redirecting to the bucket, so
+ * serving works regardless of whether the S3 endpoint is reachable from the
+ * browser (it is cluster-internal in prod and compose-internal when
+ * self-hosting). For images it also supports on-the-fly transforms via
+ * `?w=&q=&fm=`, computed with sharp, which powers responsive `srcset`. The
+ * stored attachment URL points here, keeping it stable.
  */
 
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Elysia } from "elysia";
+
+import { getObject, getObjectBytes, s3 } from "./s3Client";
 import {
-  S3_ACCESS_KEY_ID,
-  S3_BUCKET,
-  S3_ENDPOINT,
-  S3_REGION,
-  S3_SECRET_ACCESS_KEY,
-} from "lib/config/env.config";
-
-/** One hour; long enough for a page's images, short enough to limit URL sharing. */
-const PRESIGN_EXPIRY_SECONDS = 60 * 60;
-
-const s3 =
-  S3_BUCKET && S3_ACCESS_KEY_ID && S3_SECRET_ACCESS_KEY
-    ? new S3Client({
-        endpoint: S3_ENDPOINT,
-        region: S3_REGION ?? "us-east-1",
-        // Garage requires path-style addressing
-        forcePathStyle: true,
-        credentials: {
-          accessKeyId: S3_ACCESS_KEY_ID,
-          secretAccessKey: S3_SECRET_ACCESS_KEY,
-        },
-      })
-    : null;
+  TRANSFORMABLE,
+  applyTransform,
+  guessImageType,
+  parseTransform,
+} from "./transform";
 
 const attachmentServeRoutes = new Elysia({ prefix: "/api/attachments" }).get(
   "/file/*",
-  async ({ params, set }) => {
-    if (!s3 || !S3_BUCKET) {
+  async ({ params, query, set }) => {
+    if (!s3) {
       set.status = 404;
       return { error: "Attachment serving not configured" };
     }
@@ -52,19 +35,49 @@ const attachmentServeRoutes = new Elysia({ prefix: "/api/attachments" }).get(
       return { error: "Missing key" };
     }
 
+    // Guess content type from the key extension for transform eligibility
+    const guessedType = guessImageType(key);
+
+    const transform =
+      guessedType && TRANSFORMABLE.has(guessedType)
+        ? parseTransform(query as Record<string, string | undefined>)
+        : null;
+
+    // No transform: stream the original through the API
+    if (!transform) {
+      const object = await getObject(key);
+      if (!object?.Body) {
+        set.status = 404;
+        return { error: "Not found" };
+      }
+      const contentType = object.ContentType ?? "application/octet-stream";
+      return new Response(object.Body.transformToWebStream(), {
+        headers: {
+          "content-type": contentType,
+          "cache-control": "private, max-age=31536000, immutable",
+        },
+      });
+    }
+
+    // Transform: read the original and stream a derivative
+    const original = await getObjectBytes(key);
+    if (!original) {
+      set.status = 404;
+      return { error: "Not found" };
+    }
+
     try {
-      const url = await getSignedUrl(
-        s3,
-        new GetObjectCommand({ Bucket: S3_BUCKET, Key: key }),
-        { expiresIn: PRESIGN_EXPIRY_SECONDS },
-      );
-      set.status = 302;
-      set.headers.Location = url;
-      return;
+      const { bytes, contentType } = await applyTransform(original, transform);
+      return new Response(new Uint8Array(bytes), {
+        headers: {
+          "content-type": contentType,
+          "cache-control": "public, max-age=31536000, immutable",
+        },
+      });
     } catch (error) {
-      console.error("[Attachments] Failed to serve object:", error);
+      console.error("[Attachments] Transform failed:", error);
       set.status = 502;
-      return { error: "Failed to serve attachment" };
+      return { error: "Failed to transform attachment" };
     }
   },
 );

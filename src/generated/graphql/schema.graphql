@@ -3389,6 +3389,9 @@ input AttachmentFilter {
   """Filter by the object’s `createdAt` field."""
   createdAt: DatetimeFilter
 
+  """Filter by the object’s `lqip` field."""
+  lqip: StringFilter
+
   """Filter by the object’s `post` relation."""
   post: PostFilter
 
@@ -3462,6 +3465,7 @@ input AttachmentDistinctCountAggregateFilter {
   width: BigIntFilter
   height: BigIntFilter
   createdAt: BigIntFilter
+  lqip: BigIntFilter
 }
 
 input AttachmentMinAggregateFilter {
@@ -4028,6 +4032,8 @@ enum PostOrderBy {
   ATTACHMENTS_DISTINCT_COUNT_HEIGHT_DESC
   ATTACHMENTS_DISTINCT_COUNT_CREATED_AT_ASC
   ATTACHMENTS_DISTINCT_COUNT_CREATED_AT_DESC
+  ATTACHMENTS_DISTINCT_COUNT_LQIP_ASC
+  ATTACHMENTS_DISTINCT_COUNT_LQIP_DESC
   ATTACHMENTS_MIN_FILE_SIZE_ASC
   ATTACHMENTS_MIN_FILE_SIZE_DESC
   ATTACHMENTS_MIN_WIDTH_ASC
@@ -5808,6 +5814,7 @@ type Attachment {
   width: Int
   height: Int
   createdAt: Datetime!
+  lqip: String
 
   """Reads a single `Post` that is related to this `Attachment`."""
   post: Post
@@ -5918,6 +5925,9 @@ type AttachmentDistinctCountAggregates {
 
   """Distinct count of createdAt across the matching connection"""
   createdAt: BigInt
+
+  """Distinct count of lqip across the matching connection"""
+  lqip: BigInt
 }
 
 type AttachmentMinAggregates {
@@ -6013,6 +6023,7 @@ enum AttachmentGroupBy {
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
+  LQIP
 }
 
 """Conditions for `Attachment` aggregates."""
@@ -6130,6 +6141,9 @@ input AttachmentCondition {
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
+
+  """Checks for equality with the object’s `lqip` field."""
+  lqip: String
 }
 
 """Methods to use when ordering `Attachment`."""
@@ -6159,6 +6173,8 @@ enum AttachmentOrderBy {
   HEIGHT_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+  LQIP_ASC
+  LQIP_DESC
 }
 
 """
@@ -8197,6 +8213,8 @@ enum UserOrderBy {
   ATTACHMENTS_DISTINCT_COUNT_HEIGHT_DESC
   ATTACHMENTS_DISTINCT_COUNT_CREATED_AT_ASC
   ATTACHMENTS_DISTINCT_COUNT_CREATED_AT_DESC
+  ATTACHMENTS_DISTINCT_COUNT_LQIP_ASC
+  ATTACHMENTS_DISTINCT_COUNT_LQIP_DESC
   ATTACHMENTS_MIN_FILE_SIZE_ASC
   ATTACHMENTS_MIN_FILE_SIZE_DESC
   ATTACHMENTS_MIN_WIDTH_ASC
@@ -10029,56 +10047,6 @@ input PostReferenceInput {
   updatedAt: Datetime
 }
 
-"""The output of our create `Attachment` mutation."""
-type CreateAttachmentPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Attachment` that was created by this mutation."""
-  attachment: Attachment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Attachment`. May be used by Relay 1."""
-  attachmentEdge(
-    """The method to use when ordering `Attachment`."""
-    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AttachmentEdge
-}
-
-"""All input for the create `Attachment` mutation."""
-input CreateAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Attachment` to be created by this mutation."""
-  attachment: AttachmentInput!
-}
-
-"""An input for mutations affecting `Attachment`"""
-input AttachmentInput {
-  rowId: UUID
-  postId: UUID!
-  userId: UUID!
-  url: String!
-  storageKey: String!
-  mimeType: String!
-  fileSize: Int
-  kind: String!
-  width: Int
-  height: Int
-  createdAt: Datetime
-}
-
 """The output of our create `WardenSyncQueue` mutation."""
 type CreateWardenSyncQueuePayload {
   """
@@ -10170,6 +10138,57 @@ input SignalClusterInput {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `Attachment` mutation."""
+type CreateAttachmentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Attachment` that was created by this mutation."""
+  attachment: Attachment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Attachment`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering `Attachment`."""
+    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AttachmentEdge
+}
+
+"""All input for the create `Attachment` mutation."""
+input CreateAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Attachment` to be created by this mutation."""
+  attachment: AttachmentInput!
+}
+
+"""An input for mutations affecting `Attachment`"""
+input AttachmentInput {
+  rowId: UUID
+  postId: UUID!
+  userId: UUID!
+  url: String!
+  storageKey: String!
+  mimeType: String!
+  fileSize: Int
+  kind: String!
+  width: Int
+  height: Int
+  createdAt: Datetime
+  lqip: String
 }
 
 """The output of our create `StatusTemplate` mutation."""
@@ -10783,61 +10802,6 @@ input PostReferencePatch {
   updatedAt: Datetime
 }
 
-"""The output of our update `Attachment` mutation."""
-type UpdateAttachmentPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Attachment` that was updated by this mutation."""
-  attachment: Attachment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Attachment`. May be used by Relay 1."""
-  attachmentEdge(
-    """The method to use when ordering `Attachment`."""
-    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AttachmentEdge
-}
-
-"""All input for the `updateAttachment` mutation."""
-input UpdateAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Attachment` being updated.
-  """
-  patch: AttachmentPatch!
-}
-
-"""
-Represents an update to a `Attachment`. Fields that are set will be updated.
-"""
-input AttachmentPatch {
-  rowId: UUID
-  postId: UUID
-  userId: UUID
-  url: String
-  storageKey: String
-  mimeType: String
-  fileSize: Int
-  kind: String
-  width: Int
-  height: Int
-  createdAt: Datetime
-}
-
 """The output of our update `WardenSyncQueue` mutation."""
 type UpdateWardenSyncQueuePayload {
   """
@@ -10939,6 +10903,62 @@ input SignalClusterPatch {
   memberCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our update `Attachment` mutation."""
+type UpdateAttachmentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Attachment` that was updated by this mutation."""
+  attachment: Attachment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Attachment`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering `Attachment`."""
+    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AttachmentEdge
+}
+
+"""All input for the `updateAttachment` mutation."""
+input UpdateAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Attachment` being updated.
+  """
+  patch: AttachmentPatch!
+}
+
+"""
+Represents an update to a `Attachment`. Fields that are set will be updated.
+"""
+input AttachmentPatch {
+  rowId: UUID
+  postId: UUID
+  userId: UUID
+  url: String
+  storageKey: String
+  mimeType: String
+  fileSize: Int
+  kind: String
+  width: Int
+  height: Int
+  createdAt: Datetime
+  lqip: String
 }
 
 """The output of our update `StatusTemplate` mutation."""
@@ -11408,39 +11428,6 @@ input DeletePostReferenceInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Attachment` mutation."""
-type DeleteAttachmentPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Attachment` that was deleted by this mutation."""
-  attachment: Attachment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Attachment`. May be used by Relay 1."""
-  attachmentEdge(
-    """The method to use when ordering `Attachment`."""
-    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AttachmentEdge
-}
-
-"""All input for the `deleteAttachment` mutation."""
-input DeleteAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `WardenSyncQueue` mutation."""
 type DeleteWardenSyncQueuePayload {
   """
@@ -11499,6 +11486,39 @@ type DeleteSignalClusterPayload {
 
 """All input for the `deleteSignalCluster` mutation."""
 input DeleteSignalClusterInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Attachment` mutation."""
+type DeleteAttachmentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Attachment` that was deleted by this mutation."""
+  attachment: Attachment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Attachment`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering `Attachment`."""
+    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AttachmentEdge
+}
+
+"""All input for the `deleteAttachment` mutation."""
+input DeleteAttachmentInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -11804,14 +11824,14 @@ type Query implements Node {
   """Get a single `PostReference`."""
   postReferenceBySourceTypeAndSourceIdAndTargetPostIdAndKeyword(sourceType: String!, sourceId: UUID!, targetPostId: UUID!, keyword: String!): PostReference
 
-  """Get a single `Attachment`."""
-  attachment(rowId: UUID!): Attachment
-
   """Get a single `WardenSyncQueue`."""
   wardenSyncQueue(rowId: UUID!): WardenSyncQueue
 
   """Get a single `SignalCluster`."""
   signalCluster(rowId: UUID!): SignalCluster
+
+  """Get a single `Attachment`."""
+  attachment(rowId: UUID!): Attachment
 
   """Get a single `StatusTemplate`."""
   statusTemplate(rowId: UUID!): StatusTemplate
@@ -12177,40 +12197,6 @@ type Query implements Node {
     orderBy: [PostReferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostReferenceConnection
 
-  """Reads and enables pagination through a set of `Attachment`."""
-  attachments(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AttachmentCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AttachmentFilter
-
-    """The method to use when ordering `Attachment`."""
-    orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AttachmentConnection
-
   """Reads and enables pagination through a set of `WardenSyncQueue`."""
   wardenSyncQueues(
     """Only read the first `n` values of the set."""
@@ -12278,6 +12264,40 @@ type Query implements Node {
     """The method to use when ordering `SignalCluster`."""
     orderBy: [SignalClusterOrderBy!] = [PRIMARY_KEY_ASC]
   ): SignalClusterConnection
+
+  """Reads and enables pagination through a set of `Attachment`."""
+  attachments(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttachmentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AttachmentFilter
+
+    """The method to use when ordering `Attachment`."""
+    orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentConnection
 
   """Reads and enables pagination through a set of `StatusTemplate`."""
   statusTemplates(
@@ -12512,14 +12532,6 @@ type Mutation {
     input: CreatePostReferenceInput!
   ): CreatePostReferencePayload
 
-  """Creates a single `Attachment`."""
-  createAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateAttachmentInput!
-  ): CreateAttachmentPayload
-
   """Creates a single `WardenSyncQueue`."""
   createWardenSyncQueue(
     """
@@ -12535,6 +12547,14 @@ type Mutation {
     """
     input: CreateSignalClusterInput!
   ): CreateSignalClusterPayload
+
+  """Creates a single `Attachment`."""
+  createAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAttachmentInput!
+  ): CreateAttachmentPayload
 
   """Creates a single `StatusTemplate`."""
   createStatusTemplate(
@@ -12632,14 +12652,6 @@ type Mutation {
     input: UpdatePostReferenceInput!
   ): UpdatePostReferencePayload
 
-  """Updates a single `Attachment` using a unique key and a patch."""
-  updateAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAttachmentInput!
-  ): UpdateAttachmentPayload
-
   """Updates a single `WardenSyncQueue` using a unique key and a patch."""
   updateWardenSyncQueue(
     """
@@ -12655,6 +12667,14 @@ type Mutation {
     """
     input: UpdateSignalClusterInput!
   ): UpdateSignalClusterPayload
+
+  """Updates a single `Attachment` using a unique key and a patch."""
+  updateAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttachmentInput!
+  ): UpdateAttachmentPayload
 
   """Updates a single `StatusTemplate` using a unique key and a patch."""
   updateStatusTemplate(
@@ -12752,14 +12772,6 @@ type Mutation {
     input: DeletePostReferenceInput!
   ): DeletePostReferencePayload
 
-  """Deletes a single `Attachment` using a unique key."""
-  deleteAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAttachmentInput!
-  ): DeleteAttachmentPayload
-
   """Deletes a single `WardenSyncQueue` using a unique key."""
   deleteWardenSyncQueue(
     """
@@ -12775,6 +12787,14 @@ type Mutation {
     """
     input: DeleteSignalClusterInput!
   ): DeleteSignalClusterPayload
+
+  """Deletes a single `Attachment` using a unique key."""
+  deleteAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttachmentInput!
+  ): DeleteAttachmentPayload
 
   """Deletes a single `StatusTemplate` using a unique key."""
   deleteStatusTemplate(

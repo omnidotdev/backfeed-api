@@ -48,6 +48,9 @@ export const attachments = pgTable(
     // Intrinsic dimensions, when known
     width: integer(),
     height: integer(),
+    // Inline base64 blur-up placeholder (a tiny blurred derivative), when the
+    // attachment is an image. Rendered behind the image until the bytes decode
+    lqip: text(),
     createdAt: generateDefaultDate(),
   },
   (table) => [
