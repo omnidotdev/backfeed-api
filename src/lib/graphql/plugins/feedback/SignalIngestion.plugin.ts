@@ -65,11 +65,17 @@ const SignalIngestionPlugin = makeExtendSchemaPlugin(() => ({
       projectId: UUID!
     }
 
+    type SimilarPostStatus {
+      displayName: String!
+      color: String
+    }
+
     type SimilarPost {
       id: UUID!
       number: Int
       title: String
       score: Float!
+      status: SimilarPostStatus
     }
 
     extend type Mutation {

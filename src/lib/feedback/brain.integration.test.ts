@@ -172,6 +172,8 @@ describe.skipIf(!DATABASE_URL)("feedback brain (db integration)", () => {
       expect(matches.length).toBeGreaterThan(0);
       expect(matches[0].title).toBe("Add dark mode to settings");
       expect(matches[0].number).not.toBeNull();
+      // status is surfaced (null here: these posts carry no status template)
+      expect(matches[0].status).toBeNull();
     });
 
     test("returns nothing for empty content", async () => {

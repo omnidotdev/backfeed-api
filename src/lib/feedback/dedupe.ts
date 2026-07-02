@@ -11,7 +11,7 @@
  */
 
 import { sql } from "drizzle-orm";
-import { posts } from "lib/db/schema";
+import { posts, statusTemplates } from "lib/db/schema";
 
 import type { dbPool } from "lib/db/db";
 
@@ -110,6 +110,9 @@ interface SimilarPost {
   number: number | null;
   title: string | null;
   score: number;
+  // current status of the candidate, so the UI can show whether a match is
+  // already completed/closed rather than open. null when the post has no status
+  status: { displayName: string; color: string | null } | null;
 }
 
 /** Minimum similarity to surface a post as a possible duplicate to the user. */
@@ -130,14 +133,17 @@ export const findSimilarPosts = async (
   if (!content.trim()) return [];
 
   const result = await db.execute(sql`
-    SELECT id, number, title,
+    SELECT p.id, p.number, p.title,
+      st.display_name AS status_display_name,
+      st.color AS status_color,
       similarity(
-        coalesce(title, '') || ' ' || coalesce(description, ''),
+        coalesce(p.title, '') || ' ' || coalesce(p.description, ''),
         ${content}
       ) AS score
-    FROM ${posts}
-    WHERE project_id = ${projectId}
-      AND duplicate_of_id IS NULL
+    FROM ${posts} p
+    LEFT JOIN ${statusTemplates} st ON st.id = p.status_template_id
+    WHERE p.project_id = ${projectId}
+      AND p.duplicate_of_id IS NULL
     ORDER BY score DESC
     LIMIT ${limit}
   `);
@@ -150,6 +156,12 @@ export const findSimilarPosts = async (
         number: row.number as number | null,
         title: row.title as string | null,
         score: Number(row.score),
+        status: row.status_display_name
+          ? {
+              displayName: row.status_display_name as string,
+              color: (row.status_color as string | null) ?? null,
+            }
+          : null,
       }))
       .filter((post) => post.score >= SIMILAR_POST_THRESHOLD)
   );
