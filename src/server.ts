@@ -31,7 +31,6 @@ import {
 import idpWebhook from "lib/idp/webhooks";
 import attachmentServeRoutes from "lib/media/serve.route";
 import attachmentUploadRoutes from "lib/media/upload.route";
-import { maintenanceMiddleware } from "lib/middleware/maintenance";
 import {
   SEARCH_RECONCILE_INTERVAL_MS,
   initializeSearchIndexes,
@@ -111,7 +110,6 @@ async function startServer(): Promise<void> {
       set.headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
     })
     .get("/health", () => ({ status: "ok", commit }))
-    .use(maintenanceMiddleware)
     .use(
       rateLimit({
         max: 100,
