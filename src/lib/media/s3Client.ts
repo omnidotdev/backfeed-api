@@ -9,7 +9,7 @@
  * cluster-internal in prod and compose-internal when self-hosting).
  */
 
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 import {
   S3_ACCESS_KEY_ID,
   S3_BUCKET,
@@ -17,12 +17,13 @@ import {
   S3_REGION,
   S3_SECRET_ACCESS_KEY,
 } from "lib/config/env.config";
+import { createResilientS3Client } from "lib/storage/s3Client";
 
 import type { GetObjectCommandOutput } from "@aws-sdk/client-s3";
 
 export const s3 =
   S3_BUCKET && S3_ACCESS_KEY_ID && S3_SECRET_ACCESS_KEY
-    ? new S3Client({
+    ? createResilientS3Client({
         endpoint: S3_ENDPOINT,
         region: S3_REGION ?? "us-east-1",
         // Garage and MinIO require path-style addressing

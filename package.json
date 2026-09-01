@@ -47,6 +47,7 @@
     "@opentelemetry/sdk-logs": "^0.210.0",
     "@opentelemetry/sdk-node": "^0.210.0",
     "@opentelemetry/semantic-conventions": "^1.39.0",
+    "@smithy/node-http-handler": "^4.7.7",
     "@tanstack/query-core": "^5.90.16",
     "dayjs": "^1.11.19",
     "drizzle-orm": "^0.45.1",
