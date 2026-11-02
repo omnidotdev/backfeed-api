@@ -7,6 +7,11 @@ import { Pool } from "pg";
  */
 export const pgPool = new Pool({
   connectionString: DATABASE_URL,
+  // Fail fast on acquire and free a wedged connection so the pool self-heals, since a per-request auth upsert can otherwise drain the pool
+  connectionTimeoutMillis: 5_000,
+  query_timeout: 10_000,
+  statement_timeout: 10_000,
+  idle_in_transaction_session_timeout: 10_000,
   // Send TCP keepalive probes so a network blip that silently severs an idle
   // connection is detected by the OS and the dead socket evicted, instead of
   // being handed to the next request and surfacing as "Connection terminated
