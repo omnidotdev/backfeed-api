@@ -56,7 +56,10 @@ export const ingestEmail = async (
     projectId: project.id,
     organizationId: project.organizationId,
   });
-  const embedding = await embeddingProvider.embed(input.rawContent);
+  // No acting user on an inbound email, so this stays lexical (see embedding.ts)
+  const embedding = await embeddingProvider.embed(input.rawContent, {
+    organizationId: project.organizationId,
+  });
 
   const signal = await ingestSignal(db, { ...input, embedding });
   return { status: "ingested", signalId: signal.id };

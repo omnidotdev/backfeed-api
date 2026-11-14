@@ -149,9 +149,14 @@ const SignalIngestionPlugin = makeExtendSchemaPlugin(() => ({
                   throw new GraphQLError("Insufficient permissions");
                 }
 
-                // Embed when a provider is configured (null -> lexical fallback)
+                // Embed through the gateway, billed to the workspace (null ->
+                // lexical fallback)
                 const embedding = await embeddingProvider.embed(
                   input.rawContent,
+                  {
+                    organizationId: input.organizationId,
+                    actorId: observer.identityProviderId,
+                  },
                 );
                 return ingestSignalRecord(db, { ...input, embedding });
               },
