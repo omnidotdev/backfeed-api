@@ -41,11 +41,15 @@ export const {
   S3_SECRET_ACCESS_KEY,
   /** Override base URL for public object URLs (e.g. a CDN in front of the bucket) */
   S3_PUBLIC_BASE_URL,
-  // Embeddings (semantic dedupe + clustering). OpenAI-compatible /embeddings API;
-  // when unset, the brain falls back to lexical (pg_trgm) dedupe and clustering is off.
-  EMBEDDING_API_URL,
-  EMBEDDING_API_KEY,
-  EMBEDDING_MODEL,
+  // Synapse AI gateway (AI triage embeddings: semantic dedupe + clustering),
+  // product-scoped keys billed to the workspace. When unset, the brain falls
+  // back to lexical (pg_trgm) dedupe and clustering is off.
+  /** Gateway base URL (root; the client appends `/v1/embeddings`) */
+  SYNAPSE_BASE_URL,
+  /** Provisioning API base URL (api.synapse, not the gateway) */
+  SYNAPSE_API_URL,
+  /** Fleet gateway secret authorizing managed-key provisioning */
+  SYNAPSE_GATEWAY_SECRET,
   // Inbound email ingestion (Herald -> webhook). Messages to <project-key>@<domain>
   // become signals; disabled when either is unset.
   HERALD_WEBHOOK_SECRET,
@@ -78,8 +82,9 @@ export const isSearchEnabled = !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;
 /** Whether object storage (real attachment uploads) is configured */
 export const isStorageEnabled = !!S3_BUCKET;
 
-/** Whether a semantic embedding provider is configured (else lexical fallback) */
-export const isEmbeddingEnabled = !!EMBEDDING_API_URL;
+/** Whether AI triage embeddings are configured (else lexical fallback) */
+export const isEmbeddingEnabled =
+  !!SYNAPSE_BASE_URL && !!SYNAPSE_API_URL && !!SYNAPSE_GATEWAY_SECRET;
 
 /** Whether inbound email ingestion is configured */
 export const isEmailIngestionEnabled =
@@ -109,9 +114,9 @@ if (!S3_BUCKET)
   console.warn(
     "S3_BUCKET not set, attachment uploads use the noop storage provider (files are not persisted)",
   );
-if (!EMBEDDING_API_URL)
+if (!isEmbeddingEnabled)
   console.warn(
-    "EMBEDDING_API_URL not set, semantic dedupe/clustering disabled (lexical fallback)",
+    "SYNAPSE_BASE_URL/SYNAPSE_API_URL/SYNAPSE_GATEWAY_SECRET not set, AI triage (semantic dedupe/clustering) disabled (lexical fallback)",
   );
 if (!isEmailIngestionEnabled)
   console.warn(

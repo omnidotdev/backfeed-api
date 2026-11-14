@@ -128,7 +128,7 @@ const spec_postTag = {
     }
   },
   extensions: {
-    oid: "739621",
+    oid: "18260",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -206,7 +206,7 @@ const spec_postStatusChange = {
     }
   },
   extensions: {
-    oid: "745938",
+    oid: "18348",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -289,7 +289,7 @@ const spec_reaction = {
     }
   },
   extensions: {
-    oid: "743996",
+    oid: "18310",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -370,7 +370,7 @@ const spec_tag = {
     }
   },
   extensions: {
-    oid: "739634",
+    oid: "18273",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -443,7 +443,7 @@ const notificationPreferenceCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "746611",
+    oid: "18376",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -536,7 +536,7 @@ const spec_comment = {
     }
   },
   extensions: {
-    oid: "270503",
+    oid: "17769",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -636,7 +636,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "270635",
+    oid: "17901",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -744,7 +744,7 @@ const spec_projectStatusConfig = {
     }
   },
   extensions: {
-    oid: "270599",
+    oid: "17865",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -836,7 +836,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "300307",
+    oid: "18082",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -951,7 +951,7 @@ const notificationCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "781376",
+    oid: "18442",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -972,7 +972,7 @@ const voteTypeCodec = enumCodec({
   values: ["up", "down"],
   description: undefined,
   extensions: {
-    oid: "270486",
+    oid: "17752",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1061,7 +1061,7 @@ const spec_vote = {
     }
   },
   extensions: {
-    oid: "270656",
+    oid: "17922",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1181,7 +1181,7 @@ const spec_postReference = {
     }
   },
   extensions: {
-    oid: "781347",
+    oid: "18413",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1284,7 +1284,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "706846",
+    oid: "18116",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1396,7 +1396,7 @@ const spec_signalCluster = {
     }
   },
   extensions: {
-    oid: "731880",
+    oid: "18207",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1533,7 +1533,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "708031",
+    oid: "18177",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1670,7 +1670,7 @@ const spec_statusTemplate = {
     }
   },
   extensions: {
-    oid: "270616",
+    oid: "17882",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1844,7 +1844,7 @@ const spec_signal = {
     }
   },
   extensions: {
-    oid: "706866",
+    oid: "18136",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2033,7 +2033,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "270549",
+    oid: "17815",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2199,7 +2199,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "270566",
+    oid: "17832",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4941,7 +4941,7 @@ const nodeIdCodecs = {
     })
   }
 };
-const allFields2 = [{
+const allFields = [{
   name: "rowId",
   type: "UUID!"
 }, {
@@ -21144,12 +21144,12 @@ export const objects = {
       },
       observer() {
         const $observer = context().get("observer");
-        return lambda($observer, observer2 => {
-          if (!observer2) return null;
+        return lambda($observer, observer => {
+          if (!observer) return null;
           const result = {};
-          for (const field of allFields2) {
+          for (const field of allFields) {
             const key = field.contextKey ?? field.name;
-            if (key === "rowId") result[key] = observer2.id;else result[key] = observer2[key];
+            if (key === "rowId") result[key] = observer.id;else result[key] = observer[key];
           }
           return result;
         });
@@ -22333,7 +22333,10 @@ ${String(oldPlan63)}`);
           const [input, observer, db] = values;
           if (!observer) throw new GraphQLError("Unauthorized");
           if (!(await checkPermission(observer.identityProviderId, "organization", input.organizationId, "admin"))) throw new GraphQLError("Insufficient permissions");
-          const embedding = await embeddingProvider.embed(input.rawContent);
+          const embedding = await embeddingProvider.embed(input.rawContent, {
+            organizationId: input.organizationId,
+            actorId: observer.identityProviderId
+          });
           return ingestSignal(db, {
             ...input,
             embedding
