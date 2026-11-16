@@ -10,6 +10,9 @@ const SmartTagPlugin = jsonPgSmartTags({
     class: {
       post: {
         attribute: {
+          // Authorship is fixed at creation (the create path checks it is the
+          // caller); an update must never re-attribute a post
+          user_id: { tags: { behavior: "-attribute:update" } },
           // `number` is a per-project sequential identifier assigned by the
           // `assign_post_number` BEFORE INSERT trigger, so it must not be part
           // of the create/update input (the column is NOT NULL with no default,
@@ -33,6 +36,38 @@ const SmartTagPlugin = jsonPgSmartTags({
         // mutations so clients cannot forge or tamper with history; the
         // read/query surface (the timeline) is unaffected.
         tags: { behavior: "-insert -update -delete" },
+      },
+      // Authorship is fixed at creation; updates must never re-attribute
+      comment: {
+        attribute: { user_id: { tags: { behavior: "-attribute:update" } } },
+      },
+      vote: {
+        attribute: { user_id: { tags: { behavior: "-attribute:update" } } },
+      },
+      reaction: {
+        attribute: { user_id: { tags: { behavior: "-attribute:update" } } },
+      },
+      warden_sync_queue: {
+        // Durable retry queue for Warden tuple writes. The poller replays each
+        // row's payload verbatim into writeTuples/deleteTuples, so the generated
+        // createWardenSyncQueue (reachable without a token) let anyone forge
+        // authorization tuples. Written and drained only by server code; hide
+        // the table entirely
+        tags: { behavior: "-*" },
+      },
+      post_reference: {
+        // Mention/reference edges are derived from post bodies by the
+        // ReferenceExtraction plugin; clients must not forge or delete them
+        tags: { behavior: "-insert -update -delete" },
+      },
+      signal_cluster: {
+        // Clusters are computed server-side from signal embeddings
+        tags: { behavior: "-insert -update -delete" },
+      },
+      post_tag: {
+        // Tag assignment goes through the guarded createPostTag/deletePostTag;
+        // the unguarded update could repoint an assignment at any post
+        tags: { behavior: "-update" },
       },
       notification_preference: {
         // Per-user settings, accessed only through the observer-scoped

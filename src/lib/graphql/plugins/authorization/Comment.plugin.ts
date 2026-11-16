@@ -39,6 +39,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (!observer) throw new Error("Unauthorized");
 
           if (scope === "create") {
+            // A comment is always authored by the caller; the input's userId
+            // was previously trusted, so anyone could comment as anyone
+            if ((input as InsertComment).userId !== observer.id) {
+              throw new Error("Unauthorized");
+            }
+
             // Moderate the comment body before it is created (rejects flagged
             // content; a noop that allows everything when moderation is disabled).
             const { flagged } = await moderateText(
