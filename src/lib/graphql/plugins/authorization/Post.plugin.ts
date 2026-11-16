@@ -39,6 +39,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (scope === "create") {
             const post = input as InsertPost;
 
+            // A post is always authored by the caller; the input's userId was
+            // previously trusted, so anyone could post as anyone
+            if (post.userId !== observer.id) throw new Error("Unauthorized");
+
             const project = await db.query.projects.findFirst({
               where: (table, { eq }) => eq(table.id, post.projectId),
             });

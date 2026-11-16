@@ -36,13 +36,41 @@ const validatePermissions = (propName: string) =>
   );
 
 /**
+ * Validate a vote's author on create. The generated createVote took `userId`
+ * from the input with no check, so any caller could cast votes as any user
+ * (an update cannot change `userId`; see SmartTag.plugin)
+ */
+const validateAuthor = (propName: "vote") =>
+  EXPORTABLE(
+    (context, sideEffect, propName): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
+        const $input = fieldArgs.getRaw(["input", propName]);
+        const $observer = context().get("observer");
+
+        sideEffect([$input, $observer], async ([input, observer]) => {
+          if (!observer) throw new Error("Unauthorized");
+
+          const userId = (input as { userId?: string } | null)?.userId;
+          if (userId !== observer.id) {
+            throw new Error("Unauthorized");
+          }
+        });
+
+        return plan();
+      },
+    [context, sideEffect, propName],
+  );
+
+/**
  * Authorization plugin for votes.
  *
+ * - Create: the caller, voting as themselves
  * - Update: Author only
  * - Delete: Author only
  */
 const VotePlugin = wrapPlans({
   Mutation: {
+    createVote: validateAuthor("vote"),
     updateVote: validatePermissions("rowId"),
     deleteVote: validatePermissions("rowId"),
   },
