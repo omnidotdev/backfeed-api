@@ -10,7 +10,9 @@ RUN bun install --frozen-lockfile
 COPY . .
 ARG GIT_SHA
 RUN echo "$GIT_SHA" > /app/.git-sha
-RUN bun run build
+# Bundle with NODE_ENV=production: the bundler inlines NODE_ENV at build time,
+# so without it libraries that read it (e.g. Grafast) run in development mode
+RUN NODE_ENV=production bun run build
 # Guard: bun's bundler can emit an undefined __promiseAll helper for concurrent
 # async-module init, crash-looping the server on boot (the 2026-06 aether
 # incident). Fail the build before a broken bundle can deploy.
