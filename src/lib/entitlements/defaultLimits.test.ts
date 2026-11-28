@@ -35,9 +35,8 @@ describe("free-tier fallback limits mirror the catalog", () => {
     );
   });
 
-  it("caps members at 5 and admins at 1 (catalog free tier)", async () => {
-    expect(await isWithinLimit(entity, "max_members", 4)).toBe(true);
-    expect(await isWithinLimit(entity, "max_members", 5)).toBe(false);
-    expect(await isWithinLimit(entity, "max_admins", 1)).toBe(false);
+  it("never caps members or admins (catalog max_members, max_admins: -1)", async () => {
+    expect(await isWithinLimit(entity, "max_members", 100_000)).toBe(true);
+    expect(await isWithinLimit(entity, "max_admins", 100_000)).toBe(true);
   });
 });

@@ -29,8 +29,9 @@ const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
   // Aether
   max_feedback_users: { free: -1 },
   max_comments_per_post: { free: 50 },
-  max_members: { free: 5, pro: -1, team: -1 },
-  max_admins: { free: 1, pro: -1, team: -1 },
+  // -1 = unlimited: every tier includes unlimited members and admins
+  max_members: { free: -1, pro: -1, team: -1 },
+  max_admins: { free: -1, pro: -1, team: -1 },
 };
 
 /** Tier type */
