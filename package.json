@@ -38,7 +38,7 @@
     "@graphile/pg-aggregates": "^0.2.0-rc.1",
     "@graphile/simplify-inflection": "^8.0.0-rc.2",
     "@graphql-yoga/plugin-disable-introspection": "^2.19.0",
-    "@omnidotdev/providers": "github:omnidotdev/providers#v0.2.0",
+    "@omnidotdev/providers": "github:omnidotdev/providers#v0.8.0",
     "@omnidotdev/search": "github:omnidotdev/search",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.68.0",
@@ -66,7 +66,7 @@
     "unleash-client": "^6.9.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.11",
+    "@biomejs/biome": "2.6.9",
     "@changesets/changelog-github": "^1.0.0",
     "@changesets/cli": "^3.0.1",
     "@envelop/types": "^5.2.1",
