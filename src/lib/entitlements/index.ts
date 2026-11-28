@@ -18,15 +18,17 @@ const APP_ID = "backfeed";
 /**
  * Default free-tier limits applied when no billing account exists.
  * Prevents hard failures for orgs that haven't been provisioned in Aether.
+ * FALLBACK ONLY: every value mirrors the product catalog SSOT (omni-api
+ * planConfigs, backfeed block); edit the catalog first, then this map
  */
 const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
-  max_projects: { free: 1 },
+  max_projects: { free: 2 },
   // -1 = unlimited, mirroring the product catalog SSOT (omni-api planConfigs:
   // backfeed feedback is unlimited on every tier). The prior `15` was stale
   // drift that silently capped feedback for any org not yet provisioned in
   // Aether
   max_feedback_users: { free: -1 },
-  max_comments_per_post: { free: 100 },
+  max_comments_per_post: { free: 50 },
   max_members: { free: 5, pro: -1, team: -1 },
   max_admins: { free: 1, pro: -1, team: -1 },
 };
